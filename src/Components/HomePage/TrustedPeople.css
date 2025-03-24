@@ -1,0 +1,71 @@
+
+
+/* Slide in and out animation */
+/* @keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOut {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+  } */
+
+@keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+    }
+    500% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideOut {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+ .trusted-slider .slide-in {
+
+}
+.slide-in{
+
+}
+
+  .slide-in {
+    animation: slideIn 3s  linear backwards ;/* Increased duration and added ease*/
+  }
+  
+  .slide-out {
+    animation: slideOut 2s linear ; /*Increased duration and added ease*/
+  }
+  
+  .slide-bgdark{
+  background-color: #282C3F !important;
+  color: #fff  !important;
+  }
+
+  .slide-bglight{
+    background-color: #fff  !important;
+    color: #282c3f  !important;
+  }
+

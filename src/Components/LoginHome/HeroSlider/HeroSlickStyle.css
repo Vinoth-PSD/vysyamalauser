@@ -1,0 +1,47 @@
+/*** Hero Section Slick ***/
+.heroSlickStyle .slick-prev:before{
+  font-size: 75px !important;
+  content: url(../../../assets/icons/arrow-left.png);
+}
+
+.heroSlickStyle .slick-next:before{
+  font-size: 75px !important;
+  content: url(../../../assets/icons/arrow-right.png);
+
+}
+
+.heroSlickStyle .slick-dots {
+  bottom: 50px !important;
+}
+
+.heroSlickStyle .slick-dots li button:before {
+  color: white !important;
+  font-size: 12px !important;
+}
+
+.heroSlickStyle .fade-bottom::after {
+  left: 0.30rem;
+  /* left: 0rem; */
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+.slick-next{
+  right: 25px;
+}
+.slick-prev{
+  left:0;
+}
+.slick-next{
+  right: 60px;
+}
+@media screen and (max-width:1279px) and (min-width:320px) {
+  .heroSlickStyle .fade-bottom::after {
+    left: 0rem;
+  }
+}
+@media screen and (max-width:639px) and (min-width:320px) {
+  .heroSlickStyle .slick-dots {
+    bottom: 20px !important;
+}
+}
+

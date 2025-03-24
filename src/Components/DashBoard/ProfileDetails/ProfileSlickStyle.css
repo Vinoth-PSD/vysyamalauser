@@ -1,0 +1,157 @@
+/*** Profile Slick Style ***/
+.connectingSlick .slick-prev:before {
+    color: #ff6666 !important;
+}
+
+.connectingSlick .slick-next:before {
+    color: #ff6666 !important;
+}
+
+/*** Image Hover Effect Style ***/
+.profile-slider-img-container {
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-in;
+}
+
+.profile-slider-img {
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.zoomed-image-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    /* Adjust based on the size you need */
+    height: 400px;
+    /* Adjust based on the size you need */
+    border: 1px solid #ccc;
+    background-color: white;
+    overflow: hidden;
+    z-index: 100;
+    display: none;
+    /* Initially hidden */
+}
+
+.zoomed-image-container.zoomed-visible {
+    display: block;
+    /* Show when zoomed */
+}
+
+.zoomed-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+}
+
+@media screen and (max-width: 424px) and (min-width: 320px) {
+.zoomed-image-container {
+    width: 300px;
+    height: 300px;
+
+}
+}
+
+
+/*** Side bar ***/
+.sidebar {
+    max-height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Scrollable sidebar */
+    overflow-x: hidden;
+    position: relative;
+}
+
+.sidebar ul {
+    padding: 0;
+    list-style-type: none;
+    padding-left: 15px;
+    padding-top: 20px ;
+    padding-bottom: 20px ;
+}
+
+.sidebar ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 5px;
+    width: 2px;
+    height: 100%;
+    background-color: #D9D9D9;
+}
+
+.sidebar li {
+    border-radius: 5px;
+    padding: 10px 15px;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+}
+
+.sidebar li:hover {
+    background-color: transparent;
+}
+
+.sidebar li.active {
+    background-color: transparent;
+    color: #fff;
+    font-weight: bold;
+    opacity: 1;
+    font-weight: 700;
+}
+.sidebar li.active::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -13px;
+    width: 8px;
+    height: 60px;
+    background-color: #fff;
+    border-radius: 22px;
+}
+
+@media (min-width: 320px) and (max-width: 1024px) {
+.sidebar ul::before {
+    content: none;
+}
+.sidebar li.active::before{
+    content: none;
+}
+
+}
+
+@media screen and (min-width: 320px) and (max-width:639px) {
+    .sidebar li {
+        border-radius: 0px;
+    }
+}
+
+/* myprofile slider style */
+
+.myProfileslider  .slick-prev{
+    left: 0px;
+    z-index: 10;
+}
+
+.myProfileslider  .slick-next{
+    right: 0px;
+}
+
+@media screen and (max-width: 768px) and (min-width: 320px){
+    
+.myProfileslider  .slick-prev{
+    left: 0px;
+
+}
+
+.myProfileslider  .slick-next{
+    right: 0px;
+}
+
+}

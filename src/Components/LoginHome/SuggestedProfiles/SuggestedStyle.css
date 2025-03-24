@@ -1,0 +1,9 @@
+/*** Suggested Slick Style ***/
+.suggestedStyle .slick-prev:before {
+  color: #ff6666;
+  font-size: 30px !important;
+}
+.suggestedStyle .slick-next:before {
+  color: #ff6666;
+  font-size: 30px !important;
+}

@@ -1,0 +1,339 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+@font-face {
+  font-family: 'segoesc';
+  src: url('./assets/fonts/segoesc.ttf') format('woff');
+  font-weight: 700; /* Bold weight */
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
+
+.arrowDisabled {
+  @apply text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+}
+
+.active-nav {
+  @apply font-semibold hover:text-main
+  hover:cursor-pointer relative before:content-[''] before:absolute before:block before:w-full before:h-[6px] before:rounded-t-[3.5px] 
+  before:-bottom-[5.5px] max-lg:before:-bottom-2 before:left-0 before:bg-main
+  before:hover:scale-x-100 before:scale-x-0 before:origin-top-left
+  before:transition before:ease-in-out before:duration-300;
+}
+
+.active-nav.active {
+  @apply text-main cursor-pointer before:scale-x-100 transition-all hover:transition-all;
+}
+
+/*** fade profile image bottom ***/
+.fade-bottom {
+  position: relative;
+}
+
+.fade-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0rem;
+  width: 100%;
+  height: 175px;
+  /* Adjust height as needed */
+  /* background: linear-gradient(transparent, rgba(0, 0, 0, 0.7)); */
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  pointer-events: none;
+}
+.input-style {
+  outline: none;
+  width: 100%;
+  padding: 7.8px 16px;
+  border: 1px solid #85878C91;
+  border-radius: 0.25rem;
+  padding: 13px 12px;
+  padding-left: 45px;
+  color: #000;
+  font-size: 14px;
+  font-family: 'inter',sans-serif;
+}
+.custom-select {
+  width: 100%; /* w-full */
+  padding: 0.5rem 0.75rem; /* py-2 px-3 */
+  color: 1px solid #85878c; /* text-ash */
+  border: 0.25rem; /* border-[1px] and border-footer-text-gray */
+  border-radius: 4px; /* rounded-[4px] */
+}
+
+.custom-select:focus-visible {
+  outline: none; /* focus-visible:outline-none */
+}
+.country-name {
+  color: #000;
+}
+input:-internal-autofill-selected{
+  background-color: transparent !important;
+}
+
+/* input auto select bg */
+@layer utilities {
+  input:-webkit-autofill {
+    background-color: transparent !important;
+  }
+}
+
+
+
+/* Hide the original checkbox */
+.mz-switch,
+.mz-switch-rounded {
+  display: none;
+}
+
+/* Style for the label that represents the checkbox */
+.mz-switch + label,
+.mz-switch-rounded + label {
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  background-image: linear-gradient(to right, #bd1225, #cd1f2f, #de2b3a, #ee3645, #ff4050); 
+  /* background-color: #adb5bd; Primary color */
+  box-sizing: border-box;
+  position: relative;
+  transition: background-color 0.4s; /* Transition effect */
+}
+
+/* Style for the custom checkbox thumb */
+.mz-switch + label:after,
+.mz-switch-rounded + label:after {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff; /* Thumb color */
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s; /* For better browser support */
+  transition: 0.4s;
+}
+
+/* Transform the thumb when checked */
+.mz-switch:checked + label::after,
+.mz-switch-rounded:checked + label:after {
+  -webkit-transform: translateX(18px);
+  -moz-transform: translateX(18px); /* For better browser support */
+  transform: translateX(18px);
+}
+
+/* Change background color when checked */
+.mz-switch:checked + label,
+.mz-switch-rounded:checked + label {
+  background-image: linear-gradient(to right, #bd1225, #cd1f2f, #de2b3a, #ee3645, #ff4050); /* Checked color */
+}
+
+/* Style for rounded checkboxes */
+.mz-switch-rounded + label,
+.mz-switch-rounded + label::after {
+  border-radius: 50px;
+}
+
+/* Ensure cursor changes for better UX */
+.mz-switch + label,
+.mz-switch:checked + label,
+.mz-switch:not(:checked) + label,
+.mz-switch-rounded + label,
+.mz-switch-rounded:checked + label,
+.mz-switch-rounded:not(:checked) + label {
+  cursor: pointer;
+}
+
+/* hide default password icon */
+input[type="password"]::-ms-reveal, 
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* select arrow icon style */
+
+select + svg{
+  font-size: 20px;
+  color: #85878C91;
+  position: absolute;
+  right: 12px;
+  top:15px;
+}
+
+
+
+.message-profilecard,.message-box{
+  /* Ensures overflow content can be scrolled */
+  overflow-y: auto;
+  /* height: 100%; */
+}
+
+/* Custom scrollbar styles */
+.message-profilecard::-webkit-scrollbar,
+.message-box::-webkit-scrollbar
+ {
+  width: 4px; /* Width of the scrollbar */
+}
+
+.message-profilecard::-webkit-scrollbar-thumb,
+.message-box::-webkit-scrollbar-thumb
+ {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+.message-profilecard::-webkit-scrollbar-thumb:hover,
+.message-box::-webkit-scrollbar-thumb:hover
+ {
+  background-color: #555; /* Thumb color on hover */
+}
+
+.message-profilecard::-webkit-scrollbar-track,
+.message-box::-webkit-scrollbar-track
+ {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+
+/* phone numcber */
+
+.banner-form .react-tel-input .flag-dropdown{
+  border-color: #282c3f !important;
+  border: none !important;
+  
+  
+
+}
+
+.banner-form .react-tel-input .selected-flag{
+  border: none !important;
+  padding-left: 15px !important;
+}
+
+@media screen and (max-width:1024px) and (min-width:32px) {
+  .react-tel-input .form-control{
+    height: 50px !important;
+  }
+}
+
+
+
+
+/* feature-profile */
+
+@media screen and (max-width:1280px) and (min-width:1024px) {
+  .feature-profile > div:nth-child(8){
+    display: none;
+  }
+  .feature-profile > div:nth-child(9){
+    display: none;
+  }
+}
+
+@media screen and (max-width:1023px) and (min-width:768px) {
+  .feature-profile > div:nth-child(6){
+    display: none;
+  }
+  .feature-profile > div:nth-child(7){
+    display: none;
+  }
+  .feature-profile > div:nth-child(8){
+    display: none;
+  }
+  .feature-profile > div:nth-child(9){
+    display: none;
+  }
+}
+@media screen and (max-width:767px) and (min-width:320px) {
+  .feature-profile > div:nth-child(4){
+    display: none;
+  }
+  .feature-profile > div:nth-child(5){
+    display: none;
+  }
+  .feature-profile > div:nth-child(6){
+    display: none;
+  }
+  .feature-profile > div:nth-child(7){
+    display: none;
+  }
+  .feature-profile > div:nth-child(8){
+    display: none;
+  }
+  .feature-profile > div:nth-child(9){
+    display: none;
+  }
+}

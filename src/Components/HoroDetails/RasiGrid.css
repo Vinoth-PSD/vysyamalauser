@@ -1,0 +1,36 @@
+/* Apply styles to the scrollbar */
+.rasi-box {
+    overflow: hidden;
+    overflow-y: auto;
+    /* scrollbar-width: none; For Firefox */
+    scrollbar-color: #b0b0b0 #f0f0f0; /* For Firefox */
+    /* height: 100%; */
+    padding: 5px 0 !important;
+  }
+  
+
+
+/* Custom scrollbar styles */
+.rasi-box::-webkit-scrollbar
+ {
+  width: 4px; /* Width of the scrollbar */
+}
+
+.rasi-box::-webkit-scrollbar-thumb
+ {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+
+.rasi-box::-webkit-scrollbar-thumb:hover
+ {
+  background-color: #555; /* Thumb color on hover */
+}
+
+
+.rasi-box::-webkit-scrollbar-track
+ {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+

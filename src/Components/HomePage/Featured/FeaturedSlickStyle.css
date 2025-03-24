@@ -1,0 +1,21 @@
+
+/*** Featured slick style ***/
+.featuredStyle .slick-list {
+    padding: 3em 0em 1.5rem !important;
+  }
+  @media screen and (max-width:639px) and (min-width:320px){
+    .featuredStyle .slick-list {
+      padding: 1em 0em 2rem!important;
+    }
+  }
+
+  /* review slider */
+.review-slider .slick-list{
+  padding: 2rem 0 ;
+}
+
+@media screen and (max-width:991px) and (min-width:320px) {
+  .review-slider .slick-list{
+    padding: 2rem 0rem ;
+  }
+}
