@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+//import axios from 'axios';
 import { NotifyError, NotifySuccess, ToastNotification } from '../../Toast/ToastNotification';
 import apiClient from '../../../API';
 
@@ -27,7 +28,7 @@ export const AlertSettings = () => {
     const [emailAlerts, setEmailAlerts] = useState<Alert[]>([]);
     const [smsAlerts, setSmsAlerts] = useState<Alert[]>([]);
     const [selectedAlerts, setSelectedAlerts] = useState<{ [key: string]: boolean }>({});
-    const profileId = sessionStorage.getItem('loginuser_profile_id');
+    const profileId = localStorage.getItem("loginuser_profile_id");
     useEffect(() => {
         // Fetch all available alerts
         apiClient

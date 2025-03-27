@@ -29,7 +29,7 @@ export const PayNow: React.FC = () => {
   console.log("packageName", packageName);
 
   const [membershipPlane, setMemberShipPlane] = useState<Package[]>([]);
-  // const profile_id = sessionStorage.getItem("profile_id_new");
+  // const profile_id = localStorage.getItem("profile_id_new");
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -50,7 +50,7 @@ export const PayNow: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   // const id = queryParams.get("id");
   const price = queryParams.get("price");
-  const profile_id = sessionStorage.getItem("profile_id_new");
+  const profile_id = localStorage.getItem("profile_id_new");
   //const plan_id = sessionStorage.getItem("cur_plan_id"); // Get cur_plan_id
 
   const [selectedValues, setSelectedValues] = useState<number[]>([]);

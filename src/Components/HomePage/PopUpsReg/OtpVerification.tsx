@@ -88,7 +88,7 @@
 
 //   useEffect(() => {
 //     // Retrieve profile_id from session storage
-//     const storedProfileId = sessionStorage.getItem("profile_id");
+//     const storedProfileId = localStorage.getItem("profile_id");
 //     if (storedProfileId) {
 //       setProfileId(storedProfileId);
 //     }
@@ -203,7 +203,7 @@
 //     setMessage("");
 
 //     try {
-//       const profileId = sessionStorage.getItem("profile_id");
+//       const profileId = localStorage.getItem("profile_id");
 //       if (profileId) {
 //         const result = await resendOtp(profileId);
 //         setMessage(result.response_data.message);
@@ -404,7 +404,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
 
   useEffect(() => {
     // Retrieve profile_id from session storage
-    const storedProfileId = sessionStorage.getItem("profile_id");
+    const storedProfileId = localStorage.getItem("profile_id");
     if (storedProfileId) {
       setProfileId(storedProfileId);
     }
@@ -504,7 +504,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
     setMessage("");
 
     try {
-      const profileId = sessionStorage.getItem("profile_id");
+      const profileId = localStorage.getItem("profile_id");
       if (profileId) {
         const result = await resendOtp(profileId);
         setMessage(result.response_data.message);

@@ -81,12 +81,32 @@ function App() {
 function AppContent({ token }: AppContentProps) {
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   console.log("Current token:", token);
+  //   sessionStorage.removeItem("searchvalue");
+
+  //   const handlePopState = () => {
+  //     const currentToken = sessionStorage.getItem("token");
+  //     if (currentToken) {
+  //       navigate("/LoginHome");
+  //     } else {
+  //       navigate("/");
+  //     }
+  //   };
+
+  //   window.addEventListener("popstate", handlePopState);
+
+  //   return () => {
+  //     window.removeEventListener("popstate", handlePopState);
+  //   };
+  // }, [token, navigate]);
+
   useEffect(() => {
     console.log("Current token:", token);
     sessionStorage.removeItem("searchvalue");
 
     const handlePopState = () => {
-      const currentToken = sessionStorage.getItem("token");
+      const currentToken = localStorage.getItem("token");
       if (currentToken) {
         navigate("/LoginHome");
       } else {
@@ -103,7 +123,7 @@ function AppContent({ token }: AppContentProps) {
 
   return (
     <Routes>
-    <Route path="/AwardsMobile" element={<AwardsMobile />} />
+      <Route path="/AwardsMobile" element={<AwardsMobile />} />
       <Route path="/AboutUsMobile" element={<AboutUsMobile />} />
       <Route path="/HappyStoriesMobile" element={<HappyStoriesMobile />} />
 
@@ -138,7 +158,7 @@ function AppContent({ token }: AppContentProps) {
         <Route path="/FindSomeOneSpecial" element={<FindSomeOneSpecial />} />
         <Route path="/ProfileNotFound" element={<ProfileNotFound />} />
         <Route path="/ProfileImage" element={<ImagePage />} />
-      <Route path="/BasicInfoPdf" element={<BasicInfoPdf />} />
+        <Route path="/BasicInfoPdf" element={<BasicInfoPdf />} />
 
 
       </Route>

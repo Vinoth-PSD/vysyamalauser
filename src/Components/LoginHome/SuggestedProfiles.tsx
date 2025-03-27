@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { SuggestedCard } from "./SuggestedProfiles/SuggestedCard";
+//import axios from "axios";
 import "./SuggestedProfiles/SuggestedStyle.css";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
@@ -128,7 +129,7 @@ export const SuggestedProfiles: React.FC = () => {
     const fetchProfiles = async () => {
       try {
         const response = await apiClient.post("/auth/Get_Suggested_List/", {
-          profile_id: sessionStorage.getItem('loginuser_profile_id'),
+          profile_id: localStorage.getItem("loginuser_profile_id") ,
         });
         if (response.data.status === "success") {
           setProfiles(response.data.data);

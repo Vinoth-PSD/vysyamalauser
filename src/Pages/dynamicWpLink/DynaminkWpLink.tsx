@@ -154,9 +154,9 @@ const ImagePage: React.FC = () => {
                 />
                 <meta
                   property="og:image"
-                  content={ 'https://matrimonyapi.rainyseasun.com/media/default_groom.png'} // Use placeholder if no image
+                  content={ 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png'} // Use placeholder if no image
                 />
-                <meta property="og:url" content={'https://matrimonyapi.rainyseasun.com/media/default_groom.png'} />
+                <meta property="og:url" content={'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png'} />
               </Helmet>
             {/* Hero Section */}
             {/* <HeroSection
@@ -173,7 +173,7 @@ const ImagePage: React.FC = () => {
                 <div className="w-full">
                     <div className="flex justify-start mb-6">
                         <img
-                            src={profileImagess || "https://matrimonyapi.rainyseasun.com/media/default_groom.png"}
+                            src={profileImagess || "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png"}
                             alt={profileName || "Name not available"}
                             className="w-48 h-48 sm:w-[40%] sm:h-[40%] object-cover rounded-3xl border-4 border-orange-400 shadow-redboxshadow hover:scale-105 transition-transform duration-300"
                         />

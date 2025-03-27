@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+//import axios from 'axios';
 import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import apiClient from '../../../API';
@@ -12,7 +13,7 @@ interface PersonalNotesPopupProps {
 export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePopup }) => {
     const [notes, setNotes] = useState<string>('');
     const [showUpgradePrompt, setShowUpgradePrompt] = useState<boolean>(false); // To show the upgrade overlay
-    const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
 

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+//import axios from "axios";
 import { IoPersonCircle } from "react-icons/io5";
 
 import { MdOutlineSearch } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import FindSomeoneIcon from "../../assets/images/FindSomeone.png";
+// import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal";
 import { useNavigate } from "react-router-dom";
 import HeartBg from "../../assets/images/FindMatchesHeartBg.png"
 import { motion, useAnimation } from "framer-motion";
@@ -20,6 +22,16 @@ interface Profession {
   Profes_Pref_id: number;
   Profes_name: string;
 }
+
+// interface Profile {
+//   profile_id: string;
+//   profile_name: string;
+//   profile_age: number;
+//   profile_img: string;
+//   profile_height: string;
+//   profession: string;
+//   location: string;
+// }
 
 
 const FindProfessionals = () => {

@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { IoShareSocialSharp } from "react-icons/io5";
 import { MyProfileShare } from "../../Components/DashBoard/ProfileDetails/MyProfileShare"
 import { Helmet } from "react-helmet";
+import apiClient from "../../API";
 
 // import { useNavigate } from "react-router-dom";
 
@@ -141,14 +142,15 @@ export const MyProfile = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [percentage, setPercentage] = useState<number>(0); // Initialize with 0 or any default value
   const [personalData, setPersonalData] = useState<PersonalData | null>(null);
-  const [profileId, setProfileId] = useState<string | null>(null);
+  //const [profileId, setProfileId] = useState<string | null>(null);
+  const [profileId, setProfileId] = useState<string | null>( null);
 
 
   useEffect(() => {
-    const storedProfileId = sessionStorage.getItem("profile_id");
+    const storedProfileId = localStorage.getItem("profile_id");
     if (storedProfileId) {
       setProfileId(storedProfileId);
     } else {
@@ -163,8 +165,8 @@ export const MyProfile = () => {
           const formData = new FormData();
           formData.append("profile_id", profileId);
 
-          const response = await axios.post(
-            "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/get_myprofile_personal/",
+          const response = await apiClient.post(
+            "/auth/get_myprofile_personal/",
             formData
           );
 
@@ -189,10 +191,10 @@ export const MyProfile = () => {
     const fetchGetMyProfilePersonal = async () => {
       setLoading(true); // Start loading when fetch begins
       try {
-        const response = await axios.post(
-          "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/get_myprofile_personal/",
+        const response = await apiClient.post(
+          "/auth/get_myprofile_personal/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId ,
             user_profile_id: loginuser_profileId,
           }
         );
@@ -436,9 +438,9 @@ export const MyProfile = () => {
         />
         <meta
           property="og:image"
-          content={'https://matrimonyapi.rainyseasun.com/media/default_groom.png'} // Use placeholder if no image
+          content={'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png'} // Use placeholder if no image
         />
-        <meta property="og:url" content={'https://matrimonyapi.rainyseasun.com/media/default_groom.png'} />
+        <meta property="og:url" content={'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png'} />
       </Helmet>
       <div className="bg-grayBg py-20 max-lg:py-14 max-md:py-10 max-sm:py-10">
         <div className="container mx-auto">

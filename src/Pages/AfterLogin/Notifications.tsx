@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Notification } from "../../Components/LoginHeader";
 import { ProfileContext } from "../../ProfileContext";
@@ -51,14 +52,14 @@ export const Notifications = () => {
   }, []);
 
   const [NotificationData, setNotificationData] = useState<Notification[]>([]);
-  const userId = sessionStorage.getItem("loginuser_profile_id");
+  const userId = localStorage.getItem("loginuser_profile_id");
   const [dataPerPage, setDataPerPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(5);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [totalPages, setTotalpages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   console.log(totalPages, totalRecords, currentPage, dataPerPage, "ffffffff");
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   // const queryParams = new URLSearchParams(location.search);
   // const idparam = queryParams.get("id") || "";
   const [roomId, setRoomId] = useState("");
@@ -135,7 +136,7 @@ export const Notifications = () => {
       const response = await apiClient.post(
         "/auth/Get_notification_list/",
         {
-          profile_id: userId,
+          profile_id: userId ,
           per_page: currentPage,
         }
       );

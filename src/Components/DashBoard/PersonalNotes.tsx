@@ -3,6 +3,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { PersonalNotesCard } from './PersonalNotes/PersonalNotesCard';
 import { SuggestedProfiles } from '../LoginHome/SuggestedProfiles';
 import Pagination from '../Pagination';
+//import axios from 'axios';
 import apiClient from '../../API';
 
 interface PersonalNotesProps {
@@ -10,7 +11,7 @@ interface PersonalNotesProps {
 }
 
 export const PersonalNotes: React.FC<PersonalNotesProps> = ({ dashBoardAgain }) => {
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10

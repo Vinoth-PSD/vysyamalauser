@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { z } from 'zod';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
+//import axios from 'axios';
 import apiClient from '../../../API';
 
 // Define the schema
@@ -29,7 +30,7 @@ export const ChangePassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const onSubmit = async (data: any) => {
     try {

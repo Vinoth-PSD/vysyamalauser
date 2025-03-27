@@ -1,6 +1,5 @@
-
-
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
+//import axios from 'axios';
 import apiClient from '../../../API';
 // import { useParams } from 'react-router-dom';
 
@@ -38,7 +37,7 @@ export const FamilyView: React.FC = () => {
     // const { user_profile_id } = useParams<{ user_profile_id: string }>();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     useEffect(() => {
         const fetchFamilyDetails = async () => {

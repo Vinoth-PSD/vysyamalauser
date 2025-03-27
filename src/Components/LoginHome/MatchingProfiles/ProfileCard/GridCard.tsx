@@ -1,7 +1,6 @@
 
 
 
-
 import React, { useState, useContext, useEffect } from "react";
 
 import { IoCalendar } from "react-icons/io5";
@@ -80,7 +79,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     try {
       const response = await apiClient.post(

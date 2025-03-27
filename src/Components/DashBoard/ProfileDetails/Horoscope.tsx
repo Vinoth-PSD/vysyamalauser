@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { MdModeEdit } from "react-icons/md";
+//import axios from "axios";
 import RasiGridnew from "../../HoroDetails/RasiGridnew";
 import AmsamGridnew from "../../HoroDetails/AmsamGridnew";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +47,7 @@ export const Horoscope = () => {
     useState<HoroscopeDetails | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<HoroscopeDetails>>({});
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [birthStars, setBirthStars] = useState<BirthStar[]>([]);
   const [selectedBirthStarId, setSelectedBirthStarId] = useState<
     number | string
@@ -76,7 +77,7 @@ export const Horoscope = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_horoscope/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId ,
           }
         );
         const data = response.data.data;

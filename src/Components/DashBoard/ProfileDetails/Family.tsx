@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { MdModeEdit } from "react-icons/md";
+//import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -45,7 +46,7 @@ export const Family = () => {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<FamilyDetails>>({});
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [familyStatuses, setFamilyStatuses] = useState<FamilyStatus[]>([]);
   const [selectedFamilyStatusId, setSelectedFamilyStatusId] = useState<
     number | string
@@ -80,7 +81,7 @@ export const Family = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_family/",
           {
-            profile_id: loginuser_profileId, // replace with the actual profile_id if needed
+            profile_id: loginuser_profileId , // replace with the actual profile_id if needed
           }
         );
         const data = response.data.data;

@@ -5,7 +5,7 @@ export const ThankYouReg = () => {
   const Save_plan_package_message = sessionStorage.getItem(
     "Save_plan_package_message"
   );
-  const profileid = sessionStorage.getItem("profile_id_new") || "0"; // Default to "0" if not found
+  const profileid = localStorage.getItem("profile_id_new") || "0"; // Default to "0" if not found
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -34,7 +34,7 @@ export const ThankYouReg = () => {
 
           <div>
             <p className="text-vysyamalaBlack font-semibold mt-20 max-xl:mt-16 max-lg:mt-12 max-md:mt-6">
-              Copyright &copy; 2024 | All Rights Reserved
+              Copyright &copy; 2025 | All Rights Reserved
             </p>
           </div>
         </div>

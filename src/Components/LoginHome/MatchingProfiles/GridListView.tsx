@@ -33,7 +33,7 @@ export interface SearchResultProps {
 
 export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
   const context = useContext(ProfileContext);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");

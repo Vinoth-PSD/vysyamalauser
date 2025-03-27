@@ -13,13 +13,13 @@ export const ChatRoom: React.FC = () => {
     const ws = useRef<WebSocket | null>(null);
 
     // Retrieve the profile ID dynamically from sessionStorage
-    const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const username = loginuser_profileId || "Guest"; // Default to "Guest" if not found
 
     // Fetch chat history from the server
     const fetchChatHistory = async () => {
         try {
-            const response = await fetch(`/auth/getMessages/${room_name}/`, {
+            const response = await fetch(`https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/getMessages/${room_name}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const ChatRoom: React.FC = () => {
             setMessages(JSON.parse(cachedMessages));
         }
 
-        const websocketUrl = `ws://103.214.132.20:8000/ws/chat/${room_name}/?username=${username}`;
+        const websocketUrl = `ws://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/ws/chat/${room_name}/?username=${username}`;
         console.log('Connecting to WebSocket:', websocketUrl);
         ws.current = new WebSocket(websocketUrl);
 

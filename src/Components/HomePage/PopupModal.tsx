@@ -334,7 +334,7 @@
 //     setMessage("");
 
 //     try {
-//       const profileId = sessionStorage.getItem("profile_id");
+//       const profileId = localStorage.getItem("profile_id");
 //       if (profileId) {
 //         const result = await resendOtp(profileId);
 //         setMessage(result.response_data.message);
@@ -627,7 +627,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber })
     setMessage("");
 
     try {
-      const profileId = sessionStorage.getItem("profile_id");
+      const profileId = localStorage.getItem("profile_id");
       if (profileId) {
         const result = await resendOtp(profileId);
         setMessage(result.response_data.message);

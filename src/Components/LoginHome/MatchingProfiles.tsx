@@ -84,7 +84,7 @@ export const MatchingProfiles = () => {
   // State for managing scrolling
   const [shouldScroll, setShouldScroll] = useState(false);
 
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");
   }

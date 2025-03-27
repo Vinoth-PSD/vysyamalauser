@@ -41,7 +41,7 @@ export const PersonalNotesCard = () => {
   const [profilesData, setProfilesData] = useState<GetProfListMatch[]>([]); // Updated to an array for multiple profiles
 
   const [statusMessage] = useState<string>(""); // State variable for the status message
-  const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
 
   useEffect(() => {

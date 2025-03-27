@@ -7,6 +7,7 @@ import { z } from "zod";
 import UploadFile from "../../UploadImages/UploadFile"; // Assuming the UploadFile component is reusable
 //import closebtn from "../../../assets/icons/closebtn.png";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+//import axios from "axios";
 import { NotifyError, NotifySuccess, ToastNotification } from "../../Toast/ToastNotification";
 import apiClient from "../../../API";
 
@@ -29,7 +30,7 @@ export const PhotoSettings = () => {
   );
   const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const loginuser_profile_id = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profile_id = localStorage.getItem("loginuser_profile_id");
  // const [uploadedProfileImages, setUploadedProfileImages] = useState([]);
   const [uploadedHoroscopeFile, setUploadedHoroscopeFile] = useState("");
   const [uploadedIDProof, setUploadedIDProof] = useState("");

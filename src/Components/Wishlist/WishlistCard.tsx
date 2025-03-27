@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+//import axios from "axios";
 import ProfileListImg from "../../assets/images/ProfileListImg.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
@@ -100,7 +101,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
 
   useEffect(() => {
     // Retrieve profile_id from sessionStorage
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     if (loginuser_profileId) {
       fetchWishlistProfiles(loginuser_profileId);

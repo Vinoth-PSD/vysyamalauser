@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+//import axios from "axios";
 import ProfileListImg from "../../../assets/images/ProfileListImg.png";
 import {
   MdVerifiedUser,
@@ -53,7 +54,7 @@ export const MyVisitorsCard = () => {
   const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
 
   // Function to handle the bookmark toggle

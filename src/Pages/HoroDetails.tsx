@@ -19,6 +19,7 @@ import {
   NotifyError,
   NotifySuccess,
 } from "../Components/Toast/ToastNotification";
+//import axios from "axios";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 // Define validation schema with zod
@@ -117,8 +118,8 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       const profileId =
-        sessionStorage.getItem("profile_id_new") ||
-        sessionStorage.getItem("loginuser_profile_id");
+        localStorage.getItem("profile_id_new") ||
+        localStorage.getItem("loginuser_profile_id");
       if (profileId) {
         try {
           const requestData = {
@@ -248,7 +249,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
 
     try {
       // Format the data as expected by the backend
-      const profileId = sessionStorage.getItem("profile_id_new");
+      const profileId = localStorage.getItem("profile_id_new");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }

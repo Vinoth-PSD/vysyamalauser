@@ -1,11 +1,10 @@
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MarriedSlick from "./HappyStories/MarriedSlick";
-// import { PopupModal } from "./PopUpsReg/PopupModal";
-// import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal";
-//import { FaArrowRightLong } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+//import axios from "axios";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import apiClient from "../../API";
@@ -68,20 +67,6 @@ const HappyStories = () => {
   useEffect(() => {
     fetchHappyStories();
   }, []);
-
-  // const handleRegisterClick = () => setIsAccountSetupOpen(true);
-  // const handleCloseAccountSetup = () => {
-  //   setIsAccountSetupOpen(false);
-  //   console.log("Closing PopupModal popup");
-  // };
-
-
-
-  // function handleCloseLoginPopup(): void {
-  //   throw new Error("Function not implemented.");
-  // }
-
-
   
   const controls = useAnimation(); // Controls for the animation
   const [ref, inView] = useInView({

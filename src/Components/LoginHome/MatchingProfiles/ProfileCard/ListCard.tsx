@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import {
@@ -87,7 +90,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     try {
       const response = await apiClient.post(

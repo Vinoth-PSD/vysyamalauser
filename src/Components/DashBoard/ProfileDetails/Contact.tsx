@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { MdModeEdit } from "react-icons/md";
+//import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "../../RegistrationForm/InputField";
@@ -51,7 +52,7 @@ export const Contact = () => {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<ContactDetails>>({});
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountryId, setSelectedCountryId] = useState<number | string>(
@@ -87,23 +88,7 @@ export const Contact = () => {
     personal_email: "",
   });
 
-  // const [districtValue, setDistrictValue] = useState(""); // Add state for the district value
 
-  // const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const value = e.target.value;
-
-  //   if (value === "others") {
-  //     // Switch to free textbox
-  //     setDistrictValue(""); // Clear district value
-  //     setIsCityDropdown(false); // Show the free textbox
-  //    // setValue("district", ""); // Clear the district value in the form
-  //   } else {
-  //     // Use selected district
-  //     setDistrictValue(value);
-  //     setIsCityDropdown(true); // Use dropdown
-  //     //setValue("district", value); // Update the form value for district
-  //   }
-  // };
 
   useEffect(() => {
     const fetchContactDetails = async () => {
@@ -111,7 +96,7 @@ export const Contact = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_contact/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId ,
           }
         );
         const data = response.data.data;
@@ -406,7 +391,7 @@ export const Contact = () => {
         const getResponse = await apiClient.post(
           "/auth/get_myprofile_contact/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId ,
           }
         );
 

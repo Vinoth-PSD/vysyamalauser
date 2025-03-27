@@ -71,7 +71,7 @@
 //     window.location.href = "/";
 //   };
 
-//   // const profile_id = sessionStorage.getItem("profile_id");
+//   // const profile_id = localStorage.getItem("profile_id");
 //   const profile_completion = sessionStorage.getItem("profile_completion");
 
 
@@ -320,7 +320,7 @@ export const Header: React.FC = () => {
     window.location.href = "/";
   };
 
-  // const profile_id = sessionStorage.getItem("profile_id");
+  // const profile_id = localStorage.getItem("profile_id");
   const profile_completion = sessionStorage.getItem("profile_completion");
 
 

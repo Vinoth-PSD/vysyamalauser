@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FeaturedProfileCard } from "./FeaturedProfiles/FeaturedProfileCard";
 import "./FeaturedProfiles/FeaturedProfileStyle.css";
+//import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 import apiClient from "../../API";
@@ -117,7 +118,7 @@ export const FeaturedProfiles = () => {
         const response = await apiClient.post(
           "/auth/Get_Featured_List/",
           {
-            profile_id: sessionStorage.getItem("loginuser_profile_id"),
+            profile_id: localStorage.getItem("loginuser_profile_id") ,
             from_age: 20,
             to_age: 40,
             from_height: 100,

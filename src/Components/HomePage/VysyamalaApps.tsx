@@ -1,10 +1,20 @@
+
+
 import { motion, useAnimation } from "framer-motion";
 import VysyamalaApp from "../../assets/images/VysyamalaApps.png";
 import VysyamalaDownload from "../../assets/images/VysyamalaDownloads.png";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 
+
+// Define the interface for the API response
+// interface AppData {
+//   id: number;
+//   vysyamala_apps: string;
+// }
+
 const VysyamalaApps = () => {
+
 
 
   const controls = useAnimation(); // Controls for the animation

@@ -14,6 +14,7 @@ import { GridListView } from "../LoginHome/MatchingProfiles/GridListView";
 import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
 import { ProfileContext } from "../../ProfileContext";
 import Pagination from "../Pagination";
+//import axios from "axios";
 import apiClient from "../../API";
 
 interface SearchResultsProps {
@@ -93,7 +94,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     setAdvanceSearchData([]);
     onSearchAgain();
   };
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [searchProfile, setSearchProfile] = useState<string>("");
   const HandlesearchProfile = async () => {
     try {

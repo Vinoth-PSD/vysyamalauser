@@ -30,7 +30,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
   photoLock,
 }) => {
   const loginuser_profileId =
-    sessionStorage.getItem("loginuser_profile_id") || "";
+    localStorage.getItem("loginuser_profile_id") || "";
   const [userImages, setUserImages] = useState<UserImages>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

@@ -69,7 +69,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [noData, setNoData] = useState(false);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [roomId, setRoomId] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
@@ -95,7 +95,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
    
          // Second API call to Get_user_chatlist
          const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
-           profile_id: loginuser_profileId,
+           profile_id: loginuser_profileId ,
          });
    
          if (chatListResponse.data.status === 1) {

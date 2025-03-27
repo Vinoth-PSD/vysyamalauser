@@ -1,6 +1,7 @@
 import { FooterContent } from '../Components/FooterPages/FooterContent'
 import parseHtml from "html-react-parser"
 import { useEffect, useState } from "react";
+//import axios from "axios";
 import apiClient from '../API';
 
 export const TermsandConditions = () => {

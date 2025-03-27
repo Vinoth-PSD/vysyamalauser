@@ -70,7 +70,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     try {
       const response = await apiClient.post(

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { InterestSentCard } from "./InterestSent/InterestSentCard";
 import Pagination from "../Pagination";
+//import axios from "axios";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 
@@ -12,7 +13,7 @@ interface InterestSentProps {
 export const InterestSent: React.FC<InterestSentProps> = ({
   dashBoardAgain,
 }) => {
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [dataPerPage, setDataPerPage] = useState(0);

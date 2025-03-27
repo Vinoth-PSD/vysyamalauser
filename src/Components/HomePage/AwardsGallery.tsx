@@ -1,29 +1,9 @@
-
-
-
-
-
-// import { useEffect, useState } from "react";
-// import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-// import "./Featured/FeaturedSlickStyle.css";
-// import axios from "axios";
-// import Award from "../../assets/icons/Award.png";
-// import { AwardCard } from "./AwardGallery/AwardCard";
-// import { PopupModal } from "./PopUpsReg/PopupModal"; // Assuming this is the same component used in HappyStories
-// import { motion, useAnimation } from "framer-motion";
-// import { useInView } from "react-intersection-observer";
-
-
-
-
-
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Featured/FeaturedSlickStyle.css";
+//import axios from "axios";
 import Award from "../../assets/icons/Award.png";
 import { AwardCard } from "./AwardGallery/AwardCard";
 import { PopupModal } from "./PopUpsReg/PopupModal"; // Assuming this is the same component used in HappyStories

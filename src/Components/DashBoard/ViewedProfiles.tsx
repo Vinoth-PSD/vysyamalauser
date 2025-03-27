@@ -3,6 +3,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { ViewedProfilesCard } from './ViewedProfiles/ViewedProfilesCard';
 import { SuggestedProfiles } from '../LoginHome/SuggestedProfiles';
 import Pagination from '../Pagination';
+//import axios from 'axios';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import apiClient from '../../API';
 
@@ -12,7 +13,7 @@ interface ViewedProfilesProps {
 
 export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }) => {
 
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10

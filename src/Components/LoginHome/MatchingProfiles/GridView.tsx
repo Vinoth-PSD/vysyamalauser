@@ -21,7 +21,7 @@ export interface SearchResultProps {
 export const GridView: React.FC<SearchResultProps> = ({ searchvalues }) => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   // const advanceSearchData = sessionStorage.getItem("advance_search_data")
   //   ? JSON.parse(sessionStorage.getItem("advance_search_data")!)

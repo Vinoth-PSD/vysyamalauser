@@ -1,6 +1,3 @@
-
-
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from "react";
 import VysyamalaLogo from "../assets/icons/VysyamalaLogo.png";
@@ -13,6 +10,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import { MdManageAccounts } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import OfferHeaderBg from "../assets/images/OfferHeader.png"
+//import axios from "axios";
 import apiClient from "../API";
 
 export interface Notification {
@@ -32,7 +30,7 @@ export interface Notification {
 export const LoginHeader: React.FC = () => {
   // Retrieve token from sessionStorage
   // const token = sessionStorage.getItem("token");
-  const userId = sessionStorage.getItem("loginuser_profile_id");
+  const userId = localStorage.getItem("loginuser_profile_id");
 
   // const handleClick = () => {
   //   navigate('/MyProfile/#ProfileDetailsSettings');
@@ -40,6 +38,7 @@ export const LoginHeader: React.FC = () => {
   // Function to handle logout
   const handleLogout = () => {
     sessionStorage.clear();
+    localStorage.clear();
     // Clear token from sessionStorage
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("profile_completion");
@@ -52,9 +51,9 @@ export const LoginHeader: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [NotificationData, setNotificationData] = useState<Notification[]>([]);
   const [notificationCount, setNotificationCount] = useState<number>(0);
-  const userProfileImage = sessionStorage.getItem("user_profile_image");
+  const userProfileImage = localStorage.getItem("user_profile_image");
   console.log(userProfileImage, "userProfileImage ");
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [roomId, setRoomId] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
@@ -141,7 +140,7 @@ export const LoginHeader: React.FC = () => {
   const getNotification = () => {
     apiClient
       .post("/auth/Get_notification_list/", {
-        profile_id: userId,
+        profile_id: userId ,
       })
       .then((response) => {
         setNotificationData(response.data.data);
@@ -170,7 +169,7 @@ export const LoginHeader: React.FC = () => {
     const response = await apiClient.post(
       `/auth/Read_notifications/`,
       {
-        profile_id: userId,
+        profile_id: userId ,
       }
     );
     try {

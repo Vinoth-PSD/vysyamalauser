@@ -1,8 +1,15 @@
+//import axios from "axios";
 import VysyamalaLogo from "../../assets/icons/VysyamalaLogo.png";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../API";
 
+// export const VysyamalaAbout = () => {
+//   const navigate = useNavigate();
 
+//   const handleReadMoreClick = () => {
+//     // Navigate to the FooterPages and pass data via state
+//     navigate("/FooterPages", { state: { section: "about-us" } });
+//   };
 
 
 export const VysyamalaAbout = () => {

@@ -24,7 +24,7 @@ interface Package {
 
 export const UpgradePayNow: React.FC = () => {
   const [membershipPlane, setMemberShipPlane] = useState<Package[]>([]);
-  const profile_id = sessionStorage.getItem("profile_id");
+  const profile_id = localStorage.getItem("profile_id");
   //  const plan_id = sessionStorage.getItem("cur_plan_id"); // Get cur_plan_id
   const navigate = useNavigate();
 

@@ -1,9 +1,13 @@
+
+
+
 import React, { useState, useRef, useEffect } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
+//import axios from "axios";
 import apiClient from "../../../API";
 
 
@@ -17,6 +21,17 @@ const forgetPasswordSchema = z.object({
     (data) => !(data.email && data.userID), // Both fields cannot be filled at the same time
     { message: 'Please provide either Email or User ID, not both', path: ['userID'] }
 );
+// const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+// const passwordResetSchema = z.object({
+//     newPassword: z.string()
+//         .min(8, "Password must be at least 8 characters long")
+//         .regex(passwordRegex, "Password must contain at least one uppercase letter, one number, and one special character"),
+//     confirmPassword: z.string().min(8, "Confirm Password must be at least 8 characters long"),
+// }).refine((data) => data.newPassword === data.confirmPassword, {
+//     message: "Passwords don't match",
+//     path: ["confirmPassword"],
+// });
 interface FormInputs {
     email: string;
     userID: string;
@@ -52,7 +67,7 @@ export const ForgetPassword: React.FC<ForgetPasswordProps> = ({
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const inputRefs = useRef<HTMLInputElement[]>([]);
-    // const profileId = sessionStorage.getItem('loginuser_profile_id') || 'VY240002';
+    // const profileId = localStorage.getItem("loginuser_profile_id") || 'VY240002';
     const [userID, setUserID] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [canResend, setCanResend] = useState<boolean>(false);

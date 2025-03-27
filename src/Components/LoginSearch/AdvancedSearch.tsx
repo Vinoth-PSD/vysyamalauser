@@ -79,7 +79,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   const [birthStars, setBirthStars] = useState<BirthStar[]>([]);
   const [incomeOptions, setIncomeOptions] = useState<Income[]>([]);
   const [fieldofstudyOptions, setfieldofstudyOptions] = useState<FieldOfStudy[]>([]);
-  const loginuser_profile_id = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profile_id = localStorage.getItem("loginuser_profile_id");
   const context = useContext(ProfileContext);
   const navigate = useNavigate();
 

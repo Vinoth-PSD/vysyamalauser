@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+//import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -185,7 +186,7 @@ export const PartnerSettings: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const profile_id = sessionStorage.getItem("loginuser_profile_id"); // Replace with dynamic profile ID if needed
+    const profile_id = localStorage.getItem("loginuser_profile_id"); // Replace with dynamic profile ID if needed
     apiClient
       .post("/auth/Get_myprofile_partner/", {
         profile_id,
@@ -285,7 +286,7 @@ export const PartnerSettings: React.FC = () => {
 
       // Prepare the payload for submission
       const updateData = {
-        profile_id: sessionStorage.getItem("loginuser_profile_id"),
+        profile_id: localStorage.getItem("loginuser_profile_id"),
         pref_age_differences: `${data.fromAge}`,
         pref_height_from: data.fromHeight,
         pref_height_to: data.toHeight,

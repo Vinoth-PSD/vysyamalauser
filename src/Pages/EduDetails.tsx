@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import apiClient from "../API";
 import {ToastNotification,NotifyError,NotifySuccess,} from "../Components/Toast/ToastNotification";
+//import axios from "axios";
 import currencyCodes from "currency-codes";
 import currencySymbolMap from "currency-symbol-map";
 import Select from "react-select";
@@ -243,7 +244,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     setValue("field_ofstudy", selectedValue); // Update form value
   };
 
-  const profileId = sessionStorage.getItem("profile_id_new");
+  const profileId = localStorage.getItem("profile_id_new");
   // Existing states...
   const [selectedFieldOfStudy, setSelectedFieldOfStudy] = useState<string>(""); // New state
 
@@ -490,8 +491,8 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     try {
       // Format the data as expected by the backend
       const profileId =
-        sessionStorage.getItem("profile_id_new") ||
-        sessionStorage.getItem("loginuser_profile_id");
+        localStorage.getItem("profile_id_new") ||
+        localStorage.getItem("loginuser_profile_id");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }

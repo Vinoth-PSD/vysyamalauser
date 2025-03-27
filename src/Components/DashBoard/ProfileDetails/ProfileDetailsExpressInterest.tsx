@@ -124,7 +124,7 @@ export const    ProfileDetailsExpressInterest: React.FC<
   const interestParam = queryParams.get("interest");
   const idparam = queryParams.get("id") || "";
 
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const custom_message = sessionStorage.getItem("custom_message");
 
@@ -264,28 +264,7 @@ export const    ProfileDetailsExpressInterest: React.FC<
   }, [idparam, loginuser_profileId]); // Dependency array: effect runs when profileIdViewed changes
 
   console.log("valueeee", status);
-  // const GetPhotoByPassword = async (Password: string) => {
-  //   try {
-  //     const response = await axios.post(Get_photo_bypassword, {
-  //       profile_id: loginuser_profileId,
-  //       profile_to: id,
-  //       photo_password: Password,
-  //     });
-
-  //     if (response.status === 200) {
-  //       const userImages = response.data.data.user_images;
-  //       setResponse(true);
-  //       // NotifySuccess("Image Unlocked Successfully");
-  //       // Set the user images to the state
-  //       // setProtectedImg(userImages);
-
-  //       sessionStorage.setItem(`userImages_${id}`, JSON.stringify(userImages));
-  //       // sessionStorage.setItem("userImages", JSON.stringify(userImages));
-  //     }
-  //   } catch (error) {
-  //     NotifyError("Please Enter Correct Password");
-  //   }
-  // };
+ 
   console.log(idparam, "id");
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -317,19 +296,7 @@ export const    ProfileDetailsExpressInterest: React.FC<
     fetchProfileData();
   }, []);
 
-  // useEffect(() => {
-  //   const storedPhotoProtectionval = JSON.parse(sessionStorage.getItem("photolock") || "0");
-  //   setPhotoPasswordlock(storedPhotoProtectionval);
-  //   console.log("ffr");
-  // }, []);
-  // Redux
-  // const dispatch = useDispatch();
-
-  // const handleBackClick = () => {
-  //     dispatch(hideInterest());
-  // };
-
-  // Declaration for Bookmarking Profile
+  
   // Declaration for Bookmarking Profile
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkedProfiles, setBookmarkedProfiles] = useState<ProfileData[]>(
@@ -580,7 +547,7 @@ export const    ProfileDetailsExpressInterest: React.FC<
     console.log("aaaaaaaaaaaaaaa", loginuser_profileId);
     console.log("bbbbbbbbbbbbbb", idparam);
     try {
-      const response = await apiClient.post('/auth/generate-porutham-pdf/', {
+      const response = await axios.post('https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-porutham-pdf/', {
         profile_from: loginuser_profileId,
         profile_to: idparam
       }, {
@@ -618,7 +585,7 @@ export const    ProfileDetailsExpressInterest: React.FC<
     const fetchProfileData = async () => {
       try {
         const response = await apiClient.post('/auth/Get_prof_list_match/', {
-          profile_id: loginuser_profileId,
+          profile_id: loginuser_profileId ,
         });
         // Assuming the response data is in response.data
         // setArrayValues(response.data);
@@ -682,7 +649,7 @@ export const    ProfileDetailsExpressInterest: React.FC<
   const handleDownloadPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    link.href = `https://apiupg.rainyseasun.com/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };

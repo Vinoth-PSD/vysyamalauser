@@ -1,3 +1,5 @@
+
+
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import axios from "axios";
 import ProfileListImg from "../../../assets/images/ProfileListImg.png";
@@ -57,7 +59,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
   });
   const [, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   useEffect(() => {
     const fetchProfiles = async () => {

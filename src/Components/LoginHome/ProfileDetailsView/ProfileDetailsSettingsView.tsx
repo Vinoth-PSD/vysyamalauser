@@ -46,7 +46,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
         }
     };
 
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const [profileIds, setProfileIds] = useState<string[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(-1);
     const [, setLoading] = useState<boolean>(true);

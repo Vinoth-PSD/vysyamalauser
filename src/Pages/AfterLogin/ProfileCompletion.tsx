@@ -267,7 +267,7 @@ const ProfileCompletionForm = () => {
   const [emptyFields, setEmptyFields] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const navigate = useNavigate();
 
@@ -284,7 +284,7 @@ const ProfileCompletionForm = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_personal/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId ,
             // user_profile_id: loginuser_profileId,
           }
         );

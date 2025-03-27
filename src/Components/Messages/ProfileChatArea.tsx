@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+//import axios from 'axios';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import SenderMessageTail from "../../assets/images/SenderMessageTail.png";
@@ -28,7 +30,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const roomName = selectedProfile?.room_name_id || '';
-    const profile_id = sessionStorage.getItem('loginuser_profile_id') || 'Guest';
+    const profile_id = localStorage.getItem("loginuser_profile_id") || 'Guest';
     const username = profile_id;
 
     const scrollToBottom = () => {
@@ -41,7 +43,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
         if (!roomName) return;
 
         try {
-            const response = await fetch('https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/login//auth/GetMessages/', {
+            const response = await fetch('https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/GetMessages/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +84,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
     useEffect(() => {
         if (!roomName) return;
 
-        const websocketUrl = `ws://103.214.132.20:8000/ws/chat/${roomName}/?username=${username}`;
+        const websocketUrl = `ws://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/ws/chat/${roomName}/?username=${username}`;
         ws.current = new WebSocket(websocketUrl);
 
         ws.current.onopen = () => {
@@ -156,6 +158,8 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
                     setNewMessage('');
 
                     // // Call the first API
+                    
+
                     // Create a FormData object
                     const formData = new FormData();
                     formData.append('profile_id', profile_id);
@@ -176,7 +180,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
                     // Call the second API
                     const userChatListResponse = await apiClient.post(
                         '/auth/Get_user_chatlist/',
-                        { profile_id: profile_id }
+                        { profile_id: profile_id  }
                     );
 
                     console.log('User Chat List:', userChatListResponse.data);
@@ -243,7 +247,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
 
 
             {/* Chat Area */}
-            
+           
             <div className="h-[35rem] overflow-y-auto px-5 py-3 message-box">
                 {messages.length > 0 ? (
                     messages.map((msg, index) => {

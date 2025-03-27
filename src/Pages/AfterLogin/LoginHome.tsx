@@ -67,7 +67,7 @@ export const LoginHome: React.FC = () => {
 
   const storedProfileCompletion: string =
     sessionStorage.getItem("profile_completion") || "0";
-  // const profile_id:string=sessionStorage.getItem("profile_id")
+  // const profile_id:string=localStorage.getItem("profile_id")
 
   const redirectToPage = (profileCompletion: string | null) => {
     switch (profileCompletion) {

@@ -71,7 +71,7 @@ const PhotoRequestCard = ({
   const [photoRequests, setPhotoRequests] = useState<PhotoRequestData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [RejectMsg] = useState<string>("");
  // const [, setShowPhotoRequestNotesPopup] = useState<boolean>(false);
 
@@ -188,75 +188,7 @@ const PhotoRequestCard = ({
 
   console.log(photoRequests, "ddddddddddddddd");
 
-  // const upDatePhotoRequest = async (Message?: string) => {
-  //   const payload = {
-  //     profile_from: data.req_profileid,
-  //     status: Message ? 3 : 2,
-  //     profile_id: loginuser_profileId,
-  //     // ...(Message && { response_message: Message }),
-  //     response_message: Message,
-  //   };
-
-  //   try {
-  //     const response = await axios.post(Update_photo_request, payload);
-
-  //     if (response.status === 200) {
-  //       if (Message) {
-  //         NotifyError("Interest Declined");
-  //       } else {
-  //         NotifySuccess("Photo request accepted successfully");
-  //         setShowMessageButton(true);
-  //       }
-  //       setShowPhotoRequestNotesPopup(true);
-  //       setRequestHandled(true); // Update state to hide buttons
-
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setRejectMsg("");
-  //     setNewUPDatedData(!NewUpdatedData);
-  //   }
-  // };
-
-  // const handleUpdateInterest = async (status: string) => {
-  //   const payload = {
-  //     profile_id: loginuser_profileId, // Logged-in user
-  //     profile_from: data.req_profileid, // Target profile
-  //     status: status === "2" ? "2" : "3", // 2 for Accept, 3 for Decline
-  //     response_message: status === "3" ? RejectMsg : undefined, // Add message only for Decline
-  //   };
-
-  //   try {
-  //     const response = await axios.post(Update_photo_request, payload);
-  //     if (response.status === 200 && response.data.Status === 1) {
-  //       // Update UI and State
-  //       if (status === "2") {
-  //         NotifySuccess("Photo request accepted successfully");
-  //         setPhotoRequests((prevRequests) =>
-  //           prevRequests.map((profile) =>
-  //             profile.req_profileid === data.req_profileid
-  //               ? { ...profile, req_status: 2 } // Update status to 2 (Accepted)
-  //               : profile
-  //           )
-  //         );
-  //       } else {
-  //         NotifyError("Photo request declined");
-  //         setResponseMessage(RejectMsg); // Update response message
-          
-  //       }
-  //       setRequestHandled(true); // Indicate the request was handled
-        
-  //     } else {
-  //       NotifyError("Failed to update photo request");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating photo request:", error);
-  //     NotifyError("An error occurred while updating the photo request");
-  //   }
-  // };
-
-
+  
 
   const handleUpdateInterest = async (status: string) => {
     const payload = {
@@ -294,8 +226,7 @@ const PhotoRequestCard = ({
     setshowPhotoRequestPopup(!showPhotoRequestPopup); // Toggle the popup
   };
 
-
-
+  
   const handleDeclineSubmit = async (message: string) => {
     if (!selectedProfileId) return;
   

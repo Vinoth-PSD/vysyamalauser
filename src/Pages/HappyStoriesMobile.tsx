@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 // import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal";
 //import { FaArrowRightLong } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+//import axios from "axios";
 import { useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import MarriedSlick from "../Components/HomePage/HappyStories/MarriedSlick";

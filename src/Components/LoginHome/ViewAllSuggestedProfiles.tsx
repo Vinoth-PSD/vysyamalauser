@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState, useContext  } from 'react';
+//import axios from 'axios';
 import ProfileListImg from "../../assets/images/ProfileListImg.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
@@ -50,7 +51,7 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
   const fetchProfiles = async (profileId: string) => {
     try {
       const response = await apiClient.post('/auth/Get_Suggested_List/', {
-        profile_id: profileId,
+        profile_id: profileId ,
         page_number: page,
       });
       
@@ -69,7 +70,7 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
 
   useEffect(() => {
     // Retrieve profile_id from sessionStorage
-    const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     
     if (loginuser_profileId) {
       fetchProfiles(loginuser_profileId);

@@ -27,10 +27,7 @@ const schema = zod.object({
   myhobbies: zod.string().optional(),
 
   // Modify the weight validation to allow only 3-digit numbers
-  //  weight: zod.number()
-  //  .min(1, "Weight is required")
-  //  .max(999, "Weight must be a 3-digit number"),
-
+  weight: zod.string().optional(),
   bloodGroup: zod.string().optional(),
   motherOccupation: zod.string().optional(),
   // brother: zod.number().optional(),
@@ -74,10 +71,9 @@ interface FamilyDetailsInputs {
   familyname?: string;
   aboutmyself?: string;
   myhobbies?: string;
-
   weight?: number;
-  bodytype?: string;
-  eyewear?: string;
+  body_type?: string;
+  eye_wear?: string;
   motherOccupation?: string;
   familyType?: string;
   familyValue?: string;
@@ -294,8 +290,8 @@ const FamilyDetails: React.FC = () => {
 
   const physicallyChallengedValue = watch("physicallyChallenged");
 
-  const profileId = sessionStorage.getItem("profile_id_new");
-  const [weight, setWeight] = useState<number>(0);
+  const profileId = localStorage.getItem("profile_id_new");
+  const [weight, setWeight] = useState<string>("");
   const [familyName, setFamilyName] = useState<string>("");
   useEffect(() => {
     const fetchFamilyData = async () => {
@@ -330,9 +326,10 @@ const FamilyDetails: React.FC = () => {
           setFamilyName(profileData.family_name);
           setValue("aboutmyself", profileData.about_self);
           setValue("myhobbies", profileData.hobbies);
-          setWeight(profileData.weight);
-          setValue("bodytype", profileData.bodytype);
-          setValue("eyewear", profileData.eyewear);
+          setWeight(profileData.weight || "");
+          setValue("weight", profileData.weight );
+          setValue("body_type", profileData.body_type);
+          setValue("eye_wear", profileData.eye_wear);
 
           setValue("bloodGroup", profileData.blood_group);
 
@@ -452,71 +449,10 @@ const FamilyDetails: React.FC = () => {
     fetchPropertyworth();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchFamilyTypes = async () => {
-  //     try {
-  //       const response = await apiClient.post(`/auth/Get_FamilyType/`);
-  //       const data = response.data;
-  //       const familyTypesArray = Object.values(data) as FamilyType[];
-  //       setFamilyTypes(familyTypesArray);
-  //     } catch (error) {
-  //       console.error("Error fetching family types:", error);
-  //     }
-  //   };
-
-  //   fetchFamilyTypes();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchFamilyStatus = async () => {
-  //     try {
-  //       const response = await apiClient.post(`/auth/Get_FamilyStatus/`);
-  //       const data = response.data;
-  //       const familyTypesArray = Object.values(data) as FamilyStatus[];
-  //       setFamilyStatus(familyTypesArray);
-  //     } catch (error) {
-  //       console.error("Error fetching family status:", error);
-  //     }
-  //   };
-
-  //   fetchFamilyStatus();
-  // }, []);
-
-  // useEffect(() => {
-  //   const fetchFamilyValue = async () => {
-  //     try {
-  //       const response = await apiClient.post(`/auth/Get_FamilyValue/`);
-  //       const data = response.data;
-  //       const familyTypesArray = Object.values(data) as FamilyValue[];
-  //       setFamilyValue(familyTypesArray);
-  //       console.log(familyTypesArray, "familyTypesArray");
-  //     } catch (error) {
-  //       console.error("Error fetching family value:", error);
-  //     }
-  //   };
-
-  //   fetchFamilyValue();
-  // }, []);
-
   const buttonClass = (isSelected: boolean) =>
     isSelected
       ? "bg-secondary text-white"
       : "border-gray hover:bg-secondary hover:text-white";
-
-  // const handleFamilyTypeChange = (value: string) => {
-  //   setSelectedFamilyType(value);
-  //   setValue("familyType", value, { shouldValidate: true });
-  // };
-
-  // const handleFamilyValueChange = (value: string) => {
-  //   setSelectedFamilyValue(value);
-  //   setValue("familyValue", value, { shouldValidate: true });
-  // };
-
-  // const handleFamilyStatusChange = (value: string) => {
-  //   setSelectedFamilyStatus(value);
-  //   setValue("familyStatus", value, { shouldValidate: true });
-  // };
 
   const handleBrotherChange = (value: number) => {
     setSelectedBrother(value);
@@ -561,8 +497,8 @@ const FamilyDetails: React.FC = () => {
     try {
       // Format the data as expected by the backend
       const profileId =
-        sessionStorage.getItem("profile_id_new") ||
-        sessionStorage.getItem("loginuser_profile_id");
+        localStorage.getItem("profile_id_new") ||
+        localStorage.getItem("loginuser_profile_id");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }
@@ -577,8 +513,8 @@ const FamilyDetails: React.FC = () => {
         hobbies: data.myhobbies,
 
         weight: weight,
-        bodytype: data.bodytype,
-        eyewear: data.eyewear,
+        body_type: data.body_type || "",
+        eye_wear: data.eye_wear || "",
         blood_group: data.bloodGroup,
         Pysically_changed: physicallyChallengedValue,
         no_of_brother: data.brother ?? undefined,
@@ -627,7 +563,7 @@ const FamilyDetails: React.FC = () => {
       console.error("Error submitting form data:", error);
       setIsSubmitting(false);
     } finally {
-      setWeight(0);
+      setWeight("");
       setFamilyName("");
     }
   };
@@ -644,16 +580,7 @@ const FamilyDetails: React.FC = () => {
 
   const aboutMyFamilyValue = watch("aboutMyFamily", "");
 
-  // Type annotations for the handleKeyDown function
-  // const handleKeyDown = (
-  //   e: React.KeyboardEvent<HTMLInputElement>,
-  //   value: any
-  // ) => {
-  //   // Prevent space if input is empty
-  //   if (e.key === " " && value.trim() === "") {
-  //     e.preventDefault();
-  //   }
-  // };
+ 
   const handleKeyDownTextArea = (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     value: any
@@ -770,23 +697,16 @@ const FamilyDetails: React.FC = () => {
             </div>
 
             <div className="w-full space-y-5">
-              {/* <div>
-                <InputField
-                  label="Weight (kg)"
-                  type="number"
-                  value={String(weight)}
-                  onChange={(e) => setWeight(Number(e.target.value))}
-                />
-              </div> */}
+             
+
+
               <div>
                 <InputField
                   label="Weight (kg)"
-                  // type="number"
-                  // value={String(weight)}
-                  // onChange={(e) => setWeight(Number(e.target.value))}
                   max={3}
                   onKeyDown={handleKeyDown}
                   {...register("weight", {
+                    onChange: (e) => setWeight(e.target.value), // Update the weight state
                     validate: (value) => {
                       if (!value) return true; // Allow optional
                       if (String(value).length > 3)
@@ -816,9 +736,8 @@ const FamilyDetails: React.FC = () => {
                   <select
                     id="bodytype"
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                    {...register("bodytype", {
-                      setValueAs: (value) => value.trim(),
-                    })}
+                    {...register("body_type")}
+                    value={watch("body_type")} // Ensure the selected value is shown
                   >
                     <option value="">Select Body Type</option>
                     <option value="Slim">Slim</option>
@@ -840,7 +759,7 @@ const FamilyDetails: React.FC = () => {
                   <select
                     id=""
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                    {...register("eyewear", {
+                    {...register("eye_wear", {
                       setValueAs: (value) => value.trim(),
                     })}
                   >

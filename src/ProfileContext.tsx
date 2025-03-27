@@ -1,3 +1,5 @@
+
+
 import React, {
   createContext,
   useState,
@@ -6,6 +8,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
+// import axios from "axios";
 import { toast } from "react-toastify";
 import apiClient from "./API";
 
@@ -227,7 +230,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
     useState<DashboardDetails|any >();
     const [profileImages, setProfileImages] = useState<string[]>([]);
 
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [AdvanceselectedProfessions, setAdvanceSelectedProfessions] = useState<
     number[]
   >([]);
@@ -263,7 +266,7 @@ const handleMouseLeave = () => {
 
 const fetchImages = async () => {
   try {
-    const loginUserProfileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
     if (!loginUserProfileId) throw new Error('Profile ID not found');
 
     const response = await apiClient.post(
@@ -271,7 +274,7 @@ const fetchImages = async () => {
       { profile_id: loginUserProfileId }
     );
 
-    console.log('Fetched images responseggggggggggggggggggggggggggggggggggggggggggggggggggggggggg:', response.data.data);
+    console.log('Fetched images response:', response.data.data);
 
     if (response.data.Status === 1) {
       const imageObjects: Image[] = response.data.data.map((img: any) => ({
@@ -312,7 +315,7 @@ useEffect(() => {
     }
     try {
       const response = await apiClient.post(
-        "/auth/Get_dashboard_details/",
+        "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_dashboard_details/",
         {
           profile_id: loginuser_profileId,
         }

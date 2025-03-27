@@ -93,30 +93,37 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
         username: trimmedData.profileID,
         password: trimmedData.password,
       });
-      sessionStorage.setItem(
+      localStorage.setItem(
         "profile_completion",
         response.data.profile_completion
       );
 
       console.log("Login Response:", response.data);
-      sessionStorage.setItem("token", response.data.token);
-      sessionStorage.setItem("user_profile_image", response.data.profile_image);
-      const selectedstar= sessionStorage.setItem("selectedstar", response.data.birth_star_id);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user_profile_image", response.data.profile_image);
+      const selectedstar= localStorage.setItem("selectedstar", response.data.birth_star_id);
       console.log("selectedstar", selectedstar)
-      const selectedRasi =sessionStorage.setItem("selectedRasi", response.data.birth_rasi_id);
+      const selectedRasi =localStorage.setItem("selectedRasi", response.data.birth_rasi_id);
       console.log("selectedRasi", selectedRasi)
-      sessionStorage.setItem("gender", response.data.gender);
-      sessionStorage.setItem("ProfileId", response.data.profile_id);
-      sessionStorage.setItem("profile_id", response.data.profile_id);
-      sessionStorage.setItem("profile_id_new", response.data.profile_id);
-      sessionStorage.setItem("loginuser_profile_id", response.data.profile_id);
-      sessionStorage.setItem("plan_id", response.data.cur_plan_id);
-      sessionStorage.setItem("profile_owner", response.data.profile_owner);
-      sessionStorage.setItem("quick_reg", response.data.quick_reg);
-      sessionStorage.setItem("userheightfromapi", response.data.height);
-      sessionStorage.setItem("userplanid", response.data.plan_limits?.[0]?.plan_id,);
+      localStorage.setItem("gender", response.data.gender);
+      
+      localStorage.setItem("ProfileId", response.data.profile_id);
+      localStorage.setItem("profile_id", response.data.profile_id);
+      localStorage.setItem("profile_id_new", response.data.profile_id);
+      localStorage.setItem("loginuser_profile_id", response.data.profile_id);
+
+      // localStorage.setItem("ProfileId", response.data.profile_id);
+      // localStorage.setItem("profile_id", response.data.profile_id);
+      // localStorage.setItem("profile_id_new", response.data.profile_id);
+      // localStorage.setItem("loginuser_profile_id", response.data.profile_id);
+
+      localStorage.setItem("plan_id", response.data.cur_plan_id);
+      localStorage.setItem("profile_owner", response.data.profile_owner);
+      localStorage.setItem("quick_reg", response.data.quick_reg);
+      localStorage.setItem("userheightfromapi", response.data.height);
+      localStorage.setItem("userplanid", response.data.plan_limits?.[0]?.plan_id,);
       if (response.data.status === 1) {
-        sessionStorage.setItem("custom_message", response.data.custom_message);
+        localStorage.setItem("custom_message", response.data.custom_message);
         setErrorMessage(null); // Clear error message on success
         if (rememberMe) {
           localStorage.setItem("rememberMeProfileID", data.profileID);

@@ -75,7 +75,7 @@ export const EducationProfession = () => {
   const [formData, setFormData] = useState<Partial<EducationProfessionDetails>>(
     {}
   );
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [annualIncomes, setAnnualIncomes] = useState<AnnualIncome[]>([]);
   const [selectedIncomeId, setSelectedIncomeId] = useState<number | string>("");
   const [educations, setEducations] = useState<Education[]>([]);

@@ -62,12 +62,12 @@ const Search = () => {
   const [, setNoRecordsFound] = useState(false);
   const [, setResponse] = useState<number>(0);
   const [error, setError] = useState(false);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [responseMsg, setResponseMsg] = useState<string>("");
   const handle_Get_advance_search = async () => {
     try {
       const response = await axios.post(Get_advance_search, {
-        profile_id: loginuser_profileId,
+        profile_id: loginuser_profileId ,
         from_age: fromAge,
         to_age: ToAge,
         from_height: fromHeight,

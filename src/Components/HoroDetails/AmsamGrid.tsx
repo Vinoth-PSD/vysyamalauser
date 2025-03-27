@@ -54,8 +54,8 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
   // useEffect(() => {
   //   const fetchProfileData = async () => {
   //     const profileId =
-  //       sessionStorage.getItem("profile_id_new") ||
-  //       sessionStorage.getItem("loginuser_profile_id");
+  //       localStorage.getItem("profile_id_new") ||
+  //       localStorage.getItem("loginuser_profile_id");
   //     if (profileId) {
   //       try {
   //         const requestData = {
@@ -158,7 +158,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const profileId = sessionStorage.getItem("profile_id_new") || sessionStorage.getItem("loginuser_profile_id");
+      const profileId = localStorage.getItem("profile_id_new") || localStorage.getItem("loginuser_profile_id");
       if (profileId) {
         try {
           const requestData = { profile_id: profileId, page_id: 5 };

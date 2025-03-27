@@ -242,8 +242,8 @@ const PartnerSettings: React.FC = () => {
 
     try {
       const profileId =
-        sessionStorage.getItem("profile_id_new") ||
-        sessionStorage.getItem("loginuser_profile_id");
+        localStorage.getItem("profile_id_new") ||
+        localStorage.getItem("loginuser_profile_id");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }
@@ -304,7 +304,7 @@ const PartnerSettings: React.FC = () => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const profileId = sessionStorage.getItem("profile_id_new");
+      const profileId = localStorage.getItem("profile_id_new");
 
       if (profileId) {
         try {

@@ -3,6 +3,7 @@ import HeartMsg from "../../../assets/icons/HeartMsg.png";
 import ProfileImgSlider from "../../../assets/images/ProfileImgSlider.png";
 import { IoCalendar } from "react-icons/io5";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
+//import axios from "axios";
 import Slider from "react-slick";
 import apiClient from "../../../API";
 
@@ -76,7 +77,7 @@ const settings = {
 export const HeroSliderContent = () => {
   const [profileData, setProfileData] = useState<Profile[]>([]); // Use an array to hold multiple profiles
   const [, setLoading] = useState(true);
-  const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   // Fetch profile data from API
   useEffect(() => {

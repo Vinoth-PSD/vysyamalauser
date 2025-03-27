@@ -186,7 +186,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
     try {
       // console.log("Form Data: ", data);
 
-      const profileId = sessionStorage.getItem("profile_id");
+      const profileId = localStorage.getItem("profile_id");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }
@@ -212,10 +212,19 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
         const { profile_id } = response.data;
         sessionStorage.setItem("profile_id_new", profile_id);
 
-         // Store profile_id in multiple sessionStorage keyss
-  sessionStorage.setItem("profile_id", profile_id);
-  sessionStorage.setItem("ProfileId", profile_id);
-  sessionStorage.setItem("loginuser_profile_id", profile_id);
+        sessionStorage.setItem("profile_id", profile_id);
+
+        sessionStorage.setItem("ProfileId", profile_id);
+        sessionStorage.setItem("loginuser_profile_id", profile_id);
+
+        // Store profile_id in multiple sessionStorage keyss
+
+        localStorage.setItem("profile_id_new", profile_id);
+        localStorage.setItem("profile_id", profile_id);
+        localStorage.setItem("ProfileId", profile_id);
+        localStorage.setItem("loginuser_profile_id", profile_id);
+
+
         sessionStorage.setItem("maritalStatus", data.maritalStatus);
         onClose();
         navigate("/ThankYou");

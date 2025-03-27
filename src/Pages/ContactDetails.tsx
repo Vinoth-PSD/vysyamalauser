@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import ContentBlackCard from "../Components/RegistrationForm/ContentBlackCard";
 import InputField from "../Components/RegistrationForm/InputField";
@@ -15,6 +17,7 @@ import {
 } from "../Components/Toast/ToastNotification";
 
 import "react-phone-input-2/lib/style.css";
+//import axios from "axios";
 import PhoneInput from "react-phone-input-2";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -188,6 +191,7 @@ useEffect(() => {
   useState(() => {});
 
   
+
   const fetchCities = async () => {
     try {
       const response = await apiClient.post(
@@ -221,8 +225,8 @@ useEffect(() => {
 
 
   const profileId =
-    sessionStorage.getItem("profile_id_new") ||
-    sessionStorage.getItem("loginuser_profile_id");
+    localStorage.getItem("profile_id_new") ||
+    localStorage.getItem("loginuser_profile_id");
   console.log(profileId);
   console.log(stateOptions, "stateOptions");
   useEffect(() => {
@@ -343,7 +347,7 @@ useEffect(() => {
   //   setIsSubmitting(true);
 
   //   try {
-  //     const profileId = sessionStorage.getItem("profile_id_new");
+  //     const profileId = localStorage.getItem("profile_id_new");
   //     if (!profileId) {
   //       throw new Error("ProfileId not found in sessionStorage");
   //     }
@@ -419,7 +423,7 @@ useEffect(() => {
     setIsSubmitting(true);
 
     try {
-      const profileId = sessionStorage.getItem("profile_id_new");
+      const profileId = localStorage.getItem("profile_id_new");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }

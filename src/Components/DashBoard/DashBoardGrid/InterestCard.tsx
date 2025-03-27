@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+//import axios from 'axios';
 import { FaCheckCircle } from 'react-icons/fa';
 import { IoMdCloseCircle } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +20,7 @@ interface Profile {
 const InterestCard: React.FC = () => {
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ const InterestCard: React.FC = () => {
             try {
                 const response = await apiClient.post<{ Status: number, message: string, data: { profiles: Profile[] } }>(
                     '/auth/Get_profile_intrests_list/',
-                    { profile_id: loginuser_profileId }
+                    { profile_id: loginuser_profileId}
                 );
                 if (response.data.Status === 1) {
                     setProfiles(response.data.data.profiles);

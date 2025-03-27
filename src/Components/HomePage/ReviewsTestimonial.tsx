@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import TestimonialSlick from "./ReviewTestimonial/TestimonialSlick";
 import { FaArrowRight } from "react-icons/fa6";
 import React, { useEffect, useState } from "react";
+//import axios from "axios";
 import apiClient from "../../API";
 
 interface SlickArrowProps {

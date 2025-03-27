@@ -2,13 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { AddOns } from "../Components/PayNow/AddOns";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {cancelPayment,createOrder,Get_addon_packages,savePlanPackage,verifyPayment} from "../commonapicall";
+import { cancelPayment, createOrder, Get_addon_packages, savePlanPackage, verifyPayment } from "../commonapicall";
 import axios from "axios";
-import {
-  ToastNotification,
-  NotifyError,
-  NotifySuccess,
-} from "../Components/Toast/ToastNotification";
+import { ToastNotification, NotifyError, NotifySuccess, } from "../Components/Toast/ToastNotification";
+import { GPayPopup } from "./PayNowRegistration/GPayPopup";
 
 interface Package {
   package_id: number;
@@ -44,12 +41,18 @@ export const PayNowRegistration: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const price = queryParams.get("price");
-  const profile_id = sessionStorage.getItem("profile_id_new");
+  const profile_id = localStorage.getItem("profile_id_new");
   const planName = queryParams.get("planName");
 
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<number[]>([]);
-  const [isPaymentSuccessful, setIsPaymentSuccessful] =useState<boolean>(false);
+  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState<boolean>(false);
+  // const [gpayPaymentSuccessful, setgpayPaymentSuccessful] = useState(false);
+  const [gpayPaymentSuccessful] = useState(false);
+  const [isGPayClicked, setIsGPayClicked] = useState(false);
+  const [isOnlinePaymentClicked, setIsOnlinePaymentClicked] = useState(false);
+  const [showGPayPopup, setShowGPayPopup] = useState(false);
+
 
   const handleAddOnChange = (
     rate: number,
@@ -104,14 +107,14 @@ export const PayNowRegistration: React.FC = () => {
       NotifyError("Failed to create order. Please try again.");
       console.error("Error creating order:", error);
       throw error;
-    }  
+    }
   };
 
-  const verifyPaymentFunction = async (profile_id: string,razorpay_order_id: string,razorpay_payment_id: string,razorpay_signature: string
+  const verifyPaymentFunction = async (profile_id: string, razorpay_order_id: string, razorpay_payment_id: string, razorpay_signature: string
   ) => {
     try {
       // Call the verifyPayment API (assuming verifyPayment is already defined in your common API file)
-      const verificationResponse = await verifyPayment(profile_id,razorpay_order_id,razorpay_payment_id,razorpay_signature);
+      const verificationResponse = await verifyPayment(profile_id, razorpay_order_id, razorpay_payment_id, razorpay_signature);
       // Log the response for debugging
       console.log("Payment Verification Response:", verificationResponse);
       // Handle the verification response
@@ -229,6 +232,29 @@ export const PayNowRegistration: React.FC = () => {
     });
   }, []);
 
+  // Update the handleGPay function
+  const handleGPay = () => {
+    setIsGPayClicked(true);
+    setShowGPayPopup(true);
+  };
+
+  // Add a function to handle GPay confirmation
+  // const handleGPayConfirm = async () => {
+  //   setShowGPayPopup(false);
+  //   try {
+  //     // Add actual GPay payment processing logic here
+  //     // For now, simulate success after 2 seconds
+  //     setTimeout(() => {
+  //       setgpayPaymentSuccessful(true);
+  //       NotifySuccess("GPay payment successful!");
+  //       Save_plan_package();
+  //     }, 2000);
+  //   } catch (error) {
+  //     NotifyError("GPay payment failed");
+  //     setIsGPayClicked(false);
+  //   }
+  // };
+
   const handlePayNow = async () => {
     try {
       // Convert total amount to paise (since Razorpay expects amount in paise)
@@ -256,8 +282,13 @@ export const PayNowRegistration: React.FC = () => {
             response.razorpay_payment_id,
             response.razorpay_signature
           );
-           // Set the payment as successful
-        setIsPaymentSuccessful(true);
+          // Set the payment as successful
+          // setIsPaymentSuccessful(true);
+          setIsOnlinePaymentClicked(true); // Disable GPay button
+          // Simulate payment success
+          setTimeout(() => {
+            setIsPaymentSuccessful(false); // Re-enable if payment fails
+          }, 2000);
         },
         prefill: {
           name: "User", // User's name
@@ -303,6 +334,7 @@ export const PayNowRegistration: React.FC = () => {
       console.error("Error creating order or opening Razorpay:", error);
     }
   };
+
 
   return (
     <div className="bg-grayBg">
@@ -355,19 +387,36 @@ export const PayNowRegistration: React.FC = () => {
               &#8377; {totalAmount}
             </p>
           </div>
+          <div className="flex flex-row gap-x-4 mt-4">
+            <button
+              onClick={() => handleGPay()}
+              type="button"
+              className="w-full py-[10px] px-[24px] bg-main text-sm font-medium text-white leading-7 rounded-[6px] mt-10"
+              disabled={gpayPaymentSuccessful || isOnlinePaymentClicked}
+              style={{ cursor: (gpayPaymentSuccessful || isOnlinePaymentClicked) ? 'not-allowed' : 'pointer' }} // Change cursor on disabled state
+            >
+              {gpayPaymentSuccessful ? "Payment Successful" : "GPay"}
+            </button>
 
-          <button
-            // onClick={() => Save_plan_package()}
-            onClick={() => handlePayNow()}
-            type="submit"
-            className="w-full py-[10px] px-[24px] bg-main text-sm font-medium text-white leading-7 rounded-[6px] mt-10"
-            disabled={isPaymentSuccessful} // Disable if payment is successful
-            style={{ cursor: isPaymentSuccessful ? 'not-allowed' : 'pointer' }} // Change cursor on disabled state
-          >
-           {isPaymentSuccessful ? "Payment Successful" : "Pay Now"}
-          </button>
+            <button
+              // onClick={() => Save_plan_package()}
+              onClick={() => handlePayNow()}
+              type="submit"
+              className="w-full py-[10px] px-[24px] bg-main text-sm font-medium text-white leading-7 rounded-[6px] mt-10"
+              disabled={isPaymentSuccessful || isGPayClicked} // Disable if payment is successful
+              style={{ cursor: (isPaymentSuccessful || isGPayClicked) ? 'not-allowed' : 'pointer' }} // Change cursor on disabled state
+            >
+              {isPaymentSuccessful ? "Payment Successful" : "Online Payment"}
+            </button>
+          </div>
         </div>
       </div>
+      <GPayPopup isOpen={showGPayPopup} onClose={() => {
+        setShowGPayPopup(false);
+        setIsGPayClicked(false);
+      }}
+       //onConfirm={handleGPay}
+      />
       <ToastNotification />
     </div>
   );

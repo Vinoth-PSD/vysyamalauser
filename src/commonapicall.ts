@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//import axios from "axios";
 import apiClient from "./API"; // Ensure correct import
 
 export const fetchProfiles = async (
@@ -13,7 +14,7 @@ export const fetchProfiles = async (
     const response = await apiClient.post(
       "/auth/Get_prof_list_match/",
       {
-        profile_id: profileId,
+        profile_id: profileId ,
         per_page: perPage,
         page_number: pageNo,
         order_by: sortOrder,
@@ -31,7 +32,7 @@ export const fetchProfiles = async (
 
 export const fetchProfilesDetails = async (profileId: string): Promise<any> => {
   try {
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const response = await apiClient.post("/auth/Get_profile_det_match/", {
       profile_id: loginuser_profileId,
@@ -71,10 +72,10 @@ export const Get_advance_search =
 
 export const fetchSearchProfiles = async (searchId: string,profession: string,age:string,location:string,pageNo:number,sortOrder:number): Promise<any> => {
   try {
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const response = await apiClient.post("/auth/Get_prof_list_match/", {
-      profile_id: loginuser_profileId,
+      profile_id: loginuser_profileId ,
       search_profile_id: searchId, // Adjust as needed based on your API requirements
       search_profession:profession,
       search_age:age,
@@ -148,7 +149,7 @@ export const fetchFooterContent = async (pageId?: string) => {
 // };
 
 export const getGallerylists = async (pageNumber:number) => {
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   try {
     const response = await apiClient.post(

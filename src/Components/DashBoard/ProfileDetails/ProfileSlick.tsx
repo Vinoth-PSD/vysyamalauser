@@ -3,11 +3,12 @@ import Slider from "react-slick";
 import "./ProfileSlickStyle.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { MdModeEdit } from "react-icons/md";
+//import axios from "axios";
 import { NotifySuccess, ToastNotification } from "../../Toast/ToastNotification";
 import { FaPlus } from "react-icons/fa6";
 import { ProfileContext } from "../../../ProfileContext";
 import apiClient from "../../../API";
-import { MdModeEdit } from "react-icons/md";
 
 
 export const ProfileSlick = () => {
@@ -38,11 +39,6 @@ export const ProfileSlick = () => {
     };
   }, [fetchImages]);
 
-  // useEffect(() => {
-  //   fetchImages();
-  //   setNav1(sliderRef1.current);
-  //   setNav2(sliderRef2.current);
-  // }, [fetchImages, removePhotoIndicator]);
 
   useEffect(() => {
     debouncedFetchImages();
@@ -67,7 +63,7 @@ export const ProfileSlick = () => {
       // Add preview image
       const previewImage = { id: null, imageUrl: URL.createObjectURL(file), url: "", alt: "" };
       setImages((prev) => [...prev, previewImage]);
-      const loginUserProfileId = sessionStorage.getItem("loginuser_profile_id");
+      const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
       if (!loginUserProfileId) {
         console.error("Profile ID not found");
         continue;
@@ -108,7 +104,7 @@ export const ProfileSlick = () => {
   const handleRemoveImage = async () => {
     if (currentEditIndex !== null) {
       try {
-        const loginUserProfileId = sessionStorage.getItem("loginuser_profile_id");
+        const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
         if (!loginUserProfileId) throw new Error("Profile ID not found");
 
         const imageToRemove = images[currentEditIndex];

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+//import axios from "axios";
 import PhotoRequestCard from "./PhotoRequest/PhotoRequestCard";
 
 import { IoArrowBackOutline } from "react-icons/io5";
@@ -22,7 +23,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
   const [photoRequestData, setPhotoRequestData] = useState([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [NewUpdatedData, setNewUPDatedData] = useState<boolean>(false);
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const getPhotoRequest = async () => {
     try {

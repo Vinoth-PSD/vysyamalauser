@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+//import axios from "axios";
 import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
@@ -53,7 +54,7 @@ export const VysAssistCard: React.FC = () => {
     const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({}); // Track bookmarks for each profile
     const [profiles, setProfiles] = useState<ProfileData[]>([]); // Store all profiles
     const [noVysassistFound, setNoVysassistFound] = useState(false); // Track if no vysassist is found
-    const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const handleBookmark = (profileId: string) => {
         setIsBookmarked(prevState => ({

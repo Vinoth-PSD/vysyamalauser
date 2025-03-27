@@ -27,7 +27,7 @@ export const ProfileContacts: React.FC<ProfileContactsProps> = ({
 }) => {
   const [chatList, setChatList] = useState<Chat[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   useEffect(() => {
     const mapApiDataToChatList = (data: any[]): Chat[] =>
@@ -52,7 +52,7 @@ export const ProfileContacts: React.FC<ProfileContactsProps> = ({
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ profile_id: loginuser_profileId }),
+              body: JSON.stringify({ profile_id: loginuser_profileId  }),
             }
           );
           const result = await response.json();

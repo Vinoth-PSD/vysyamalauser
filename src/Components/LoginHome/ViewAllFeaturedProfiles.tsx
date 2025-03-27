@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+//import axios from "axios";
 import ProfileListImg from "../../assets/images/ProfileListImg.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
@@ -75,7 +76,7 @@ export const ViewAllFeaturedProfiles: React.FC = () => {
 
   useEffect(() => {
     // Retrieve profile_id from sessionStorage
-    const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     if (loginuser_profileId) {
       fetchProfiles(loginuser_profileId, page);

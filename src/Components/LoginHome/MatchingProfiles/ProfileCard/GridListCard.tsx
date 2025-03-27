@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdVerifiedUser, MdBookmark, MdBookmarkBorder } from "react-icons/md";
@@ -46,7 +47,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profileId, profile }
     setSelectedProfiles: () => { },
   };
   const navigate = useNavigate();
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   // useEffect(() => {
   //   const loadProfile = async () => {

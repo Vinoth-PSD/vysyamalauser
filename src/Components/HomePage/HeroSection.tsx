@@ -166,7 +166,7 @@
 //     }
 //   };
 
-  
+
 //   const controls = useAnimation(); // Controls for the animation
 //   const [ref, inView] = useInView({
 //       triggerOnce: true, // Trigger animation only once
@@ -205,7 +205,7 @@
 //             Find your <br className="max-sm:hidden" /> perfect partner and
 //             family
 //           </h3>
-          
+
 //           <form
 //             onSubmit={handleSubmit(onSubmit)}
 //             className="flex items-start justify-between  gap-4 max-xl:flex-wrap max-2xl:gap-x-2 max-lg:justify-start max-lg:gap-x-7"
@@ -263,7 +263,7 @@
 
 //               <div className="w-full">
 //                 {/* <input
-           
+
 //                 type="tel"
 //                 {...register("mobile")}
 //                 placeholder="Mobile Number"
@@ -290,7 +290,7 @@
 //                   preferredCountries={["us", "in", "gb"]}
 //                   {...register("mobile")}
 //                   onChange={handleMobileNumberChange}
-                
+
 //                 />
 //                 {errors.mobile && (
 //                   <p className="text-red-500">{errors.mobile.message}</p>
@@ -317,7 +317,7 @@
 //                   {...register("email")}
 //                   placeholder="Email"
 //                   className="w-full bg-transparent text-[16px] text-white font-semibold py-[17px] px-[12px] border-[1px] border-[white] rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-white placeholder:font-semibold max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
-                
+
 
 //                 />
 //                 {errors.email && (
@@ -331,7 +331,7 @@
 //                   {...register("password")}
 //                   placeholder="Create Password"
 //                   className="w-full bg-transparent text-[16px] text-white font-semibold py-[17px] px-[12px] border-[1px] border-[white] rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-white placeholder:font-semibold max-xl:px-2 max-lg:py-[12px] max-sm:placeholder:font-medium max-sm:font-normal max-sm:border-[1px]"
-              
+
 
 //                 />
 //                 {errors.password && (
@@ -512,7 +512,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
       } else {
         const { profile_id, profile_owner, Gender } = response.data;
 
+        localStorage.setItem("profile_id", profile_id);
+
         sessionStorage.setItem("profile_id", profile_id);
+
         sessionStorage.setItem("profile_owner", profile_owner);
         sessionStorage.setItem("gender", Gender);
 
@@ -535,17 +538,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
     }
   };
 
-  
+
   const controls = useAnimation(); // Controls for the animation
   const [ref, inView] = useInView({
-      triggerOnce: true, // Trigger animation only once
-      threshold: 0.2, // Trigger when 20% of the element is visible
+    triggerOnce: true, // Trigger animation only once
+    threshold: 0.2, // Trigger when 20% of the element is visible
   });
 
   useEffect(() => {
-      if (inView) {
-          controls.start("visible"); // Start animation when in view
-      }
+    if (inView) {
+      controls.start("visible"); // Start animation when in view
+    }
   }, [controls, inView]);
 
 
@@ -557,81 +560,81 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
         style={{ backgroundImage: `url(${HeroBanner})` }}
       >
         <motion.div
-               ref={ref} // Attach the ref to the element
-               initial="hidden" // Initial state
-               animate={controls} // Control animations with `controls`
-               variants={{
-                   hidden: { opacity: 0, translateY: 150 }, // Hidden state
-                   visible: { opacity: 1, translateY: 0 }, // Visible state
-               }}
-               transition={{ duration: 0.8, ease: "easeOut" }}
-           >
-        <div className="mx-auto p-[24px] bg-white rounded-[8px] w-[95%] 2xl:w-[1300px] xl:w-[1200px] max-sm:bottom-[25px]">
-          <h5 className="text-[20px] font-semibold text-vysyamalaBlack pb-2 max-md:text-[18px] max-sm:text-[16px]">
-            A platform to
-          </h5>
-          <h3 className="text-[36px] font-bold text-[#ed1e24] pb-8 leading-[40px] max-xl:text-[34px] max-lg:text-[30px] max-md:text-[28px] max-sm:text-[24px] max-sm:leading-7 max-sm:font-semibold">
-            Find your <br className="max-sm:hidden" /> perfect partner and
-            family
-          </h3>
-          
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="banner-form flex items-start justify-between  gap-4 max-xl:flex-wrap  max-lg:justify-start max-lg:gap-x-7"
-          >
-            <div className="w-full inline-flex  flex-row gap-4 max-lg:grid max-lg:grid-cols-3 max-sm:grid-cols-1">
-              <div className="w-[175px] flex-shrink-0 max-lg:w-full">
-                <div className="w-full relative">
-                  <select
-                    className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 appearance-none  max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
-                    {...register("profileFor")}
-                  >
-                    <option value="" hidden>
-                    Create profile for
-                    </option>
-                    {profileOptions.map((option) => (
-                      <option
-                        key={option.owner_id}
-                        value={option.owner_id}
-                        className="text-black"
-                      >
-                        {option.owner_description}
+          ref={ref} // Attach the ref to the element
+          initial="hidden" // Initial state
+          animate={controls} // Control animations with `controls`
+          variants={{
+            hidden: { opacity: 0, translateY: 150 }, // Hidden state
+            visible: { opacity: 1, translateY: 0 }, // Visible state
+          }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="mx-auto p-[24px] bg-white rounded-[8px] w-[95%] 2xl:w-[1300px] xl:w-[1200px] max-sm:bottom-[25px]">
+            <h5 className="text-[20px] font-semibold text-vysyamalaBlack pb-2 max-md:text-[18px] max-sm:text-[16px]">
+              A platform to
+            </h5>
+            <h3 className="text-[36px] font-bold text-[#ed1e24] pb-8 leading-[40px] max-xl:text-[34px] max-lg:text-[30px] max-md:text-[28px] max-sm:text-[24px] max-sm:leading-7 max-sm:font-semibold">
+              Find your <br className="max-sm:hidden" /> perfect partner and
+              family
+            </h3>
+
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="banner-form flex items-start justify-between  gap-4 max-xl:flex-wrap  max-lg:justify-start max-lg:gap-x-7"
+            >
+              <div className="w-full inline-flex  flex-row gap-4 max-lg:grid max-lg:grid-cols-3 max-sm:grid-cols-1">
+                <div className="w-[175px] flex-shrink-0 max-lg:w-full">
+                  <div className="w-full relative">
+                    <select
+                      className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 appearance-none  max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
+                      {...register("profileFor")}
+                    >
+                      <option value="" hidden>
+                        Create profile for
                       </option>
-                    ))}
-                  </select>
-                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                      {profileOptions.map((option) => (
+                        <option
+                          key={option.owner_id}
+                          value={option.owner_id}
+                          className="text-black"
+                        >
+                          {option.owner_description}
+                        </option>
+                      ))}
+                    </select>
+                    <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                  </div>
+
+                  {errors.profileFor && (
+                    <p className="text-red-500">{errors.profileFor.message}</p>
+                  )}
                 </div>
 
-                {errors.profileFor && (
-                  <p className="text-red-500">{errors.profileFor.message}</p>
-                )}
-              </div>
-
-              <div className="w-[120px] flex-shrink-0  max-lg:w-full">
-                <div className="w-full relative">
-                  <select
-                    className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 appearance-none  max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
-                    {...register("gender")}
-                  >
-                    <option value="" hidden>
-                    Gender
-                    </option>
-                    <option value="male" className="text-black">
-                      Male
-                    </option>
-                    <option value="female" className="text-black">
-                      Female
-                    </option>
-                  </select>
-                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                <div className="w-[120px] flex-shrink-0  max-lg:w-full">
+                  <div className="w-full relative">
+                    <select
+                      className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 appearance-none  max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
+                      {...register("gender")}
+                    >
+                      <option value="" hidden>
+                        Gender
+                      </option>
+                      <option value="male" className="text-black">
+                        Male
+                      </option>
+                      <option value="female" className="text-black">
+                        Female
+                      </option>
+                    </select>
+                    <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                  </div>
+                  {errors.gender && (
+                    <p className="text-red-500">{errors.gender.message}</p>
+                  )}
                 </div>
-                {errors.gender && (
-                  <p className="text-red-500">{errors.gender.message}</p>
-                )}
-              </div>
 
-              <div className="w-full">
-                {/* <input
+                <div className="w-full">
+                  {/* <input
            
                 type="tel"
                 {...register("mobile")}
@@ -640,34 +643,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
                 onChange={handleMobileNumberChange}
               /> */}
 
-                <PhoneInput
-                  inputStyle={{
-                    width: "100%",
-                    background: "transparent",
-                    color: "#282c3f",
-                    fontSize: "16px",
-                    fontWeight: "400",
-                    border: "1px solid #282c3f80",
-                    height: "60px", // Adjust the height as needed
-                    paddingLeft:"50px",
-                    paddingTop:"2px"
+                  <PhoneInput
+                    inputStyle={{
+                      width: "100%",
+                      background: "transparent",
+                      color: "#282c3f",
+                      fontSize: "16px",
+                      fontWeight: "400",
+                      border: "1px solid #282c3f80",
+                      height: "60px", // Adjust the height as needed
+                      paddingLeft: "50px",
+                      paddingTop: "2px"
 
-                  }}
-                  buttonStyle={{
-                    backgroundColor: "transparent",
-                  }}
-                  value={mobile}
-                  country={"in"} // Default country
-                  preferredCountries={["us", "in", "gb"]}
-                  {...register("mobile")}
-                  onChange={handleMobileNumberChange}
-                
-                />
-                {errors.mobile && (
-                  <p className="text-red-500">{errors.mobile.message}</p>
-                )}
-              </div>
-              {/* <div className="w-full bg-transparent text-[16px] text-white font-normal py-[18px] px-[12px] border-[1px] border-black rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-white placeholder:font-normal max-xl:px-2 max-lg:py-[12px] max-sm:placeholder:font-normal max-sm:font-normal max-sm:border-[1px]">
+                    }}
+                    buttonStyle={{
+                      backgroundColor: "transparent",
+                    }}
+                    value={mobile}
+                    country={"in"} // Default country
+                    preferredCountries={["us", "in", "gb"]}
+                    {...register("mobile")}
+                    onChange={handleMobileNumberChange}
+
+                  />
+                  {errors.mobile && (
+                    <p className="text-red-500">{errors.mobile.message}</p>
+                  )}
+                </div>
+                {/* <div className="w-full bg-transparent text-[16px] text-white font-normal py-[18px] px-[12px] border-[1px] border-black rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-white placeholder:font-normal max-xl:px-2 max-lg:py-[12px] max-sm:placeholder:font-normal max-sm:font-normal max-sm:border-[1px]">
 <PhoneInput
           value=""
           inputProps={{
@@ -682,48 +685,48 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
           onChange={handleMobileNumberChange}
         /> */}
 
-              <div className="w-full">
-                <input
-                  type="email"
-                  {...register("email")}
-                  placeholder="Email"
-                  className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-vysyamalaBlack placeholder:font-normal max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
-                
+                <div className="w-full">
+                  <input
+                    type="email"
+                    {...register("email")}
+                    placeholder="Email"
+                    className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-vysyamalaBlack placeholder:font-normal max-xl:px-2 max-lg:py-[12px] max-sm:font-normal max-sm:border-[1px]"
 
-                />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
+
+                  />
+                  {errors.email && (
+                    <p className="text-red-500">{errors.email.message}</p>
+                  )}
+                </div>
+
+                <div className="w-full">
+                  <input
+                    type="password"
+                    {...register("password")}
+                    placeholder="Create Password"
+                    className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-vysyamalaBlack placeholder:font-normal max-xl:px-2 max-lg:py-[12px] max-sm:placeholder:font-medium max-sm:font-normal max-sm:border-[1px]"
+
+
+                  />
+                  {errors.password && (
+                    <p className="text-red-500">{errors.password.message}</p>
+                  )}
+                </div>
               </div>
 
-              <div className="w-full">
-                <input
-                  type="password"
-                  {...register("password")}
-                  placeholder="Create Password"
-                  className="w-full bg-transparent text-[16px] text-vysyamalaBlack font-normal py-[17px] px-[12px] border-[1px] border-[#282c3f80] rounded-[5px] focus-visible:outline-0 placeholder:text-[16px] placeholder:text-vysyamalaBlack placeholder:font-normal max-xl:px-2 max-lg:py-[12px] max-sm:placeholder:font-medium max-sm:font-normal max-sm:border-[1px]"
-              
-
-                />
-                {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
-                )}
+              <div className="max-lg:w-[30%] max-sm:w-full bg-gradient flex justify-center items-center py-[18px] px-[35px] shadow-redboxshadow rounded-[6px] space-x-2">
+                <button
+                  type="submit"
+                  className="text-[16px] text-white font-semibold "
+                  disabled={isSubmitting} // Disable the button when form is submitting
+                >
+                  {isSubmitting ? "Submitting..." : "Register"}
+                </button>
+                <FaArrowRightLong className="text-white text-[22px]" />
               </div>
-            </div>
+            </form>
 
-            <div className="max-lg:w-[30%] max-sm:w-full bg-gradient flex justify-center items-center py-[18px] px-[35px] shadow-redboxshadow rounded-[6px] space-x-2">
-              <button
-                type="submit"
-                className="text-[16px] text-white font-semibold "
-                disabled={isSubmitting} // Disable the button when form is submitting
-              >
-                {isSubmitting ? "Submitting..." : "Register"}
-              </button>
-              <FaArrowRightLong className="text-white text-[22px]" />
-            </div>
-          </form>
-
-        </div>
+          </div>
         </motion.div>
 
       </section>

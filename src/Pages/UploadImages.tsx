@@ -1,3 +1,6 @@
+
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useEffect } from "react";
 // import { IoEye, IoEyeOff } from "react-icons/io5";
 import ContentBlackCard from "../Components/RegistrationForm/ContentBlackCard";
@@ -66,7 +69,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   // State to track if the checkbox is checked
   const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const loginuser_profile_id = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profile_id = localStorage.getItem("loginuser_profile_id");
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -216,7 +219,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
   const handleSubmit = async () => {
     const quick_reg = Param === "1" ? "1" : "0";
-    const profileId = sessionStorage.getItem("profile_id_new");
+    const profileId = localStorage.getItem("profile_id_new");
 
      // Determine photo password and protection status
   // const photoPassword = isChecked ? document.getElementById('password').value : ''; // Get the password if checkbox is checked
@@ -317,7 +320,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
       const response = await apiClient.post(
         "/auth/Get_save_details/",
         {
-          profile_id: sessionStorage.getItem("profile_id_new"),
+          profile_id: localStorage.getItem("profile_id_new"),
           page_id: "2",
         }
       );
@@ -343,7 +346,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   }, []);
 
   const handleRemoveImage = async (imageId: number) => {
-    const profileId = sessionStorage.getItem("profile_id_new");
+    const profileId = localStorage.getItem("profile_id_new");
     console.log("Retrieved profileId:", profileId);
     console.log("imageId:", imageId);
 

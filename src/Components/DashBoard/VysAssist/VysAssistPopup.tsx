@@ -1,5 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { IoClose } from 'react-icons/io5';
+//import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../../API';
@@ -18,7 +20,7 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [data, setData] = useState<any>()
     console.log(data)
-    const loginuser_profileId = sessionStorage.getItem('loginuser_profile_id');
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
     const navigate = useNavigate()

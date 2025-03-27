@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MdModeEdit } from "react-icons/md";
+//import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiClient from "../../../API";
@@ -53,7 +54,7 @@ export const Personal = () => {
     useState<PersonalDetails | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<PersonalDetails>>({});
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [maritalStatuses, setMaritalStatuses] = useState<MaritalStatus[]>([]);
   const [selectedMaritalStatusId, setSelectedMaritalStatusId] = useState<
     number | string
@@ -99,7 +100,7 @@ export const Personal = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_personal/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId  ,
           }
         );
 
@@ -401,7 +402,7 @@ export const Personal = () => {
         const getResponse = await apiClient.post(
           "/auth/get_myprofile_personal/",
           {
-            profile_id: loginuser_profileId,
+            profile_id: loginuser_profileId ,
           }
         );
 

@@ -1,5 +1,5 @@
-
 import React, { useEffect, useState } from "react";
+//import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -113,7 +113,7 @@ export const ProfileVisibility: React.FC = () => {
         const profileRes = await apiClient.post(
           "/auth/Get_profile_visibility/",
           {
-            profile_id: sessionStorage.getItem("loginuser_profile_id"),
+            profile_id: localStorage.getItem("loginuser_profile_id"),
           }
         );
         const profileData = profileRes.data.data[0];
@@ -143,7 +143,7 @@ export const ProfileVisibility: React.FC = () => {
 
   const onSubmit = async (data: ProfileVisibilityForm) => {
     const payload = {
-      profile_id: sessionStorage.getItem("loginuser_profile_id"),
+      profile_id: localStorage.getItem("loginuser_profile_id"),
       visibility_age_from: data.ageFrom,
       visibility_age_to: data.ageTo,
       visibility_height_from: data.heightFrom,
@@ -178,77 +178,7 @@ console.log(payload,"Update_profile_visibility")
           Profile Visibility
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Age Fields
-      <div className="flex justify-between items-center mb-5">
-        <div>
-          <label htmlFor="ageFrom" className="text-[20px] text-primary font-semibold">Age From</label>
-          <input
-            type="text"
-            id="ageFrom"
-            {...register("ageFrom")}
-            className="outline-none w-fit px-4 py-1.5 border border-ashSecondary rounded"
-          />
-          {errors.ageFrom && <span className="text-red-500">{errors.ageFrom.message}</span>}
-        </div>
-        <div>
-          <label htmlFor="ageTo" className="text-[20px] text-primary font-semibold">Age To</label>
-          <input
-            type="text"
-            id="ageTo"
-            {...register("ageTo")}
-            className="outline-none w-fit px-4 py-1.5 border border-ashSecondary rounded"
-          />
-          {errors.ageTo && <span className="text-red-500">{errors.ageTo.message}</span>}
-        </div>
-      </div> */}
-
-          {/* Height */}
-          {/* <div className="flex justify-center items-center space-x-5">
-            <div>
-              <label
-                htmlFor="fromHeight"
-                className="text-[20px] text-primary font-semibold"
-              >
-                Height
-              </label>{" "}
-              <br />
-              <input
-                type="text"
-                id="fromHeight"
-                placeholder="From"
-                {...register("heightFrom")}
-                className="outline-none w-fit px-4 py-1.5 border border-ashSecondary rounded"
-              />
-              {errors.heightFrom && (
-                <span className="text-red-500 block mt-0">
-                  {errors.heightFrom.message}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="toHeight"
-                className="text-[20px] text-primary font-semibold invisible"
-              >
-                Height
-              </label>{" "}
-              <br />
-              <input
-                type="text"
-                id="toHeight"
-                placeholder="To"
-                {...register("heightTo")}
-                className="outline-none w-fit px-4 py-1.5 border border-ashSecondary rounded"
-              />
-              {errors.heightTo && (
-                <span className="text-red-500 block mt-0">
-                  {errors.heightTo.message}
-                </span>
-              )}
-            </div>
-          </div> */}
-
+         
           <div className="flex justify-between items-center mb-5 max-2xl:flex-col max-2xl:items-start">
             {/* Age */}
             <div className="flex justify-center items-end gap-2 max-sm:flex-col">

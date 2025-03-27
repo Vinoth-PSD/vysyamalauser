@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { MyVisitorsCard } from "./MyVisitors/MyVisitorsCard";
 import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
+//import axios from "axios";
 import Pagination from "../Pagination";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
@@ -11,7 +12,7 @@ interface MyVisitorsProps {
 }
 
 export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
-  const loginuser_profileId = sessionStorage.getItem("loginuser_profile_id");
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [ViewCount, setViewCount] = useState<number>(0)
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [dataPerPage, setDataPerPage] = useState(0);

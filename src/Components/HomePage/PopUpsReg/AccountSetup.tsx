@@ -366,7 +366,7 @@
 
 //       <div className="mb-5">
 //         {/* <label className=" text-primary">OTP will be sent to this number</label> */}
-       
+
 
 //         <PhoneInput
 //           value=""
@@ -415,7 +415,7 @@
 
 //       <div className="mb-5">
 //         <div className="relative">
-         
+
 //           <input
 //             type={showPassword ? "text" : "password"}
 //             id="password"
@@ -687,7 +687,7 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
 
 
     // if (savedProfileFor) setSelectedProfile(savedProfileFor);    
-    if (savedProfileFor) setSelectedProfile(savedProfileFor);    
+    if (savedProfileFor) setSelectedProfile(savedProfileFor);
     if (savedProfileFor) setValue("profileFor", savedProfileFor);
     if (savedEmail) setValue("email", savedEmail);
     if (savedPassword) setValue("password", savedPassword);
@@ -695,7 +695,7 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
     if (savedCountryCode) setCountryCode(savedCountryCode);
     if (savedAgreeToTerms) setValue("agreeToTerms", savedAgreeToTerms === "true");
     if (savedGender) setGender(savedGender);
-    
+
   }, [setValue]);
 
 
@@ -748,7 +748,10 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
       } else {
         const { profile_id, profile_owner, Gender } = response.data;
 
+        localStorage.setItem("profile_id", profile_id);
+        
         sessionStorage.setItem("profile_id", profile_id);
+
         sessionStorage.setItem("profile_owner", profile_owner);
         sessionStorage.setItem("gender", Gender);
 
@@ -912,7 +915,7 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
 
       <div className="mb-5">
         {/* <label className=" text-primary">OTP will be sent to this number</label> */}
-      
+
 
 
         <PhoneInput
@@ -927,14 +930,14 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
           preferredCountries={["in", "sg", "my", "ae", "us", "gb"]}
           onChange={handleMobileNumberChang}
         />
-        
-          {showLabel && (
+
+        {showLabel && (
           <label className="text-primary">
             OTP will be sent to this number
           </label>
         )}
         <br />
-         {errors.mobile && (
+        {errors.mobile && (
           <span className="text-red-500 mx-1">{errors.mobile.message}</span>
         )}
 
@@ -962,7 +965,7 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
 
       <div className="mb-5">
         <div className="relative">
-         
+
           <input
             type={showPassword ? "text" : "password"}
             id="password"
@@ -976,8 +979,8 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
           />
           <div
             onClick={handleShowPassword}
-         className="absolute inset-y-2.5 right-0 pr-3 flex items-center text-ash text-[18px] cursor-pointer"
-           // className="absolute inset-y-0 right-0 pr-3 flex items-center text-ash text-[18px] cursor-pointer mt-6"
+            className="absolute inset-y-2.5 right-0 pr-3 flex items-center text-ash text-[18px] cursor-pointer"
+          // className="absolute inset-y-0 right-0 pr-3 flex items-center text-ash text-[18px] cursor-pointer mt-6"
           //className="absolute inset-y-0.511111111111111 right-0  pr-5 flex items-center text-ash text-[18px] cursor-pointer"
           >
             {showPassword ? <IoEyeOff /> : <IoEye />}

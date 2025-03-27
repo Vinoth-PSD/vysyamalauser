@@ -185,7 +185,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   const handleSubmit = async () => {
     // setLoading(true)
     const quick_reg = Param === "1" ? "1" : "0";
-    const profileId = sessionStorage.getItem("profile_id_new");
+    const profileId = localStorage.getItem("profile_id_new");
 
     const uploadImages = async (
       files: File[],
@@ -250,9 +250,9 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   const fetchUploadedImages = async () => {
     try {
       const response = await apiClient.post(
-        "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_save_details/",
+        "/auth/Get_save_details/",
         {
-          profile_id: sessionStorage.getItem("profile_id_new"),
+          profile_id: localStorage.getItem("profile_id_new"),
           page_id: "2",
         }
       );

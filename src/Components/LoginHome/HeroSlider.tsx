@@ -1,3 +1,5 @@
+
+
 import { useState, useEffect } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -16,7 +18,7 @@ export const HeroSlider = () => {
           {
             method: "POST",
             body: JSON.stringify({
-              profile_id: sessionStorage.getItem("loginuser_profile_id"),
+              profile_id: localStorage.getItem("loginuser_profile_id") ,
             }),
             headers: { "Content-Type": "application/json" },
           }
