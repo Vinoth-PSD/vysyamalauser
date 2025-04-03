@@ -9,11 +9,7 @@ import InputField from "../Components/RegistrationForm/InputField";
 import SideContent from "../Components/RegistrationForm/SideContent";
 import arrow from "../assets/icons/arrow.png";
 import apiClient from "../API";
-import {
-  ToastNotification,
-  NotifyError,
-  NotifySuccess,
-} from "../Components/Toast/ToastNotification";
+import {ToastNotification,NotifyError,NotifySuccess,} from "../Components/Toast/ToastNotification";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoMdArrowDropdown } from "react-icons/io";
 
@@ -25,7 +21,6 @@ const schema = zod.object({
   // familyname: zod.string().min(3, "Family name is required"),
   aboutmyself: zod.string().optional(),
   myhobbies: zod.string().optional(),
-
   // Modify the weight validation to allow only 3-digit numbers
   weight: zod.string().optional(),
   bloodGroup: zod.string().optional(),
@@ -41,28 +36,12 @@ const schema = zod.object({
   propertyWorth: zod.string().optional(),
   // suyaGothram: zod.string().optional(),
   suyaGothram: zod.string().min(1, "SuyaGothram is required"),
-  uncleGothram: zod.string().optional(),
-  ancestorOrigin: zod.string().optional(),
+  uncle_gothram: zod.string().optional(),
+  ancestor_origin: zod.string().optional(),
   aboutMyFamily: zod.string().optional(),
+  
 });
-// .refine(
-//   (data) =>
-//     data.brother === 0 ||
-//     (data.brother > 0 && data.marriedBrother !== undefined),
-//   {
-//     message: "Married Brother count is required if there are brothers",
-//     path: ["marriedBrother"],
-//   }
-// )
-// .refine(
-//   (data) =>
-//     data.sister === 0 ||
-//     (data.sister > 0 && data.marriedSister !== undefined),
-//   {
-//     message: "Married Sister count is required if there are sisters",
-//     path: ["marriedSister"],
-//   }
-// );
+
 
 interface FamilyDetailsInputs {
   fathername: string;
@@ -81,8 +60,8 @@ interface FamilyDetailsInputs {
   propertyDetails?: string;
   propertyWorth?: string;
   suyaGothram?: string;
-  uncleGothram?: string;
-  ancestorOrigin?: string;
+  uncle_gothram?: string;
+  ancestor_origin?: string;
   aboutMyFamily?: string;
   brother: number;
   marriedBrother: number;
@@ -196,6 +175,8 @@ const FamilyDetails: React.FC = () => {
     number | null
   >(null);
   const [, setSelectedfamilyStatus] = useState<string | null>(null);
+  const [bodytyoe, setBodytype] = useState("");
+  const [bodywear, setBodyWear] = useState("");
 
   const handleFamilyTypeChange = (id: number, name: string) => {
     setSelectedFamilyType(name); // Update the displayed family type description
@@ -409,9 +390,12 @@ const FamilyDetails: React.FC = () => {
           setValue("propertyDetails", profileData.property_details);
           setValue("propertyWorth", profileData.property_worth);
           setValue("suyaGothram", profileData.suya_gothram);
-          setValue("uncleGothram", profileData.uncle_gothram);
-          setValue("ancestorOrigin", profileData.ancestor_origin);
+          setValue("uncle_gothram", profileData.uncle_gothram);
+          setValue("ancestor_origin", profileData.ancestor_origin);
           setValue("aboutMyFamily", profileData.about_family);
+          setValue("body_type", profileData.body_type);
+          setValue("eye_wear", profileData.eye_wear);
+
         } catch (error) {
           console.error("Error fetching family data:", error);
         }
@@ -513,8 +497,10 @@ const FamilyDetails: React.FC = () => {
         hobbies: data.myhobbies,
 
         weight: weight,
-        body_type: data.body_type || "",
-        eye_wear: data.eye_wear || "",
+        // body_type: data.body_type || "",
+        // eye_wear: data.eye_wear || "",
+        body_type: bodytyoe || "",
+        eye_wear: bodywear || "",
         blood_group: data.bloodGroup,
         Pysically_changed: physicallyChallengedValue,
         no_of_brother: data.brother ?? undefined,
@@ -531,7 +517,8 @@ const FamilyDetails: React.FC = () => {
         about_family: data.aboutMyFamily,
         property_worth: data.propertyWorth,
         property_details: data.propertyDetails,
-
+        uncle_gothram:data.uncle_gothram,
+        ancestor_origin:data.ancestor_origin,
         suya_gothram: data.suyaGothram
 
         // Include other fields as necessary
@@ -588,6 +575,15 @@ const FamilyDetails: React.FC = () => {
     // Prevent space if input is empty
     if (e.key === " " && value.trim() === "") {
       e.preventDefault();
+    }
+  };
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { id, value } = event.target;
+    if (id === "body_type") {
+      setBodytype(value);
+    } else if (id === "eye_wear") {
+      setBodyWear(value);
     }
   };
 
@@ -726,7 +722,7 @@ const FamilyDetails: React.FC = () => {
 
               <div>
                 <label
-                  htmlFor="bodytype"
+                  htmlFor="body_type"
                   className="block mb-2 text-base text-primary font-medium"
                 >
                   Body Type{" "}
@@ -734,10 +730,11 @@ const FamilyDetails: React.FC = () => {
                 <div className="relative">
 
                   <select
-                    id="bodytype"
+                    id="body_type"
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                     {...register("body_type")}
-                    value={watch("body_type")} // Ensure the selected value is shown
+                  //  value={watch("body_type")} // Ensure the selected value is shown
+                  onChange={handleSelectChange}
                   >
                     <option value="">Select Body Type</option>
                     <option value="Slim">Slim</option>
@@ -750,18 +747,21 @@ const FamilyDetails: React.FC = () => {
 
               <div>
                 <label
-                  htmlFor=""
+                  htmlFor="eye_wear"
                   className="block mb-2 text-base text-primary font-medium "
                 >
                   Eye Wear{" "}
                 </label>
                 <div className="relative">
                   <select
-                    id=""
+                    id="eye_wear"
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                    {...register("eye_wear", {
-                      setValueAs: (value) => value.trim(),
-                    })}
+                    // {...register("eye_wear", {
+                    //   setValueAs: (value) => value.trim(),
+                    // })}
+                    
+                    {...register("eye_wear")}
+                    onChange={handleSelectChange}
                   >
                     <option value="">Select Eye Wear</option>
                     <option value="Yes">Yes</option>
@@ -1147,7 +1147,7 @@ const FamilyDetails: React.FC = () => {
             <div>
               <InputField
                 label="Uncle Gothram"
-                {...register("uncleGothram", {
+                {...register("uncle_gothram", {
                   setValueAs: (value) => value.trim(),
                 })}
               />
@@ -1156,7 +1156,7 @@ const FamilyDetails: React.FC = () => {
             <div>
               <InputField
                 label="Ancestor Origin"
-                {...register("ancestorOrigin", {
+                {...register("ancestor_origin", {
                   setValueAs: (value) => value.trim(),
                 })}
                 title="Enter details about the ancestorOrgin here."

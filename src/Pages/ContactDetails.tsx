@@ -10,47 +10,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import apiClient from "../API";
-import {
-  ToastNotification,
-  NotifyError,
-  NotifySuccess,
-} from "../Components/Toast/ToastNotification";
-
+import { ToastNotification, NotifyError, NotifySuccess } from "../Components/Toast/ToastNotification";
 import "react-phone-input-2/lib/style.css";
-//import axios from "axios";
 import PhoneInput from "react-phone-input-2";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoMdArrowDropdown } from "react-icons/io";
-
-// API call URLs
-// const COUNTRY_API_URL = await apiClient.post(`/auth/Get_Country/`);
-// const STATE_API_URL = await apiClient.post(`/auth/Get_State/`);
-// const CONTACT_REGISTRATION_API_URL = await apiClient.post(`/auth/Contact_registration/`);
-// const COUNTRY_DATA_API_URL = await apiClient.post(`/auth/Get_save_details/`);
-
 // ZOD Schema
 const schema = zod.object({
   address: zod.string().optional(),
   country: zod.string().min(1, "Country is required"),
-  // state: zod.string().min(1, "State is required"),
   state: zod.string().optional(), // State is optional
   city: zod.string().optional(),
   district: zod.string().optional(),
   pincode: zod.string().optional(),
-  // alternatemobileNumber: zod
-  //   .string()
-  //   .min(10, "Mobile number must be exactly 10 characters")
-  //   .max(10, "Mobile number must be exactly 10 characters")
-  //   .optional(),
-  // whatsappNumber: zod
-  //   .string()
-  //   .min(10, "Whatsapp number must be exactly 10 characters")
-  //   .max(10, "Whatsapp number must be exactly 10 characters")
-  //   .optional(),
   daughterMobileNumber: zod.string().optional(),
   daughterEmail: zod.string().optional(),
 });
-
 interface FormInputs {
   address: string;
   country: string;
@@ -63,22 +38,18 @@ interface FormInputs {
   daughterEmail?: string;
   district?: string;
 }
-
 interface ContactDetailsProps {
   heading?: string;
   desc?: string;
 }
-
 interface CountryOption {
   country_id: number;
   country_name: string;
 }
-
 interface StateOption {
   state_id: number;
   state_name: string;
 }
-
 const ContactDetails: React.FC<ContactDetailsProps> = () => {
   const navigate = useNavigate();
   const {
@@ -90,7 +61,6 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
     setError,
     clearErrors,
   } = useForm<FormInputs>({ resolver: zodResolver(schema) });
-
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
   const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -103,55 +73,26 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
   const selectedDistrictId = watch("district");
   const [, setSelectedCity] = React.useState("");
   const [isCityDropdown, setIsCityDropdown] = useState(true);
- // const [districtValue, setDistrictValue] = useState("");
-
-  // useEffect(() => {
-  //   // Clear district value when switching between dropdown and text box
-  //   setDistrictValue("");
-  // }, [selectedStateId]);
-
-
-
-  // const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const value = e.target.value;
-  //   // Reset city selection and set dropdown back
-  //   //setDistrictValue(value);
-  //   setIsCityDropdown(false);
-  //   setSelectedCity("");
-  //   setValue("district", value); // Update the form value for district
-  //   clearErrors("city"); // Clear city errors if any
-  //   fetchCities(); // Fetch cities for the selected district
-   
-
-  // };
-
-
   const [districtValue, setDistrictValue] = useState(""); // Add state for the district value
 
-const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const value = e.target.value;
+  const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === "others") {
+      setDistrictValue(""); // Clear district value
+      setIsCityDropdown(false); // Show the free textbox
+      setValue("district", ""); // Clear the district value in the form
+    } else {
+      setDistrictValue(value);
+      setIsCityDropdown(true); // Use dropdown
+      setValue("district", value); // Update the form value for district
+    }
+  };
 
-  if (value === "others") {
-    // Switch to free textbox
-    setDistrictValue(""); // Clear district value
-    setIsCityDropdown(false); // Show the free textbox
-    setValue("district", ""); // Clear the district value in the form
-  } else {
-    // Use selected district
-    setDistrictValue(value);
-    setIsCityDropdown(true); // Use dropdown
-    setValue("district", value); // Update the form value for district
-  }
-};
-
-
-useEffect(() => {
-  setDistrictValue(""); // Clear district value when state changes
-  setValue("district", ""); // Reset form value
-  setIsCityDropdown(true); // Reset to dropdown
-}, [selectedStateId, setValue]);
-
-
+  useEffect(() => {
+    setDistrictValue(""); // Clear district value when state changes
+    setValue("district", ""); // Reset form value
+    setIsCityDropdown(true); // Reset to dropdown
+  }, [selectedStateId, setValue]);
 
   const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -168,13 +109,11 @@ useEffect(() => {
 
   const fetchDistrict = async () => {
     try {
-      const response = await apiClient.post(
-        "/auth/Get_District/",
+      const response = await apiClient.post("/auth/Get_District/",
         {
           state_id: selectedStateId,
         }
       );
-
       getDistrict(Object.values(response.data));
     } catch (error) {
       console.error("distric:", error);
@@ -188,22 +127,17 @@ useEffect(() => {
     }
   }, [selectedStateId]);
 
-  useState(() => {});
-
-  
+  useState(() => { });
 
   const fetchCities = async () => {
     try {
-      const response = await apiClient.post(
-        "/auth/Get_City/",
+      const response = await apiClient.post("/auth/Get_City/",
         {
           district_id: selectedDistrictId?.toString(),
         }
       );
-  
       const cityData = Object.values(response.data);
       setCities(cityData);
-  
       // Toggle dropdown only if cities are available
       if (cityData.length > 0) {
         setIsCityDropdown(true);
@@ -215,18 +149,14 @@ useEffect(() => {
       console.error("Error fetching cities:", error);
     }
   };
-  
+
   useEffect(() => {
     if (selectedDistrictId) {
       fetchCities();
     }
   }, [selectedDistrictId]);
 
-
-
-  const profileId =
-    localStorage.getItem("profile_id_new") ||
-    localStorage.getItem("loginuser_profile_id");
+  const profileId =localStorage.getItem("profile_id_new") || localStorage.getItem("loginuser_profile_id");
   console.log(profileId);
   console.log(stateOptions, "stateOptions");
   useEffect(() => {
@@ -237,24 +167,16 @@ useEffect(() => {
             profile_id: profileId,
             page_id: 1,
           };
-
-          const response = await apiClient.post(
-            `/auth/Get_save_details/`,
-            requestData,
+          const response = await apiClient.post(`/auth/Get_save_details/`,requestData,
             {
               headers: {
                 "Content-Type": "application/json",
               },
             }
           );
-
           console.log("API Response:", response.data); // Log the entire API response
-
           const profileData = response.data.data; // Access the 'data' object directly
-
           console.log("Profile Data:", profileData); // Log the profile data
-
-          // Set form values here after fetching data
           setValue("address", profileData.Profile_address);
           setValue("country", profileData.Profile_country);
           setValue("state", profileData.Profile_state);
@@ -264,6 +186,7 @@ useEffect(() => {
           setAlterNativeNumber(profileData.Profile_alternate_mobile);
           setWhatsAppNumber(profileData.Profile_whatsapp);
           setValue("daughterMobileNumber", profileData.Profile_mobile_no);
+          setValue("daughterEmail", profileData.Profile_emailid);
         } catch (error) {
           console.error("Error fetching country data:", error);
         }
@@ -271,7 +194,6 @@ useEffect(() => {
         console.warn("Profile ID not found in sessionStorage");
       }
     };
-
     fetchCountryData();
   }, [profileId, setValue]);
 
@@ -294,14 +216,12 @@ useEffect(() => {
   }, []);
 
   const selectedCountryId = watch("country");
-
   useEffect(() => {
     if (selectedCountryId === "1") { // Country ID for India
       setIsCityDropdown(false); // Default to textbox for India
       setSelectedCity(""); // Reset city value
     }
   }, [selectedCountryId]);
-  
   useEffect(() => {
     if (selectedCountryId) {
       const fetchStateStatus = async () => {
@@ -343,91 +263,13 @@ useEffect(() => {
     }
   };
 
-  // const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const profileId = localStorage.getItem("profile_id_new");
-  //     if (!profileId) {
-  //       throw new Error("ProfileId not found in sessionStorage");
-  //     }
-
-  //     const postData = {
-  //       ProfileId: profileId,
-  //       Profile_address: data.address,
-  //       Profile_country: data.country,
-  //       Profile_state: data.state,
-  //       Profile_city: data.city,
-  //       Profile_pincode: data.pincode,
-  //       Profile_alternate_mobile: alterNativeNumber,
-  //       Profile_whatsapp: whatsAppNumber,
-  //       Profile_mobile_no: whatsAppNumber,
-  //       Profile_district: data.district,
-  //     };
-
-  //     console.log(" postData:", postData);
-
-  //     const response = await apiClient.post(
-  //       `/auth/Contact_registration/`,
-  //       postData
-  //     );
-  //     if (response.data.Status === 1) {
-  //       NotifySuccess("Contact details saved successfully");
-
-  //       // Get quick_reg value from sessionStorage
-  //       const quickreg = sessionStorage.getItem("quick_reg") || "0"; // Default to "0" if not found
-
-  //       setTimeout(() => {
-  //         if (quickreg === "1") {
-  //           navigate("/FamilyDetails"); // Redirect to ThankYouReg page
-  //         } else {
-  //           navigate("/UploadImages"); // Redirect to UploadImages page
-  //         }
-  //       }, 2000);
-  //     } else {
-  //       console.log("Registration unsuccessful:", response.data);
-  //     }
-  //   } catch (error: any) {
-  //     if (whatsAppNumber === "") {
-  //       setError("whatsappNumber", {
-  //         type: "manual",
-  //         message: "WhatsApp number is required",
-  //       });
-  //     } else if (whatsAppNumber.length < 10) {
-  //       setError("whatsappNumber", {
-  //         type: "manual",
-  //         message: "WhatsApp number must be at least 10 digits",
-  //       });
-  //     }
-
-  //     if (alterNativeNumber === "") {
-  //       setError("alternatemobileNumber", {
-  //         type: "manual",
-  //         message: "Alternate mobile number is required",
-  //       });
-  //     } else if (alterNativeNumber.length < 10) {
-  //       setError("alternatemobileNumber", {
-  //         type: "manual",
-  //         message: "Alternate mobile number must be at least 10 digits",
-  //       });
-  //     }
-
-  //     NotifyError("Error submitting contact details");
-  //     console.error("Error submitting contact details:", error);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     setIsSubmitting(true);
-
     try {
       const profileId = localStorage.getItem("profile_id_new");
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }
-
       const postData = {
         ProfileId: profileId,
         Profile_address: data.address,
@@ -439,21 +281,14 @@ useEffect(() => {
         Profile_whatsapp: whatsAppNumber,
         Profile_mobile_no: whatsAppNumber,
         Profile_district: data.district,
+        Profile_emailid: data.daughterEmail, // Add this line to include the email
       };
-
       console.log(" postData:", postData);
-
-      const response = await apiClient.post(
-        `/auth/Contact_registration/`,
-        postData
-      );
-
+      const response = await apiClient.post(`/auth/Contact_registration/`, postData);
       if (response.data.Status === 1) {
         NotifySuccess("Contact details saved successfully");
-
         // Get quick_reg value from sessionStorage
         const quickreg = sessionStorage.getItem("quick_reg") || "0"; // Default to "0" if not found
-
         setTimeout(() => {
           if (quickreg === "1") {
             navigate("/FamilyDetails"); // Redirect to ThankYouReg page
@@ -483,7 +318,6 @@ useEffect(() => {
             message: "WhatsApp number must be at least 10 digits",
           });
         }
-
         if (alterNativeNumber === "") {
           setError("alternatemobileNumber", {
             type: "manual",
@@ -496,7 +330,6 @@ useEffect(() => {
           });
         }
       }
-
       NotifyError("Error submitting contact details");
       console.error("Error submitting contact details:", error);
     } finally {
@@ -512,7 +345,6 @@ useEffect(() => {
   const isIncognito =
     navigator.userAgent.includes("Incognito") ||
     navigator.userAgent.includes("Private");
-
   console.log("Token:", token); // Debugging line
   console.log("Is Incognito:", isIncognito); // Debugging line
 
@@ -531,19 +363,14 @@ useEffect(() => {
     ) {
       return; // Allow the key event
     }
-
     // Prevent all other keys
     event.preventDefault();
   };
 
-
-
-  
-
   return (
     <div className="mt-24 max-lg:mt-20">
       <ContentBlackCard
-      link="/ThankYou"
+        link="/ThankYou"
         heading={"Contact Information"}
         desc="Please provide accurate contact details to ensure smooth communication with potential matches."
       />
@@ -561,21 +388,21 @@ useEffect(() => {
                 Country <span className="text-main">*</span>
               </label>
               <div className="relative">
-              <select
-                id="country"
-                className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                {...register("country")}
-              >
-                <option value="" selected disabled>
-                  Select your Country
-                </option>
-                {countryOptions.map((option) => (
-                  <option key={option.country_id} value={option.country_id}>
-                    {option.country_name}
+                <select
+                  id="country"
+                  className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                  {...register("country")}
+                >
+                  <option value="" selected disabled>
+                    Select your Country
                   </option>
-                ))}
-              </select>
-              <IoMdArrowDropdown />
+                  {countryOptions.map((option) => (
+                    <option key={option.country_id} value={option.country_id}>
+                      {option.country_name}
+                    </option>
+                  ))}
+                </select>
+                <IoMdArrowDropdown />
               </div>
               {errors.country && (
                 <span className="text-red-500">{errors.country.message}</span>
@@ -604,22 +431,22 @@ useEffect(() => {
                     State
                   </label>
                   <div className="relative">
-                  <select
-                    id="state"
-                    className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                    {...register("state")}
-                   // onChange={handleStateChange}
-                  >
-                    <option value="" selected disabled>
-                      Select State
-                    </option>
-                    {stateOptions.map((option) => (
-                      <option key={option.state_id} value={option.state_id}>
-                        {option.state_name}
+                    <select
+                      id="state"
+                      className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                      {...register("state")}
+                    // onChange={handleStateChange}
+                    >
+                      <option value="" selected disabled>
+                        Select State
                       </option>
-                    ))}
-                  </select>
-                  <IoMdArrowDropdown />
+                      {stateOptions.map((option) => (
+                        <option key={option.state_id} value={option.state_id}>
+                          {option.state_name}
+                        </option>
+                      ))}
+                    </select>
+                    <IoMdArrowDropdown />
                   </div>
                   {errors.state && (
                     <span className="text-red-500">{errors.state.message}</span>
@@ -637,26 +464,26 @@ useEffect(() => {
                       District
                     </label>
                     <div className="relative">
-                    <select
-                      id="district"
-                      className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                      {...register("district")}
-                      onChange={handleDistrictChange}
+                      <select
+                        id="district"
+                        className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                        {...register("district")}
+                        onChange={handleDistrictChange}
                       //value={districtValue} // Controlled value
-                    >
-                      <option value="" selected disabled>
-                        Select District
-                      </option>
-                      {district.map((option: any) => (
-                        <option
-                          key={option.disctict_id}
-                          value={option.disctict_id}
-                        >
-                          {option.disctict_name}
+                      >
+                        <option value="" selected disabled>
+                          Select District
                         </option>
-                      ))}
-                    </select>
-                    <IoMdArrowDropdown />
+                        {district.map((option: any) => (
+                          <option
+                            key={option.disctict_id}
+                            value={option.disctict_id}
+                          >
+                            {option.disctict_name}
+                          </option>
+                        ))}
+                      </select>
+                      <IoMdArrowDropdown />
                     </div>
                     {errors.district && (
                       <span className="text-red-500">
@@ -727,23 +554,23 @@ useEffect(() => {
                         </div>
                       </label>
                       <div className="relative">
-                      <select
-                        id="city"
-                        className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                        {...register("city")}
-                        onChange={handleCityChange}
-                      >
-                        <option value="" disabled selected>
-                          Select city
-                        </option>
-                        {cities?.map((city: any) => (
-                          <option key={city.city_id} value={city.city_id}>
-                            {city.city_name}
+                        <select
+                          id="city"
+                          className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                          {...register("city")}
+                          onChange={handleCityChange}
+                        >
+                          <option value="" disabled selected>
+                            Select city
                           </option>
-                        ))}
-                        <option value="others">Others</option>
-                      </select>
-                      <IoMdArrowDropdown />
+                          {cities?.map((city: any) => (
+                            <option key={city.city_id} value={city.city_id}>
+                              {city.city_name}
+                            </option>
+                          ))}
+                          <option value="others">Others</option>
+                        </select>
+                        <IoMdArrowDropdown />
                       </div>
                       {errors.city && (
                         <span className="text-red-500">
@@ -753,7 +580,7 @@ useEffect(() => {
                     </>
                   ) : (
                     <>
-                    
+
                       <InputField
                         id="city"
                         label="City"
@@ -833,8 +660,8 @@ useEffect(() => {
 
             <div className="!mt-12 col-span-2 ">
               <h1 className="font-bold text-xl text-primary mb-4">
-              For admin purpose only <span className="text-sm font-normal">(This information will not be displayed online)</span>             
-               </h1>
+                For admin purpose only <span className="text-sm font-normal">(This information will not be displayed online)</span>
+              </h1>
 
               <div className="mb-5">
                 <label className="block mb-2 text-base text-primary font-medium">
@@ -849,7 +676,7 @@ useEffect(() => {
                     width: "100%",
                     borderColor: errors.daughterMobileNumber ? "red" : "#85878C91",
                   }}
-                  
+
                   onChange={(value) => {
                     // Update the form field with the trimmed value
                     setValue("daughterMobileNumber", value.trim());
@@ -860,7 +687,7 @@ useEffect(() => {
                   inputProps={{
                     name: "daughterMobileNumber",
                     required: true,
-                  className: "input-style",
+                    className: "input-style",
                   }}
                 />
                 {errors.daughterMobileNumber && (

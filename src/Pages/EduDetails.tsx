@@ -141,6 +141,9 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
   const [districtValue, setDistrictValue] = useState(""); // Add state for the district value
   const [customWorkCity, setCustomWorkCity] = useState("");
   const [selectedDegrees, setSelectedDegrees] = useState<number[]>([]);
+  
+  const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
+  const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
 
   const handleEduLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEduLevel(e.target.value);
@@ -418,20 +421,6 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     );
     setSelectedDegree(isSpecificFieldSelected ? "86" : ""); // Set "others" if selected
   };
-
-  // useEffect(() => {
-  //   const fetchUgDegree = async () => {
-  //     try {
-  //       const response = await apiClient.post(`/auth/Get_Ug_Degree/`);
-  //       const options = Object.values(response.data) as Ugdegree[];
-  //       setUgdegree(options);
-  //     } catch (error) {
-  //       console.error("Error fetching UG Degree  options:", error);
-  //     }
-  //   };
-  //   fetchUgDegree();
-  // }, []);
-
   useEffect(() => {
     const fetchAnnualIncome = async () => {
       try {
@@ -445,8 +434,6 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     fetchAnnualIncome();
   }, []);
 
-  const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
-  const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
 
   useEffect(() => {
     const fetchCountryStatus = async () => {
@@ -511,8 +498,8 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
         company_name:(selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.company_name : "",
         designation: (selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.designation : "",
         profession_details:(selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.profession_details : "",
-        business_name:( selectedProfessionId === 2 || selectedProfessionId === 6)? data.business_name:"",
-        business_address:( selectedProfessionId === 2 || selectedProfessionId === 6)? data.business_address:"",
+        business_name:(selectedProfessionId === 2 || selectedProfessionId === 6)? data.business_name:"",
+        business_address:(selectedProfessionId === 2 || selectedProfessionId === 6)? data.business_address:"",
         nature_of_business: (selectedProfessionId === 2 || selectedProfessionId === 6) ?data.nature_of_business:"",
         currency: data.currency,
         actual_income: data.actualIncome,

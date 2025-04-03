@@ -141,6 +141,9 @@ export const FeaturedProfiles = () => {
   const handleNavigate = () => {
     navigate("/ViewAllFeaturedProfiles");
   };
+
+  // Hide section if no profiles are available
+  if (totalCount === 0) return null;
   return (
     <div className="bg-vysyamalaBlack py-5 max-xl:py-4 max-lg:py-3 overflow-hidden">
       <div className="container mx-auto my-10 max-lg:my-8 max-md:my-6">

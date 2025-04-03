@@ -87,6 +87,7 @@ const InterestCard: React.FC = () => {
             {loading ? (
                 <p>Loading...</p> // Or any loading indicator you prefer
             ) : profiles.length === 0 ? (
+                
 
                 // Received Interest Empty State
                 <div className="text-center py-4">

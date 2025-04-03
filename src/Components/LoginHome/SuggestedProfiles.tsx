@@ -148,13 +148,14 @@ export const SuggestedProfiles: React.FC = () => {
   const handleNavigate = () => {
     navigate('/ViewAllSuggestedProfiles'); // Replace with your target path
   };
+  if(totalCount===0) return null;
   return (
     <div className="bg-vysyamalaSandal overflow-hidden px-5 max-xl:py-4 max-lg:py-3">
     <div className="container mx-auto my-10 max-lg:my-8 max-md:my-6">
       <div className="flex justify-between items-center max-sm:flex-wrap max-sm:gap-2">
         <div>
           <h4 className="text-[24px] text-vysyamalaBlack font-bold  max-xl:text-[22px] max-lg:text-[20px] max-md:text-[18px]">
-            Suggested Profiles{" "}
+            Suggested Profiles {" "}
             <span className="text-sm text-primary font-bold">({totalCount})</span>
           </h4>
         </div>

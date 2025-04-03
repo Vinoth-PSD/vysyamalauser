@@ -31,38 +31,57 @@ interface EducationProfessionDetails {
   personal_work_sta_name: string;
   personal_work_pin: string;
   personal_career_plans: string;
+  persoanl_field_ofstudy: string;
+  persoanl_degree: string;
+  persoanl_edu_other: string;
 }
-
+interface EducationProfessionPayload {
+  profile_id: string | null;
+  education_level: string | number | undefined;
+  education_details: string | null | undefined;
+  about_edu: string | undefined;
+  profession: string | number;
+  annual_income: string | number;
+  actual_income: string | undefined;
+  work_country: string | number;
+  work_state: string | number;
+  work_pincode: string | undefined;
+  career_plans: string | undefined;
+  field_ofstudy: string;
+  degree: string;
+  other_degree: string;
+  // Optional fields that might be added conditionally
+  company_name?: string;
+  designation?: string;
+  profession_details?: string;
+  business_name?: string;
+  business_address?: string;
+  nature_of_business?: string;
+}
 interface AnnualIncome {
   income_id: number;
   income_description: string;
 }
-
 interface Education {
   education_id: number;
   education_description: string;
 }
-
 interface FieldofStudy {
   study_id: number;
   study_description: string;
 }
-
 interface Degree {
   degeree_id: number;
   degeree_description: string;
 }
-
 interface Profession {
   Profes_Pref_id: number;
   Profes_name: string;
 }
-
 interface Country {
   country_id: number;
   country_name: string;
 }
-
 interface State {
   state_id: number;
   state_name: string;
@@ -72,41 +91,31 @@ export const EducationProfession = () => {
   const [educationProfessionDetails, setEducationProfessionDetails] =
     useState<EducationProfessionDetails | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<Partial<EducationProfessionDetails>>(
-    {}
-  );
+  const [formData, setFormData] = useState<Partial<EducationProfessionDetails>>({});
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [annualIncomes, setAnnualIncomes] = useState<AnnualIncome[]>([]);
   const [selectedIncomeId, setSelectedIncomeId] = useState<number | string>("");
   const [educations, setEducations] = useState<Education[]>([]);
   const [FieldofStudy, setFieldOfStudy] = useState<FieldofStudy[]>([]);
   const [Degree, setDegree] = useState<Degree[]>([]);
-  const [selectedDegree, setSelectedDegree] = useState("");
-  //const [selectedDegrees, setSelectedDegrees] = useState<number[]>([]);
-  const [, setSelectedDegrees] = useState<number[]>([]);
-
-  // const [eduLevel, setEduLevel] = useState(""); // Example initial value
-  const [customDegree, setCustomDegree] = useState("");
+  const [selectedDegrees, setSelectedDegrees] = useState<number[]>([]);
+  console.log("selectedDegrees", selectedDegrees)
   const [fieldOfStudyy, setFieldOfStudyy] = useState(""); // Example initial value
-
-  const [selectedEducationId, setSelectedEducationId] = useState<
-    number | string
-  >();
+  console.log("fieldOfStudyy", fieldOfStudyy)
+  const [selectedEducationId, setSelectedEducationId] = useState<number | string>();
   const [profession, setProfession] = useState<Profession[]>([]);
-  const [selectedProfessionId, setSelectedProfessionId] = useState<
-    number | string
-  >("");
+  const [selectedProfessionId, setSelectedProfessionId] = useState<number | string>("");
   const [countries, setCountries] = useState<Country[]>([]);
-  const [selectedWorkCountryId, setSelectedWorkCountryId] = useState<
-    number | string
-  >("");
+  const [selectedWorkCountryId, setSelectedWorkCountryId] = useState<number | string>("");
   const [states, setStates] = useState<State[]>([]);
-  const [selectedWorkStateId, setSelectedWorkStateId] = useState<
-    number | string
-  >("");
+  const [selectedWorkStateId, setSelectedWorkStateId] = useState<number | string>("");
   const [refreshData, setRefreshData] = useState(false);
   const [workStateInput, setWorkStateInput] = useState(""); // For state textbox
   const [showStateTextbox, setShowStateTextbox] = useState(false); // For conditionally rendering
+  const [customDegree, setCustomDegree] = useState("");
+  console.log("customDegree", customDegree)
+  const [isOthersSelected, setIsOthersSelected] = useState(false);
+  console.log("isOthersSelected", isOthersSelected)
   const [errors, setErrors] = useState({
     personal_about_edu: "",
     personal_gross_ann_inc: "",
@@ -114,15 +123,16 @@ export const EducationProfession = () => {
     personal_career_plans: "",
     selectedEducationId: "",
     selectedProfessionId: "",
-    personal_company_name: "",
-    personal_designation: "",
-    personal_profess_details: "",
-    personal_business_name: "",
-    personal_business_addresss: "",
-    personal_nature_of_business: "",
+    // personal_company_name: "",
+    // personal_designation: "",
+    // personal_profess_details: "",
+    // personal_business_name: "",
+    // personal_business_addresss: "",
+    // personal_nature_of_business: "",
     selectedIncomeId: "",
     selectedWorkCountryId: "",
     selectedWorkStateId: "",
+    //persoanl_edu_other: "",
     // Add error states for other fields
   });
 
@@ -135,7 +145,6 @@ export const EducationProfession = () => {
             profile_id: loginuser_profileId,
           }
         );
-
         const data = response.data.data;
         setEducationProfessionDetails(response.data.data);
         console.log("respponseeeeeee", response.data.data);
@@ -145,7 +154,6 @@ export const EducationProfession = () => {
         if (matchedIncome) {
           setSelectedIncomeId(matchedIncome.income_id);
         }
-
         const matchedHighestEducation = educations.find((education) =>
           education.education_description.includes(data.personal_edu_name)
         );
@@ -154,18 +162,48 @@ export const EducationProfession = () => {
             matchedHighestEducation.education_id.toString()
           );
         }
-
         const matchedProfession = profession.find((profession) =>
           profession.Profes_name.includes(data.personal_profession_name)
         );
         if (matchedProfession) {
           setSelectedProfessionId(matchedProfession.Profes_Pref_id);
         }
-
-        
-
+        // Set field of study if available
+        if (data.persoanl_field_ofstudy) {
+          // Find the matching field of study in the FieldofStudy array
+          const matchedField = FieldofStudy.find(
+            (field) => field.study_id.toString() === data.persoanl_field_ofstudy.toString()
+          );
+          if (matchedField) {
+            setFieldOfStudyy(matchedField.study_id.toString());
+            setFormData(prev => ({
+              ...prev,
+              persoanl_field_ofstudy: matchedField.study_description
+            }));
+          }
+        }
+        // Set degrees if available
+        if (data.persoanl_degree) {
+          // Convert comma-separated string to array of numbers
+          const degreeIds = data.persoanl_degree.split(',').map(Number);
+          setSelectedDegrees(degreeIds);
+          // Check if "Others" is selected (assuming ID 86 is "Others")
+          if (degreeIds.includes(86)) {
+            setIsOthersSelected(true);
+            setCustomDegree(data.other_degree || "");
+          }
+        }
+        // Set other education if available
+        if (data.persoanl_edu_other) {
+          setFormData(prev => ({
+            ...prev,
+            persoanl_edu_other: data.persoanl_edu_other
+          }));
+        }
         setSelectedWorkCountryId(data.personal_work_coun_id);
         setSelectedWorkStateId(data.personal_work_sta_id);
+        setSelectedProfessionId(data.personal_profession);
+
       } catch (error) {
         console.error(
           "Error fetching education and profession details:",
@@ -303,14 +341,6 @@ export const EducationProfession = () => {
     }));
   };
 
-  // const handleEducationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedEducationId(e.target.value);
-  //   setFormData((prevState) => ({
-  //     ...prevState,
-  //     personal_edu_name: e.target.value,
-  //   }));
-  // };
-
   const handleEducationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedEducationId = e.target.value;
     setSelectedEducationId(selectedEducationId);
@@ -340,7 +370,6 @@ export const EducationProfession = () => {
       fieldOfStudy: selectedFieldId,
     }));
     setErrors((prev) => ({ ...prev, fieldOfStudy: "" })); // Clear the error on change
-
     // Clear Degree options when Field of Study changes
     setDegree([]);
     setFormData((prevState) => ({
@@ -348,11 +377,6 @@ export const EducationProfession = () => {
       Degree: "",
     }));
   };
-
-
-
- 
-
   // Handle country change
   const handleWorkCountryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -422,6 +446,7 @@ export const EducationProfession = () => {
       ...prev,
       selectedProfessionId: "",
     }));
+    
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -444,24 +469,24 @@ export const EducationProfession = () => {
       selectedProfessionId: !selectedProfessionId
         ? "Profession is required."
         : "",
-      personal_company_name: !formData.personal_company_name
-        ? "Company Nmae is required."
-        : "",
-      personal_designation: !formData.personal_designation
-        ? "Designation is required."
-        : "",
-      personal_profess_details: !formData.personal_profess_details
-        ? "Profession details are required."
-        : "",
-      personal_business_name: !formData.personal_business_name
-        ? "Business Name are required."
-        : "",
-      personal_business_addresss: !formData.personal_business_addresss
-        ? "Business Address are required."
-        : "",
-      personal_nature_of_business: !formData.personal_nature_of_business
-        ? "Nature of Business are required."
-        : "",
+      // personal_company_name: !formData.personal_company_name
+      //   ? "Company Nmae is required."
+      //   : "",
+      // personal_designation: !formData.personal_designation
+      //   ? "Designation is required."
+      //   : "",
+      // personal_profess_details: !formData.personal_profess_details
+      //   ? "Profession details are required."
+      //   : "",
+      // personal_business_name: !formData.personal_business_name
+      //   ? "Business Name are required."
+      //   : "",
+      // personal_business_addresss: !formData.personal_business_addresss
+      //   ? "Business Address are required."
+      //   : "",
+      // personal_nature_of_business: !formData.personal_nature_of_business
+      //   ? "Nature of Business are required."
+      //   : "",
       selectedIncomeId: !selectedIncomeId ? "Income source is required." : "",
       selectedWorkCountryId: !selectedWorkCountryId
         ? "Work Country is required."
@@ -498,26 +523,60 @@ export const EducationProfession = () => {
     console.log("work_pincode:", formData.personal_work_pin);
     console.log("career_plans:", formData.personal_career_plans);
 
-    const payload = {
+    const payload: EducationProfessionPayload  = {
       profile_id: loginuser_profileId,
       education_level: selectedEducationId,
       education_details: formData.personal_edu_details, // Default to an empty string if undefined
       about_edu: formData.personal_about_edu,
       profession: selectedProfessionId,
-      company_name: formData.personal_company_name,
-      designation: formData.personal_designation,
-      profession_details: formData.personal_profess_details,
-      business_name: formData.personal_business_name,
-      business_address: formData.personal_business_addresss,
-      nature_of_business: formData.personal_nature_of_business,
+      // company_name: formData.personal_company_name,
+      // designation: formData.personal_designation,
+      // profession_details: formData.personal_profess_details,
+      // business_name: formData.personal_business_name,
+      // business_address: formData.personal_business_addresss,
+      // nature_of_business: formData.personal_nature_of_business,
       annual_income: selectedIncomeId,
       actual_income: formData.personal_gross_ann_inc,
       work_country: selectedWorkCountryId,
       work_state: selectedWorkStateId,
       work_pincode: formData.personal_work_pin,
       career_plans: formData.personal_career_plans,
-    };
+      field_ofstudy: fieldOfStudyy, // Add field of study
+      degree: selectedDegrees.join(','), // Convert array to comma-separated string
+      //other_degree: customDegree, // Only include if "Others" is selected
+      other_degree: formData.persoanl_edu_other || "",
 
+    };
+// Conditionally add fields based on profession ID
+if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProfessionId === "6") {
+  // For profession ID 1, 6, or 7 - include employment fields
+  payload.company_name = formData.personal_company_name || educationProfessionDetails?.personal_company_name || "";
+  payload.designation = formData.personal_designation || educationProfessionDetails?.personal_designation || "";
+  payload.profession_details = formData.personal_profess_details || educationProfessionDetails?.personal_profess_details || "";
+  
+  // Set business-related fields to empty strings
+  payload.business_name = "";
+  payload.business_address = "";
+  payload.nature_of_business = "";
+} else if (selectedProfessionId === "2" || selectedProfessionId === "6") {
+  // For profession ID 2 or 6 - include business fields
+  payload.business_name = formData.personal_business_name || educationProfessionDetails?.personal_business_name || "";
+  payload.business_address = formData.personal_business_addresss || educationProfessionDetails?.personal_business_addresss || "";
+  payload.nature_of_business = formData.personal_nature_of_business || educationProfessionDetails?.personal_nature_of_business || "";
+  
+  // Set employment-related fields to empty strings
+  payload.company_name = "";
+  payload.designation = "";
+  payload.profession_details = "";
+} else {
+  // For other professions, set all optional fields to empty strings
+  payload.company_name = "";
+  payload.designation = "";
+  payload.profession_details = "";
+  payload.business_name = "";
+  payload.business_address = "";
+  payload.nature_of_business = "";
+}
     console.log("Logging payload values before submission:", payload);
 
     try {
@@ -548,18 +607,41 @@ export const EducationProfession = () => {
     }
   };
 
+  // Modify the handleDegreeChangeMultiSelect function
   const handleDegreeChangeMultiSelect = (selectedOptions: any) => {
-    const degreeIds = selectedOptions
-      .filter((option: any) => option.value !== "others")
-      .map((option: any) => option.value);
-
+    const degreeIds = selectedOptions.map((option: any) => option.value);
     setSelectedDegrees(degreeIds);
-    // setValue("degree", degreeIds.join(",")); // Update form value for degrees
-    const isOthersSelected = selectedOptions.some(
-      (option: any) => option.value === "others"
+    // Check if "Others" (degeree_id: 86) is selected
+    const othersSelected = selectedOptions.some(
+      (option: any) => option.value === 86 // Assuming 86 is the ID for "Others"
     );
-    setSelectedDegree(isOthersSelected ? "others" : ""); // Set "others" if selected
+    setIsOthersSelected(othersSelected);
+    // Clear other education if "Others" is deselected
+    if (!othersSelected) {
+      setFormData(prev => ({ ...prev, persoanl_edu_other: "" }));
+    }
   };
+
+  // // Define the handler function (outside the component or inside, depending on your preference)
+  // const handleCustomDegreeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value;
+  //   setCustomDegree(value);
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     other_degree: value,
+  //   }));
+  // };
+
+
+  const handleCustomDegreeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCustomDegree(value);
+    setFormData(prevState => ({
+      ...prevState,
+      persoanl_edu_other: value,
+    }));
+  };
+
 
   if (!educationProfessionDetails) {
     return <div>Loading...</div>;
@@ -586,11 +668,10 @@ export const EducationProfession = () => {
                   value={selectedEducationId ?? ""}
                   onChange={handleEducationChange}
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.selectedEducationId
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling for error
+                                        ${errors.selectedEducationId
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling for error
                 >
                   <option value="" disabled selected>
                     Select Education Level
@@ -617,6 +698,8 @@ export const EducationProfession = () => {
                     Field of Study:
                     <select
                       name="fieldOfStudy"
+
+                      value={fieldOfStudyy}
                       onChange={handleFieldOfStudyChange}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder`}
                     >
@@ -629,24 +712,24 @@ export const EducationProfession = () => {
                         </option>
                       ))}
                     </select>
-                    {/* {errors.fieldOfStudy && (
-      <p className="text-red-500 text-sm mt-1">{errors.fieldOfStudy}</p>
-    )} */}
                   </label>
 
                   <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                     Specific Field:
                     {Degree.length > 0 ? (
-                      // selectedDegree !== "others" ? (
                       <Select
                         isMulti
-                        options={[
-                          ...Degree.map((option) => ({
-                            value: option.degeree_id,
-                            label: option.degeree_description,
-                          })),
-                          { value: "others", label: "Others" },
-                        ]}
+                        options={Degree.map((option) => ({
+                          value: option.degeree_id,
+                          label: option.degeree_description,
+                        }))}
+                        value={Degree
+                          .filter(degree => selectedDegrees.includes(degree.degeree_id))
+                          .map(degree => ({
+                            value: degree.degeree_id,
+                            label: degree.degeree_description
+                          }))
+                        }
                         onChange={handleDegreeChangeMultiSelect}
                       />
                     ) : (
@@ -658,23 +741,27 @@ export const EducationProfession = () => {
                         onChange={(e) => setCustomDegree(e.target.value)}
                       />
                     )}
-                    {selectedDegree === "others" && (
+                    {isOthersSelected && (
                       <div className="mt-4">
+                        <label htmlFor="customDegree" className="block text-gray-700 font-medium mb-2">
+                          Other Education
+                        </label>
                         <input
                           type="text"
-                          id="customDegree"
+                          id="persoanl_edu_other"
+                          name="persoanl_edu_other"
                           className="outline-none w-full text-placeHolderColor px-4 py-[8.5px] border border-ashBorder rounded"
                           placeholder="Enter Specific field"
-                          value={customDegree}
-                          onChange={(e) => setCustomDegree(e.target.value)}
+                          value={formData.persoanl_edu_other || ""}
+                          // onChange={(e) => setCustomDegree(e.target.value)}
+                          onChange={handleCustomDegreeChange} // Cleaner and reusable
                         />
                       </div>
                     )}
                   </label>
                 </>
               )}
-
-              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+              {/* <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Education Details:
                 <input
                   type="text"
@@ -683,7 +770,7 @@ export const EducationProfession = () => {
                   onChange={handleInputChange}
                   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
                 />
-              </label>
+              </label> */}
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 About Education:
                 <input
@@ -696,11 +783,10 @@ export const EducationProfession = () => {
                     setErrors((prev) => ({ ...prev, personal_about_edu: "" })); // Clear the error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_about_edu
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.personal_about_edu
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 />
                 {errors.personal_about_edu && (
                   <p className="text-red-500 text-sm mt-1">
@@ -721,11 +807,10 @@ export const EducationProfession = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.selectedProfessionId
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.selectedProfessionId
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 >
                   <option value="">Select Profession </option>
                   {profession.map((profession) => (
@@ -748,178 +833,150 @@ export const EducationProfession = () => {
               {(selectedProfessionId === "1" ||
                 selectedProfessionId === "7" ||
                 selectedProfessionId === "6") && (
-                  
-                <div className="mt-4">
-              
-                  <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                    Company Name
-                    <input
-                      name="personal_company_name"
-                      value={formData.personal_company_name || ""}
-                      onChange={(e) => {
-                        handleInputChange(e); // Handle input change
-                        setErrors((prev) => ({
-                          ...prev,
-                          personal_company_name: "",
-                        })); // Clear the error on change
-                      }}
-                      className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_company_name
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
-                    />
-                    {errors.personal_company_name && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_company_name}
-                      </p>
-                    )}
-                  </label>
 
-                
-                  <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                    Designation
-                    <input
-                      name="personal_designation"
-                      value={formData.personal_designation || ""}
-                      onChange={(e) => {
-                        handleInputChange(e); // Handle input change
-                        setErrors((prev) => ({
-                          ...prev,
-                          personal_designation: "",
-                        })); // Clear the error on change
-                      }}
-                      className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_designation
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
-                    />
-                    {errors.personal_designation && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_designation}
-                      </p>
-                    )}
-                  </label>
+                  <div className="mt-4">
 
-                  <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                    Profession Details
-                    <input
-                      name="personal_profess_details"
-                      value={formData.personal_profess_details || ""}
-                      onChange={(e) => {
-                        handleInputChange(e); // Handle input change
-                        setErrors((prev) => ({
-                          ...prev,
-                          personal_company_name: "",
-                        })); // Clear the error on change
-                      }}
-                      className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_profess_details
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
-                    />
-                    {errors.personal_profess_details && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_profess_details}
-                      </p>
-                    )}
-                  </label>
-                </div>
-              )}
+                    <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Company Name
+                      <input
+                        name="personal_company_name"
+                       // value={formData.personal_company_name || ""}
+                       value={formData.personal_company_name || educationProfessionDetails?.personal_company_name || ""}
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_company_name: "",
+                          })); // Clear the error on change
+                        }}
+                        // className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
+                        //                 ${errors.personal_company_name
+                        //     ? "border-red-500"
+                        //     : "focus:border-blue-500"
+                        //   }`} // Conditional styling
+                         className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
+                      />
+                      {/* {errors.personal_company_name && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.personal_company_name}
+                        </p>
+                      )} */}
+                    </label>
+
+
+                    <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Designation
+                      <input
+                        name="personal_designation"
+                        //value={formData.personal_designation || ""}
+                        value={formData.personal_designation || educationProfessionDetails?.personal_designation || ""}
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_designation: "",
+                          })); // Clear the error on change
+                        }}
+                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
+                      />
+                    </label>
+
+                    <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Profession Details
+                      <input
+                        name="personal_profess_details"
+                       // value={formData.personal_profess_details || ""}
+                       value={formData.personal_profess_details || educationProfessionDetails?.personal_profess_details || ""}
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_company_name: "",
+                          })); // Clear the error on change
+                        }}
+                   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
+                      />
+                    </label>
+                  </div>
+                )}
 
               {(selectedProfessionId === "6" ||
                 selectedProfessionId === "2") && (
-                <div className="mt-4">
-                
-                  <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                    Business Name
-                    <input
-                      name="personal_business_name"
-                      value={formData.personal_business_name || ""}
-                      onChange={(e) => {
-                        handleInputChange(e); // Handle input change
-                        setErrors((prev) => ({
-                          ...prev,
-                          personal_business_name: "",
-                        })); // Clear the error on change
-                      }}
-                      className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_business_name
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
-                    />
-                    {errors.personal_business_name && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_business_name}
-                      </p>
-                    )}
-                  </label>
+                  <div className="mt-4">
 
-                  <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                    Business Address
-                    <input
-                      name="personal_business_addresss"
-                      value={formData.personal_business_addresss || ""}
-                      // onChange={handleInputChange}
-                      // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
-                      onChange={(e) => {
-                        handleInputChange(e); // Handle input change
-                        setErrors((prev) => ({
-                          ...prev,
-                          personal_business_addresss: "",
-                        })); // Clear the error on change
-                      }}
-                      className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_business_addresss
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
-                    />
-                    {errors.personal_business_addresss && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_business_addresss}
-                      </p>
-                    )}
-                  </label>
+                    {/* <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Business Name
+                      <input
+                        name="personal_business_name"
+                        value={formData.personal_business_name || ""}
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_business_name: "",
+                          })); // Clear the error on change
+                        }}
+                      />
+                    </label> */}
+                     <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Business Name
+                      <input
+                        name="personal_business_name"
+                        //value={formData.personal_business_name || ""}
+                        value={formData.personal_business_name || educationProfessionDetails?.personal_business_name || ""}
+                        // onChange={handleInputChange}
+                        // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_business_name: "",
+                          })); // Clear the error on change
+                        }}
+                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
+                      />
+                    </label>
 
-                
-                  <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                    Nature of Business
-                    <input
-                      name="personal_nature_of_business"
-                      value={formData.personal_nature_of_business || ""}
-                      // onChange={handleInputChange}
-                      // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
-                      onChange={(e) => {
-                        handleInputChange(e); // Handle input change
-                        setErrors((prev) => ({
-                          ...prev,
-                          personal_nature_of_business: "",
-                        })); // Clear the error on change
-                      }}
-                      className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_nature_of_business
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
-                    />
-                    {errors.personal_nature_of_business && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_nature_of_business}
-                      </p>
-                    )}
-                  </label>
-                </div>
-              )}
+                    <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Business Address
+                      <input
+                        name="personal_business_addresss"
+                        //value={formData.personal_business_addresss || ""}
+                        value={formData.personal_business_addresss || educationProfessionDetails?.personal_business_addresss || ""}
+                        // onChange={handleInputChange}
+                        // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_business_addresss: "",
+                          })); // Clear the error on change
+                        }}
+                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
+                      />
+                    </label>
+
+
+                    <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                      Nature of Business
+                      <input
+                        name="personal_nature_of_business"
+                        //value={formData.personal_nature_of_business || ""}
+                        value={formData.personal_nature_of_business || educationProfessionDetails?.personal_nature_of_business || ""}
+                        // onChange={handleInputChange}
+                        // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
+                        onChange={(e) => {
+                          handleInputChange(e); // Handle input change
+                          setErrors((prev) => ({
+                            ...prev,
+                            personal_nature_of_business: "",
+                          })); // Clear the error on change
+                        }}
+                         className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder"
+                      />
+                    </label>
+                  </div>
+                )}
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Annual Income:
@@ -931,11 +988,10 @@ export const EducationProfession = () => {
                     setErrors((prev) => ({ ...prev, selectedIncomeId: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.selectedIncomeId
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.selectedIncomeId
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 >
                   <option value="">Select Annual Income</option>
                   {annualIncomes.map((income) => (
@@ -969,11 +1025,10 @@ export const EducationProfession = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_gross_ann_inc
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.personal_gross_ann_inc
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 />
               </label>
               {errors.personal_gross_ann_inc && (
@@ -997,11 +1052,10 @@ export const EducationProfession = () => {
                     })); // Clear error on change3
                   }}
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.selectedWorkCountryId
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.selectedWorkCountryId
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 >
                   <option value="">Select Work Country</option>
                   {countries.map((country) => (
@@ -1016,7 +1070,7 @@ export const EducationProfession = () => {
                   </p>
                 )}
               </label>
-            
+
               {showStateTextbox ? (
                 <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                   Work State:
@@ -1031,11 +1085,10 @@ export const EducationProfession = () => {
                       }));
                     }}
                     className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-              ${
-                errors.selectedWorkStateId
-                  ? "border-red-500"
-                  : "focus:border-blue-500"
-              }`}
+              ${errors.selectedWorkStateId
+                        ? "border-red-500"
+                        : "focus:border-blue-500"
+                      }`}
                     placeholder="Enter Work State"
                   />
                   {errors.selectedWorkStateId && (
@@ -1058,11 +1111,10 @@ export const EducationProfession = () => {
                       })); // Clear error on change
                     }}
                     className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-              ${
-                errors.selectedWorkStateId
-                  ? "border-red-500"
-                  : "focus:border-blue-500"
-              }`}
+              ${errors.selectedWorkStateId
+                        ? "border-red-500"
+                        : "focus:border-blue-500"
+                      }`}
                   >
                     <option value="">Select Work State</option>
                     {states.map((state) => (
@@ -1093,11 +1145,10 @@ export const EducationProfession = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_work_pin
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.personal_work_pin
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 />
                 {errors.personal_work_pin && (
                   <p className="text-red-500 text-sm mt-1">
@@ -1120,11 +1171,10 @@ export const EducationProfession = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_career_plans
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`} // Conditional styling
+                                        ${errors.personal_career_plans
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`} // Conditional styling
                 />
               </label>
               {errors.personal_career_plans && (
@@ -1163,75 +1213,104 @@ export const EducationProfession = () => {
                   {educationProfessionDetails.personal_edu_name}
                 </span>
               </h5>
-
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+              {educationProfessionDetails.persoanl_field_ofstudy && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Field of Study:
+                  <span className="font-normal">
+                    {educationProfessionDetails.persoanl_field_ofstudy}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.persoanl_degree && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Specific Field:
+                  <span className="font-normal">
+                    {educationProfessionDetails.persoanl_degree}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.persoanl_edu_other && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Other Education:
+                  <span className="font-normal">
+                    {educationProfessionDetails.persoanl_edu_other}
+                  </span>
+                </h5>
+              )}
+              {/* <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Education Details:
                 <span className="font-normal">
                   {educationProfessionDetails.personal_edu_details}
                 </span>
-              </h5>
-
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                About Education:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_about_edu}
-                </span>
-              </h5>
-
+              </h5> */}
+              {educationProfessionDetails.personal_about_edu && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  About Education:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_about_edu}
+                  </span>
+                </h5>
+              )}
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Profession:
                 <span className="font-normal">
                   {educationProfessionDetails.personal_profession_name}
                 </span>
               </h5>
-            
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Company Name:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_company_name}
-                </span>
-              </h5>
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Designation:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_designation}
-                </span>
-              </h5>
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Profession Details:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_profess_details}
-                </span>
-              </h5>
-              
-               
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Business Name:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_business_name}
-                </span>
-              </h5>
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Business Address:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_business_addresss}
-                </span>
-              </h5>
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Nature of Buisness:
-                <span className="font-normal">
-                  {educationProfessionDetails.personal_nature_of_business}
-                </span>
-              </h5>
-            
-
+              {educationProfessionDetails.personal_company_name && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Company Name:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_company_name}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.personal_designation && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Designation:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_designation}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.personal_profess_details && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Profession Details:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_profess_details}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.personal_business_name && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Business Name:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_business_name}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.personal_business_addresss && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Business Address:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_business_addresss}
+                  </span>
+                </h5>
+              )}
+              {educationProfessionDetails.personal_nature_of_business && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Nature of Buisness:
+                  <span className="font-normal">
+                    {educationProfessionDetails.personal_nature_of_business}
+                  </span>
+                </h5>
+              )}
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Annual Income:
                 <span className="font-normal">
                   {educationProfessionDetails.personal_ann_inc_name}
                 </span>
               </h5>
-
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Gross Annual Income:
                 <span className="font-normal">
@@ -1239,7 +1318,6 @@ export const EducationProfession = () => {
                 </span>
               </h5>
             </div>
-
             <div>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Work Country:
@@ -1247,21 +1325,18 @@ export const EducationProfession = () => {
                   {educationProfessionDetails.personal_work_coun_name}
                 </span>
               </h5>
-
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Work State:
                 <span className="font-normal">
                   {educationProfessionDetails.personal_work_sta_name}
                 </span>
               </h5>
-
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Work Pincode:
                 <span className="font-normal">
                   {educationProfessionDetails.personal_work_pin}
                 </span>
               </h5>
-
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Career Plans:
                 <span className="font-normal">

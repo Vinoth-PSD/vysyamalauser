@@ -279,7 +279,7 @@ const fetchImages = async () => {
     if (response.data.Status === 1) {
       const imageObjects: Image[] = response.data.data.map((img: any) => ({
         id: img.id,
-        imageUrl: `https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
+        imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
       }));
 
       // Fill up to 10 images with default if fewer than 10
@@ -315,7 +315,7 @@ useEffect(() => {
     }
     try {
       const response = await apiClient.post(
-        "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_dashboard_details/",
+        "/auth/Get_dashboard_details/",
         {
           profile_id: loginuser_profileId,
         }
