@@ -219,7 +219,6 @@ export const LoginHeader: React.FC = () => {
           const profileData = chatListResponse.data.data.find(
             (item: { room_name_id: any }) => item.room_name_id === room_id_name
           );
-
           // Structure profileData with actual details from chatListResponse
           const selectedProfileData = {
             room_name_id: profileData.room_name_id,
@@ -333,13 +332,11 @@ export const LoginHeader: React.FC = () => {
                   Home
                 </li>
               </NavLink>
-
               <NavLink to="/Search" aria-current="page" className="active-nav">
                 <li className="text-[16px] cursor-pointer font-normal  px-2 py-4  max-lg:text-[14px]">
                   Search
                 </li>
               </NavLink>
-
               <NavLink
                 to="/Dashboard"
                 aria-current="page"
@@ -349,7 +346,6 @@ export const LoginHeader: React.FC = () => {
                   Dashboard
                 </li>
               </NavLink>
-
               <NavLink
                 to={"/Wishlist"}
                 aria-current="page"
@@ -359,7 +355,6 @@ export const LoginHeader: React.FC = () => {
                   Wishlist
                 </li>
               </NavLink>
-
               {/* <NavLink
                 to={"/Messages"}
                 aria-current="page"
@@ -369,7 +364,6 @@ export const LoginHeader: React.FC = () => {
                   <MdMessage className="text-[22px]" />
                 </li>
               </NavLink> */}
-
               <NavLink
                 to={"/Messages"}
                 aria-current="page"
@@ -384,7 +378,6 @@ export const LoginHeader: React.FC = () => {
                   )}
                 </li>
               </NavLink>
-
               {/* Notifications */}
               <li
                 // onClick={handleNotificationClick}
@@ -414,10 +407,8 @@ export const LoginHeader: React.FC = () => {
                     <h4 className="text-vysyamalaBlack text-[20px] font-bold px-3 py-3">
                       Notifications
                     </h4>
-
                     <div className="h-96 overflow-y-auto message-box">
                       {/* Express Interest */}
-
                       {NotificationData.length > 5
                         ? NotificationData.slice(0, 5).map((notification) => (
                           <div
@@ -432,7 +423,6 @@ export const LoginHeader: React.FC = () => {
                                 className="!w-8 h-8 rounded-full size-20"
                               />
                             </div>
-
                             <div>
                               <h5 className="text-vysyamalaBlack font-semibold">
                                 {notification.notify_profile_name}{" "}
@@ -441,7 +431,6 @@ export const LoginHeader: React.FC = () => {
                               <p className="text-ashSecondary text-sm font-normal mb-3">
                                 {notification.to_message}
                               </p>
-
                               {notification.notification_type ===
                                 "express_interests" ? (
                                 // <button className="text-main rounded-md border-[2px] border-main px-2 py-1">

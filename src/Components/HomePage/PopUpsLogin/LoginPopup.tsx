@@ -97,7 +97,6 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
         "profile_completion",
         response.data.profile_completion
       );
-
       console.log("Login Response:", response.data);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user_profile_image", response.data.profile_image);
@@ -143,7 +142,6 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
       );
     }
   };
-
   const profileIDValue = watch("profileID", "");
   const passwordValue = watch("password", "");
   const handleKeyDown = (

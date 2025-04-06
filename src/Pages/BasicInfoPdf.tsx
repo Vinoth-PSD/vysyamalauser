@@ -91,7 +91,8 @@ export const BasicInfoPdf = () => {
               <img
                 src={
                  
-                  "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png"
+                 "https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/media/default_groom.png"
+                    //"http://103.214.132.20:8000/media/default_groom.png"
                 }
                 alt={profileDetails?.personal_profile_name || "Name not available"}
                 className="w-full h-[300px]  object-contain rounded-3xl  shadow-redboxshadow hover:scale-105 transition-transform duration-300"

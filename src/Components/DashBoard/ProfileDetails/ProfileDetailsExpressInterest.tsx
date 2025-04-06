@@ -1975,7 +1975,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     console.log("aaaaaaaaaaaaaaa", loginuser_profileId);
     console.log("bbbbbbbbbbbbbb", idparam);
     try {
-      const response = await axios.post('https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-porutham-pdf/', {
+      const response = await apiClient.post('/auth/generate-porutham-pdf/', {
         profile_from: loginuser_profileId,
         profile_to: idparam
       }, {
@@ -2077,7 +2077,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const handleDownloadPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    link.href = `https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+     link.href = `https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+   // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };
