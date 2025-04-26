@@ -58,12 +58,12 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
             setLoading(true);
             try {
                 const apiEndpoints: Record<string, string> = {
-                    "1": 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_mutual_intrests/',
-                    "2": 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_profile_wishlist/',
-                    "3": 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/My_intrests_list/',
-                    "4": 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/My_viewed_profiles/',
-                    "5": 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/My_profile_visit/',
-                    "6": 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_photo_request_list/',
+                    "1": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_mutual_intrests/',
+                    "2": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_profile_wishlist/',
+                    "3": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_intrests_list/',
+                    "4": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_viewed_profiles/',
+                    "5": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_profile_visit/',
+                    "6": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_photo_request_list/',
                     // "1": 'http://103.214.132.20:8000/auth/Get_mutual_intrests/',
                     // "2": 'http://103.214.132.20:8000/auth/Get_profile_wishlist/',
                     // "3": 'http://103.214.132.20:8000/auth/My_intrests_list/',
@@ -72,7 +72,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                     // "6": 'http://103.214.132.20:8000/auth/Get_photo_request_list/',
                 };
 
-                 const apiEndpoint = apiEndpoints[pageid] || 'https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/Get_prof_list_match/';
+                 const apiEndpoint = apiEndpoints[pageid] || 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_prof_list_match/';
                 //const apiEndpoint = apiEndpoints[pageid] || 'http://103.214.132.20:8000/auth/Get_prof_list_match/';
 
                 const response = await axios.post<ProfileListResponse>(apiEndpoint, {

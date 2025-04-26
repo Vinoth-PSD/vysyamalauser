@@ -71,13 +71,18 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
         if (!loginuser_profileId) {
           throw new Error("Profile ID is missing.");
         }
-
+        //const startTime = performance.now(); // Start timer
         const data = await fetchProfiles(
           loginuser_profileId,
           MatchingProfilepageNumber,
           MatchingProfileperPage,
           sortOrder
         );
+        // const endTime = performance.now(); // End timer
+        // const durationInSeconds = ((endTime - startTime) / 1000).toFixed(2);
+  
+        // console.log(`Grid List Api: ${durationInSeconds} seconds`);
+  
         setGridListCardData(data.profiles)
         setProfiles(data.profiles); // Adjust based on the actual response structure
       } catch (error) {

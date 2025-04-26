@@ -19,7 +19,7 @@ export const ChatRoom: React.FC = () => {
     // Fetch chat history from the server
     const fetchChatHistory = async () => {
         try {
-            const response = await fetch(`https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/getMessages/${room_name}/`, {
+            const response = await fetch(`https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/getMessages/${room_name}/`, {
                 //const response = await fetch(`http://103.214.132.20:8000/auth/getMessages/${room_name}/`, {
                 method: 'GET',
                 headers: {
@@ -58,7 +58,7 @@ export const ChatRoom: React.FC = () => {
             setMessages(JSON.parse(cachedMessages));
         }
 
-        const websocketUrl = `ws://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/ws/chat/${room_name}/?username=${username}`;
+        const websocketUrl = `ws://vysyamaladevnew-aehaazdxdzegasfb.westcentralus-01.azurewebsites.net/ws/chat/${room_name}/?username=${username}`;
         //const websocketUrl = `ws://103.214.132.20:8000/ws/chat/${room_name}/?username=${username}`;
         console.log('Connecting to WebSocket:', websocketUrl);
         ws.current = new WebSocket(websocketUrl);

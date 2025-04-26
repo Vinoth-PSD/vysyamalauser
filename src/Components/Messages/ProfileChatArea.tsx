@@ -43,7 +43,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
         if (!roomName) return;
 
         try {
-           const response = await fetch('https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/GetMessages/', {
+           const response = await fetch('https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/GetMessages/', {
               //  const response = await fetch('http://103.214.132.20:8000/auth/GetMessages/', {
                 method: 'POST',
                 headers: {
@@ -85,7 +85,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
     useEffect(() => {
         if (!roomName) return;
 
-        const websocketUrl = `ws://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/ws/chat/${roomName}/?username=${username}`;
+        const websocketUrl = `ws://vysyamaladevnew-aehaazdxdzegasfb.westcentralus-01.azurewebsites.net/ws/chat/${roomName}/?username=${username}`;
         //const websocketUrl = `ws://103.214.132.20:8000/ws/chat/${roomName}/?username=${username}`;
         ws.current = new WebSocket(websocketUrl);
 

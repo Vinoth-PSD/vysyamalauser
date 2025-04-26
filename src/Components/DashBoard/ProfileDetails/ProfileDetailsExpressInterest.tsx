@@ -264,7 +264,7 @@
 //   }, [idparam, loginuser_profileId]); // Dependency array: effect runs when profileIdViewed changes
 
 //   console.log("valueeee", status);
- 
+
 //   console.log(idparam, "id");
 //   useEffect(() => {
 //     const fetchProfileData = async () => {
@@ -296,7 +296,7 @@
 //     fetchProfileData();
 //   }, []);
 
-  
+
 //   // Declaration for Bookmarking Profile
 //   const [isBookmarked, setIsBookmarked] = useState(false);
 //   const [bookmarkedProfiles, setBookmarkedProfiles] = useState<ProfileData[]>(
@@ -401,7 +401,7 @@
 //           },
 //         }
 //       );
-  
+
 //       // Show toast based on API response
 //       if (response.data.Status === 1) {
 //         // toast.success(response.data.message || "Profile added to Bookmark Successfully");
@@ -434,7 +434,7 @@
 //           },
 //         }
 //       );
-  
+
 //       // Show toast based on API response
 //       if (response.data.Status === 1) {
 //         toast.success(response.data.Message || "Profile removed from Bookmark Successfully");
@@ -627,7 +627,7 @@
 //     console.log("aaaaaaaaaaaaaaa", loginuser_profileId);
 //     console.log("bbbbbbbbbbbbbb", idparam);
 //     try {
-//       const response = await axios.post('https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-porutham-pdf/', {
+//       const response = await axios.post('https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-porutham-pdf/', {
 //         profile_from: loginuser_profileId,
 //         profile_to: idparam
 //       }, {
@@ -729,7 +729,7 @@
 //   const handleDownloadPdf = () => {
 //     const link = document.createElement("a");
 //     link.target = '_blank'; // Open in a new tab
-//     link.href = `https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+//     link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
 //     link.download = `pdf_${idparam}.pdf`; // Customize the file name
 //     link.click();
 //   };
@@ -747,7 +747,7 @@
 //     setIsOpen(false); // Close the language dropdown
 //     if (language === "Tamil" || language === "English") {
 //       setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
-      
+
 //     } else {
 //       setIsPdfMenuOpen(false); // Close the PDF menu for other languages
 //     }
@@ -1392,7 +1392,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   console.log("vysya", storedPlanId);
 
   const navigate = useNavigate();
-  
+
 
 
 
@@ -1671,7 +1671,7 @@ export const ProfileDetailsExpressInterest: React.FC<
           },
         }
       );
-  
+
       // Show toast based on API response
       if (response.data.Status === 1) {
         // toast.success(response.data.message || "Profile added to Bookmark Successfully");
@@ -1703,7 +1703,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   //         },
   //       }
   //     );
-  
+
   //     // Show toast based on API response
   //     if (response.data.Status === 1) {
   //       toast.success(response.data.message || "Profile added to Bookmark Successfully");
@@ -1773,53 +1773,53 @@ export const ProfileDetailsExpressInterest: React.FC<
   //   }
   // };
 
-  
- const removeBookmark = async (profile_id: string) => {
-  try {
-    const response = await apiClient.post(
-      "/auth/Mark_profile_wishlist/",
-      {
-        profile_id: loginuser_profileId,
-        profile_to: idparam,
-        status: "0",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
 
-    // Show toast based on API response
-    if (response.data.Status === 1) {
-      toast.error(response.data.Message || "Profile removed from Bookmark Successfully");
-      setBookmarkedProfiles((prev) => {
-        return prev.filter((profile) => {
-          if (!profile || !profile.basic_details) {
-            console.error("Malformed profile object:", profile);
-            return false;
-          }
-          return profile.basic_details.profile_id !== profile_id;
+  const removeBookmark = async (profile_id: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: idparam,
+          status: "0",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Show toast based on API response
+      if (response.data.Status === 1) {
+        toast.error(response.data.Message || "Profile removed from Bookmark Successfully");
+        setBookmarkedProfiles((prev) => {
+          return prev.filter((profile) => {
+            if (!profile || !profile.basic_details) {
+              console.error("Malformed profile object:", profile);
+              return false;
+            }
+            return profile.basic_details.profile_id !== profile_id;
+          });
         });
-      });
-      setSelectedProfiles((prev) => {
-        return prev.filter((profile) => {
-          if (!profile || !profile.basic_details) {
-            console.error("Malformed profile object:", profile);
-            return false;
-          }
-          return profile.basic_details.profile_id !== profile_id;
+        setSelectedProfiles((prev) => {
+          return prev.filter((profile) => {
+            if (!profile || !profile.basic_details) {
+              console.error("Malformed profile object:", profile);
+              return false;
+            }
+            return profile.basic_details.profile_id !== profile_id;
+          });
         });
-      });
-      setIsBookmarked(false);
-    } else {
-      toast.error(response.data.Message || "Failed to remove bookmark");
+        setIsBookmarked(false);
+      } else {
+        toast.error(response.data.Message || "Failed to remove bookmark");
+      }
+    } catch (error) {
+      console.error("Error removing bookmark:", error);
+      toast.error("Error removing bookmark");
     }
-  } catch (error) {
-    console.error("Error removing bookmark:", error);
-    toast.error("Error removing bookmark");
-  }
-};
+  };
 
   // const removeBookmark = async (profile_id: string) => {
   //   try {
@@ -1836,7 +1836,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   //         },
   //       }
   //     );
-  
+
   //     // Show toast based on API response
   //     if (response.data.Status === 1) {
   //       toast.success(response.data.Message || "Profile removed from Bookmark Successfully");
@@ -1898,7 +1898,11 @@ export const ProfileDetailsExpressInterest: React.FC<
           to_express_message: openCustomMsg || selectValue, // Use message if provided, otherwise use an empty string
         }
       );
-
+      // Check for limit reached
+      if (response?.data?.Status === 0 && response?.data?.message === "Send express interests limit Reached") {
+        toast.error("Send express interests limit reached");
+        return; // exit early
+      }
       if (response.status === 200) {
         setIsHeartMarked(!isHeartMarked);
 
@@ -2077,8 +2081,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const handleDownloadPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-     link.href = `https://vysyamaladev-afcbe2fdb9c7ckdv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-   // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };
