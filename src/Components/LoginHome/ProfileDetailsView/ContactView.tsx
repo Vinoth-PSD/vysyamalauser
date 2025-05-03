@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import apiClient from '../../../API';
+import { useNavigate } from 'react-router-dom';
 // import { useParams } from 'react-router-dom';
-
 
 interface ContactDetails {
     address: string;
@@ -23,6 +23,7 @@ export const ContactView: React.FC = () => {
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchContactDetails = async () => {
@@ -38,7 +39,8 @@ export const ContactView: React.FC = () => {
             if (response.data && response.data.contact_details) {
               setContactDetails(response.data.contact_details);
             } else {
-              setError("Contact details not found in the response");
+              //setError("Contact details not found in the response");
+              navigate('/UpgradePlan');
             }
           } catch (error) {
             if (axios.isAxiosError(error)) {

@@ -143,12 +143,16 @@ export const HoroscopeView: React.FC = () => {
             </div>
 
             <div className="space-y-10 my-10">
+            {horoscopeDetails?.rasi_kattam && horoscopeDetails.rasi_kattam.trim() !== "" && (
                 <div>
                     <RasiGridview centerLabel={"Rasi"} rasiTemp={rasi} data={horoscopeDetails?.rasi_kattam} />
                 </div>
+            )}
+              {horoscopeDetails?.amsa_kattam && horoscopeDetails.amsa_kattam.trim() !== "" && (
                 <div>
                     <AmsamGridview centerLabel={"Amsam"} rasiTemp={rasi} data={horoscopeDetails?.amsa_kattam} />
                 </div>
+                )}
             </div>
         </div>
     );

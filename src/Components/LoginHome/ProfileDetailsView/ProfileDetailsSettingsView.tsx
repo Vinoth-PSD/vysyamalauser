@@ -11,7 +11,7 @@ import { ContactView } from './ContactView';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaRegListAlt } from 'react-icons/fa';
 
-interface ProfileDetailsSettingsViewProps {}
+interface ProfileDetailsSettingsViewProps { }
 
 interface ProfileListResponse {
     Status: number;
@@ -28,6 +28,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     const queryParams = new URLSearchParams(location.search);
     const pageid = queryParams.get("page") || "";
     const currentProfileId = queryParams.get("id") || "";
+    
 
     const renderSection = () => {
         switch (activeSection) {
@@ -72,7 +73,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                     // "6": 'http://103.214.132.20:8000/auth/Get_photo_request_list/',
                 };
 
-                 const apiEndpoint = apiEndpoints[pageid] || 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_prof_list_match/';
+                const apiEndpoint = apiEndpoints[pageid] || 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_prof_list_match/';
                 //const apiEndpoint = apiEndpoints[pageid] || 'http://103.214.132.20:8000/auth/Get_prof_list_match/';
 
                 const response = await axios.post<ProfileListResponse>(apiEndpoint, {
@@ -124,7 +125,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
         if (profileIds.length > 0) {
             const index = profileIds.indexOf(currentProfileId.toString()); // Ensure comparison is done with string
             console.log("Current Index:", index); // Log the index
-            
+
             if (index !== -1) {
                 setCurrentIndex(index);
             }
@@ -181,7 +182,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                             <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
                 ${activeSection === 'HoroscopeView' ? 'active' : ''}`}
                                 onClick={() => setActiveSection('HoroscopeView')}>
-                                <FaRegListAlt  className="text-[22px] mr-2" />
+                                <FaRegListAlt className="text-[22px] mr-2" />
                                 Horoscope
                             </li>
                             <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
