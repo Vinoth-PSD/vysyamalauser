@@ -237,7 +237,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profileId, profile }
                 <img
                   src={profile_img || ProfileListImg}
                   alt="Profile-image"
-                  className="w-[180px] h-[180px]  rounded-[6px] max-sm:w-full max-sm:h-[250px]"
+                  className="w-[180px] h-[180px] rounded-[6px] max-sm:w-full max-sm:h-[250px] object-cover object-top"
                 />
                 {/* Lock overlay */}
                 <div className="absolute inset-0 flex flex-col justify-center items-center text-center bg-black bg-opacity-50 rounded-[6px]">
@@ -251,7 +251,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profileId, profile }
               <img
                 src={profile_img || ProfileListImg}
                 alt="Profile-image"
-                className="w-[180px] h-full rounded-[6px] max-sm:w-full max-sm:h-[250px]"
+                className="w-[180px] h-[180px] rounded-[6px] max-sm:w-full max-sm:h-[250px] object-cover object-top"
               />
             )}
 
@@ -310,7 +310,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profileId, profile }
 
             {/* {/ Degree /} */}
             <div className="mb-1">
-              <p className="flex items-center text-sm text-primary-400">
+              <p className="w-[180px] text-sm text-primary-400 whitespace-nowrap overflow-hidden text-ellipsis ">
                 {/* <IoSchool className="mr-2" /> */}
                 {degree || "N/A"}
               </p>

@@ -159,7 +159,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
           <img
             src={profile.profile_img}
             alt={profile.profile_name}
-            className="w-[321px] rounded-[6px] mx-auto"
+            className="w-[320px] h-[280px] rounded-[6px] mx-auto object-cover object-top"
           />
         )}
       </div>

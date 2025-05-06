@@ -175,7 +175,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
               <img
                 src={profile_img || ProfileListImg}
                 alt="Profile-image"
-                className="w-[218px] h-[218px] rounded-[6px]  max-md:w-full max-md:h-[280px]"
+                className="w-[218px] h-[218px] rounded-[6px]  max-md:w-full max-md:h-[280px] object-cover object-top"
               />
             )}
 
