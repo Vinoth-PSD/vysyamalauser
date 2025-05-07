@@ -331,10 +331,10 @@ export const PartnerSettings: React.FC = () => {
     }
   };
 
-  const storedBirthStar = sessionStorage.getItem("selectedstar");
+  const storedBirthStar = localStorage.getItem("selectedstar");
   console.log("storedBirthStar", storedBirthStar);
-  const storedGender = sessionStorage.getItem("gender");
-  const storedRasi = sessionStorage.getItem("selectedRasi");
+  const storedGender = localStorage.getItem("gender");
+  const storedRasi = localStorage.getItem("selectedRasi");
   console.log("storedRasi", storedRasi);
   useEffect(() => {
     if (storedBirthStar && storedGender) {
