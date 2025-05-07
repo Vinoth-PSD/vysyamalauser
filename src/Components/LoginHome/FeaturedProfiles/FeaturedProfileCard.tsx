@@ -88,7 +88,7 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
       role="button"
       tabIndex={0}
     >
-      <img src={profileImage} alt={profileName} className="w-full rounded-lg" />
+      <img src={profileImage} alt={profileName} className="w-full h-[250px] rounded-lg object-cover object-top" />
       <div className="w-full absolute bottom-0 px-3 py-3 z-10">
         <h5 className="text-white font-semibold">
           {profileName} <span>({profileId})</span>

@@ -131,19 +131,19 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
   return (
     <div
       // onClick={handleCardClick}
-      className="relative w-[90%] mx-auto bg-white rounded-xl shadow-md px-3 py-3 my-5 cursor-pointer"
+      className="relative w-[90%] mx-auto !h-auto bg-white rounded-xl shadow-md px-3 py-3 my-5 cursor-pointer"
       onClick={handleProfileClick}
     >
-      <div className="mb-3">
+      <div className="mb-3 !h-auto ">
         {profileImg ? (
-          <img src={profileImg} alt="Profile" className="w-full" />
+          <img src={profileImg} alt="Profile" className="w-full h-[260px] object-cover object-top" />
         ) : (
           <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
             <span className="text-gray-500">No Image</span>
           </div>
         )}
       </div>
-      <div>
+      <div className="!h-auto">
         <h4 className=" text-secondary text-[20px] font-semibold">
           {/* Harini{" "} */}
          ({profile_name})
@@ -151,7 +151,7 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
             ({profileId})
           </span>
         </h4>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center !h-auto">
           <p className="text-sm text-primary flex items-center">
             <IoCalendar className="mr-2" /> {age} yrs{" "}
           </p>
