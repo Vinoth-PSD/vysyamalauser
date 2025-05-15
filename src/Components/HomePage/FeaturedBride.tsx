@@ -7,7 +7,6 @@
 // import { BrideSlick } from "./Featured/BrideSlick";
 // import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal"; // Assuming you have this component
 
-
 // const settings = {
 //   dots: true,
 //   infinite: true,
@@ -43,7 +42,6 @@
 //     },
 //   ],
 // };
-
 
 // export const FeaturedBride: React.FC = () => {
 //   const [profiles, setProfiles] = useState<any[]>([]);
@@ -128,8 +126,6 @@
 //           </div> */}
 //         </div>
 
-
-
 //         {/* Show LoginPopupModal conditionally */}
 //         {isLoginPopupOpen && (
 //           <LoginPopupModal
@@ -143,10 +139,7 @@
 //       </div>
 //     )
 //   );
-// }  
-
-
-
+// }
 
 import React, { useEffect, useState } from "react";
 //import Slider from "react-slick";
@@ -157,7 +150,6 @@ import { BrideSlick } from "./Featured/BrideSlick";
 import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal"; // Assuming you have this component
 import apiClient from "../../API";
 import { useNavigate } from "react-router-dom";
-
 
 // const settings = {
 //   dots: true,
@@ -196,7 +188,6 @@ import { useNavigate } from "react-router-dom";
 //   ],
 // };
 
-
 export const FeaturedBride: React.FC = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -208,8 +199,6 @@ export const FeaturedBride: React.FC = () => {
   const handleViewMoreClick = () => {
     navigate("/FeaturedBrideCard");
   };
-
-
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -237,7 +226,6 @@ export const FeaturedBride: React.FC = () => {
   }, []);
 
   const handleImageClick = (profileId: string) => {
-
     setIsLoginPopupOpen(true);
     // Store the profileId in sessionStorage
     sessionStorage.setItem("selectedProfileId", profileId);
@@ -263,9 +251,9 @@ export const FeaturedBride: React.FC = () => {
               Featured Brides
             </h4>
             <p className="text-vysyamalaBlack text-[21px]  max-xl:text-[18px] max-lg:text-[16px]">
-              Dreaming of your partner? Is she a singer? Dancer? It’s time to turn
-              this dream into reality!<br className="max-md:hidden"></br> Find some of our brides in the spotlight
-              below.
+              Dreaming of your partner? Is she a singer? Dancer? It’s time to
+              turn this dream into reality!<br className="max-md:hidden"></br>{" "}
+              Find some of our brides in the spotlight below.
             </p>
           </div>
 
@@ -289,7 +277,7 @@ export const FeaturedBride: React.FC = () => {
             <button className=" bg-main py-2 px-5 text-white text-lg font-medium rounded-md">View More</button>
           </div> */}
 
-<div className="feature-profile grid grid-cols-5 gap-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 mt-10">
+          <div className="feature-profile grid grid-cols-5 gap-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 mt-10">
             {/* Render the first 9 profiles */}
             {profiles.slice(0, 9).map((profile) => (
               <BrideSlick
@@ -307,15 +295,16 @@ export const FeaturedBride: React.FC = () => {
                 className="flex items-center justify-center bg-gray border border-vysyamalaPink mx-[10px] mb-5 w-[90%] cursor-pointer shadow-reviewBoxShadow rounded-lg  max-sm:mb-5  max-md:mx-auto"
                 onClick={handleViewMoreClick} // Function to handle "View More" click
               >
-                <a className="text-vysyamalaBlack text-xl  font-semibold hover:text-main max-md:text-xs"  onClick={handleViewMoreClick}>View More</a>
-                
+                <a
+                  className="text-vysyamalaBlack text-xl  font-semibold hover:text-main max-md:text-xs"
+                  onClick={handleViewMoreClick}
+                >
+                  View More
+                </a>
               </div>
             )}
           </div>
-
         </div>
-
-
 
         {/* Show LoginPopupModal conditionally */}
         {isLoginPopupOpen && (
@@ -330,4 +319,4 @@ export const FeaturedBride: React.FC = () => {
       </div>
     )
   );
-}  
+};
