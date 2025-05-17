@@ -411,10 +411,10 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
-    autoplay: false,
+    autoplay: true,
     cssEase: "linear",
     pauseOnHover: true,
-    rtl: true,
+    rtl: false,
     arrows: false,
     responsive: [
       {
@@ -573,7 +573,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
           <div className="profile-slider-img-container">
             <img
               src={images[0]}
-              className="w-full h-[420px] rounded-lg profile-slider-img"
+              className="w-full h-[450px] rounded-lg profile-slider-img max-lg:w-full max-sm:w-full  max-sm:h-[300px] object-cover object-top "
               alt="Single Image"
               onMouseEnter={() => handleMouseEnter(images[0])}
               onMouseLeave={handleMouseLeave}
@@ -606,7 +606,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
               arrows={false}
               dotsClass="slick-dots slick-thumb"
               infinite={true}
-              speed={500}
+              speed={1400}
               slidesToShow={1}
               slidesToScroll={1}
               asNavFor={nav2 as Slider}
@@ -622,7 +622,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
                 >
                   <img
                     src={image}
-                    className="w-full h-[420px] rounded-lg profile-slider-img"
+                    className="w-full h-[450px] rounded-lg profile-slider-img max-lg:w-full max-sm:w-full  max-sm:h-[300px] object-cover object-top "
                     alt={`Slide ${index + 1}`}
                   />
                   {photoLock === 1 && PhotoPasswordlock === 1 && !storedProtectedImg && (
@@ -643,8 +643,8 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
             <Slider
               // dots={false}
               // slidesToShow={5}
-              // swipeToSlide={true}
-              // focusOnSelect={true}
+              swipeToSlide={true}
+              focusOnSelect={true}
               asNavFor={nav1 as never}
               ref={(slider) => setNav2(slider)}
               {...settings}

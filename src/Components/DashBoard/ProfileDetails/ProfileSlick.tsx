@@ -158,17 +158,17 @@ export const ProfileSlick = () => {
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
-    autoplay: false,
+    autoplay: true,
     cssEase: "linear",
     pauseOnHover: true,
-    rtl: true,
+    rtl: false,
     arrows:false,
     responsive: [
       {
         breakpoint: 1536,
         settings: {
           slidesToShow: 4,
-          infinite: false,
+          infinite: true,
           dots: false,
         },
       },
@@ -176,7 +176,7 @@ export const ProfileSlick = () => {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
-          infinite: false,
+          infinite: true,
           dots: false,
         },
       },
@@ -227,7 +227,7 @@ export const ProfileSlick = () => {
           arrows={false}
           dotsClass="slick-dots slick-thumb"
           infinite={true}
-          speed={500}
+          speed={1400}
           slidesToShow={1}
           slidesToScroll={1}
           asNavFor={nav2 as never}
@@ -243,7 +243,7 @@ export const ProfileSlick = () => {
             >
               <img
                 src={image.imageUrl || ""}
-                className="w-full h-full rounded-lg profile-slider-img max-lg:w-full max-sm:w-full"
+                className="w-full h-[450px] rounded-lg profile-slider-img max-lg:w-full max-sm:w-full  max-sm:h-[300px] object-cover object-top "
                 alt={`Slide ${index + 1}`}
               />
               <div
@@ -300,7 +300,7 @@ export const ProfileSlick = () => {
       </div> */}
           <img
             src={image.imageUrl || ""}
-            className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover"
+            className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
            // className="w-full h-auto mx-auto rounded-lg object-cover"
             alt={`Slide ${index + 1}`}
           />
@@ -309,8 +309,8 @@ export const ProfileSlick = () => {
     </Slider> 
       </div>
       {zoomImage && (
-        <div className="zoomed-image-container zoomed-visible">
-          <img src={zoomImage} className="zoomed-image" alt="Zoomed" />
+        <div className="zoomed-image-container zoomed-visible ">
+          <img src={zoomImage} className="zoomed-image object-top" alt="Zoomed" />
         </div>
       )}
       <input
