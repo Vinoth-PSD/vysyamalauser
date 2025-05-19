@@ -156,7 +156,10 @@ export const SuggestedProfiles: React.FC = () => {
         <div>
           <h4 className="text-[24px] text-vysyamalaBlack font-bold  max-xl:text-[22px] max-lg:text-[20px] max-md:text-[18px]">
             Suggested Profiles {" "}
-            <span className="text-sm text-primary font-bold">({totalCount})</span>
+            <span className="text-sm text-primary font-bold">
+              {/* ({totalCount}) */}
+              
+              </span>
           </h4>
         </div>
         <div>
