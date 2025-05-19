@@ -1,6 +1,4 @@
 
-
-
 import React, { useState, useContext, useEffect } from "react";
 
 import { IoCalendar } from "react-icons/io5";
@@ -146,7 +144,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
               alt={profile.profile_name}
               className="w-[321px] h-[321px] rounded-[6px] mx-auto opacity-50" // Reduced opacity to indicate locked state
             />
-            <div className="absolute top-0 left-0 w-[321px] h-[321px] rounded-[6px] flex items-center justify-center bg-black bg-opacity-40">
+            <div className="absolute top-0 left-0 w-full h-full rounded-[6px] flex items-center justify-center bg-black bg-opacity-40">
               <div className="text-center lock-style text-white">
                 <IoMdLock className="w-fit mx-auto text-secondary text-[50px]" />
                 <p className="text-sm font-semibold">

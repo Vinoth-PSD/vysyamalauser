@@ -269,7 +269,7 @@ const MatchingScore: React.FC<MatchingScoreProps> = ({ scorePercentage }) => {
 
 
                 <div className="text-sm text-ash font-semibold z-10">
-                  {scorePercentage}%
+                  {scorePercentage}
                 </div>
               </span>
             </div>
@@ -295,7 +295,7 @@ const MatchingScore: React.FC<MatchingScoreProps> = ({ scorePercentage }) => {
 
       {/* Matching Score */}
       {/* {/ <div className="mt-2 text-lg font-semibold">Matching Score: {score}%</div> /} */}
-      <div className="mt-16 text-lg text-center font-semibold">Matching Score: {scorePercentage}%</div>
+      <div className="mt-16 text-lg text-center font-semibold">Matching Score: {scorePercentage}</div>
 
     </div>
   );
