@@ -37,10 +37,6 @@ export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePop
         fetchPersonalNotes();
     }, [loginuser_profileId, id]);
 
-    const handleUpgradeCancel =()=>{
-        setShowUpgradePrompt(false);
-        closePopup();
-    }
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -63,12 +59,9 @@ export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePop
             console.error('Error saving notes:', error);
             alert('An error occurred while saving notes');
         }
-
-        
     };
 
     const handleUpgrade = () => {
-        
         setShowUpgradePrompt(false);
         closePopup();
         window.location.href = '/MembershipPlan'; // Adjust route if needed
@@ -78,17 +71,14 @@ export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePop
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white sm:w-[400px] w-[300px] rounded-lg container mx-auto relative">
                 <div className="rounded-lg">
-                  {!showUpgradePrompt && (
-                      <div className="bg-white rounded-t-lg flex justify-between items-center border-b-[1px] border-ashBorder px-3 py-2 mb-2">
+                    <div className="bg-white rounded-t-lg flex justify-between items-center border-b-[1px] border-ashBorder px-3 py-2 mb-2">
                         <h4 className="text-[24px] text-primary font-bold">Personal Notes</h4>
                         <IoClose onClick={closePopup} className="text-[22px] text-primary cursor-pointer" />
                     </div>
-                  )}
 
-                   
-
-                    {!showUpgradePrompt ? (
-   <form onSubmit={handleSubmit}>
+                    <div>
+                        {/* Input Field */}
+                        <form onSubmit={handleSubmit}>
                             <div className="">
                                 <textarea
                                     name="personalNotes"
@@ -116,33 +106,33 @@ export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePop
                                 </button>
                             </div>
                         </form>
-) : (
-  <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-    <div className="bg-white rounded-lg p-5 w-3/4">
-     
-      <p className="text-lg font-semibold mb-4">
-        You need to upgrade your package to access this functionality.
-      </p>
-      <div className="flex justify-end space-x-4">
-        <button
-          onClick={handleUpgradeCancel}
-          className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleUpgrade}
-          className="bg-gradient text-white flex items-center rounded-lg font-semibold border-2 px-5 py-2 cursor-pointer"
-        >
-          Upgrade
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+                    </div>
                 </div>
 
+                {/* Upgrade Prompt Overlay */}
+                {showUpgradePrompt && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white rounded-lg p-5 w-3/4">
+                            <p className="text-lg font-semibold mb-4">
+                                You need to upgrade your package to access this functionality.
+                            </p>
+                            <div className="flex justify-end space-x-4">
+                                <button
+                                    onClick={() => setShowUpgradePrompt(false)}
+                                    className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleUpgrade}
+                                    className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+                                >
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -153,7 +153,7 @@ export const FeaturedProfiles = () => {
               Featured Profiles{" "}
               <span className="text-sm text-white font-bold">
                 {" "}
-                {/* ({totalCount}) */}
+                ({totalCount})
               </span>
             </h4>
           </div>

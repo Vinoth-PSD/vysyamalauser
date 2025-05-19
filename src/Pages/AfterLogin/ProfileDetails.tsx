@@ -2,7 +2,7 @@ import { ProfileDetailsExpressInterest } from '../../Components/DashBoard/Profil
 // import { ProfileDetailsRequest } from '../../Components/DashBoard/ProfileDetails/ProfileDetailsRequest'
 import { ProfileDetailsSettingsView } from '../../Components/LoginHome/ProfileDetailsView/ProfileDetailsSettingsView'
 import { FeaturedProfiles } from '../../Components/LoginHome/FeaturedProfiles'
-//import { VysyaBazaar } from '../../Components/LoginHome/VysyaBazaar'
+import { VysyaBazaar } from '../../Components/LoginHome/VysyaBazaar'
 import { SuggestedProfiles } from '../../Components/LoginHome/SuggestedProfiles'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -17,7 +17,7 @@ export const ProfileDetails = () => {
             <ProfileDetailsExpressInterest />
             <ProfileDetailsSettingsView />
             <FeaturedProfiles />
-            {/* <VysyaBazaar /> */}
+            <VysyaBazaar />
             <SuggestedProfiles />
         </div>
     )
