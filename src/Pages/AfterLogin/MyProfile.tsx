@@ -887,19 +887,6 @@ import { toast } from "react-toastify";
 
 interface GetProfileDetMatch {
   profile_id: string;
-  //   profile_name: string;
-  //   age: string;
-  //   weight: string;
-  //   height: string;
-  //   star: string;
-  //   profession: string;
-  //   education: string;
-  //   about: string;
-  //   gothram: string;
-  //   horoscope_available: string;
-  //   matching_score: string;
-  //   verified: number;
-
   personal_profile_name: string;
   personal_age: number;
   personal_profile_height: string;
@@ -915,7 +902,6 @@ interface GetProfileDetMatch {
   prosession: string;
   heightest_education: string;
 }
-
 
 interface EmptyField {
   tab: string;

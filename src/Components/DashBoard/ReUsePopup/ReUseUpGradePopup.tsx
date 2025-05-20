@@ -1,24 +1,22 @@
 
 import { useNavigate } from "react-router-dom";
 
-interface ReUseUpGradePopupProbs{
+interface ReUseUpGradePopupProbs {
   closePopup: () => void;
-  text:string
+  text: string
 }
 
-
-export const ReUseUpGradePopup: React.FC<ReUseUpGradePopupProbs> = ({ closePopup ,text}) => {
+export const ReUseUpGradePopup: React.FC<ReUseUpGradePopupProbs> = ({ closePopup, text }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={closePopup}>
       <div className="bg-white rounded-lg p-5 w-3/4 max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Upgrade Required</h3>
-          
         </div>
         <p className="mb-4">
-         {text}
+          {text}
         </p>
         <div className="flex justify-end space-x-4">
           <button

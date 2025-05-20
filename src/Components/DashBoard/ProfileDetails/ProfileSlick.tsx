@@ -1,15 +1,14 @@
-import { useState, useEffect, useRef, useContext, useCallback  } from "react";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import Slider from "react-slick";
 import "./ProfileSlickStyle.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdModeEdit } from "react-icons/md";
 //import axios from "axios";
-import { NotifySuccess, ToastNotification } from "../../Toast/ToastNotification";
+import { NotifyError, NotifySuccess, ToastNotification } from "../../Toast/ToastNotification";
 import { FaPlus } from "react-icons/fa6";
 import { ProfileContext } from "../../../ProfileContext";
 import apiClient from "../../../API";
-
 
 export const ProfileSlick = () => {
   const [nav1, setNav1] = useState<Slider | null>(null);
@@ -46,20 +45,17 @@ export const ProfileSlick = () => {
     setNav2(sliderRef2.current);
   }, [debouncedFetchImages, removePhotoIndicator]);
 
- 
+
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-
     const validFileTypes = ["image/jpeg", "image/png"];
     const uploadedImages = [];
-
     for (const file of files) {
       if (!validFileTypes.includes(file.type)) {
         alert("Only JPG and PNG files are allowed");
         continue;
       }
-
       // Add preview image
       const previewImage = { id: null, imageUrl: URL.createObjectURL(file), url: "", alt: "" };
       setImages((prev) => [...prev, previewImage]);
@@ -68,47 +64,47 @@ export const ProfileSlick = () => {
         console.error("Profile ID not found");
         continue;
       }
-
       try {
         const formData = new FormData();
         formData.append("profile_id", loginUserProfileId);
-        console.log("currentEditIndex",currentEditIndex)
-      //  formData.append("new_image_files", file);
-      if (currentEditIndex !== null && images[currentEditIndex]?.id) {
-        // Replace image logic
-        formData.append("replace_image_ids", images[currentEditIndex].id.toString());
-        formData.append("replace_image_files", file);
-      } else {
-        // Add new image logic
-        formData.append("new_image_files", file);
-      }
-
+        console.log("currentEditIndex", currentEditIndex)
+        //  formData.append("new_image_files", file);
+        if (currentEditIndex !== null && images[currentEditIndex]?.id) {
+          // Replace image logic
+          formData.append("replace_image_ids", images[currentEditIndex].id.toString());
+          formData.append("replace_image_files", file);
+        } else {
+          // Add new image logic
+          formData.append("new_image_files", file);
+        }
         const response = await apiClient.post("/auth/ImageSetEdit/", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         uploadedImages.push(response.data); // Optional: Handle server response
         NotifySuccess("Image uploaded successfully");
-      } 
-      catch (error) {
+      }
+      catch (error: any) {
         console.error("Error uploading image:", error);
         setImages((prev) => prev.filter((img) => img.imageUrl !== previewImage.imageUrl)); // Remove preview on failure
+        // Show specific error message from server
+        if (error.response?.data?.error) {
+          NotifyError(error.response.data.error); // This will show "Upload limit exceeded..." message
+        } else {
+          NotifyError("Error uploading image");
+        }
       }
     }
- // Refresh image list after successful upload
- fetchImages();
+    // Refresh image list after successful upload
+    fetchImages();
     setShowOptions(false); // Close options menu
   };
 
-  
-  
   const handleRemoveImage = async () => {
     if (currentEditIndex !== null) {
       try {
         const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
         if (!loginUserProfileId) throw new Error("Profile ID not found");
-
         const imageToRemove = images[currentEditIndex];
-
         if (imageToRemove.id !== null) {
           const formData = new FormData();
           formData.append("profile_id", loginUserProfileId);
@@ -123,7 +119,6 @@ export const ProfileSlick = () => {
               },
             }
           );
-
           if (response.data.success === 1) {
             NotifySuccess("Image removed successfully");
             setRemovePhotoIndicator(!removePhotoIndicator);
@@ -149,11 +144,9 @@ export const ProfileSlick = () => {
     setShowOptions(true);
   };
 
-  
-
   const settings = {
     dots: false,
-    infinite:true,
+    infinite: true,
     speed: 1400,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -162,7 +155,7 @@ export const ProfileSlick = () => {
     cssEase: "linear",
     pauseOnHover: true,
     rtl: false,
-    arrows:false,
+    arrows: false,
     responsive: [
       {
         breakpoint: 1536,
@@ -185,7 +178,7 @@ export const ProfileSlick = () => {
         settings: {
           slidesToShow: 4,
           autoplay: false,
-  
+
         },
       },
       {
@@ -193,7 +186,7 @@ export const ProfileSlick = () => {
         settings: {
           slidesToShow: 4,
           autoplay: false,
-          arrows: false,  
+          arrows: false,
         },
       },
       {
@@ -201,13 +194,12 @@ export const ProfileSlick = () => {
         settings: {
           slidesToShow: 3,
           autoplay: false,
-          arrows: false,  
-  
+          arrows: false,
+
         },
       },
     ],
   };
-  
 
   return (
     <div>
@@ -276,37 +268,35 @@ export const ProfileSlick = () => {
           ))}
         </Slider>
 
-       
-          <Slider
-      asNavFor={nav1 as never}
-      ref={(slider) => setNav2(slider)}
-      // slidesToShow={4}
-      swipeToSlide={true}
-      focusOnSelect={true}
-      // arrows={false}
-      {...settings}  
-      
-      className="connectingSlick"
-    >
-      {images.map((image, index) => (
-        <div
-          key={index}
-          className="profile-slider-img-container"
-          onMouseEnter={() => handleMouseEnter(image.imageUrl || "")}
-          onMouseLeave={handleMouseLeave}
+        <Slider
+          asNavFor={nav1 as never}
+          ref={(slider) => setNav2(slider)}
+          // slidesToShow={4}
+          swipeToSlide={true}
+          focusOnSelect={true}
+          // arrows={false}
+          {...settings}
+          className="connectingSlick"
         >
-           {/* <div className="text-center mb-2 text-sm text-gray-600">
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="profile-slider-img-container"
+              onMouseEnter={() => handleMouseEnter(image.imageUrl || "")}
+              onMouseLeave={handleMouseLeave}
+            >
+              {/* <div className="text-center mb-2 text-sm text-gray-600">
         {` ${index === 0 ? "1ST" : index === 1 ? "2ND" : index === 2 ?"3RD" : `${index + 1}TH`} image`}
       </div> */}
-          <img
-            src={image.imageUrl || ""}
-            className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
-           // className="w-full h-auto mx-auto rounded-lg object-cover"
-            alt={`Slide ${index + 1}`}
-          />
-        </div>
-      ))}
-    </Slider> 
+              <img
+                src={image.imageUrl || ""}
+                className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
+                // className="w-full h-auto mx-auto rounded-lg object-cover"
+                alt={`Slide ${index + 1}`}
+              />
+            </div>
+          ))}
+        </Slider>
       </div>
       {zoomImage && (
         <div className="zoomed-image-container zoomed-visible ">

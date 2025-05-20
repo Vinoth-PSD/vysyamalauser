@@ -1,7 +1,7 @@
 
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 // import { useDispatch } from "react-redux";
 // import { hideInterest } from "../../../redux/slices/interestSlice";
 import axios, { AxiosResponse } from "axios";
@@ -84,6 +84,7 @@ interface ProfileData {
   education_details: EducationDetails;
   basic_details: BasicDetails;
   personal_details: PersonalDetails;
+  photo_request: number;
 }
 
 interface ApiResponse {
@@ -119,10 +120,9 @@ export const ProfileDetailsExpressInterest: React.FC<
   console.log(typeof PhotoPasswordlock, "PhotoPasswordlock");
   // console.log(profileData?.basic_details.verified, "llllllllllllllllll");
   const [hideExpresButton, setHideExpressButton] = useState<boolean>(true);
-const [expressPopup,setExpressPopup]=useState<boolean>(false)
-const [bookMarkPopup,setBookMarkPopup]=useState<boolean>(false)
-const [matchingScorePopup,setMatchingScorePopup]=useState<boolean>(false)
-
+  const [expressPopup, setExpressPopup] = useState<boolean>(false)
+  const [bookMarkPopup, setBookMarkPopup] = useState<boolean>(false)
+  const [matchingScorePopup, setMatchingScorePopup] = useState<boolean>(false)
 
   const [loading, setLoading] = useState(false);
 
@@ -486,15 +486,15 @@ const [matchingScorePopup,setMatchingScorePopup]=useState<boolean>(false)
       // }
 
       {
-      
-          setExpressPopup(true)
-          return;
+
+        setExpressPopup(true)
+        return;
       }
 
-    //    {
-    //   setShowVysassist(true); // Show the popup by setting state
-    //   return;
-    // }
+      //    {
+      //   setShowVysassist(true); // Show the popup by setting state
+      //   return;
+      // }
       if (response.status === 200) {
         setIsHeartMarked(!isHeartMarked);
 
@@ -547,10 +547,10 @@ const [matchingScorePopup,setMatchingScorePopup]=useState<boolean>(false)
           status: 1,
         }
       );
-       if (response?.data?.Status === 0 && response?.data?.message === "No access to bookmark the profile"){
-       
-      setBookMarkPopup(true);
-      return;
+      if (response?.data?.Status === 0 && response?.data?.message === "No access to bookmark the profile") {
+
+        setBookMarkPopup(true);
+        return;
       }
       if (response.status >= 200 || response.status >= 204) {
         NotifySuccess("Your photo interest request has been sent successfully!");
@@ -567,70 +567,64 @@ const [matchingScorePopup,setMatchingScorePopup]=useState<boolean>(false)
     }
   };
 
-const generatePoruthamPDF = async () => {
-  console.log("Profile from:", loginuser_profileId);
-  console.log("Profile to:", idparam);
+  const generatePoruthamPDF = async () => {
+    console.log("Profile from:", loginuser_profileId);
+    console.log("Profile to:", idparam);
 
-  try {
-    const response = await apiClient.post(
-      "/auth/generate-porutham-pdf/",
-      {
-        profile_from: loginuser_profileId,
-        profile_to: idparam,
-      },
-      {
-        responseType: "blob", // Needed to download PDF
-      }
-    );
+    try {
+      const response = await apiClient.post(
+        "/auth/generate-porutham-pdf/",
+        {
+          profile_from: loginuser_profileId,
+          profile_to: idparam,
+        },
+        {
+          responseType: "blob", // Needed to download PDF
+        }
+      );
 
-    const contentType = response.headers["content-type"];
+      const contentType = response.headers["content-type"];
 
-    // 📌 Case 1: Server returned JSON (an error)
-    if (contentType && contentType.includes("application/json")) {
-      const text = await response.data.text(); // Convert blob to text
-      const json = JSON.parse(text); // Parse text to JSON
-
-      if (
-        json.status === "failure" &&
-        json.message === "No access to see the compatibility report"
-      ) {
-    
-        setMatchingScorePopup(true);
+      // 📌 Case 1: Server returned JSON (an error)
+      if (contentType && contentType.includes("application/json")) {
+        const text = await response.data.text(); // Convert blob to text
+        const json = JSON.parse(text); // Parse text to JSON
+        if (
+          json.status === "failure" &&
+          json.message === "No access to see the compatibility report"
+        ) {
+          setMatchingScorePopup(true);
+          return;
+        }
+        NotifyError(json.message || "Unexpected error from server.");
         return;
       }
 
-      NotifyError(json.message || "Unexpected error from server.");
-      return;
+      // 📌 Case 2: Server returned PDF
+      if (response.status === 200 && contentType.includes("application/pdf")) {
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        const link = document.createElement("a");
+        const url = window.URL.createObjectURL(blob);
+
+        link.href = url;
+        link.setAttribute("download", "Porutham.pdf");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        console.log("PDF downloaded successfully.");
+      } else {
+        NotifyError("Failed to generate compatibility report.");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response?.data || error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+      setBookMarkPopup(true)
     }
-
-    // 📌 Case 2: Server returned PDF
-    if (response.status === 200 && contentType.includes("application/pdf")) {
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const link = document.createElement("a");
-      const url = window.URL.createObjectURL(blob);
-
-      link.href = url;
-      link.setAttribute("download", "Porutham.pdf");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      console.log("PDF downloaded successfully.");
-    } else {
-      NotifyError("Failed to generate compatibility report.");
-    }
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.response?.data || error.message);
-    } else {
-      console.error("Unexpected error:", error);
-    }
-   
-    setBookMarkPopup(true)
-  
-  }
-};
-
+  };
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -659,7 +653,7 @@ const generatePoruthamPDF = async () => {
   const [showPersonalNotes, setShowPersonalNotes] = useState(false);
   const handlePersonalNotesPopup = () => {
     setShowPersonalNotes(!showPersonalNotes);
-    
+
   };
 
   const closePersonalNotesPopup = () => {
@@ -676,8 +670,6 @@ const generatePoruthamPDF = async () => {
   const closeVysassistpopup = () => {
     setShowVysassist(false);
   };
-
-
 
   // const [isShareVisible, setIsShareVisible] = useState(false);
 
@@ -706,15 +698,8 @@ const generatePoruthamPDF = async () => {
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };
-
   const horoscopeLink = profileData?.basic_details.horoscope_link
-
-
   const [isPdfMenuOpen, setIsPdfMenuOpen] = useState(false);
-
-
-
-
   // const handleSelectLanguage = (language: SetStateAction<string | null>) => {
   //   setSelectedLanguage(language);
   //   setIsOpen(false); // Close the language dropdown
@@ -782,7 +767,6 @@ const generatePoruthamPDF = async () => {
                   <div className="">
                     <h4 className="flex items-center text-[30px] text-secondary font-bold mb-3 max-lg:text-[28px] max-md:text-[24px] max-sm:text-[20px]">
                       {profileData?.basic_details.profile_name}
-
                       {profileData?.basic_details.verified === 1 && (
                         <MdVerifiedUser className="text-checkGreen ml-2" />
                       )}
@@ -843,15 +827,15 @@ const generatePoruthamPDF = async () => {
                         />
                       )}
                     </div>
-
-                    <div>
-                      <TbPhotoHeart
-                        onClick={() => sendPhotoRequest()}
-                        title="Send Photo Request"
-                        className="text-[22px] text-vysyamalaBlack cursor-pointer"
-                      />
-                    </div>
-
+                    {profileData?.photo_request !== 0 && (
+                      <div>
+                        <TbPhotoHeart
+                          onClick={() => sendPhotoRequest()}
+                          title="Send Photo Request"
+                          className="text-[22px] text-vysyamalaBlack cursor-pointer"
+                        />
+                      </div>
+                    )}
                     <div>
                       <img
                         src={SupportAgent}
@@ -915,10 +899,6 @@ const generatePoruthamPDF = async () => {
                         </span>
                       </h5>
                     )}
-
-
-
-
 
                     {/* Star & Gothram */}
                     <div className="flex justify-start gap-4 items-center mb-3  max-lg:flex-wrap max-sm:gap-3 max-sm:flex-col max-sm:items-start">
@@ -1024,7 +1004,6 @@ const generatePoruthamPDF = async () => {
                 <div className="flex justify-between items-center mt-20 max-sm:flex-wrap max-sm:gap-3  max-sm:mt-3">
                   <div>
                     {/* Buttons */}
-
                     {interestParam !== "1" && status !== 2 && status !== 3 && loginuser_profileId && (
                       <div className="flex justify-start gap-4 items-end">
                         <button
@@ -1090,7 +1069,6 @@ const generatePoruthamPDF = async () => {
                             </>
                           ) : null}
                           {/* Message button */}
-
                         </div>
                       )
                     )}
@@ -1120,10 +1098,7 @@ const generatePoruthamPDF = async () => {
                     {loading && <p>Loading...</p>}
                     {error && <p>{error}</p>}
                   </div> */}
-
-
                   </div>
-
                   <div
                     className="flex justify-center items-center space-x-10"
                     onMouseEnter={() => setIsHovered(true)}
@@ -1240,18 +1215,18 @@ const generatePoruthamPDF = async () => {
             <FeaturedProfiles />
             <VysyaBazaar />
             <SuggestedProfiles /> */}
-            {expressPopup&&(
-              <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={"You need to upgrade your package to access this functionality."}/>
-            )}
+      {expressPopup && (
+        <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={"You need to upgrade your package to access this functionality."} />
+      )}
 
-            {bookMarkPopup&&(
-              <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={"No access to bookmark the profile"}/>
-            )}
+      {bookMarkPopup && (
+        <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={"No access to bookmark the profile"} />
+      )}
 
-            
-            {matchingScorePopup&&(
-              <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={"No access to see the compatibility report"}/>
-            )}
+
+      {matchingScorePopup && (
+        <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={"No access to see the compatibility report"} />
+      )}
     </div>
   );
 };
