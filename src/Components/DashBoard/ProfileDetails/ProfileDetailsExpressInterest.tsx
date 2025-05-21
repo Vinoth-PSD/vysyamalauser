@@ -120,9 +120,10 @@ export const ProfileDetailsExpressInterest: React.FC<
   console.log(typeof PhotoPasswordlock, "PhotoPasswordlock");
   // console.log(profileData?.basic_details.verified, "llllllllllllllllll");
   const [hideExpresButton, setHideExpressButton] = useState<boolean>(true);
-  const [expressPopup, setExpressPopup] = useState<boolean>(false)
-  const [bookMarkPopup, setBookMarkPopup] = useState<boolean>(false)
-  const [matchingScorePopup, setMatchingScorePopup] = useState<boolean>(false)
+  const [expressPopup, setExpressPopup] = useState<boolean>(false);
+  const [bookMarkPopup, setBookMarkPopup] = useState<boolean>(false);
+  const [matchingScorePopup, setMatchingScorePopup] = useState<boolean>(false);
+  console.log('matchingScorePopup', matchingScorePopup)
 
   const [loading, setLoading] = useState(false);
 
@@ -466,6 +467,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   console.log(openCustomMsg, "setOpenCustomMsg");
 
   const [selectValue, setSelectValue] = useState<string>("");
+  const [apimsgExpressInt, setApiMsgExpressInt] = useState("");
 
   const handleHeartMark = async () => {
     try {
@@ -479,14 +481,14 @@ export const ProfileDetailsExpressInterest: React.FC<
         }
       );
       // Check for limit reached
-      if (response?.data?.Status === 0 && response?.data?.message === "Send express interests limit Reached")
+      if (response.data.Status === 0 && response.data.message)
       //    {
       //   toast.error("Send express interests limit reached");
       //   return; // exit early
       // }
 
       {
-
+        setApiMsgExpressInt(response.data.message); // Store the API message
         setExpressPopup(true)
         return;
       }
@@ -536,6 +538,9 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const [selectedLanguage, _setSelectedLanguage] = useState<string | null>(null);
   const [_isHovered, setIsHovered] = useState(false);
+  const [apimsgPhotoReq, setApimsgPhotoReq] = useState("");
+  const [apimsgMatchingScore, setApimsgMatchingScore] = useState("");
+  console.log('apimsgMatchingScore', apimsgMatchingScore)
 
   const sendPhotoRequest = async () => {
     try {
@@ -547,8 +552,8 @@ export const ProfileDetailsExpressInterest: React.FC<
           status: 1,
         }
       );
-      if (response?.data?.Status === 0 && response?.data?.message === "No access to bookmark the profile") {
-
+      if (response.data.Status === 0 && response.data.message) {
+        setApimsgPhotoReq(response.data.message);
         setBookMarkPopup(true);
         return;
       }
@@ -591,8 +596,9 @@ export const ProfileDetailsExpressInterest: React.FC<
         const json = JSON.parse(text); // Parse text to JSON
         if (
           json.status === "failure" &&
-          json.message === "No access to see the compatibility report"
+          json.message
         ) {
+          setApimsgMatchingScore(json.message); // Store the API message
           setMatchingScorePopup(true);
           return;
         }
@@ -618,11 +624,23 @@ export const ProfileDetailsExpressInterest: React.FC<
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data || error.message);
+        // Handle 400 error from the API
+        if (error.response?.status === 400) {
+          const errorData = error.response.data;
+          console.log("errorData",errorData)
+          console.log("errorData")
+          if (typeof errorData === 'object' && errorData !== null) {
+            setApimsgMatchingScore(errorData.message || "No access to see the compatibility report");
+          } else {
+            setApimsgMatchingScore("No access to see the compatibility report");
+          }
+        } else {
+          setApimsgMatchingScore("Failed to generate compatibility report");
+        }
       } else {
-        console.error("Unexpected error:", error);
+        setApimsgMatchingScore("An unexpected error occurred");
       }
-      setBookMarkPopup(true)
+      setMatchingScorePopup(true);
     }
   };
 
@@ -1202,7 +1220,6 @@ export const ProfileDetailsExpressInterest: React.FC<
                         </div>
                       )}
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -1216,16 +1233,16 @@ export const ProfileDetailsExpressInterest: React.FC<
             <VysyaBazaar />
             <SuggestedProfiles /> */}
       {expressPopup && (
-        <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={"You need to upgrade your package to access this functionality."} />
+        <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={apimsgExpressInt} />
       )}
 
       {bookMarkPopup && (
-        <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={"No access to bookmark the profile"} />
+        <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={apimsgPhotoReq} />
       )}
 
 
       {matchingScorePopup && (
-        <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={"No access to see the compatibility report"} />
+        <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={apimsgMatchingScore} />
       )}
     </div>
   );
