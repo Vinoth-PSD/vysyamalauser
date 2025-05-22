@@ -19,7 +19,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
             <img
               src={profile.img_url}
               alt={`Gallery image ${profile.profile_id}`}
-              className="w-full h-48 object-cover rounded-lg transition-transform transform duration-500 scale-100 group-hover:scale-105"
+              className="w-full h-[350px] object-cover rounded-lg transition-transform transform duration-500 scale-100 group-hover:scale-105 object-top"
             />
              <p className="mt-2 text-center">{profile.profile_id}</p>
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">

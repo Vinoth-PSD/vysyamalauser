@@ -1,13 +1,13 @@
 
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 // import { useDispatch } from "react-redux";
 // import { hideInterest } from "../../../redux/slices/interestSlice";
 import axios, { AxiosResponse } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { MdMessage, MdVerifiedUser } from "react-icons/md";
+import { MdArrowDropDown, MdLocalPrintshop, MdMessage, MdVerifiedUser } from "react-icons/md";
 import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import AgeIcon from "../../../assets/icons/ageIcon.png";
 // import { IoShareSocialSharp } from "react-icons/io5";
@@ -536,8 +536,8 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // Declaration for Horoscope State
 
-  const [selectedLanguage, _setSelectedLanguage] = useState<string | null>(null);
-  const [_isHovered, setIsHovered] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
   const [apimsgPhotoReq, setApimsgPhotoReq] = useState("");
   const [apimsgMatchingScore, setApimsgMatchingScore] = useState("");
   console.log('apimsgMatchingScore', apimsgMatchingScore)
@@ -718,16 +718,17 @@ export const ProfileDetailsExpressInterest: React.FC<
   };
   const horoscopeLink = profileData?.basic_details.horoscope_link
   const [isPdfMenuOpen, setIsPdfMenuOpen] = useState(false);
-  // const handleSelectLanguage = (language: SetStateAction<string | null>) => {
-  //   setSelectedLanguage(language);
-  //   setIsOpen(false); // Close the language dropdown
-  //   if (language === "Tamil" || language === "English") {
-  //     setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
+  const [isOpen, setIsOpen] = useState(false);
+  const handleSelectLanguage = (language: SetStateAction<string | null>) => {
+    setSelectedLanguage(language);
+    setIsOpen(false); // Close the language dropdown
+    if (language === "Tamil" || language === "English") {
+      setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
 
-  //   } else {
-  //     setIsPdfMenuOpen(false); // Close the PDF menu for other languages
-  //   }
-  // };
+    } else {
+      setIsPdfMenuOpen(false); // Close the PDF menu for other languages
+    }
+  };
 
   const handleViewPdf = () => {
     handleDownloadPdf();
@@ -1160,13 +1161,13 @@ export const ProfileDetailsExpressInterest: React.FC<
 
 
                     <div className="relative">
-                      {/* <p className="flex items-center text-ash cursor-pointer">
+                      <p className="flex items-center text-ash cursor-pointer">
                         <MdLocalPrintshop className="text-[22px] mr-2" />
                         Print Horoscope
                         <MdArrowDropDown className="text-[22px] ml-2" />
-                      </p> */}
+                      </p>
 
-                      {/* {(isHovered || isOpen) && (
+                      {(isHovered || isOpen) && (
                         <div
                           className="absolute top-4 right-0 mt-2 w-40 bg-white rounded-md shadow-lg"
                           onMouseEnter={() => setIsOpen(true)}
@@ -1195,7 +1196,7 @@ export const ProfileDetailsExpressInterest: React.FC<
                             </li>
                           </ul>
                         </div>
-                      )} */}
+                      )}
                       {/* PDF Menu Dropdown */}
                       {(isPdfMenuOpen) && (
                         <div
