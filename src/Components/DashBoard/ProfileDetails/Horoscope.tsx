@@ -687,14 +687,14 @@ export const Horoscope = () => {
           </div>
           <div className="flex justify-between mt-5 max-md:flex-col  max-md:hidden">
             <h2 className="text-[30px] text-vysyamalaBlack font-bold mb-5  max-xl:text-[26px] max-md:text-[24px] max-sm:text-[18px] max-sm:justify-between max-sm:mb-2 ">Rasi & Amsam Grid</h2>
-            <div className="flex gap-3">
+            {/* <div className="flex gap-3">
             <label htmlFor="mz-switch-rounded" className=" text-[12px] font-medium">English</label>
               <div>
                 <input className="mz-switch-rounded" type="checkbox" name="" id="mz-switch-rounded" />
                 <label htmlFor="mz-switch-rounded"></label>
               </div>
               <label htmlFor="mz-switch-rounded"  className=" text-[12px] font-medium">tamil</label>
-            </div>
+            </div> */}
 
           </div>
 

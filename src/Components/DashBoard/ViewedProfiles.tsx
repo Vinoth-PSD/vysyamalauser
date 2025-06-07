@@ -4,7 +4,7 @@ import { ViewedProfilesCard } from './ViewedProfiles/ViewedProfilesCard';
 import { SuggestedProfiles } from '../LoginHome/SuggestedProfiles';
 import Pagination from '../Pagination';
 //import axios from 'axios';
-import { IoMdArrowDropdown } from 'react-icons/io';
+// import { IoMdArrowDropdown } from 'react-icons/io';
 import apiClient from '../../API';
 
 interface ViewedProfilesProps {
@@ -54,7 +54,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                         </h4>
                     </div>
 
-                    <div className="relative max-md:w-full max-md:text-end">
+                    {/* <div className="relative max-md:w-full max-md:text-end">
                         <select name="month" id="month" className="w-[160px] rounded-md px-4 py-[10px] text-sm text-primary-400  shadow border border-ashSecondary focus-visible:outline-none appearance-none">
                             <option value="jan">January</option>
                             <option value="feb">February</option>
@@ -72,7 +72,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                         <div className="absolute right-2 top-3.5 ">
                                     <IoMdArrowDropdown className="text-lg text-primary-400" /> 
                                     </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Interest Sent Card */}

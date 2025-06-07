@@ -47,7 +47,7 @@ export const ChangePassword = () => {
       } else {
         // Handle successful password change
         console.log('Password changed successfully');
-        setSuccessMessage('Password changed successfully.');
+        setSuccessMessage('Password Updated Successfully.');
         setErrorMessage(null); // Clear error message if any
       }
     } catch (error) {
