@@ -10,6 +10,7 @@ import { HoroscopeView } from './HoroscopeView';
 import { ContactView } from './ContactView';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaRegListAlt } from 'react-icons/fa';
+import { Hearts } from 'react-loader-spinner';
 
 interface ProfileDetailsSettingsViewProps { }
 
@@ -28,6 +29,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     const queryParams = new URLSearchParams(location.search);
     const pageid = queryParams.get("page") || "";
     const currentProfileId = queryParams.get("id") || "";
+    const [isNavigating, setIsNavigating] = useState<boolean>(false);
     
 
     const renderSection = () => {
@@ -65,16 +67,9 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                     "4": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_viewed_profiles/',
                     "5": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_profile_visit/',
                     "6": 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_photo_request_list/',
-                    // "1": 'http://103.214.132.20:8000/auth/Get_mutual_intrests/',
-                    // "2": 'http://103.214.132.20:8000/auth/Get_profile_wishlist/',
-                    // "3": 'http://103.214.132.20:8000/auth/My_intrests_list/',
-                    // "4": 'http://103.214.132.20:8000/auth/My_viewed_profiles/',
-                    // "5": 'http://103.214.132.20:8000/auth/My_profile_visit/',
-                    // "6": 'http://103.214.132.20:8000/auth/Get_photo_request_list/',
                 };
 
                 const apiEndpoint = apiEndpoints[pageid] || 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_prof_list_match/';
-                //const apiEndpoint = apiEndpoints[pageid] || 'http://103.214.132.20:8000/auth/Get_prof_list_match/';
 
                 const response = await axios.post<ProfileListResponse>(apiEndpoint, {
                     profile_id: loginuser_profileId,
@@ -110,6 +105,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                 setError("Failed to fetch profiles.");
             } finally {
                 setLoading(false);
+                setIsNavigating(false); // Set isNavigating to false after data is loaded
             }
         };
 
@@ -134,26 +130,51 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
 
     const handlePrevious = () => {
         if (currentIndex > 0) {
+            setIsNavigating(true);
             const newIndex = currentIndex - 1;
             setCurrentIndex(newIndex);
             navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
-            setTimeout(() => {
-                window.scrollTo(0, 0);  // Move scroll to the top after navigation
-            }, 300);
+            // setIsNavigating(false);
+            // setTimeout(() => {
+            //     window.scrollTo(0, 0);
+            //     setIsNavigating(false);
+            // }, 300);
         }
     };
 
     const handleNext = () => {
         if (currentIndex < profileIds.length - 1) {
+            setIsNavigating(true);
             const newIndex = currentIndex + 1;
-            console.log("Navigating to next profile, New Index:", newIndex); // Debugging log
+            console.log("Navigating to next profile, New Index:", newIndex);
             setCurrentIndex(newIndex);
             navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
-            setTimeout(() => {
-                window.scrollTo(0, 0);  // Move scroll to the top after navigation
-            }, 300);
+            // setIsNavigating(false);
+            // setTimeout(() => {
+            //     window.scrollTo(0, 0);
+            //     setIsNavigating(false);
+            // }, 300);
         }
     };
+
+    if (isNavigating) {
+        return (
+            <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+                <div className="flex flex-col items-center">
+                    <Hearts
+                        height="100"
+                        width="100"
+                        color="#FF6666"
+                        ariaLabel="hearts-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                    />
+                    <p className="text-sm mt-4 text-gray-600">Loading profile...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-ash">

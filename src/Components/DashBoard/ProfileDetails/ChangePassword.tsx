@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { z } from 'zod';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
-//import axios from 'axios';
+import { AxiosError } from 'axios';
 import apiClient from '../../../API';
 
 // Define the schema
@@ -16,12 +16,18 @@ const schema = z.object({
   path: ["confirmPassword"],
 });
 
+type FormData = {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 export const ChangePassword = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -32,7 +38,7 @@ export const ChangePassword = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     try {
       const response = await apiClient.post('/auth/User_change_password/', {
         ProfileId: loginuser_profileId,
@@ -41,7 +47,7 @@ export const ChangePassword = () => {
         Re_enter_new_password: data.confirmPassword,
       });
 
-      if (response.data.status === 'error') {
+      if (response.data.status === "error") {
         setErrorMessage(response.data.message);
         setSuccessMessage(null); // Clear success message if any
       } else {
@@ -52,9 +58,18 @@ export const ChangePassword = () => {
       }
     } catch (error) {
       // Handle API errors
-      console.error('Error changing password:', error);
-      setErrorMessage('An error occurred while changing the password.');
+      if (error instanceof AxiosError) {
+        console.log('Error changing password:', error.response?.data);
+        if(error.response?.data?.status === "error") {
+          setErrorMessage(error.response.data.message);
+          setSuccessMessage(null);
+        } else {
+        setErrorMessage('An error occurred while changing the password.');
       setSuccessMessage(null); // Clear success message if any
+      }
+      }
+      // setErrorMessage('An error occurred while changing the password.');
+      // setSuccessMessage(null); // Clear success message if any
     }
   };
 

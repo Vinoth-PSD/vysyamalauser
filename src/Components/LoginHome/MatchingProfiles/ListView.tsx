@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { fetchProfiles } from "../../../commonapicall"; // Adjust the path as needed
 import { ListCard } from "./ProfileCard/ListCard"; // Adjust the path as needed
 import { Profile, ProfileContext } from "../../../ProfileContext"; // Adjust the path as needed
-import Spinner from "../../Spinner";
+// import Spinner from "../../Spinner";
 import { ProfileNotFound } from "./ProfileNotFound";
+import { Hearts } from "react-loader-spinner";
 
 export interface SearchResultProps {
   profile_name: string;
@@ -85,10 +86,21 @@ export const ListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner />
+      <div className="w-fit mx-auto py-40">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
       </div>
-    );   if (error) return <div>{error}</div>;
+    );
+
+  if (error) return <div>{error}</div>;
 
   const searchvalue = sessionStorage.getItem("searchvalue") || " ";
   console.log(searchvalue);

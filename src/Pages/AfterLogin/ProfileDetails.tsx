@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom'
 export const ProfileDetails = () => {
     const { pathname } = useLocation();
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
       }, [pathname]);
     return (
         <div>

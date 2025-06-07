@@ -1,4 +1,4 @@
-import React, { useState, useContext, SetStateAction, Dispatch } from "react";
+import React, { useState, useContext, SetStateAction, Dispatch, useEffect } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { HiOutlineSearch } from "react-icons/hi";
 import { HiMiniViewColumns } from "react-icons/hi2";
@@ -7,6 +7,7 @@ import { ImMenu } from "react-icons/im";
 // import { BsSortDown } from "react-icons/bs";
 // import { BsSortUp } from "react-icons/bs";
 import { HiAdjustmentsVertical } from "react-icons/hi2";
+import { Hearts } from "react-loader-spinner";
 import { GridView } from "../LoginHome/MatchingProfiles/GridView";
 import { ListView } from "../LoginHome/MatchingProfiles/ListView";
 import { GridListView } from "../LoginHome/MatchingProfiles/GridListView";
@@ -39,6 +40,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 }) => {
   // View state changed
   const [currentView, setCurrentView] = useState("gridlist");
+  const [loading, setLoading] = useState(true);
 
   const context = useContext(ProfileContext);
 
@@ -65,6 +67,13 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     setPeopleOnlyWithPhoto,
     advanceSearchData,
   } = context;
+
+  useEffect(() => {
+    // Set loading to false when data is available
+    if (advanceSearchData) {
+      setLoading(false);
+    }
+  }, [advanceSearchData]);
 
   // const noOfPages = Math.ceil(totalCount / perPage);
 
@@ -205,9 +214,23 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
             <p className="text-vysyamalaBlack font-semibold">Advanced Filter</p>
           </div>
         </div>
-        {!error &&
+
+        {loading ? (
+          <div className="w-fit mx-auto py-40">
+            <Hearts
+              height="100"
+              width="100"
+              color="#FF6666"
+              ariaLabel="hearts-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+            <p className="text-sm">Please wait...</p>
+          </div>
+        ) : !error &&
         ((advanceSearchData && advanceSearchData.length >= 1) ||
-          responseMsg !== "At least one search criterion must be provided.") ? (
+          responseMsg !== "At least one search criterion must be provided.") && (
           <div>
             {/* Conditionally render views based on currentView state */}
             {currentView === "gridlist" && (
@@ -228,22 +251,25 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
                 height={undefined}
                 star={undefined}
                 matching_score={undefined}
-                searchvalues={undefined} // searchResult={undefined}
+                searchvalues={undefined}
               />
             )}
             {currentView === "grid" && (
               <GridView
-                  profile_name={""}
-                  profile_id={undefined}
-                  profile_age={undefined}
-                  height={undefined}
-                  searchResult={undefined}
-                  searchvalues={undefined}               />
+                profile_name={""}
+                profile_id={undefined}
+                profile_age={undefined}
+                height={undefined}
+                searchResult={undefined}
+                searchvalues={undefined}
+              />
             )}
           </div>
-        ) : (
-          <p>No Records Found</p>
-        )}
+        ) 
+        // : (
+        //   <p>No Records Found</p>
+        // )
+        }
 
         {/* Pagination */}
         {error === false &&

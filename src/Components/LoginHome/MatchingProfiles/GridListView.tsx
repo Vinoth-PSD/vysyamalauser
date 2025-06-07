@@ -4,6 +4,7 @@ import { GridListCard } from "./ProfileCard/GridListCard"; // Named import
 import { fetchProfiles } from "../../../commonapicall"; // Import the API function
 import { Profile, ProfileContext } from "../../../ProfileContext";
 import { ProfileNotFound } from "./ProfileNotFound";
+import { Hearts } from "react-loader-spinner";
 // import Spinner from "../../Spinner";
 
 // Define the Profile type if not defined
@@ -48,7 +49,7 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
   } = context;
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   console.log(setError, "error");
 
@@ -100,12 +101,21 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
   console.log("searchvalues", searchvalues);
 
 
-  // if (loading)
-  //   return (
-  //     <div className="flex justify-center items-center h-screen">
-  //       <Spinner />
-  //     </div>
-  //   );
+  if (loading)
+    return (
+      <div className="w-fit mx-auto py-40">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
+      </div>
+    ); 
 
   if (error) return <p>{error}</p>;
 
