@@ -28,14 +28,13 @@ import axios from "axios";
 // import { AdvancedSearchPopup } from "./MatchingProfiles/FilterPopup/AdvancedSearchPopup";
 // import { FiXCircle } from "react-icons/fi";
 //import { LuFilterX } from "react-icons/lu";
-
-
 // import { number } from "zod";
 import Pagination from "../Pagination";
-import Spinner from "../Spinner";
+// import Spinner from "../Spinner";
 import { ToastNotification } from "../Toast/ToastNotification";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
+import { Hearts } from "react-loader-spinner";
 // import { log } from "console";
 
 // const items = [
@@ -238,7 +237,7 @@ export const MatchingProfiles = () => {
     } catch (error) {
       console.error("Search failed:", error);
       // Handle error as needed
-    } 
+    }
     finally {
       setLoading(false); // Hide the spinner once the search completes
     }
@@ -318,10 +317,8 @@ export const MatchingProfiles = () => {
         const response = await apiClient.post(
           "/auth/Get_State_Pref/"
         );
-
         // Assuming response.data is an object, transform it to an array of State
         const statesArray = Object.values(response.data) as State[];
-
         setStates(statesArray);
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -331,20 +328,28 @@ export const MatchingProfiles = () => {
         }
       }
     };
-
     fetchStates();
   }, []);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner />
+      // <div className="flex justify-center items-center h-screen">
+      //   <Spinner />
+      // </div>
+      <div className="w-fit mx-auto py-40">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
       </div>
     );
   }
-
-
-
 
   return (
     <div className=" max-xl:py-4 max-lg:py-3 bg-grayBg">
@@ -365,7 +370,7 @@ export const MatchingProfiles = () => {
 
         <div className="bg-white grid grid-cols-6 justify-center items-center rounded-lg  gap-4 shadow-profileCardShadow mb-5 px-2 py-[4px] divide-x-[1.5px] divide-ashSecondary max-lg:flex-wrap max-lg:col-gap-5 max-lg:space-x-0 max-xl:grid-cols-3 max-xl:items-end max-sm:grid-cols-1 max-sm:gap-1 max-sm:divide-x-0 max-sm:divide-y-[1px] max-sm:divide-ashSecondary">
           <div className="relative flex items-center col-span-2 max-sm:col-span-1">
-          <img src={searchIcon} className="text-[22px] text-ashSecondary" />
+            <img src={searchIcon} className="text-[22px] text-ashSecondary" />
             <input
               type="text"
               placeholder="Search Profile ID on Matching Profiles"
@@ -376,7 +381,7 @@ export const MatchingProfiles = () => {
           </div>
 
           <div className="relative w-full px-[18px] flex items-center">
-          <img src={professionIcon} className="text-[22px] text-ashSecondary" />
+            <img src={professionIcon} className="text-[22px] text-ashSecondary" />
             <select
               value={profession} // Bind the value of the select to the profession state
               onChange={(e) => setProfession(e.target.value)}
@@ -397,12 +402,12 @@ export const MatchingProfiles = () => {
               ))}
             </select>
             <div className="absolute right-1 top-4 ">
-            <IoMdArrowDropdown className="text-ashSecondary" />
+              <IoMdArrowDropdown className="text-ashSecondary" />
             </div>
           </div>
 
           <div className="relative w-full px-[18px] flex items-center">
-          <img src={ageIcon} className="text-[22px] text-ashSecondary" />
+            <img src={ageIcon} className="text-[22px] text-ashSecondary" />
             <select
               value={selectAge}
               onChange={(e) => setSelectAge(e.target.value)}
@@ -425,12 +430,12 @@ export const MatchingProfiles = () => {
               <option value="10">10</option>
             </select>
             <div className="absolute right-1 top-4 ">
-            <IoMdArrowDropdown className="text-ashSecondary" />
+              <IoMdArrowDropdown className="text-ashSecondary" />
             </div>
           </div>
 
           <div className="relative w-full px-[18px] flex items-center">
-          <img src={locationIcon} className="text-[22px] text-ashSecondary" />
+            <img src={locationIcon} className="text-[22px] text-ashSecondary" />
             <select
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
@@ -448,40 +453,40 @@ export const MatchingProfiles = () => {
               ))}
             </select>
             <div className="absolute right-1 top-4 ">
-            <IoMdArrowDropdown className="text-ashSecondary" />
+              <IoMdArrowDropdown className="text-ashSecondary" />
             </div>
           </div>
 
           <div className="w-full flex items-center justify-end max-xl:lg max-sm:flex-col">
-          <div onClick={handleAdvancedSearchPopup} className="w-fit mx-4 my-3" title="Remove Filter">
-            {/*<FiFilter className="text-[22px] text-secondary mx-5 my-3 cursor-pointer" />*/}
-            <div className="">
-            <img src={FilterIcon} className="w-8 text-main  cursor-pointer max-sm:w-5" />
-            </div>
-            
-
-            {showAdvancedSearchPopup && (
-              <div
-                ref={popupRef}
-                onClick={(e) => e.stopPropagation()}
-                className="relative"
-              >
-                {/* <AdvancedSearchPopup closePopup={closeAdvancedSearchPopup} /> */}
+            <div onClick={handleAdvancedSearchPopup} className="w-fit mx-4 my-3" title="Remove Filter">
+              {/*<FiFilter className="text-[22px] text-secondary mx-5 my-3 cursor-pointer" />*/}
+              <div className="">
+                <img src={FilterIcon} className="w-8 text-main  cursor-pointer max-sm:w-5" />
               </div>
-            )}
+
+
+              {showAdvancedSearchPopup && (
+                <div
+                  ref={popupRef}
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative"
+                >
+                  {/* <AdvancedSearchPopup closePopup={closeAdvancedSearchPopup} /> */}
+                </div>
+              )}
+            </div>
+            <div className="w-full">
+              <button
+                // disabled={!searchProfileId}
+                className="w-full  bg-gradient text-white text-sm   rounded-r-[6px] font-semibold px-[26px] py-[14px]   max-xl:px-4 max-sm:rounded-md"
+                onClick={handleFindMatch}
+              >
+                Find Match
+              </button>
+            </div>
+
+
           </div>
-          <div className="w-full">
-          <button
-              // disabled={!searchProfileId}
-              className="w-full  bg-gradient text-white text-sm   rounded-r-[6px] font-semibold px-[26px] py-[14px]   max-xl:px-4 max-sm:rounded-md"
-              onClick={handleFindMatch}
-            >
-              Find Match
-            </button>
-          </div>
-          
-          
-        </div>
         </div>
 
         {/* Icon Sort */}
@@ -563,7 +568,7 @@ export const MatchingProfiles = () => {
               profile_age={undefined}
               height={undefined}
               profile_img={""}
-              searchvalues={searchResult}             />
+              searchvalues={searchResult} />
           )}
 
           {currentView === "list" && (

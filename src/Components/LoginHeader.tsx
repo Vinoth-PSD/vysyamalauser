@@ -51,6 +51,7 @@ export const LoginHeader: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [NotificationData, setNotificationData] = useState<Notification[]>([]);
   const [notificationCount, setNotificationCount] = useState<number>(0);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
   const userProfileImage = localStorage.getItem("user_profile_image");
   console.log(userProfileImage, "userProfileImage ");
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -140,11 +141,12 @@ export const LoginHeader: React.FC = () => {
   const getNotification = () => {
     apiClient
       .post("/auth/Get_notification_list/", {
-        profile_id: userId ,
+        profile_id: userId,
       })
       .then((response) => {
         setNotificationData(response.data.data);
         setNotificationCount(response.data.notifiy_count);
+        setTotalRecords(response.data.total_records);
         console.log(notificationCount, "notificationCount");
       })
       .catch((error) => {
@@ -169,7 +171,7 @@ export const LoginHeader: React.FC = () => {
     const response = await apiClient.post(
       `/auth/Read_notifications/`,
       {
-        profile_id: userId ,
+        profile_id: userId,
       }
     );
     try {
@@ -281,7 +283,7 @@ export const LoginHeader: React.FC = () => {
       {/* new offer top bar */}
       <div className="py-3" style={{
         backgroundImage: `url(${OfferHeaderBg}), linear-gradient(92.08deg, #BD1225 0.6%, #FF4050 103.08%)`,
-        backgroundPosition:"left right",
+        backgroundPosition: "left right",
         backgroundRepeat: "2",
       }}>
         <p className="text-white text-base font-normal text-center max-sm:text-[14px]"> 🎁 We’ve launched a new offer. <span className=" border-b-[1px]"> Check now</span></p>
@@ -409,8 +411,8 @@ export const LoginHeader: React.FC = () => {
                     </h4>
                     <div className="h-96 overflow-y-auto message-box">
                       {/* Express Interest */}
-                      {NotificationData.length > 5
-                        ? NotificationData.slice(0, 5).map((notification) => (
+                      {NotificationData.length > 10
+                        ? NotificationData.slice(0, 10).map((notification) => (
                           <div
                             className="bg-lightFade-pink flex items-start gap-2 border-b-[1px] border-gray p-4 space-x-5"
                             key={notification.id}
@@ -432,7 +434,7 @@ export const LoginHeader: React.FC = () => {
                                 {notification.to_message}
                               </p>
                               {notification.notification_type ===
-                                "express_interests" ? (
+                                "express_interests_accept" ? (
                                 // <button className="text-main rounded-md border-[2px] border-main px-2 py-1">
                                 //   Messages
                                 // </button>
@@ -490,10 +492,22 @@ export const LoginHeader: React.FC = () => {
                               </p>
 
                               {notification.notification_type ===
-                                "express_interests" ? (
-                                <button className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
+                                "express_interests_accept" ? (
+                                <button
+                                onClick={() => handleMessage(notification.from_profile_id)}
+                                className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
                                   Message
                                 </button>
+                              ) : (notification.notification_type === "Profile_update" || notification.notification_type === "express_interests")? (
+                                <button
+                                  className="text-main rounded-md border-[2px] border-main px-2 py-1"
+                                  onClick={() => navigate(`/ProfileDetails?id=${notification.from_profile_id}`)}
+                                >
+                                  View Profile
+                                </button>
+                              ) : (notification.notification_type === "Call_request" || notification.notification_type === "Vys_assists") ? (
+                                // Hide the button for Call_request and Vys_assists
+                                null
                               ) : (
                                 // <button className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
                                 //   Update my photo
@@ -505,7 +519,6 @@ export const LoginHeader: React.FC = () => {
                                   Update my photo
                                 </button>
                               )}
-
                               <p className="text-[12px] font-semibold text-ashSecondary mt-3">
                                 {notification.time_ago}
                               </p>
@@ -521,12 +534,14 @@ export const LoginHeader: React.FC = () => {
                     </div>
 
                     <div className="text-center ">
-                      <button
-                        onClick={() => readNotification()}
-                        className="w-full rounded-md text-sm text-main py-3 font-semibold hover:bg-gradient hover:text-white"
-                      >
-                        Load more
-                      </button>
+                      {totalRecords >= 10 && (
+                        <button
+                          onClick={() => readNotification()}
+                          className="w-full rounded-md text-sm text-main py-3 font-semibold hover:bg-gradient hover:text-white"
+                        >
+                          Load more
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}
@@ -640,7 +655,7 @@ export const LoginHeader: React.FC = () => {
                     </li>
                   </NavLink>
                   <Link to="/MyProfile"
-                  onClick={handleMenuToggle}
+                    onClick={handleMenuToggle}
                   >
                     <div className="active-nav text-[16px] text-primary cursor-pointer !font-normal">
 
@@ -692,7 +707,7 @@ export const LoginHeader: React.FC = () => {
                   <li
                     // onClick={handleNotificationClick}
                     onClick={() => readNotification()}
-                    
+
                     className={`active-nav text-[16px] text-primary rounded-md transition-all cursor-pointer !font-normal relative`}
                   >
                     Notification
@@ -718,7 +733,7 @@ export const LoginHeader: React.FC = () => {
                   {/* Upgrade Button */}
                   <Link to="/UpgradePlan"
                     onClick={handleMenuToggle}
-                  
+
                   >
                     <li className="bg-gradient rounded-[6px] py-[8px] px-[24px] text-white text-[16px] font-semibold cursor-pointer">
                       Upgrade

@@ -69,7 +69,7 @@ export const Notifications = () => {
 
   // Added state to capture the selected from_profile_id for messaging
   const [, setSelectedFromProfileId] = useState<string | null>(null);
-  console.log("setSelectedFromProfileId",setSelectedFromProfileId)
+  console.log("setSelectedFromProfileId", setSelectedFromProfileId)
 
 
   const handleMessage = async (fromProfileId: string) => {
@@ -80,21 +80,21 @@ export const Notifications = () => {
         profile_to: fromProfileId, // Use the passed fromProfileId
       });
 
-  
+
       if (response.data.statue === 1) {
         const { room_id_name } = response.data;
-  
+
         // Second API call to Get_user_chatlist
         const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
           profile_id: loginuser_profileId,
         });
-  
+
         if (chatListResponse.data.status === 1) {
           // Extract relevant profile data
           const profileData = chatListResponse.data.data.find(
             (item: { room_name_id: any; }) => item.room_name_id === room_id_name
           );
-  
+
           // Structure profileData with actual details from chatListResponse
           const selectedProfileData = {
             room_name_id: profileData.room_name_id,
@@ -102,11 +102,11 @@ export const Notifications = () => {
             profile_user_name: profileData.profile_user_name,
             profile_lastvist: profileData.profile_lastvist,
           };
-  
+
           // Save profile data with room ID to sessionStorage
           sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
           console.log(selectedProfileData, "selectedProfileData");
-  
+
           // Set state and navigate to messages page
           setRoomId(room_id_name);
           setIsRedirect(true);
@@ -121,7 +121,7 @@ export const Notifications = () => {
       console.error("Error creating or fetching chat room:", error);
     }
   };
-  
+
 
   useEffect(() => {
     if (isRedirect) {
@@ -136,18 +136,18 @@ export const Notifications = () => {
       const response = await apiClient.post(
         "/auth/Get_notification_list/",
         {
-          profile_id: userId ,
+          profile_id: userId,
           per_page: currentPage,
         }
       );
-     
-    
+
+
       setNotificationData(response.data.data);
       setDataPerPage(response.data.per_page);
       setTotalRecords(response.data.total_records);
       setTotalpages(response.data.total_pages);
       console.log(response.data.data, ".....");
-     // console.log(notifications, ".....");
+      // console.log(notifications, ".....");
 
     } catch (error: any) {
       console.error(
@@ -199,7 +199,7 @@ export const Notifications = () => {
     // Perform any necessary actions here, such as updating the photo
     navigate('/MyProfile'); // Navigates to the MyProfile page
   };
-  
+
   return (
     <>
       <div className="bg-grayBg py-10">
@@ -228,9 +228,9 @@ export const Notifications = () => {
                       {/* {data.from_profile_id} {data.message_titile} */}
                       {data.message_titile}
                     </h5>
-                  
 
-                    {data.notification_type === "express_interests" ? (
+
+                    {/* {data.notification_type === "express_interests" ? (
                       // <button className="text-main rounded-md border-[2px] border-main px-2 py-1"
                       // onClick={handleMessage}
                       // >
@@ -253,11 +253,40 @@ export const Notifications = () => {
                       >
                         Update my photo
                       </button>
+                    )} */}
+                    {data.notification_type ===
+                      "express_interests_accept" ? (
+                      <button className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1"
+                        onClick={() => handleMessage(data.from_profile_id)} // Wrap in arrow function
+
+                      >
+                        Message
+                      </button>
+                    ) : (data.notification_type === "Profile_update" || data.notification_type === "express_interests") ? (
+                      <button
+                        className="text-main rounded-md border-[2px] border-main px-2 py-1"
+                        onClick={() => navigate(`/ProfileDetails?id=${data.from_profile_id}`)}
+                      >
+                        View Profile
+                      </button>
+                    ) : (data.notification_type === "Call_request" || data.notification_type === "Vys_assists") ? (
+                      // Hide the button for Call_request and Vys_assists
+                      null
+                    ) : (
+                      // <button className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
+                      //   Update my photo
+                      // </button>
+                      <button
+                        className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1"
+                        onClick={() => navigate("/MyProfile")} // Use navigate instead of window.location
+                      >
+                        Update my photo
+                      </button>
                     )}
-                  
+
 
                     <h5 className="text-[12px] font-normal text-vysyamalaBlack">
-                    {data.from_profile_id} {data.to_message}
+                      {data.from_profile_id} {data.to_message}
                     </h5>
                     <p className="text-[12px] font-semibold text-ashSecondary mt-3">
                       {data.time_ago}

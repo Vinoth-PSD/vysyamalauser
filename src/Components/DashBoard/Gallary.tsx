@@ -6,6 +6,7 @@ import { getGallerylists } from "../../commonapicall";
 import Spinner from "../Spinner";
 import Pagination from "../Pagination";
 import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
+import { Hearts } from "react-loader-spinner";
 
 interface GalleryProps {
   dashBoardAgain: () => void;
@@ -38,7 +39,7 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
           setNoProfiles(true); // Set flag to show ProfileNotFound
           return;
         }
-  
+
         // Ensure response structure matches your API response
         setGalleryItems(response?.data?.data?.image_data || []);
         setLoading(false);
@@ -48,7 +49,7 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
         setNoProfiles(false); // Reset flag if data exists
       } catch (err) {
         setError("Failed to load gallery items.");
-        console.log("Failed to load gallery items.",err);
+        console.log("Failed to load gallery items.", err);
         setLoading(false);
       }
     };
@@ -57,7 +58,7 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
   }, [pageNumber]);
 
 
-  
+
 
 
   const totalPages = Number(Math.ceil(totlaRecords / perPage));
@@ -75,27 +76,40 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
             <span className="text-sm text-primary"> ({totlaRecords})</span>
           </h4>
         </div>
-    
-      
 
-
-        {loading && <Spinner />}
-        {noProfiles ? <ProfileNotFound /> : (
+        {/* {loading && <Spinner />}
+        {noProfiles ? <ProfileNotFound /> : ( */}
+        {loading ? (
+          <div className="w-fit mx-auto py-40">
+            <Hearts
+              height="100"
+              width="100"
+              color="#FF6666"
+              ariaLabel="hearts-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+            <p className="text-sm">Please wait...</p>
+          </div>
+        ) : noProfiles ? (
+          <ProfileNotFound />
+        ) : (
           <>
             {error && <p className="text-red-500">{error}</p>}
-        <GalleryCard
-          profiles={galleryItems} // Pass the entire profile object
-        />
-        <div className="pb-10">
-        <Pagination
-          toptalPages={totalPages}
-          dataPerPage={perPage}
-          totalRecords={totlaRecords}
-          setPageNumber={setPageNumber}
-          pageNumber={pageNumber}
-        />
-        </div>
-        </>
+            <GalleryCard
+              profiles={galleryItems} // Pass the entire profile object
+            />
+            <div className="pb-10">
+              <Pagination
+                toptalPages={totalPages}
+                dataPerPage={perPage}
+                totalRecords={totlaRecords}
+                setPageNumber={setPageNumber}
+                pageNumber={pageNumber}
+              />
+            </div>
+          </>
         )}
       </div>
       <SuggestedProfiles />

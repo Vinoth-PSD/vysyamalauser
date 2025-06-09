@@ -83,7 +83,6 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   const context = useContext(ProfileContext);
   const navigate = useNavigate();
 
-
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");
   }
@@ -172,12 +171,6 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       }
     });
   };
-
-
-
-
-
-
 
   const handleBirthStarChange = (
     event: React.ChangeEvent<HTMLSelectElement>
