@@ -17,7 +17,6 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
@@ -37,10 +36,12 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                 }
             );
             setTotalRecords(response.data.viewed_profile_count);
-            setLoading(false);
+            
         } catch (err) {
             setError("Failed to load viewed profiles");
             console.error("Failed to load viewed profiles", err);
+           
+        }finally {
             setLoading(false);
         }
     };
@@ -83,7 +84,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
 
                 {/* Interest Sent Card */}
                 {loading ? (
-                    <div className="w-fit mx-auto py-40">
+                    <div className='flex flex-col items-center justify-center min-h-[300px]'>
                         <Hearts
                             height="100"
                             width="100"

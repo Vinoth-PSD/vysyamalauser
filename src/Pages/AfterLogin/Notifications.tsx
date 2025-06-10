@@ -195,10 +195,10 @@ export const Notifications = () => {
 
   const navigate = useNavigate();
 
-  const handleUpdatePhoto = () => {
-    // Perform any necessary actions here, such as updating the photo
-    navigate('/MyProfile'); // Navigates to the MyProfile page
-  };
+  // const handleUpdatePhoto = () => {
+  //   // Perform any necessary actions here, such as updating the photo
+  //   navigate('/MyProfile'); // Navigates to the MyProfile page
+  // };
 
   return (
     <>

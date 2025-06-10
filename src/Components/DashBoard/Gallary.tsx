@@ -3,7 +3,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
 import GalleryCard from "./Gallery/GalleryCard";
 import { getGallerylists } from "../../commonapicall";
-import Spinner from "../Spinner";
+// import Spinner from "../Spinner";
 import Pagination from "../Pagination";
 import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
 import { Hearts } from "react-loader-spinner";
@@ -56,10 +56,6 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
 
     fetchGalleryItems();
   }, [pageNumber]);
-
-
-
-
 
   const totalPages = Number(Math.ceil(totlaRecords / perPage));
   console.log(perPage, ",,");
@@ -116,5 +112,4 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
     </div>
   );
 };
-
 export default Gallery;
