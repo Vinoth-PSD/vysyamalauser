@@ -53,10 +53,10 @@
 //   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 //   const files = event.target.files;
 //   if (!files || files.length === 0) return;
-  
+
 //   const validFileTypes = ["image/jpeg", "image/png"];
 //   const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-  
+
 //   if (!loginUserProfileId) {
 //     console.error("Profile ID not found");
 //     return;
@@ -75,7 +75,7 @@
 //     try {
 //       const formData = new FormData();
 //       formData.append("profile_id", loginUserProfileId);
-      
+
 //       // Only include replace logic if we're in edit mode
 //       if (currentEditIndex !== null && images[currentEditIndex]?.id) {
 //         formData.append("replace_image_ids", images[currentEditIndex].id.toString());
@@ -94,7 +94,7 @@
 //       console.error("Error uploading image:", error);
 //       // Remove the preview image if upload fails
 //       setImages((prev) => prev.filter((img) => img.imageUrl !== previewImage.imageUrl));
-      
+
 //       if (error.response?.data?.error) {
 //         NotifyError(error.response.data.error);
 //       } else {
@@ -439,10 +439,10 @@
 //   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 //   const files = event.target.files;
 //   if (!files || files.length === 0) return;
-  
+
 //   const validFileTypes = ["image/jpeg", "image/png"];
 //   const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-  
+
 //   if (!loginUserProfileId) {
 //     console.error("Profile ID not found");
 //     return;
@@ -461,7 +461,7 @@
 //     try {
 //       const formData = new FormData();
 //       formData.append("profile_id", loginUserProfileId);
-      
+
 //       // Only include replace logic if we're in edit mode
 //       if (currentEditIndex !== null && images[currentEditIndex]?.id) {
 //         formData.append("replace_image_ids", images[currentEditIndex].id.toString());
@@ -480,7 +480,7 @@
 //       console.error("Error uploading image:", error);
 //       // Remove the preview image if upload fails
 //       setImages((prev) => prev.filter((img) => img.imageUrl !== previewImage.imageUrl));
-      
+
 //       if (error.response?.data?.error) {
 //         NotifyError(error.response.data.error);
 //       } else {
@@ -772,63 +772,63 @@ export const ProfileSlick = () => {
 
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  const files = event.target.files;
-  if (!files || files.length === 0) return;
-  
-  const validFileTypes = ["image/jpeg", "image/png"];
-  const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-  
-  if (!loginUserProfileId) {
-    console.error("Profile ID not found");
-    return;
-  }
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
-  for (const file of files) {
-    if (!validFileTypes.includes(file.type)) {
-      alert("Only JPG and PNG files are allowed");
-      continue;
+    const validFileTypes = ["image/jpeg", "image/png"];
+    const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+
+    if (!loginUserProfileId) {
+      console.error("Profile ID not found");
+      return;
     }
 
-    // Add preview image immediately for better UX
-    const previewImage = { id: null, imageUrl: URL.createObjectURL(file), url: "", alt: "" };
-    setImages((prev) => [...prev, previewImage]);
-
-    try {
-      const formData = new FormData();
-      formData.append("profile_id", loginUserProfileId);
-      
-      // Only include replace logic if we're in edit mode
-      if (currentEditIndex !== null && images[currentEditIndex]?.id) {
-        formData.append("replace_image_ids", images[currentEditIndex].id.toString());
-        formData.append("replace_image_files", file);
-      } else {
-        // Default case: just add new image
-        formData.append("new_image_files", file);
+    for (const file of files) {
+      if (!validFileTypes.includes(file.type)) {
+        alert("Only JPG and PNG files are allowed");
+        continue;
       }
 
-      const response = await apiClient.post("/auth/ImageSetEdit/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      // Add preview image immediately for better UX
+      const previewImage = { id: null, imageUrl: URL.createObjectURL(file), url: "", alt: "" };
+      setImages((prev) => [...prev, previewImage]);
 
-      NotifySuccess("Image uploaded successfully");
-    } catch (error: any) {
-      console.error("Error uploading image:", error);
-      // Remove the preview image if upload fails
-      setImages((prev) => prev.filter((img) => img.imageUrl !== previewImage.imageUrl));
-      
-      if (error.response?.data?.error) {
-        NotifyError(error.response.data.error);
-      } else {
-        NotifyError("Error uploading image");
+      try {
+        const formData = new FormData();
+        formData.append("profile_id", loginUserProfileId);
+
+        // Only include replace logic if we're in edit mode
+        if (currentEditIndex !== null && images[currentEditIndex]?.id) {
+          formData.append("replace_image_ids", images[currentEditIndex].id.toString());
+          formData.append("replace_image_files", file);
+        } else {
+          // Default case: just add new image
+          formData.append("new_image_files", file);
+        }
+
+        const response = await apiClient.post("/auth/ImageSetEdit/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log("response", response)
+        NotifySuccess("Image uploaded successfully");
+      } catch (error: any) {
+        console.error("Error uploading image:", error);
+        // Remove the preview image if upload fails
+        setImages((prev) => prev.filter((img) => img.imageUrl !== previewImage.imageUrl));
+
+        if (error.response?.data?.error) {
+          NotifyError(error.response.data.error);
+        } else {
+          NotifyError("Error uploading image");
+        }
       }
     }
-  }
 
-  // Refresh the image list after upload
-  fetchImages();
-  setShowOptions(false);
-  setCurrentEditIndex(null); // Reset edit mode after upload
-};
+    // Refresh the image list after upload
+    fetchImages();
+    setShowOptions(false);
+    setCurrentEditIndex(null); // Reset edit mode after upload
+  };
   const handleRemoveImage = async () => {
     if (currentEditIndex !== null) {
       try {
@@ -974,15 +974,15 @@ export const ProfileSlick = () => {
                 <FaPlus className="text-2xl text-main" onClick={() => 
                   fileInputRef.current?.click()} />
               </div> */}
-              <div 
-  className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-  onClick={() => {
-    setCurrentEditIndex(null); // Ensure we're in "add" mode
-    fileInputRef.current?.click();
-  }}
->
-  <FaPlus className="text-2xl text-main" />
-</div>
+              <div
+                className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                onClick={() => {
+                  setCurrentEditIndex(null); // Ensure we're in "add" mode
+                  fileInputRef.current?.click();
+                }}
+              >
+                <FaPlus className="text-2xl text-main" />
+              </div>
               <div
                 className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
                 onClick={() => handleEditClick(index)}

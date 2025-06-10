@@ -4,7 +4,7 @@ import { ViewedProfilesCard } from './ViewedProfiles/ViewedProfilesCard';
 import { SuggestedProfiles } from '../LoginHome/SuggestedProfiles';
 import Pagination from '../Pagination';
 //import axios from 'axios';
-import { IoMdArrowDropdown } from 'react-icons/io';
+// import { IoMdArrowDropdown } from 'react-icons/io';
 import apiClient from '../../API';
 import { Hearts } from 'react-loader-spinner';
 
