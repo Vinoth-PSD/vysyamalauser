@@ -159,8 +159,6 @@ export const Notifications = () => {
     }
   }, [currentPage, userId]);
 
-
-
   useEffect(() => {
     getNotification();
   }, [getNotification]);
