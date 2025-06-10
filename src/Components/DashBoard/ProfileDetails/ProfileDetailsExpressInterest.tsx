@@ -6,7 +6,6 @@ import { useState, useEffect, SetStateAction } from "react";
 // import { hideInterest } from "../../../redux/slices/interestSlice";
 import axios, { AxiosResponse } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { MdArrowDropDown, MdLocalPrintshop, MdMessage, MdVerifiedUser } from "react-icons/md";
 import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import AgeIcon from "../../../assets/icons/ageIcon.png";
@@ -19,7 +18,6 @@ import { FaHeart } from "react-icons/fa6";
 import { FaTableList } from "react-icons/fa6";
 // import { ProfileSlick } from "./ProfileSlick";
 import { ProfileSlickView } from "../../LoginHome/ProfileDetailsView/ProfileSlickView";
-
 import { TbPhotoHeart } from "react-icons/tb";
 import PersonalNotes from "../../../assets/icons/PersonalNotes.png";
 import SupportAgent from "../../../assets/icons/SupportAgent.png";
@@ -27,24 +25,15 @@ import MatchingScore from "./MatchingScore";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import CustomMessagePopUp from "./CustomMessagePopup";
-import {
-  NotifySuccess,
-  NotifyError,
-} from "../../Toast/ToastNotification";
+import {NotifySuccess,NotifyError} from "../../Toast/ToastNotification";
 import { toast } from "react-toastify";
 import { PersonalNotesPopup } from "../PersonalNotes/PersonalNotesPopup";
-
 // import { Share } from "./Share";
 // import { Get_profile_det_match } from "../../../commonapicall";
 import { VysAssistPopup } from "../VysAssist/VysAssistPopup";
 import apiClient from "../../../API";
-
 import { Hearts } from 'react-loader-spinner'
-
 import { ReUseUpGradePopup } from "../ReUsePopup/ReUseUpGradePopup";
-
-
-
 // import { boolean } from "zod";
 
 // Define the interfaces for profile data
@@ -131,18 +120,11 @@ export const ProfileDetailsExpressInterest: React.FC<
   const queryParams = new URLSearchParams(location.search);
   const interestParam = queryParams.get("interest");
   const idparam = queryParams.get("id") || "";
-
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
-
   const custom_message = sessionStorage.getItem("custom_message");
-
   const storedPlanId = sessionStorage.getItem("plan_id");
   console.log("vysya", storedPlanId);
-
   const navigate = useNavigate();
-
-
-
 
 
   const handleMessageClick = async () => {
@@ -154,13 +136,10 @@ export const ProfileDetailsExpressInterest: React.FC<
           profile_to: idparam,
         }
       );
-
       if (response.data.statue === 1) {
         const { room_id_name } = response.data;
-
         const profileData = {
           room_name_id: room_id_name,
-
         };
         navigate("/Messages")
         // Save the profile with roomId to sessionStorage
@@ -711,7 +690,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const handleDownloadPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    // link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_horoscope_black/${idparam}`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -724,7 +704,6 @@ export const ProfileDetailsExpressInterest: React.FC<
     setIsOpen(false); // Close the language dropdown
     if (language === "Tamil" || language === "English") {
       setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
-
     } else {
       setIsPdfMenuOpen(false); // Close the PDF menu for other languages
     }
@@ -732,16 +711,13 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const handleViewPdf = () => {
     handleDownloadPdf();
-
     console.log(`Viewing PDF in ${selectedLanguage}`);
     // Add your logic to view the PDF in the selected language
   };
 
-
   // if (loading) {
   //   return <div>Loading Divya...</div>;
   // }
-
 
   return (
     <div>
@@ -777,7 +753,6 @@ export const ProfileDetailsExpressInterest: React.FC<
                   profileId={profileData?.basic_details.profile_id}
                   photoLock={PhotoPasswordlock}
                 />
-
               </div>
 
               {/* Profile Details */}
@@ -1174,7 +1149,7 @@ export const ProfileDetailsExpressInterest: React.FC<
                           onMouseLeave={() => setIsOpen(false)}
                         >
                           <ul>
-                            <li
+                            {/* <li
                               className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                               onClick={() => {
                                 handleSelectLanguage("Tamil")
@@ -1182,7 +1157,7 @@ export const ProfileDetailsExpressInterest: React.FC<
                               }}
                             >
                               Tamil
-                            </li>
+                            </li> */}
                             <li
                               className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                               onClick={() => {

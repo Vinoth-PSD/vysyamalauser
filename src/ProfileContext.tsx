@@ -1,5 +1,6 @@
 
 
+
 import React, {
   createContext,
   useState,
@@ -253,8 +254,8 @@ const [images,setImages]=useState<Image[]>([])
 const [zoomImage,setZoomImage]=useState<string|null>(null)
   const [key, setKey] = useState<boolean>(false);
 
-  const defaultImageUrl =
-  "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
+  // const defaultImageUrl =
+  // "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
 
 const handleMouseEnter = (imageUrl: string | null) => {
   if (imageUrl) setZoomImage(imageUrl);
@@ -263,6 +264,47 @@ const handleMouseEnter = (imageUrl: string | null) => {
 const handleMouseLeave = () => {
   setZoomImage(null);
 };
+
+// const fetchImages = async () => {
+//   try {
+//     const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+//     if (!loginUserProfileId) throw new Error('Profile ID not found');
+
+//     const response = await apiClient.post(
+//       '/auth/Get_profile_images/',
+//       { profile_id: loginUserProfileId }
+//     );
+
+//     console.log('Fetched images response:', response.data.data);
+
+//     if (response.data.Status === 1) {
+//       const imageObjects: Image[] = response.data.data.map((img: any) => ({
+//         id: img.id,
+//         imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
+//       }));
+
+//       // Fill up to 10 images with default if fewer than 10
+//       const filledImages = [
+//         ...imageObjects,
+//         ...Array(Math.max(0, 10 - imageObjects.length))
+//         .fill({
+//           id: null,
+//           imageUrl: defaultImageUrl,
+//         }),
+//       ];
+
+//       console.log('Processed images:', filledImages);
+//       setImages(filledImages);
+//     } else {
+//       console.error('Failed to fetch images:', response.data.message);
+//       setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
+//     }
+//   } catch (error) {
+//     console.error('Error fetching images:', error);
+//     setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
+//   }
+// };
+
 
 const fetchImages = async () => {
   try {
@@ -277,29 +319,23 @@ const fetchImages = async () => {
     console.log('Fetched images response:', response.data.data);
 
     if (response.data.Status === 1) {
+      // Process the actual images from the response
       const imageObjects: Image[] = response.data.data.map((img: any) => ({
         id: img.id,
         imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
+        url: img.image, // Assuming this is needed for your Image interface
+        alt: "Profile image" // Add alt text as needed
       }));
 
-      // Fill up to 10 images with default if fewer than 10
-      const filledImages = [
-        ...imageObjects,
-        ...Array(Math.max(0, 10 - imageObjects.length)).fill({
-          id: null,
-          imageUrl: defaultImageUrl,
-        }),
-      ];
-
-      console.log('Processed images:', filledImages);
-      setImages(filledImages);
+      // Only set the actual images, don't fill with defaults
+      setImages(imageObjects);
     } else {
       console.error('Failed to fetch images:', response.data.message);
-      setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
+      setImages([]); // Set empty array if no images are available
     }
   } catch (error) {
     console.error('Error fetching images:', error);
-    setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
+    setImages([]); // Set empty array on error
   }
 };
 
