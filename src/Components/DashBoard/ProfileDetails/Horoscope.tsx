@@ -15,7 +15,7 @@ interface HoroscopeDetails {
   personal_bth_rasi_id: number;
   personal_bth_rasi_name: string;
   personal_lagnam_didi_name: string;
-  personal_didi:string;
+  personal_didi: string;
   personal_chevvai_dos: string;
   personal_ragu_dos: string;
   personal_nalikai: string;
@@ -24,6 +24,7 @@ interface HoroscopeDetails {
   personal_dasa_bal: string;
   personal_rasi_katt: string;
   personal_amsa_katt: string;
+  personal_horoscope_hints: string;
 }
 
 // Define the interface for Lagnam data
@@ -57,18 +58,22 @@ export const Horoscope = () => {
   const [rasiList, setRasiList] = useState<Rasi[]>([]);
   const [selectedRasiId, setSelectedRasiId] = useState<number | string>("");
   const [refreshData, setRefreshData] = useState(false);
+  const [dasaBalanceDay, setDasaBalanceDay] = useState("");
+  const [dasaBalanceMonth, setDasaBalanceMonth] = useState("");
+  const [dasaBalanceYear, setDasaBalanceYear] = useState("");
   const [errors, setErrors] = useState({
     selectedBirthStarId: "",
     selectedRasiId: "",
     selectedLagnamId: "",
     personal_chevvai_dos: "",
-    personal_didi:"",
+    personal_didi: "",
     personal_ragu_dos: "",
     personal_nalikai: "",
     personal_dasa: "",
     personal_dasa_bal: "",
     personal_rasi_katt: "",
     personal_amsa_katt: "",
+    personal_horoscope_hints: "",
   });
 
   useEffect(() => {
@@ -77,12 +82,22 @@ export const Horoscope = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_horoscope/",
           {
-            profile_id: loginuser_profileId ,
+            profile_id: loginuser_profileId,
           }
         );
         const data = response.data.data;
         console.log("horoscope", response.data.data);
         setHoroscopeDetails(data);
+
+        // Parse dasa balance
+        if (data.personal_dasa_bal) {
+          const [day, month, year] = data.personal_dasa_bal
+            .split(",")
+            .map((item: string) => item.split(":")[1]);
+          setDasaBalanceDay(day);
+          setDasaBalanceMonth(month);
+          setDasaBalanceYear(year);
+        }
 
         const matchedLagnam = lagnams.find((lagnam) =>
           lagnam.didi_description.includes(data.personal_lagnam_didi_name)
@@ -237,7 +252,7 @@ export const Horoscope = () => {
         : "",
       selectedRasiId: !selectedRasiId ? "Rasi is required." : "",
       selectedLagnamId: !selectedLagnamId ? "Lagnam is required." : "",
-     personal_didi:!formData.personal_didi ? "Didi is required" :"",
+      personal_didi: !formData.personal_didi ? "Didi is required" : "",
       personal_chevvai_dos: !formData.personal_chevvai_dos
         ? "Chevvai Dosham is required."
         : "",
@@ -257,6 +272,9 @@ export const Horoscope = () => {
       personal_amsa_katt: !formData.personal_amsa_katt
         ? "Amsa Katt is required."
         : "",
+      personal_horoscope_hints: !formData.personal_horoscope_hints
+        ? "Horoscope Hints is required."
+        : "",
     };
 
     // Check if there are any errors
@@ -275,7 +293,7 @@ export const Horoscope = () => {
           birthstar_name: selectedBirthStarId,
           birth_rasi_name: selectedRasiId,
           lagnam_didi: selectedLagnamId,
-          didi:formData.personal_didi,
+          didi: formData.personal_didi,
           chevvai_dosaham: formData.personal_chevvai_dos,
           ragu_dosham: formData.personal_ragu_dos,
           nalikai: formData.personal_nalikai,
@@ -284,6 +302,7 @@ export const Horoscope = () => {
           dasa_balance: formData.personal_dasa_bal,
           rasi_kattam: formData.personal_rasi_katt,
           amsa_kattam: formData.personal_amsa_katt,
+          horoscope_hints: formData.personal_horoscope_hints, // Add this line
         }
       );
 
@@ -309,6 +328,20 @@ export const Horoscope = () => {
       toast.error("Failed to update horoscope details. Please try again.");
     }
   };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleRaguSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+
 
   if (!horoscopeDetails) {
     return <div>Loading...</div>;
@@ -413,7 +446,119 @@ export const Horoscope = () => {
                   </p>
                 )}
               </label>
-
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Dasa Name:
+                <input
+                  type="text"
+                  name="personal_dasa"
+                  value={formData.personal_dasa || ""}
+                  onChange={(e) => {
+                    handleInputChange(e);
+                    setErrors((prev) => ({ ...prev, personal_dasa: "" })); // Clear error on change
+                  }}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
+                                        ${errors.personal_dasa
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
+                />
+                {errors.personal_dasa && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.personal_dasa}
+                  </p>
+                )}
+              </label>
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Dasa Balance:
+                <div className="flex space-x-2">
+                  <div className="relative w-full">
+                    <select
+                      value={dasaBalanceDay}
+                      onChange={(e) => {
+                        setDasaBalanceDay(e.target.value);
+                        const balance = `day:${e.target.value},month:${dasaBalanceMonth},year:${dasaBalanceYear}`;
+                        setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
+                      }}
+                      className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
+                        ${errors.personal_dasa_bal ? "border-red-500" : "focus:border-blue-500"}`}
+                    >
+                      <option value="">Day</option>
+                      {[...Array(31)].map((_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="relative w-full">
+                    <select
+                      value={dasaBalanceMonth}
+                      onChange={(e) => {
+                        setDasaBalanceMonth(e.target.value);
+                        const balance = `day:${dasaBalanceDay},month:${e.target.value},year:${dasaBalanceYear}`;
+                        setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
+                      }}
+                      className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
+                        ${errors.personal_dasa_bal ? "border-red-500" : "focus:border-blue-500"}`}
+                    >
+                      <option value="">Month</option>
+                      {[...Array(12)].map((_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="relative w-full">
+                    <select
+                      value={dasaBalanceYear}
+                      onChange={(e) => {
+                        setDasaBalanceYear(e.target.value);
+                        const balance = `day:${dasaBalanceDay},month:${dasaBalanceMonth},year:${e.target.value}`;
+                        setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
+                      }}
+                      className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
+                        ${errors.personal_dasa_bal ? "border-red-500" : "focus:border-blue-500"}`}
+                    >
+                      <option value="">Year</option>
+                      {Array.from({ length: 30 }, (_, i) => i + 1).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                {errors.personal_dasa_bal && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.personal_dasa_bal}
+                  </p>
+                )}
+              </label>
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Nalikai:
+                <input
+                  type="text"
+                  name="personal_nalikai"
+                  value={formData.personal_nalikai || ""}
+                  onChange={(e) => {
+                    handleInputChange(e);
+                    setErrors((prev) => ({ ...prev, personal_nalikai: "" })); // Clear error on change
+                  }}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
+                                        ${errors.personal_nalikai
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
+                />
+                {errors.personal_nalikai && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.personal_nalikai}
+                  </p>
+                )}
+              </label>
+            </div>
+            <div>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Didi
                 <input
@@ -439,78 +584,6 @@ export const Horoscope = () => {
                   </p>
                 )}
               </label>
-
-              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Chevvai Doshom:
-                <input
-                  type="text"
-                  name="personal_chevvai_dos"
-                  value={formData.personal_chevvai_dos || ""}
-                  onChange={(e) => {
-                    handleInputChange(e);
-                    setErrors((prev) => ({
-                      ...prev,
-                      personal_chevvai_dos: "",
-                    })); // Clear error on change
-                  }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_chevvai_dos
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
-                />
-                {errors.personal_chevvai_dos && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_chevvai_dos}
-                  </p>
-                )}
-              </label>
-              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Ragu Doshom:
-                <input
-                  type="text"
-                  name="personal_ragu_dos"
-                  value={formData.personal_ragu_dos || ""}
-                  onChange={(e) => {
-                    handleInputChange(e);
-                    setErrors((prev) => ({ ...prev, personal_ragu_dos: "" })); // Clear error on change
-                  }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_ragu_dos
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
-                />
-                {errors.personal_ragu_dos && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_ragu_dos}
-                  </p>
-                )}
-              </label>
-            </div>
-            <div>
-              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Nalikai:
-                <input
-                  type="text"
-                  name="personal_nalikai"
-                  value={formData.personal_nalikai || ""}
-                  onChange={(e) => {
-                    handleInputChange(e);
-                    setErrors((prev) => ({ ...prev, personal_nalikai: "" })); // Clear error on change
-                  }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_nalikai
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
-                />
-                {errors.personal_nalikai && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_nalikai}
-                  </p>
-                )}
-              </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Suya Gothram:
                 <input
@@ -518,50 +591,72 @@ export const Horoscope = () => {
                   name="personal_surya_goth"
                   value={formData.personal_surya_goth || ""}
                   onChange={handleInputChange}
-                  className="font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder"
+                  className="font-normal border rounded px-3 py-[8px] w-full focus:outline-none  border-ashBorder"
                 />
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Dasa Name:
-                <input
-                  type="text"
-                  name="personal_dasa"
-                  value={formData.personal_dasa || ""}
-                  onChange={(e) => {
-                    handleInputChange(e);
-                    setErrors((prev) => ({ ...prev, personal_dasa: "" })); // Clear error on change
-                  }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_dasa
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
+                Ragu Dosham:
+                <select
+                  name="personal_ragu_dos"
+                  value={formData.personal_ragu_dos || ""}
+                  onChange={handleRaguSelectChange}
+                  className={`font-normal border rounded px-3 py-3 w-full focus:outline-none border-ashBorder ${errors.personal_chevvai_dos ? "border-red-500" : "focus:border-blue-500"
                     }`}
-                />
-                {errors.personal_dasa && (
+                >
+                  <option value="">Select</option>
+                  <option value="Unknown">Unknown</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                {errors.personal_ragu_dos && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_dasa}
+                    {errors.personal_ragu_dos}
                   </p>
                 )}
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Dasa Balance:
+                Chevvai Dosham:
+                <select
+                  name="personal_chevvai_dos"
+                  value={formData.personal_chevvai_dos || ""}
+                  onChange={handleSelectChange}
+                  className={`font-normal border rounded px-3 py-3 w-full focus:outline-none border-ashBorder ${errors.personal_chevvai_dos ? "border-red-500" : "focus:border-blue-500"
+                    }`}
+                >
+                  <option value="">Select</option>
+                  <option value="Unknown">Unknown</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+
+                {errors.personal_chevvai_dos && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.personal_chevvai_dos}
+                  </p>
+                )}
+              </label>
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Horoscope Hints:
                 <input
                   type="text"
-                  name="personal_dasa_bal"
-                  value={formData.personal_dasa_bal || ""}
+                  name="personal_horoscope_hints"
+                  value={formData.personal_horoscope_hints || ""}
                   onChange={(e) => {
                     handleInputChange(e);
-                    setErrors((prev) => ({ ...prev, personal_dasa_bal: "" })); // Clear error on change
+                    setErrors((prev) => ({
+                      ...prev,
+                      personal_horoscope_hints: "",
+                    })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_dasa_bal
+                                        ${errors.personal_horoscope_hints
                       ? "border-red-500"
                       : "focus:border-blue-500"
                     }`}
                 />
-                {errors.personal_dasa_bal && (
+                {errors.personal_horoscope_hints && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_dasa_bal}
+                    {errors.personal_horoscope_hints}
                   </p>
                 )}
               </label>
@@ -633,10 +728,10 @@ export const Horoscope = () => {
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Didi:
+                Dasa Name:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_didi}
+                  {horoscopeDetails.personal_dasa}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
@@ -647,19 +742,19 @@ export const Horoscope = () => {
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Sarpa Dhosam:
+                Nallikai:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_chevvai_dos}
+                  {horoscopeDetails.personal_nalikai}
                 </span>
               </h5>
             </div>
             <div>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Nallikai:
+                Didi:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_nalikai}
+                  {horoscopeDetails.personal_didi}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
@@ -670,10 +765,10 @@ export const Horoscope = () => {
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Dasa:
+                Ragu Dosham:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_dasa}
+                  {horoscopeDetails.personal_ragu_dos}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
@@ -681,6 +776,13 @@ export const Horoscope = () => {
                 <span className="font-normal">
                   {" "}
                   {horoscopeDetails.personal_chevvai_dos}
+                </span>
+              </h5>
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Horoscope Hints:
+                <span className="font-normal">
+                  {" "}
+                  {horoscopeDetails.personal_horoscope_hints}
                 </span>
               </h5>
             </div>

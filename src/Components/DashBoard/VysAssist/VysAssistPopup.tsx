@@ -15,7 +15,6 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
     const [VysassistEnable, setVysassistEnable] = useState(0)
     console.log(VysassistEnable)
     const [vysassits, setVysassits] = useState()
-
     console.log(vysassits)
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [data, setData] = useState<any>()
@@ -48,7 +47,6 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
             console.log(response.data.basic_details);
         setVysassistEnable(response.data.basic_details.vysy_assist_enable);
             setVysassits(response.data.basic_details.vys_assits)
-
             setData(response.data.basic_details.vys_list)
         } catch (error) {
             console.error("Error fetching profile details:", error);
@@ -189,7 +187,7 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
 
 
             {
-                VysassistEnable === 0 && (
+                VysassistEnable === 0 && vysassits === false && data === null &&(
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={closePopup}>
                         <div className="bg-white w-[36rem] rounded-lg container mx-auto relative">
                             <div className="rounded-lg">

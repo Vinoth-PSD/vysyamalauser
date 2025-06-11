@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import ContentBlackCard from "../Components/RegistrationForm/ContentBlackCard";
 import InputField from "../Components/RegistrationForm/InputField";
 import SideContent from "../Components/RegistrationForm/SideContent";
@@ -312,7 +311,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   console.log("selectedstar", birthStarId);
 
   sessionStorage.setItem("selectedRasi", rasiId);
-  
+
   console.log("selectedRasi", rasiId);
 
   useEffect(() => {
@@ -449,7 +448,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   return (
     <div className="mt-24 max-lg:mt-20">
       <ContentBlackCard
-      link="/EduDetails"
+        link="/EduDetails"
         heading={"Horoscope Details"}
         desc="Please enter your horoscope details to assist in finding a compatible match based on astrological preferences."
       />
@@ -791,69 +790,69 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                 </label>
                 <div className="flex space-x-2 ">
                   <div className=" w-full">
-                  <div className="relative">
-                    <select
-                      id="day"
-                      className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                      {...register("day")}
-                      onChange={handleDayChange}
-                    >
-                      <option value="" disabled>
-                        Day
-                      </option>
-                      {[...Array(31)].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
+                    <div className="relative">
+                      <select
+                        id="day"
+                        className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                        {...register("day")}
+                        onChange={handleDayChange}
+                      >
+                        <option value="" disabled>
+                          Day
                         </option>
-                      ))}
-                    </select>
-                    <IoMdArrowDropdown /> 
+                        {[...Array(31)].map((_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {i + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <IoMdArrowDropdown />
                     </div>
                     {errors.day && (
                       <span className="text-red-500">{errors.day.message}</span>
                     )}
                   </div>
                   <div className="w-full ">
-                  <div className="relative">
-                    <select
-                      id="month"
-                      className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                      {...register("month")}
-                      onChange={handleMonthChange}
-                    >
-                      <option value="" disabled>
-                        Month
-                      </option>
-                      {[...Array(12)].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
+                    <div className="relative">
+                      <select
+                        id="month"
+                        className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                        {...register("month")}
+                        onChange={handleMonthChange}
+                      >
+                        <option value="" disabled>
+                          Month
                         </option>
-                      ))}
-                    </select>
-                    <IoMdArrowDropdown />
-</div>
+                        {[...Array(12)].map((_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {i + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <IoMdArrowDropdown />
+                    </div>
                     {errors.month && (
                       <span className="text-red-500">{errors.month.message}</span>
                     )}
                   </div>
                   <div className="w-full">
-                  <div className="relative">
-                    <select
-                      id="year"
-                      className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                      {...register("year")}
-                      onChange={handleYearChange}
-                    >
-                      <option value="" disabled>
-                        Year
-                      </option>
-                      {Array.from({ length: 30 }, (_, i) => i + 1).map((year) => (
-                        <option key={year} value={year}>
-                          {year}
+                    <div className="relative">
+                      <select
+                        id="year"
+                        className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                        {...register("year")}
+                        onChange={handleYearChange}
+                      >
+                        <option value="" disabled>
+                          Year
                         </option>
-                      ))}
-                    </select>
-                    <IoMdArrowDropdown />
+                        {Array.from({ length: 30 }, (_, i) => i + 1).map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                      <IoMdArrowDropdown />
                     </div>
                     {errors.year && (
                       <span className="text-red-500">{errors.year.message}</span>

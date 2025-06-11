@@ -720,8 +720,6 @@
 //   );
 // };
 
-
-
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import Slider from "react-slick";
 import "./ProfileSlickStyle.css";
@@ -1040,7 +1038,9 @@ export const ProfileSlick = () => {
       </div>
       {zoomImage && (
         <div className="zoomed-image-container zoomed-visible ">
-          <img src={zoomImage} className="zoomed-image object-top" alt="Zoomed" />
+          <img src={zoomImage} 
+          className="zoomed-image object-top" 
+          alt="Zoomed" />
         </div>
       )}
       <input

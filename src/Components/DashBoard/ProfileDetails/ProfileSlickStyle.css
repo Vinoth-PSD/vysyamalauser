@@ -20,44 +20,55 @@
 }
 
 .zoomed-image-container {
-    position: absolute;
+    position: fixed; /* Fixed to viewport for center alignment */
     top: 50%;
     left: 50%;
+    margin-left: 50px;
     transform: translate(-50%, -50%);
-    width: 400px;
-    /* Adjust based on the size you need */
-    height: 400px;
-    /* Adjust based on the size you need */
+    width: 550px;
+    height: 550px;
     border: 1px solid #ccc;
     background-color: white;
     overflow: hidden;
     z-index: 100;
     display: none;
-    /* Initially hidden */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
 }
 
 .zoomed-image-container.zoomed-visible {
     display: block;
-    /* Show when zoomed */
 }
 
 .zoomed-image {
-    /* position: absolute;
-    top: 50%;
-    left: 50%; */
-    /* transform: translate(-50%, -50%); */
     width: 100%;
     height: 100%;
     max-width: none;
     max-height: none;
     object-position: top center;
-    object-fit: 100% 100% ;
+    object-fit: cover;
 }
+
+
+@media screen and (max-width: 768px) {
+    .zoomed-image-container {
+        width: 90vw;
+        height: 90vw;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .zoomed-image-container {
+        width: 95vw;
+        height: 95vw;
+    }
+}
+
 
 @media screen and (max-width: 424px) and (min-width: 320px) {
 .zoomed-image-container {
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
 
 }
 }
