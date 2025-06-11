@@ -720,6 +720,8 @@
 //   );
 // };
 
+
+
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import Slider from "react-slick";
 import "./ProfileSlickStyle.css";
@@ -905,7 +907,7 @@ export const ProfileSlick = () => {
         breakpoint: 1023,
         settings: {
           slidesToShow: 4,
-          autoplay: false,
+          autoplay: true,
 
         },
       },
@@ -913,7 +915,7 @@ export const ProfileSlick = () => {
         breakpoint: 768,
         settings: {
           slidesToShow: 4,
-          autoplay: false,
+          autoplay: true,
           arrows: false,
         },
       },
@@ -921,7 +923,7 @@ export const ProfileSlick = () => {
         breakpoint: 639,
         settings: {
           slidesToShow: 3,
-          autoplay: false,
+          autoplay: true,
           arrows: false,
 
         },
@@ -1038,9 +1040,7 @@ export const ProfileSlick = () => {
       </div>
       {zoomImage && (
         <div className="zoomed-image-container zoomed-visible ">
-          <img src={zoomImage} 
-          className="zoomed-image object-top" 
-          alt="Zoomed" />
+          <img src={zoomImage} className="zoomed-image object-top object-contain" alt="Zoomed" />
         </div>
       )}
       <input

@@ -50,7 +50,7 @@ const SLIDER_SETTINGS = {
       breakpoint: 1536,
       settings: {
         slidesToShow: 4,
-        infinite: false,
+        infinite: true,
         dots: false,
       },
     },
@@ -58,7 +58,7 @@ const SLIDER_SETTINGS = {
       breakpoint: 1024,
       settings: {
         slidesToShow: 3,
-        infinite: false,
+        infinite: true,
         dots: false,
       },
     },
@@ -66,14 +66,14 @@ const SLIDER_SETTINGS = {
       breakpoint: 1023,
       settings: {
         slidesToShow: 4,
-        autoplay: false,
+        autoplay: true,
       },
     },
     {
       breakpoint: 768,
       settings: {
         slidesToShow: 4,
-        autoplay: false,
+        autoplay: true,
         arrows: true,
       },
     },
@@ -81,7 +81,7 @@ const SLIDER_SETTINGS = {
       breakpoint: 639,
       settings: {
         slidesToShow: 3,
-        autoplay: false,
+        autoplay: true,
         arrows: true,
       },
     },
@@ -150,7 +150,7 @@ const ZoomedImage: React.FC<{ image: string | null }> = ({ image }) => {
 
   return (
     <div className="zoomed-image-container zoomed-visible">
-      <img src={image} className="zoomed-image" alt="Zoomed" />
+      <img src={image} className="zoomed-image object-top object-contain" alt="Zoomed" />
     </div>
   );
 };
@@ -327,6 +327,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
               arrows={false}
               dotsClass="slick-dots slick-thumb"
               infinite={true}
+          // autoplay={true}
               speed={1400}
               slidesToShow={1}
               slidesToScroll={1}
@@ -377,7 +378,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
                 >
                   <img
                     src={image}
-                    className="w-[90px] h-[90px] mx-auto my-5 rounded-lg object-cover"
+                    className="w-[90px] h-[90px] mx-auto my-5 rounded-lg object-top object-cover"
                     alt={`Thumbnail ${index + 1}`}
                   />
                 </div>
