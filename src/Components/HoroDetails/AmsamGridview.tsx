@@ -177,7 +177,7 @@ const AmsamGridview: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp,data })
 
   useEffect(() => {
     const formattedData = formatGridData();
-    console.log("Amsam Contents:");
+    //console.log("Amsam Contents:");
     console.log(formattedData);
 
     // Store formattedData in sessionStorage

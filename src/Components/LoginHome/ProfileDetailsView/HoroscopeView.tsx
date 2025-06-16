@@ -38,15 +38,15 @@ export const HoroscopeView: React.FC = () => {
 
     useEffect(() => {
         const fetchHoroscopeDetails = async () => {
-            console.log("logggeddduser", loginuser_profileId);
-            console.log("viewid", id);
+            //console.log("logggeddduser", loginuser_profileId);
+            //console.log("viewid", id);
             try {
                 const response = await apiClient.post("/auth/Get_profile_det_match/", {
                     profile_id: loginuser_profileId,
                     user_profile_id: id
                 });
 
-                console.log("API Response:", response.data);
+                //console.log("API Response:", response.data);
 
                 // Adjust the response processing based on the actual API response format
                 setHoroscopeDetails(response.data.horoscope_details);

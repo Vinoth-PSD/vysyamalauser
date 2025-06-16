@@ -220,7 +220,7 @@ export const LoginPopupModal: React.FC<LoginPopupModalProps> = ({ onClose }) => 
     };
 
     const basicDetailsNext = () => {
-        console.log('User registered');
+        //console.log('User registered');
         onClose();
     };
 

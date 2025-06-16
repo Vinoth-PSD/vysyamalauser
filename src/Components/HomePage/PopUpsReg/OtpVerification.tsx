@@ -171,7 +171,7 @@
 //           ProfileId: profileId,
 //         });
 
-//         console.log("OTP Verification Response:", response.data);
+//         //console.log("OTP Verification Response:", response.data);
 
 //         // Check the response for success or failure
 //         if (response.data.message !== "OTP verified successfully.") {
@@ -473,7 +473,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
           ProfileId: profileId,
         });
 
-        console.log("OTP Verification Response:", response.data);
+        //console.log("OTP Verification Response:", response.data);
 
         // Check the response for success or failure
         if (response.data.message !== "OTP verified successfully.") {

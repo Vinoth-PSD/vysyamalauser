@@ -53,16 +53,14 @@ export const LoginHeader: React.FC = () => {
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const userProfileImage = localStorage.getItem("user_profile_image");
-  console.log(userProfileImage, "userProfileImage ");
+  //console.log(userProfileImage, "userProfileImage ");
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [roomId, setRoomId] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
   const [, setSelectedFromProfileId] = useState<string | null>(null);
   const [refreshNotifications, setRefreshNotifications] = useState(false); // Trigger for refresh
-
-
-  console.log("setSelectedFromProfileId", setSelectedFromProfileId);
+  ////console.log("setSelectedFromProfileId", setSelectedFromProfileId);
   const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
 
   const getUnreadMessageCount = async () => {
@@ -77,7 +75,7 @@ export const LoginHeader: React.FC = () => {
 
       formData.append("profile_id", String(userId));
 
-      console.log("unread_message_count...", formData);
+      ////console.log("unread_message_count...", formData);
       const response = await apiClient.post(
         "/auth/unread_message_count/",
         formData,
@@ -87,7 +85,7 @@ export const LoginHeader: React.FC = () => {
           },
         }
       );
-      console.log("unread_message_count", response);
+      ////console.log("unread_message_count", response);
       if (response.status === 200) {
         setUnreadMessageCount(response.data.unread_count);
       }
@@ -147,7 +145,7 @@ export const LoginHeader: React.FC = () => {
         setNotificationData(response.data.data);
         setNotificationCount(response.data.notifiy_count);
         setTotalRecords(response.data.total_records);
-        console.log(notificationCount, "notificationCount");
+        //console.log(notificationCount, "notificationCount");
       })
       .catch((error) => {
         console.error(
@@ -175,13 +173,13 @@ export const LoginHeader: React.FC = () => {
       }
     );
     try {
-      console.log(response.data);
+      //console.log(response.data);
       if (response.status === 200) {
         navigate("/Notifications");
         getNotification();
       }
     } catch (error) {
-      console.log("error", error);
+      ////console.log("error", error);
     }
     setIsMenuOpen(!isMenuOpen);
 
@@ -234,7 +232,7 @@ export const LoginHeader: React.FC = () => {
             "selectedProfile",
             JSON.stringify(selectedProfileData)
           );
-          console.log(selectedProfileData, "selectedProfileData");
+          ///console.log(selectedProfileData, "selectedProfileData");
 
           // Set state and navigate to messages page
           setRoomId(room_id_name);
@@ -266,7 +264,7 @@ export const LoginHeader: React.FC = () => {
   };
 
   const handleUpdateSettings = () => {
-    console.log("testing bbb");
+    ////console.log("testing bbb");
     // Perform any necessary actions here, such as updating the photo
     navigate("/DashBoard?key=1");
     setIsMenuOpen(!isMenuOpen);

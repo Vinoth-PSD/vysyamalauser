@@ -20,7 +20,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
   const toptalPages = dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
   // const [totalPages,setTotalPages]=useState<number>(0)
 
-  console.log(dataPerPage, "dataPerPage" ,toptalPages,"toptalPages",totalRecords,"totalRecords");
+  //console.log(dataPerPage, "dataPerPage" ,toptalPages,"toptalPages",totalRecords,"totalRecords");
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const fetchData = async () => {

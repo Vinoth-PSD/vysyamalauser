@@ -89,7 +89,7 @@
 //         <>
 //             <HeroSection
 //                 onNext={(mobile: string) => {
-//                     console.log("HeroSection mobile:", mobile);
+//                     //console.log("HeroSection mobile:", mobile);
 //                 }}
 //             />
 //             <div className="flex flex-col items-center p-40 min-w-96 bg-gray-100 min-h-screen">
@@ -163,7 +163,7 @@ const ImagePage: React.FC = () => {
             {/* Hero Section */}
             {/* <HeroSection
                 onNext={(mobile: string) => {
-                    console.log("HeroSection mobile:", mobile);
+                    //console.log("HeroSection mobile:", mobile);
                 }}
             /> */}
             {/* Profile Details Section */}

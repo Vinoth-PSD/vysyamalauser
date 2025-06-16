@@ -199,7 +199,7 @@
 //           }
 //         );
 
-//         console.log("API Response:", response.data);
+//         //console.log("API Response:", response.data);
 
 //         // Ensure the response contains `data` before setting it
 //         if (response.data && response.data.data) {
@@ -348,7 +348,7 @@
 //   // }
 
 //   const handleNextClick = () => {
-//     console.log("Next button clicked");
+//     //console.log("Next button clicked");
 //     navigate('/ProfileCompletion'); // Replace with your actual route path
 //   };
 //   // const popupRef = useRef(null);
@@ -1027,7 +1027,7 @@ export const MyProfile = () => {
         } catch (error) {
           console.error("Error fetching dashboard details:", error);
           // alert("An error occurred while fetching data.");
-          console.log("An error occurred while fetching data.");
+          //console.log("An error occurred while fetching data.");
         }
       };
 
@@ -1046,7 +1046,7 @@ export const MyProfile = () => {
           }
         );
 
-        console.log("API Response:", response.data);
+        //console.log("API Response:", response.data);
 
         // Ensure the response contains `data` before setting it
         if (response.data && response.data.data) {
@@ -1219,7 +1219,7 @@ export const MyProfile = () => {
   // }
 
   const handleNextClick = () => {
-    console.log("Next button clicked");
+    //console.log("Next button clicked");
     navigate('/ProfileCompletion'); // Replace with your actual route path
   };
   // const popupRef = useRef(null);

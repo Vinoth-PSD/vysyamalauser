@@ -23,7 +23,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
 
     // const [totalPages,setTotalPages]=useState<number>(0)
 
-    console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
+    //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
 
     const [pageNumber, setPageNumber] = useState<number>(1);
     const fetchData = async () => {

@@ -25,7 +25,7 @@ export const HeroSlider = () => {
           }
         );
         const data = await response.json();
-        console.log(data, "data");
+        //console.log(data, "data");
         if (data.Status !== 0) {
           setProfileCount(data.data.profiles.length); // Set profile count if profiles are found
         }

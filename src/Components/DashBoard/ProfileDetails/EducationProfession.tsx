@@ -99,9 +99,9 @@ export const EducationProfession = () => {
   const [FieldofStudy, setFieldOfStudy] = useState<FieldofStudy[]>([]);
   const [Degree, setDegree] = useState<Degree[]>([]);
   const [selectedDegrees, setSelectedDegrees] = useState<number[]>([]);
-  console.log("selectedDegrees", selectedDegrees)
+  // //console.log("selectedDegrees", selectedDegrees)
   const [fieldOfStudyy, setFieldOfStudyy] = useState(""); // Example initial value
-  console.log("fieldOfStudyy", fieldOfStudyy)
+  // //console.log("fieldOfStudyy", fieldOfStudyy)
   const [selectedEducationId, setSelectedEducationId] = useState<number | string>();
   const [profession, setProfession] = useState<Profession[]>([]);
   const [selectedProfessionId, setSelectedProfessionId] = useState<number | string>("");
@@ -113,9 +113,9 @@ export const EducationProfession = () => {
   const [workStateInput, setWorkStateInput] = useState(""); // For state textbox
   const [showStateTextbox, setShowStateTextbox] = useState(false); // For conditionally rendering
   const [customDegree, setCustomDegree] = useState("");
-  console.log("customDegree", customDegree)
+  /////console.log("customDegree", customDegree)
   const [isOthersSelected, setIsOthersSelected] = useState(false);
-  console.log("isOthersSelected", isOthersSelected)
+  ////console.log("isOthersSelected", isOthersSelected)
   const [errors, setErrors] = useState({
     personal_about_edu: "",
     personal_gross_ann_inc: "",
@@ -147,7 +147,7 @@ export const EducationProfession = () => {
         );
         const data = response.data.data;
         setEducationProfessionDetails(response.data.data);
-        console.log("respponseeeeeee", response.data.data);
+        ////console.log("respponseeeeeee", response.data.data);
         const matchedIncome = annualIncomes.find((income) =>
           income.income_description.includes(data.personal_ann_inc_name)
         );
@@ -296,8 +296,8 @@ export const EducationProfession = () => {
             field_of_study: fieldOfStudyy,
           }
         );
-        console.log("selectedEducationId", selectedEducationId);
-        console.log("fieldOfStudyy", fieldOfStudyy);
+        // //console.log("selectedEducationId", selectedEducationId);
+        // //console.log("fieldOfStudyy", fieldOfStudyy);
         const degreeData = Object.values(response.data) as Degree[];
         setDegree(degreeData);
       } catch (error) {
@@ -504,24 +504,24 @@ export const EducationProfession = () => {
       return;
     }
 
-    console.log("Logging all values before submission:");
-    console.log("profile_id:", loginuser_profileId);
-    console.log("selectedEducationId:", selectedEducationId);
-    console.log("education_details:", formData.personal_edu_details);
-    console.log("about_edu:", formData.personal_about_edu);
-    console.log("selectedProfessionId:", selectedProfessionId);
-    console.log("company_name:", formData.personal_company_name);
-    console.log("designation:", formData.personal_designation);
-    console.log("profession_details:", formData.personal_profess_details);
-    console.log("business_name:", formData.personal_business_name);
-    console.log("business_address:", formData.personal_business_addresss);
-    console.log("nature_of_business:", formData.personal_nature_of_business);
-    console.log("selectedIncomeId:", selectedIncomeId);
-    console.log("actual_income:", formData.personal_gross_ann_inc);
-    console.log("selectedWorkCountryId:", selectedWorkCountryId);
-    console.log("selectedWorkStateId:", selectedWorkStateId);
-    console.log("work_pincode:", formData.personal_work_pin);
-    console.log("career_plans:", formData.personal_career_plans);
+    // //console.log("Logging all values before submission:");
+    // //console.log("profile_id:", loginuser_profileId);
+    // //console.log("selectedEducationId:", selectedEducationId);
+    // //console.log("education_details:", formData.personal_edu_details);
+    // //console.log("about_edu:", formData.personal_about_edu);
+    // //console.log("selectedProfessionId:", selectedProfessionId);
+    // //console.log("company_name:", formData.personal_company_name);
+    // //console.log("designation:", formData.personal_designation);
+    // //console.log("profession_details:", formData.personal_profess_details);
+    // //console.log("business_name:", formData.personal_business_name);
+    // //console.log("business_address:", formData.personal_business_addresss);
+    // //console.log("nature_of_business:", formData.personal_nature_of_business);
+    // //console.log("selectedIncomeId:", selectedIncomeId);
+    // //console.log("actual_income:", formData.personal_gross_ann_inc);
+    // //console.log("selectedWorkCountryId:", selectedWorkCountryId);
+    // //console.log("selectedWorkStateId:", selectedWorkStateId);
+    // //console.log("work_pincode:", formData.personal_work_pin);
+    // //console.log("career_plans:", formData.personal_career_plans);
 
     const payload: EducationProfessionPayload  = {
       profile_id: loginuser_profileId,
@@ -577,7 +577,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
   payload.business_address = "";
   payload.nature_of_business = "";
 }
-    console.log("Logging payload values before submission:", payload);
+    //console.log("Logging payload values before submission:", payload);
 
     try {
       const response = await apiClient.post(

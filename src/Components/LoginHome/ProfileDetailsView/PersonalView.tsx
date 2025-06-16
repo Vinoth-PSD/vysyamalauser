@@ -46,7 +46,7 @@ export const PersonalView: React.FC = () => {
                     profile_id: loginuser_profileId,
                     user_profile_id: id
                 });
-                console.log("API Response:", response.data);
+                //console.log("API Response:", response.data);
 
                 // Extract personal details from the API response
                 const { personal_details } = response.data as ApiResponse;

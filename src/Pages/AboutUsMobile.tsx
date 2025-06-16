@@ -6,7 +6,7 @@ import vysyamalaLogo from "../assets/icons/VysyamalaLogo.png";
 export const AboutUsMobile = () => {
     const location = useLocation();
     // Log location.state to see the structure of the received data
-    console.log("Location State:", location.state);
+    //console.log("Location State:", location.state);
 
 
     // Access the FAQ data properly using dot notation if necessary

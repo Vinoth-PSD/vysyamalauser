@@ -184,7 +184,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
     setIsSubmitting(true); // Set isSubmitting to true when form submission starts
 
     try {
-      // console.log("Form Data: ", data);
+      // //console.log("Form Data: ", data);
 
       const profileId = localStorage.getItem("profile_id");
       if (!profileId) {
@@ -200,13 +200,13 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
         Profile_complexion: data.complexion,
       };
 
-      console.log("Post Data: ", postData);
+      //console.log("Post Data: ", postData);
 
       const response = await apiClient.post(
         `/auth/Registrationstep2/`,
         postData
       );
-      console.log("Registration successful:", response.data);
+      //console.log("Registration successful:", response.data);
       if (response.data.Status === 1) {
         setIsSubmitting(false);
         const { profile_id } = response.data;
@@ -230,7 +230,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
         navigate("/ThankYou");
       } else {
         setIsSubmitting(false); // Set isSubmitting to false when form submission fails
-        console.log("Registration unsuccessful:", response.data);
+        //console.log("Registration unsuccessful:", response.data);
       }
     } catch (error) {
       setIsSubmitting(false); // Set isSubmitting to false when there is an error

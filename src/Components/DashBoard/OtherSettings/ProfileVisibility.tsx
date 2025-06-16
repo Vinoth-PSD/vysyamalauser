@@ -66,7 +66,7 @@ export const ProfileVisibility: React.FC = () => {
       const educationRes = await apiClient.post(
         "/auth/Get_Highest_Education/"
       );
-      console.log("Education Response:", educationRes.data); // Log to check structure
+      /////console.log("Education Response:", educationRes.data); // Log to check structure
 
       // Convert object to array using Object.values()
       setEducationOptions(
@@ -79,7 +79,7 @@ export const ProfileVisibility: React.FC = () => {
       const professionRes = await apiClient.post(
         "/auth/Get_Profes_Pref/"
       );
-      console.log("Profession Response:", professionRes.data);
+      ////console.log("Profession Response:", professionRes.data);
 
       setProfessionOptions(
         Object.values(professionRes.data).map((item: any) => ({
@@ -91,7 +91,7 @@ export const ProfileVisibility: React.FC = () => {
       const incomeRes = await apiClient.post(
         "/auth/Get_Annual_Income/"
       );
-      console.log("Income Response:", incomeRes.data);
+      ////console.log("Income Response:", incomeRes.data);
 
       setIncomeOptions(
         Object.values(incomeRes.data).map((item: any) => ({
@@ -117,7 +117,7 @@ export const ProfileVisibility: React.FC = () => {
           }
         );
         const profileData = profileRes.data.data[0];
-        console.log("Get_profile_visibility",profileRes)
+        ////console.log("Get_profile_visibility",profileRes)
 
         // Prefill form values
         setValue("ageFrom", profileData.visibility_age_from || "");
@@ -156,7 +156,7 @@ export const ProfileVisibility: React.FC = () => {
       visibility_foreign_interest: data.foreignInterest,
       status: 1,
     };
-console.log(payload,"Update_profile_visibility")
+//console.log(payload,"Update_profile_visibility")
     try {
       const response = await apiClient.post(
         "/auth/Update_profile_visibility/",

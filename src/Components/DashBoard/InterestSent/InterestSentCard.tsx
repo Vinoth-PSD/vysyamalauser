@@ -65,7 +65,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
   });
   // State to store the profile data fetched from the API
   const [profile, setProfiles] = useState<Profile[]>([]);
-  console.log(profile, "proooo");
+  //console.log(profile, "proooo");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [noData, setNoData] = useState(false);
@@ -78,7 +78,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
 
    // Added state to capture the selected from_profile_id for messaging
    const [, setSelectedFromProfileId] = useState<string | null>(null);
-   console.log("setSelectedFromProfileId",setSelectedFromProfileId)
+   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
  
  
    const handleMessage = async (fromProfileId: string) => {
@@ -114,7 +114,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
    
            // Save profile data with room ID to sessionStorage
            sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
-           console.log(selectedProfileData, "selectedProfileData");
+           //console.log(selectedProfileData, "selectedProfileData");
    
            // Set state and navigate to messages page
            setRoomId(room_id_name);
@@ -223,7 +223,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
       );
       if (response.data.Status === 1) {
         toast.success("Profile added to wishlist!");
-   console.log("Profile added to wishlist!");
+   ////console.log("Profile added to wishlist!");
         setBookmarkedProfiles((prev) => [...prev, profileId]);
         sessionStorage.setItem(
           "bookmarkedProfiles",
@@ -249,7 +249,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
       );
       if (response.data.Status === 1) {
         toast.error("Profile removed from wishlist.");
-      console.log("Profile removed from wishlist.");
+      ////console.log("Profile removed from wishlist.");
         const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
         setBookmarkedProfiles(updatedBookmarks);
         sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));

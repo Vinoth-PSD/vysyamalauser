@@ -316,7 +316,7 @@ const fetchImages = async () => {
       { profile_id: loginUserProfileId }
     );
 
-    console.log('Fetched images response:', response.data.data);
+    //console.log('Fetched images response:', response.data.data);
 
     if (response.data.Status === 1) {
       // Process the actual images from the response
@@ -414,7 +414,7 @@ useEffect(() => {
       if (response.data.Status === 1) {
         setBookmarkedProfiles((prev) => [...prev, profile]);
          toast.success(`Profile ${profile.profile_id} bookmarked successfully!`);
-        console.log(`Profile ${profile.profile_id} bookmarked successfully.`);
+        //console.log(`Profile ${profile.profile_id} bookmarked successfully.`);
       } else {
         setError(`Failed to bookmark profile: ${response.data.Message}`);
         // toast.error(`Failed to bookmark profile: ${response.data.Message}`);
@@ -456,9 +456,9 @@ useEffect(() => {
           prev.filter((profile) => profile.profile_id !== profileId)
         );
          toast.success(`Profile ${profileId} removed from bookmarks successfully!`);
-        console.log(
-          `Profile ${profileId} removed from bookmarks successfully.`
-        );
+        //console.log(
+        //   `Profile ${profileId} removed from bookmarks successfully.`
+        // );
       } else {
         setError(`Failed to remove bookmark: ${response.data.Message}`);
         // toast.error(`Failed to remove bookmark: ${response.data.Message}`);

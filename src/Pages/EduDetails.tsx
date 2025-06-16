@@ -158,7 +158,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     setValue("profession", name, { shouldValidate: true });
     trigger("profession"); // Trigger validation manually if needed
   };
-  console.log("rrrrrrrr", selectedProfessionId);
+  //console.log("rrrrrrrr", selectedProfessionId);
 
   useEffect(() => {
     const fetchProfessionData = async () => {
@@ -167,7 +167,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
           "/auth/Get_Profes_Pref/"
         );
         setProfessionOptions(Object.values(response.data));
-        console.log("profession", response.data);
+        //console.log("profession", response.data);
       } catch (error) {
         console.error("Error fetching profession options:", error);
       }
@@ -308,7 +308,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
             setValue("profession", selectedProfessionOption.Profes_name, {
               shouldValidate: true,
             }); // Update form state          } else {
-            console.log("Profession not found in options");
+            //console.log("Profession not found in options");
           }
           setWorkCity(profileData.work_city);
           setState(profileData.work_state);
@@ -517,7 +517,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
         work_other_city:data.WorkOtherCity,
       };
 
-      console.log("EducationDetails:", formattedData);
+      //console.log("EducationDetails:", formattedData);
       setIsSubmitting(true);
       const response = await apiClient.post(
         `/auth/Education_registration/`,

@@ -136,14 +136,14 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
             }
           );
 
-          console.log("API Response:", response.data); // Log the entire API response
+          //console.log("API Response:", response.data); // Log the entire API response
 
           const profileData = response.data.data; // Access the 'data' object directly
 
-          console.log("Profile Data:", profileData); // Log the profile data
+          //console.log("Profile Data:", profileData); // Log the profile data
 
-          // console.log("rasi:",profileData.rasi_kattam);
-          // console.log("amsam:",profileData.amsa_kattam);
+          // //console.log("rasi:",profileData.rasi_kattam);
+          // //console.log("amsam:",profileData.amsa_kattam);
 
           // sessionStorage.setItem("formattedDatarasi", profileData.rasi_kattam);
           // sessionStorage.setItem("formattedDatamsam", profileData.amsa_kattam);
@@ -202,7 +202,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
       const response = await apiClient.post(
         "/auth/Get_Dasa_Name/"
       );
-      console.log("dasa:", response.data);
+      //console.log("dasa:", response.data);
 
       // Assuming response.data.value is an array of dasa names
       const dasaValue = Array.isArray(response.data)
@@ -226,18 +226,18 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
     const storedDataString = sessionStorage.getItem("formattedData");
     if (storedDataString) {
       storedData = JSON.parse(storedDataString); // No need to parse as it's already a string
-      console.log("Retrieved formattedData from sessionStorage:", storedData);
+      //console.log("Retrieved formattedData from sessionStorage:", storedData);
     } else {
-      console.log("No formattedData found in sessionStorage");
+      //console.log("No formattedData found in sessionStorage");
     }
 
     // Retrieve 'formattedData1' from sessionStorage
     const storedDataString1 = sessionStorage.getItem("formattedData1");
     if (storedDataString1) {
       storedData1 = JSON.parse(storedDataString1); // No need to parse as it's already a string
-      console.log("Retrieved formattedData1 from sessionStorage:", storedData1);
+      //console.log("Retrieved formattedData1 from sessionStorage:", storedData1);
     } else {
-      console.log("No formattedData1 found in sessionStorage");
+      //console.log("No formattedData1 found in sessionStorage");
     }
 
     // const hour = watch("hour");
@@ -270,7 +270,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
         amsa_kattam: storedData1,
       };
       sessionStorage.setItem('birth_rasi_name', rasiId);
-      console.log("Formatted Data:", formattedData);
+      //console.log("Formatted Data:", formattedData);
       setIsSubmitting(true);
       const response = await apiClient.post(
         `/auth/Horoscope_registration/`,
@@ -308,11 +308,11 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
 
   // sessionStorage.setItem("selectedstar", selectedStar);
   sessionStorage.setItem("selectedstar", birthStarId);
-  console.log("selectedstar", birthStarId);
+  //console.log("selectedstar", birthStarId);
 
   sessionStorage.setItem("selectedRasi", rasiId);
 
-  console.log("selectedRasi", rasiId);
+  //console.log("selectedRasi", rasiId);
 
   useEffect(() => {
     const fetchBirthStar = async () => {

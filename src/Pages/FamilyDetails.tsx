@@ -201,7 +201,7 @@ const FamilyDetails: React.FC = () => {
       try {
         const response = await apiClient.post("/auth/Get_FamilyType/");
         setfamilyType(Object.values(response.data));
-        console.log("Get_FamilyType", response.data);
+        //console.log("Get_FamilyType", response.data);
       } catch (error) {
         console.error("Error fetching familytype :", error);
       }
@@ -215,7 +215,7 @@ const FamilyDetails: React.FC = () => {
       try {
         const response = await apiClient.post("/auth/Get_FamilyValue/");
         setfamilyValue(Object.values(response.data));
-        console.log("Get_FamilyValue", response.data);
+        //console.log("Get_FamilyValue", response.data);
       } catch (error) {
         console.error("Error fetching familytype :", error);
       }
@@ -229,7 +229,7 @@ const FamilyDetails: React.FC = () => {
       try {
         const response = await apiClient.post("/auth/Get_FamilyStatus/");
         setfamilyStatus(Object.values(response.data));
-        console.log("Get_FamilyStatus", response.data);
+        //console.log("Get_FamilyStatus", response.data);
       } catch (error) {
         console.error("Error fetching familytype :", error);
       }
@@ -293,11 +293,11 @@ const FamilyDetails: React.FC = () => {
             }
           );
 
-          console.log("API Response:", response.data);
+          //console.log("API Response:", response.data);
 
           const profileData = response.data.data;
 
-          console.log("Profile Data:", profileData);
+          //console.log("Profile Data:", profileData);
 
           // Set form values here after fetching data
           setValue("fathername", profileData.father_name);
@@ -524,9 +524,9 @@ const FamilyDetails: React.FC = () => {
         // Include other fields as necessary
       };
 
-      console.log("FamilyDetails:", formattedData);
+      //console.log("FamilyDetails:", formattedData);
 
-      // console.log("Formatted Data:", formattedData);
+      // //console.log("Formatted Data:", formattedData);
 
       setIsSubmitting(true);
       const response = await apiClient.post(

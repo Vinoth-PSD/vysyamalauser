@@ -129,7 +129,7 @@ export const FeaturedProfiles = () => {
         );
         setProfiles(response.data.data);
         setTotalCount(response.data.total_count || response.data.data.length);
-        console.log("featured profilese response", response.data.data);
+        ////console.log("featured profilese response", response.data.data);
       } catch (error) {
         console.error("Error fetching featured profiles", error);
       }

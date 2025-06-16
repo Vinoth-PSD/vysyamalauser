@@ -126,7 +126,7 @@ export const ForgetPassword: React.FC<ForgetPasswordProps> = ({
                 setOtpValues(['', '', '', '', '', '']); // Clear OTP input fields
                 setSuccessMessage("OTP resent successfully."); // Set the success message
                 setCanResend(false); // Disable the resend button until the timer completes
-                console.log("OTP resent successfully");
+                //console.log("OTP resent successfully");
             } else {
                 setError("Failed to resend OTP. Please try again.");
             }
@@ -157,14 +157,14 @@ export const ForgetPassword: React.FC<ForgetPasswordProps> = ({
         }
     
         try {
-            console.log("Sending userData:", userData);
+            //console.log("Sending userData:", userData);
     
             const response = await apiClient.post(
                 "/auth/Forget_password/",
                 userData
             );
     
-            console.log("Forget_password Response:", response);
+            //console.log("Forget_password Response:", response);
     
             if (response.data?.message && response.data?.forget_profile_id) {
                 // Store the forget_profile_id from the response
@@ -209,9 +209,9 @@ export const ForgetPassword: React.FC<ForgetPasswordProps> = ({
                     }
                 );
 
-                console.log("Forget_password_otp_verify",userID)
+                //console.log("Forget_password_otp_verify",userID)
     
-                console.log("OTP Verification Response:", response);
+                //console.log("OTP Verification Response:", response);
     
                 if (response.data?.status === 1) {
                     setSuccessMessage(response.data.message);
@@ -244,7 +244,7 @@ export const ForgetPassword: React.FC<ForgetPasswordProps> = ({
                     confirm_password: data.confirmPassword,
                 }
             );
-            console.log("Reset_password",response)
+            //console.log("Reset_password",response)
 
             if (response.data.status === 'error') {
                 setError(response.data.message);

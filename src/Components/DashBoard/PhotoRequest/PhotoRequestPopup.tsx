@@ -24,8 +24,8 @@ export const PhotoRequestPopup: React.FC<PhotoRequestPopupProps> = ({ closePopup
         response_message: photoRequest, // Adding the personal notes to the payload
       });
 
-    console.log('response_message:', photoRequest); // Log the API response
-      console.log('Submit Response:', response.data); // Log the API response
+    // console.log('response_message:', photoRequest); // Log the API response
+    //   console.log('Submit Response:', response.data); // Log the API response
   
       if (response.data.Status === 1) {
        // alert('Photo request updated successfully');

@@ -171,7 +171,7 @@
 
 //   const handleCloseLoginPopup = () => {
 //     setIsLoginPopupOpen(false);
-//     console.log("Closing Login PopupModal popup"); // Debug log
+//     //console.log("Closing Login PopupModal popup"); // Debug log
 //   };
 
 //   if (loading) return <p>Loading...</p>;
@@ -217,7 +217,7 @@
 //           <LoginPopupModal
 //             onClose={handleCloseLoginPopup}
 //             onForgetPassword={() => {
-//               console.log("Forgot password clicked.");
+//               //console.log("Forgot password clicked.");
 //             }}
 //             isopen={false} // Set it to false initially
 //           />
@@ -330,7 +330,7 @@ export const FeaturedGroom: React.FC = () => {
 
   const handleCloseLoginPopup = () => {
     setIsLoginPopupOpen(false);
-    console.log("Closing Login PopupModal popup"); // Debug log
+    //console.log("Closing Login PopupModal popup"); // Debug log
   };
 
   if (loading) return <p>Loading...</p>;
@@ -405,7 +405,7 @@ export const FeaturedGroom: React.FC = () => {
           <LoginPopupModal
             onClose={handleCloseLoginPopup}
             onForgetPassword={() => {
-              console.log("Forgot password clicked.");
+              //console.log("Forgot password clicked.");
             }}
             isopen={false} // Set it to false initially
           />

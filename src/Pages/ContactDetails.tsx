@@ -174,9 +174,9 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
               },
             }
           );
-          console.log("API Response:", response.data); // Log the entire API response
+          //console.log("API Response:", response.data); // Log the entire API response
           const profileData = response.data.data; // Access the 'data' object directly
-          console.log("Profile Data:", profileData); // Log the profile data
+          //console.log("Profile Data:", profileData); // Log the profile data
           setValue("address", profileData.Profile_address);
           setValue("country", profileData.Profile_country);
           setValue("state", profileData.Profile_state);
@@ -283,7 +283,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
         Profile_district: data.district,
         Profile_emailid: data.daughterEmail, // Add this line to include the email
       };
-      console.log(" postData:", postData);
+      //console.log(" postData:", postData);
       const response = await apiClient.post(`/auth/Contact_registration/`, postData);
       if (response.data.Status === 1) {
         NotifySuccess("Contact details saved successfully");
@@ -297,7 +297,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
           }
         }, 2000);
       } else {
-        console.log("Registration unsuccessful:", response.data);
+        //console.log("Registration unsuccessful:", response.data);
       }
     } catch (error: any) {
       if (error.response?.data?.Profile_alternate_mobile) {

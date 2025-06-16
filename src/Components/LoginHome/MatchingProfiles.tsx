@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useContext } from "react";
-
 // import { HiOutlineSearch } from "react-icons/hi";
 // import { FaSuitcase } from "react-icons/fa";
 // import { IoCalendar } from "react-icons/io5";
@@ -18,10 +17,6 @@ import searchIcon from "../../assets/icons/searchIcon.png";
 import professionIcon from "../../assets/icons/professionIcon.png";
 import ageIcon from "../../assets/icons/ageIcon.png";
 import locationIcon from "../../assets/icons/locationIcon.png";
-
-
-
-
 import { ProfileContext } from "../../ProfileContext";
 import { fetchProfiles, fetchSearchProfiles } from "../../commonapicall";
 import axios from "axios";
@@ -70,19 +65,14 @@ export interface SearchResultProps {
   matching_score?: number;
 }
 
-
-
 sessionStorage.removeItem("photolock");
 sessionStorage.removeItem("photolockval");
 
 export const MatchingProfiles = () => {
   const context = useContext(ProfileContext);
-
   const scrollRef = useRef<HTMLDivElement>(null); // Type the ref as HTMLDivElement
-
   // State for managing scrolling
   const [shouldScroll, setShouldScroll] = useState(false);
-
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");
@@ -128,7 +118,7 @@ export const MatchingProfiles = () => {
   const [states, setStates] = useState<State[]>([]); // Adjust the State type according to the response structure
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [selectAge, setSelectAge] = useState<string>("");
-  console.log(selectedLocation);
+  //console.log(selectedLocation);
 
   // const closeAdvancedSearchPopup = () => {
   //   setShowAdvancedSearchPopup(false);
@@ -203,13 +193,13 @@ export const MatchingProfiles = () => {
 
   const handleFindMatch = async () => {
 
-    console.log(
-      "valuessss",
-      searchProfileId,
-      profession,
-      selectAge,
-      selectedLocation
-    );
+    // console.log(
+    //   "valuessss",
+    //   searchProfileId,
+    //   profession,
+    //   selectAge,
+    //   selectedLocation
+    // );
 
     setLoading(true); // Show the spinner while the search is being processed
 
@@ -222,11 +212,11 @@ export const MatchingProfiles = () => {
         paginationValue,
         sortOrder
       );
-      console.log("count", result.total_count);
+      ////console.log("count", result.total_count);
       setCount(result.total_count);
-      console.log("Search result:", result.profiles);
-      console.log("Search value:", result.search_result);
-      console.log("Search status:", result.Status);
+      // //console.log("Search result:", result.profiles);
+      // //console.log("Search value:", result.search_result);
+      // //console.log("Search status:", result.Status);
       sessionStorage.setItem("searchvalue", result.search_result);
 
       setTotalCount(result.total_count);
@@ -257,7 +247,7 @@ export const MatchingProfiles = () => {
   //   if (searchResult) {
   //     const tempElement = document.getElementById("temp");
   //     if (tempElement) {
-  //       console.log("Scrolling to temp element");
+  //       //console.log("Scrolling to temp element");
   //       tempElement.scrollIntoView({ behavior: 'smooth' });
   //     }
   //   }

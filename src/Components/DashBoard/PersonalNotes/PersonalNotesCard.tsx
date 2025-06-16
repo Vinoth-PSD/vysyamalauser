@@ -50,7 +50,7 @@ export const PersonalNotesCard = () => {
         const response = await apiClient.post("/auth/Get_personal_notes/", {
           profile_id: loginuser_profileId,
         });
-        console.log(response.data);
+        //console.log(response.data);
 
         const profiles = response.data.data.profiles;
 

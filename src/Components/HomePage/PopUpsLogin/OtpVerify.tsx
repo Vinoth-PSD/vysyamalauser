@@ -78,7 +78,7 @@ export const OtpVerify: React.FC<OtpVerifyProps> = ({ onNext, onClose }) => {
                         response.data.profile_completion
                       );
                 
-                      console.log("Login Response:", response.data);
+                      //console.log("Login Response:", response.data);
                       sessionStorage.setItem("token", response.data.token);
                       sessionStorage.setItem("user_profile_image", response.data.profile_image);
                       sessionStorage.setItem("selectedstar", response.data.birth_star_id);

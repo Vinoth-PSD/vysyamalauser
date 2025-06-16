@@ -86,7 +86,7 @@ export const Horoscope = () => {
           }
         );
         const data = response.data.data;
-        console.log("horoscope", response.data.data);
+        ////console.log("horoscope", response.data.data);
         setHoroscopeDetails(data);
 
         // Parse dasa balance

@@ -68,8 +68,8 @@ export const Notifications = () => {
 
 
   // Added state to capture the selected from_profile_id for messaging
-  const [, setSelectedFromProfileId] = useState<string | null>(null);
-  console.log("setSelectedFromProfileId", setSelectedFromProfileId)
+  //const [, setSelectedFromProfileId] = useState<string | null>(null);
+  //console.log("setSelectedFromProfileId", setSelectedFromProfileId)
 
 
   const handleMessage = async (fromProfileId: string) => {

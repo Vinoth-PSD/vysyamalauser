@@ -206,7 +206,7 @@ const PartnerSettings: React.FC = () => {
 
   const onSubmit: SubmitHandler<PartnerSettingsInputs> = async (data) => {
     setIsSubmitting(true);
-    console.log("Form data:", data);
+    //console.log("Form data:", data);
 
     const starArray = selectedStarIds.map((item) => item.id);
     const starRasiArray = selectedStarIds.map(
@@ -227,10 +227,10 @@ const PartnerSettings: React.FC = () => {
     // const IncomeValues = selectedAnnualIncomes.join(",");
     // console.log(IncomeValues);
     const IncomeValue = selectedAnnualIncomes[0]; // Extract the selected value
-    console.log("Selected Annual Income:", IncomeValue);
+    //console.log("Selected Annual Income:", IncomeValue);
 
     const IncomeValuemax = selectedMaxAnnualIncome[0]; // Extract the selected value
-    console.log("Selected Annual Income:", IncomeValuemax);
+    //console.log("Selected Annual Income:", IncomeValuemax);
     // const prefProfessionString = [
     //   ...(selectedProfessions.includes("employed") ? ["employed"] : []),
     //   ...(selectedBusiness ? ["business"] : []),
@@ -267,13 +267,13 @@ const PartnerSettings: React.FC = () => {
         status: "1",
       };
 
-      console.log("PartnerSettings:", postData);
+      //console.log("PartnerSettings:", postData);
 
       const response = await apiClient.post(
         `/auth/Partner_pref_registration/`,
         postData
       );
-      console.log("Registration response:", response.data);
+      //console.log("Registration response:", response.data);
 
       if (response.data.Status === 1) {
         NotifySuccess("Partner details updated successfully");
@@ -292,7 +292,7 @@ const PartnerSettings: React.FC = () => {
       } else {
         setIsSubmitting(false);
         NotifyError("Registration unsuccessful");
-        console.log("Registration unsuccessful:", response.data);
+        //console.log("Registration unsuccessful:", response.data);
       }
     } catch (error) {
       setIsSubmitting(false);
@@ -323,7 +323,7 @@ const PartnerSettings: React.FC = () => {
             }
           );
 
-          console.log("API Response:", response.data);
+          //console.log("API Response:", response.data);
 
           const profileData = response.data.data;
 
@@ -533,7 +533,7 @@ const PartnerSettings: React.FC = () => {
           ).map((matchCount: any) => matchCount);
           setMatchStars(matchCountArrays);
 
-          // console.log("defaultSelectedIds",defaultSelectedIds)
+          // //console.log("defaultSelectedIds",defaultSelectedIds)
           // Set default selected IDs based on fetched data, excluding count of 0
           const defaultSelectedIds = matchCountArrays
             .flat()
@@ -579,12 +579,12 @@ const PartnerSettings: React.FC = () => {
           // );
           // setUncheckDefaultSelectedIds(uncheckedItems);
 
-          // console.log("uncheckedItems:", uncheckedItems);
+          // //console.log("uncheckedItems:", uncheckedItems);
 
           // setSelectedStarIds(defaultSelectedIds);
-          // console.log("defaultSelectedIds",defaultSelectedIds)
+          // //console.log("defaultSelectedIds",defaultSelectedIds)
 
-          console.log("Response from server:", matchCountArrays);
+          //console.log("Response from server:", matchCountArrays);
         } catch (error) {
           console.error("Error fetching matching star options:", error);
         }
@@ -593,7 +593,7 @@ const PartnerSettings: React.FC = () => {
     }
   }, [storedBirthStar, storedGender, storedRasi]);
 
-  console.log("storedHeight", storedHeight);
+  //console.log("storedHeight", storedHeight);
 
   useEffect(() => {
     if (storedHeight) {
@@ -612,7 +612,7 @@ const PartnerSettings: React.FC = () => {
   const heightFrom = watch("heightFrom"); // Watch the value of heightFrom
   const heightTo = watch("heightTo"); // Watch the value of heightTo
 
-  // console.log("sssssssssssssssssssss",heightTo);
+  // //console.log("sssssssssssssssssssss",heightTo);
 
   // Handle validation on change using useEffect
   useEffect(() => {
@@ -665,7 +665,7 @@ const PartnerSettings: React.FC = () => {
   //   // Check sessionStorage for saved star IDs
   //   const savedStarIds = sessionStorage.getItem("selectedStarIds");
 
-  //   console.log("savedStarIds",savedStarIds)
+  //   //console.log("savedStarIds",savedStarIds)
 
   //   if (savedStarIds) {
   //     setSelectedStarIds(JSON.parse(savedStarIds));

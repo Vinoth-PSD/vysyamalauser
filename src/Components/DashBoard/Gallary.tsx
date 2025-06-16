@@ -49,7 +49,7 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
         setNoProfiles(false); // Reset flag if data exists
       } catch (err) {
         setError("Failed to load gallery items.");
-        console.log("Failed to load gallery items.", err);
+        ////console.log("Failed to load gallery items.", err);
         setLoading(false);
       }
     };
@@ -58,7 +58,7 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
   }, [pageNumber]);
 
   const totalPages = Number(Math.ceil(totlaRecords / perPage));
-  console.log(perPage, ",,");
+  //console.log(perPage, ",,");
   return (
     <div className="bg-grayBg pt-10">
       <div className="container mx-auto">

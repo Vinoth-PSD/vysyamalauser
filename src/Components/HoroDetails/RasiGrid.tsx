@@ -175,7 +175,7 @@ const RasiGrid: React.FC<RasiGridProps> = ({ centerLabel, rasiTemp }) => {
 
   useEffect(() => {
     const formattedData = formatGridData();
-    console.log("Rasi Contents:");
+    //console.log("Rasi Contents:");
     console.log(formattedData);
 
     // Store formattedData in sessionStorage

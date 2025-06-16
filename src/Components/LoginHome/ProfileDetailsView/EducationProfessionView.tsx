@@ -42,7 +42,7 @@ export const EducationProfessionView: React.FC = () => {
           }
         );
 
-        console.log("API Response:", response.data);
+        //console.log("API Response:", response.data);
 
         // Extract education_details from the response
         const data = response.data.education_details;

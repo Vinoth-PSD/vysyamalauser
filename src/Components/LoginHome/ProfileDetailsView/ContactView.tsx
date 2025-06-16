@@ -32,7 +32,7 @@ export const ContactView: React.FC = () => {
               profile_id: loginuser_profileId,
               user_profile_id:id
             });
-            console.log("API Response:", response.data);
+            //console.log("API Response:", response.data);
             // Accessing the contact_details property in the response data
             if (response.data && response.data.contact_details) {
               setContactDetails(response.data.contact_details);

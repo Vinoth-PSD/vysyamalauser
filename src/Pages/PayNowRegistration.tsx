@@ -18,7 +18,7 @@ export const PayNowRegistration: React.FC = () => {
   const location = useLocation();
   // Destructure the state data passed via navigate
   const { packageName } = location.state || {};
-  console.log("packageName", packageName);
+   console.log("packageName", packageName);
 
   const [membershipPlane, setMemberShipPlane] = useState<Package[]>([]);
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ export const PayNowRegistration: React.FC = () => {
       // Call the verifyPayment API (assuming verifyPayment is already defined in your common API file)
       const verificationResponse = await verifyPayment(profile_id, razorpay_order_id, razorpay_payment_id, razorpay_signature);
       // Log the response for debugging
-      console.log("Payment Verification Response:", verificationResponse);
+      //console.log("Payment Verification Response:", verificationResponse);
       // Handle the verification response
       if (verificationResponse.status === "success") {
         NotifySuccess("Payment verified successfully!");
@@ -144,7 +144,7 @@ export const PayNowRegistration: React.FC = () => {
       ); // Pass the profile_id, order_id, and reason (3 in this case, for cancellation)
 
       // Log the response for debugging
-      console.log("Cancel Payment Response:", cancelResponse);
+      //console.log("Cancel Payment Response:", cancelResponse);
 
       if (cancelResponse.status === "success") {
         NotifySuccess("Payment cancelled successfully!");
@@ -162,8 +162,8 @@ export const PayNowRegistration: React.FC = () => {
   const Save_plan_package = async () => {
     try {
       const addonPackageIdsString = selectedPackageIds.join(",");
-      console.log("addonPackageIdsString", addonPackageIdsString);
-      console.log("totalAmount", totalAmount);
+      //console.log("addonPackageIdsString", addonPackageIdsString);
+      //console.log("totalAmount", totalAmount);
 
       // Call the savePlanPackage function from the common API file
       const response = await savePlanPackage(
@@ -174,7 +174,7 @@ export const PayNowRegistration: React.FC = () => {
       );
 
       // Log the full response to check its structure
-      console.log("Response from savePlanPackage:", response);
+      //console.log("Response from savePlanPackage:", response);
 
       // Check if the response and status exist before accessing them
       if (response && response.status === "success") {
@@ -186,7 +186,7 @@ export const PayNowRegistration: React.FC = () => {
             response.data_message
           );
           sessionStorage.setItem("register_token", response.token);
-          console.log("Save_plan_package", response);
+          //console.log("Save_plan_package", response);
 
           // Navigate to the next page
           setTimeout(() => {
@@ -273,7 +273,7 @@ export const PayNowRegistration: React.FC = () => {
           razorpay_order_id: any;
           razorpay_signature: any;
         }) {
-          console.log("Payment Response:", response);
+          //console.log("Payment Response:", response);
 
           // After successful payment, call verifyPayment
           await verifyPaymentFunction(
@@ -308,7 +308,7 @@ export const PayNowRegistration: React.FC = () => {
       rzp1.on(
         "payment.failed",
         async function (response: { error: { metadata: any; reason: any } }) {
-          console.log("Payment Failed:", response);
+          //console.log("Payment Failed:", response);
           try {
             // Call the cancelPayment function using the profile_id and order_id from the failed payment response
             const cancelResponse = await cancelPaymentFunction(

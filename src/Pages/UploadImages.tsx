@@ -1,5 +1,3 @@
-
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useEffect } from "react";
 // import { IoEye, IoEyeOff } from "react-icons/io5";
@@ -11,12 +9,7 @@ import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SideContent from "../Components/RegistrationForm/SideContent";
 import arrow from "../assets/icons/arrow.png";
-
-import {
-  ToastNotification,
-  NotifySuccess,
-  NotifyError,
-} from "../Components/Toast/ToastNotification";
+import {ToastNotification,NotifySuccess,NotifyError} from "../Components/Toast/ToastNotification";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { update_photo_password } from "../commonapicall";
@@ -101,7 +94,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   
   //const [uploadedFiles, setUploadedFiles] = useState(images);
 
-  // console.log("ppppppppppppppppp",Param);
+  // //console.log("ppppppppppppppppp",Param);
   const fileInputRefs = {
     images: useRef<HTMLInputElement>(null),
     horoscope: useRef<HTMLInputElement>(null),
@@ -206,10 +199,10 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         "/auth/Get_save_details/",
         formData
       );
-      console.log("saveImageDetails", response);
+      ////console.log("saveImageDetails", response);
 
       if (response.status === 200) {
-        console.log("Image details saved successfully", response.data);
+        ////console.log("Image details saved successfully", response.data);
         NotifySuccess("Image details saved successfully");
       }
     } catch (error) {
@@ -255,7 +248,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
           await saveImageDetails(profileId as string, fieldName);
         }
 
-        console.log("UploadImageResponse", response.data);
+        ////console.log("UploadImageResponse", response.data);
       } catch (error) {
         console.error("Error uploading files:", error);
       }
@@ -313,12 +306,12 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         NotifySuccess("Photo password updated successfully.");
       }
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       NotifyError("Something went wrong");
     }
   };
 
-  // Fetch the uploaded images from the API
+// Fetch the uploaded images from the API
   const fetchUploadedImages = async () => {
     try {
       const response = await apiClient.post(
@@ -329,7 +322,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         }
       );
 
-      console.log("fetchUploadedImages", response);
+      ////console.log("fetchUploadedImages", response);
 
       if (response.data.Status === 1) {
         const data = response.data.data;
@@ -351,8 +344,8 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
   const handleRemoveImage = async (imageId: number) => {
     const profileId = localStorage.getItem("profile_id_new");
-    console.log("Retrieved profileId:", profileId);
-    console.log("imageId:", imageId);
+    // //console.log("Retrieved profileId:", profileId);
+    // //console.log("imageId:", imageId);
 
     // Validate the required values
     if (!profileId) {
@@ -365,10 +358,10 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
     }
 
     try {
-      console.log("Attempting to remove image with the following details:", {
-        profile_id: profileId,
-        image_id: imageId,
-      });
+      // //console.log("Attempting to remove image with the following details:", {
+      //   profile_id: profileId,
+      //   image_id: imageId,
+      // });
 
       // Set up the data to be sent
       const formData = new FormData();
@@ -386,7 +379,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         }
       );
 
-      console.log("Server response:", response.data);
+      ////console.log("Server response:", response.data);
 
       // Check if the image removal was successful
       if (response.data.success === 1) {

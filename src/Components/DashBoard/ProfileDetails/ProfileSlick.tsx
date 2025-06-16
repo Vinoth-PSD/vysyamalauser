@@ -404,7 +404,7 @@
 //   //     try {
 //   //       const formData = new FormData();
 //   //       formData.append("profile_id", loginUserProfileId);
-//   //       console.log("currentEditIndex", currentEditIndex)
+//   //       //console.log("currentEditIndex", currentEditIndex)
 //   //       //  formData.append("new_image_files", file);
 //   //       if (currentEditIndex !== null && images[currentEditIndex]?.id) {
 //   //         // Replace image logic

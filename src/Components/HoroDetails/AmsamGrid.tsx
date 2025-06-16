@@ -73,14 +73,14 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
   //           }
   //         );
 
-  //         console.log("API Response Grid:", response.data); // Log the entire API response
+  //         //console.log("API Response Grid:", response.data); // Log the entire API response
 
   //         const profileData = response.data.data; // Access the 'data' object directly
 
-  //         console.log("Profile Data Grid:", profileData); // Log the profile data
+  //         //console.log("Profile Data Grid:", profileData); // Log the profile data
 
-  //         // console.log("rasi:",profileData.rasi_kattam);
-  //         // console.log("amsam:",profileData.amsa_kattam);
+  //         // //console.log("rasi:",profileData.rasi_kattam);
+  //         // //console.log("amsam:",profileData.amsa_kattam);
 
   //         sessionStorage.setItem("formattedDatarasi", profileData.rasi_kattam);
   //         sessionStorage.setItem("formattedDatamsam", profileData.amsa_kattam);
@@ -110,7 +110,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
 
   //           setAmsamContents(newAmsamContents);
   //         } else {
-  //           console.log("No formattedDatamsam found in sessionStorage");
+  //           //console.log("No formattedDatamsam found in sessionStorage");
   //         }
 
 
@@ -151,7 +151,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
 
   //     setAmsamContents(newAmsamContents);
   //   } else {
-  //     console.log("No formattedDatamsam found in sessionStorage");
+  //     //console.log("No formattedDatamsam found in sessionStorage");
   //   }
   // }, [location, initialLabels]);
 
@@ -165,7 +165,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
           const response = await apiClient.post(`/auth/Get_save_details/`, requestData, { headers: { "Content-Type": "application/json" } });
 
           const profileData = response.data.data;
-          console.log("amsamgriddddd",profileData.amsa_kattam);
+          //console.log("amsamgriddddd",profileData.amsa_kattam);
           sessionStorage.setItem("formattedDatamsam", profileData.amsa_kattam);
 
           const formattedDatamsamval = sessionStorage.getItem("formattedDatamsam");
@@ -276,7 +276,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
 
   useEffect(() => {
     const formattedData = formatGridData();
-    console.log("Amsam Contents:");
+    //console.log("Amsam Contents:");
     console.log(formattedData);
 
     // Store formattedData in sessionStorage

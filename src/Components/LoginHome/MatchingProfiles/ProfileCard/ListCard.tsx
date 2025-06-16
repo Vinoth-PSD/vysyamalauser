@@ -102,7 +102,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
       );
 
       if (response.data.Status === 1) {
-        console.log("Profile visit created successfully:", response.data);
+        //console.log("Profile visit created successfully:", response.data);
         navigate(`/ProfileDetails?id=${ profile.profile_id}&rasi=1`);
       } else {
         console.error("Failed to create profile visit:", response.statusText);

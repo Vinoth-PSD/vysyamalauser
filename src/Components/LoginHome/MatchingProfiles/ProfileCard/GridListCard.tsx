@@ -63,7 +63,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profileId, profile }
   //         MatchingProfileperPage,
   //         sortOrder
   //       );
-  //       console.log("Fetched profile data:", data);
+  //       //console.log("Fetched profile data:", data);
   //       if (data && data.profiles) {
   //         const profileData = data.profiles.find(
   //           (profile: Profile) => profile.profile_id === profileId
@@ -156,7 +156,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profileId, profile }
         );
 
         if (response.data.Status === 1) {
-          console.log("Profile visit created successfully:", response.data);
+          //console.log("Profile visit created successfully:", response.data);
           navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
         } else {
           console.error("Failed to create profile visit:", response.statusText);

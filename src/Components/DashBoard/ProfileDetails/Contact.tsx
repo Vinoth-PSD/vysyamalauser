@@ -347,19 +347,19 @@ export const Contact = () => {
     }
 
     // Print data to be sent
-    console.log("Data being sent:", {
-      profile_id: loginuser_profileId,
-      Profile_address: formData.personal_prof_addr,
-      Profile_city: selectedCityId,
-      Profile_state: selectedStateId,
-      Profile_country: selectedCountryId,
-      Profile_district: selectedDistrictId,
-      Profile_pincode: formData.personal_prof_pin,
-      Profile_alternate_mobile: formData.personal_prof_phone,
-      Profile_mobile_no: formData.personal_prof_mob_no,
-      Profile_whatsapp: formData.personal_prof_whats,
-      EmailId: formData.personal_email,
-    });
+    // //console.log("Data being sent:", {
+    //   profile_id: loginuser_profileId,
+    //   Profile_address: formData.personal_prof_addr,
+    //   Profile_city: selectedCityId,
+    //   Profile_state: selectedStateId,
+    //   Profile_country: selectedCountryId,
+    //   Profile_district: selectedDistrictId,
+    //   Profile_pincode: formData.personal_prof_pin,
+    //   Profile_alternate_mobile: formData.personal_prof_phone,
+    //   Profile_mobile_no: formData.personal_prof_mob_no,
+    //   Profile_whatsapp: formData.personal_prof_whats,
+    //   EmailId: formData.personal_email,
+    // });
 
     try {
       const response = await apiClient.post(

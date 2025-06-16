@@ -78,7 +78,7 @@ export const GridView: React.FC<SearchResultProps> = ({ searchvalues }) => {
 
   const searchvalue = sessionStorage.getItem("searchvalue") || " ";
   console.log(advanceSearchData, "v");
-  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", searchvalues);
+  //console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", searchvalues);
   
   const noResults =
     (!advanceSearchData?.length && !profiles?.length && searchvalue !== "1") ||

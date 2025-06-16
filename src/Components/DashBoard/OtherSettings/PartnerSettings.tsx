@@ -114,7 +114,7 @@ export const PartnerSettings: React.FC = () => {
     []
   );
 
-  console.log("selectedAnnualIncomes other serttings", selectedAnnualIncomes);
+//  //console.log("selectedAnnualIncomes other serttings", selectedAnnualIncomes);
 
   const [selectedMaxAnnualIncome, setSelectedMaxAnnualIncome] = useState<
     string[]
@@ -123,10 +123,10 @@ export const PartnerSettings: React.FC = () => {
   //   []
   // );
 
-  console.log(
-    "selectedMaxAnnualIncome other serttings",
-    selectedMaxAnnualIncome
-  );
+  // console.log(
+  //   "selectedMaxAnnualIncome other serttings",
+  //   selectedMaxAnnualIncome
+  // );
 
   useEffect(() => {
     apiClient
@@ -136,7 +136,7 @@ export const PartnerSettings: React.FC = () => {
           id: item.education_id,
           name: item.education_description,
         }));
-        console.log("education", data);
+        ////console.log("education", data);
         setEducationOptions(data);
       })
       .catch((error) => console.error("Error fetching education data:", error));
@@ -165,7 +165,7 @@ export const PartnerSettings: React.FC = () => {
           id: item.income_id,
           name: item.income_description,
         }));
-        console.log("Get_Annual_Income", data);
+        ////console.log("Get_Annual_Income", data);
         setIncomeOptions(data);
       })
       .catch((error) => console.error("Error fetching income data:", error));
@@ -179,7 +179,7 @@ export const PartnerSettings: React.FC = () => {
           id: item.marital_sts_id,
           name: item.marital_sts_name,
         }));
-        console.log("Get_Marital_Status", data);
+       // //console.log("Get_Marital_Status", data);
         setMaritalOptions(data);
       })
       .catch((error) => console.error("Error fetching marital data:", error));
@@ -193,7 +193,7 @@ export const PartnerSettings: React.FC = () => {
       })
       .then((response) => {
         const data = response.data.data;
-        console.log("Get_myprofile_partner", data);
+        ////console.log("Get_myprofile_partner", data);
         const prefilledStarRasiArray = data.partner_porutham_star_rasi
           ? data.partner_porutham_star_rasi
               .split(",")
@@ -218,7 +218,7 @@ export const PartnerSettings: React.FC = () => {
         setValue("toHeight", data.partner_height_to || "");
         setValue("education", selectedEducation);
         setValue("maritalstatus", selectedMaritalStatus);
-        console.log("selectedMaritalStatus");
+        ////console.log("selectedMaritalStatus");
         // setValue("income", selectedIncome);
         setValue("profession", selectedProfession);
         setValue("rahuKetuDhosam", data.partner_rahu_kethu || "");
@@ -248,41 +248,41 @@ export const PartnerSettings: React.FC = () => {
     try {
       // Convert selectedStarIds to a format for API
       const starArray = selectedStarIds.map((item) => item.id);
-      console.log(starArray, "starArray");
+      //console.log(starArray, "starArray");
       const starRasiArray = selectedStarIds.map(
         (item) => `${item.star}-${item.rasi}`
       );
-      console.log(starRasiArray, "starPORUTHAMRasiArray");
+      //console.log(starRasiArray, "starPORUTHAMRasiArray");
 
       // Combine pre-filled and new selections
       const combinedStarRasiArray = [
         ...new Set([...prefilledStarRasiArray, ...starRasiArray]),
       ];
-      console.log(combinedStarRasiArray, "combinedStarRasiArray");
+      //console.log(combinedStarRasiArray, "combinedStarRasiArray");
 
       // Detect removed items
       const removedStarRasiArray = prefilledStarRasiArray.filter(
         (prefilled) => !starRasiArray.includes(prefilled)
       );
-      console.log(removedStarRasiArray, "removedStarRasiArray");
+      //console.log(removedStarRasiArray, "removedStarRasiArray");
 
       // Final array excluding removed items
       const finalStarRasiArray = combinedStarRasiArray.filter(
         (combined) => !removedStarRasiArray.includes(combined)
       );
-      console.log(finalStarRasiArray, "finalStarRasiArray");
+      //console.log(finalStarRasiArray, "finalStarRasiArray");
 
       // Create a comma-separated string for the final selections
       const StarString = starArray.join(",");
       const finalRasiString = finalStarRasiArray.join(",");
 
-      console.log("Final Star IDs:", StarString);
-      console.log("Final Star-Rasi String:", finalRasiString);
+      // //console.log("Final Star IDs:", StarString);
+      // //console.log("Final Star-Rasi String:", finalRasiString);
 
       const IncomeValue = selectedAnnualIncomes[0]; // Extract the selected value
-      console.log("Selected Annual Income:", IncomeValue);
+      ////console.log("Selected Annual Income:", IncomeValue);
       const IncomeValuemax = selectedMaxAnnualIncome[0]; // Extract the selected value
-      console.log("Selected Annual Income:", IncomeValuemax);
+      ////console.log("Selected Annual Income:", IncomeValuemax);
 
       // Prepare the payload for submission
       const updateData = {
@@ -332,10 +332,10 @@ export const PartnerSettings: React.FC = () => {
   };
 
   const storedBirthStar = localStorage.getItem("selectedstar");
-  console.log("storedBirthStar", storedBirthStar);
+  ////console.log("storedBirthStar", storedBirthStar);
   const storedGender = localStorage.getItem("gender");
   const storedRasi = localStorage.getItem("selectedRasi");
-  console.log("storedRasi", storedRasi);
+ // //console.log("storedRasi", storedRasi);
   useEffect(() => {
     if (storedBirthStar && storedGender) {
       const fetchMatchingStars = async () => {
@@ -350,7 +350,7 @@ export const PartnerSettings: React.FC = () => {
             response.data
           ).map((matchCount: any) => matchCount);
           setMatchStars(matchCountArrays);
-          console.log("Response from server:", matchCountArrays);
+         // //console.log("Response from server:", matchCountArrays);
         } catch (error) {
           console.error("Error fetching matching star options:", error);
         }

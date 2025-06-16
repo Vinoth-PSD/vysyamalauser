@@ -18,7 +18,7 @@ const CustomMessagePopup: React.FC<CustomMessagePopupProps> = ({
 
   const handleSend = () => {
     setOpenCustomMsg(message);
-    console.log("Message sent:", message);
+    ////console.log("Message sent:", message);
     setOpenCustomMsgShow(false);
     setSelect(selectValue);
   };

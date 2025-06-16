@@ -72,7 +72,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
 
   const { dashboardDetails, fetchDashboardDetails } = context;
   const [loading, setLoading] = useState(true);
-  console.log(dashboardDetails, "dashbordDetails");
+  //console.log(dashboardDetails, "dashbordDetails");
 
   useEffect(() => {
     const loadData = async () => {

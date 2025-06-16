@@ -74,7 +74,7 @@ const HappyStoriesMobile = () => {
     // const handleRegisterClick = () => setIsAccountSetupOpen(true);
     // const handleCloseAccountSetup = () => {
     //   setIsAccountSetupOpen(false);
-    //   console.log("Closing PopupModal popup");
+    //   //console.log("Closing PopupModal popup");
     // };
 
 

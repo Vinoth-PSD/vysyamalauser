@@ -1,5 +1,3 @@
-
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, SetStateAction } from "react";
 // import { useDispatch } from "react-redux";
@@ -106,13 +104,13 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [PhotoPasswordlock, setPhotoPasswordlock] = useState<number>(0);
-  console.log(typeof PhotoPasswordlock, "PhotoPasswordlock");
+  //console.log(typeof PhotoPasswordlock, "PhotoPasswordlock");
   // console.log(profileData?.basic_details.verified, "llllllllllllllllll");
   const [hideExpresButton, setHideExpressButton] = useState<boolean>(true);
   const [expressPopup, setExpressPopup] = useState<boolean>(false);
   const [bookMarkPopup, setBookMarkPopup] = useState<boolean>(false);
   const [matchingScorePopup, setMatchingScorePopup] = useState<boolean>(false);
-  console.log('matchingScorePopup', matchingScorePopup)
+  //console.log('matchingScorePopup', matchingScorePopup)
 
   const [loading, setLoading] = useState(false);
 
@@ -123,7 +121,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const custom_message = sessionStorage.getItem("custom_message");
   const storedPlanId = sessionStorage.getItem("plan_id");
-  console.log("vysya", storedPlanId);
+  ////console.log("vysya", storedPlanId);
   const navigate = useNavigate();
 
 
@@ -144,7 +142,7 @@ export const ProfileDetailsExpressInterest: React.FC<
         navigate("/Messages")
         // Save the profile with roomId to sessionStorage
         sessionStorage.setItem('selectedProfile', JSON.stringify(profileData));
-        console.log(profileData, "profileData")
+        //console.log(profileData, "profileData")
 
         setRoomId(room_id_name);
         setIsRedirect(true); // Redirect to messages page
@@ -214,7 +212,7 @@ export const ProfileDetailsExpressInterest: React.FC<
           profile_to: idparam,
         }
       );
-      console.log("Profile interest status:", response.data.data.interest_status);
+      ////console.log("Profile interest status:", response.data.data.interest_status);
       setStatus(response.data.data.interest_status); // Adjust based on your response structure
     } catch (err) {
       console.error("Failed to fetch profile status:", err);
@@ -236,8 +234,7 @@ export const ProfileDetailsExpressInterest: React.FC<
             profile_to: idparam
           }
         );
-        console.log("dddddddddddddddddddd", response.data.data.interest_status);
-
+        ////console.log("dddddddddddddddddddd", response.data.data.interest_status);
         setStatus(response.data.data.interest_status); // Adjust based on your response structure
       } catch (err) {
         // setError('Failed to fetch profile status');
@@ -251,9 +248,8 @@ export const ProfileDetailsExpressInterest: React.FC<
     }
   }, [idparam, loginuser_profileId]); // Dependency array: effect runs when profileIdViewed changes
 
-  console.log("valueeee", status);
-
-  console.log(idparam, "id");
+  // //console.log("valueeee", status);
+  // console.log(idparam, "id");
   useEffect(() => {
 
     setLoading(true);
@@ -270,11 +266,10 @@ export const ProfileDetailsExpressInterest: React.FC<
         setProfileData(response.data);
         // setPhotoLock(response.data.photo_protection);
         sessionStorage.setItem("photolock", JSON.stringify(response.data.photo_protection));
-        console.log(response.data.photo_protection);
+        //console.log(response.data.photo_protection);
         const storedPhotoProtectionVal = sessionStorage.getItem("photolock");
         const parsedPhotoProtectionVal = storedPhotoProtectionVal ? JSON.parse(storedPhotoProtectionVal) : "0";
         setPhotoPasswordlock(parsedPhotoProtectionVal);
-
 
         if (response.data.basic_details.express_int === "1") {
           setIsHeartMarked(true);
@@ -442,8 +437,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [openCustomMsgShow, setOpenCustomMsgShow] = useState<boolean>(false);
   const [openCustomMsg, setOpenCustomMsg] = useState<string>("");
 
-  console.log(openCustomMsg, "openCustomMsg");
-  console.log(openCustomMsg, "setOpenCustomMsg");
+  // console.log(openCustomMsg, "openCustomMsg");
+  // console.log(openCustomMsg, "setOpenCustomMsg");
 
   const [selectValue, setSelectValue] = useState<string>("");
   const [apimsgExpressInt, setApiMsgExpressInt] = useState("");
@@ -519,7 +514,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [isHovered, setIsHovered] = useState(false);
   const [apimsgPhotoReq, setApimsgPhotoReq] = useState("");
   const [apimsgMatchingScore, setApimsgMatchingScore] = useState("");
-  console.log('apimsgMatchingScore', apimsgMatchingScore)
+  //console.log('apimsgMatchingScore', apimsgMatchingScore)
 
   const sendPhotoRequest = async () => {
     try {
@@ -552,8 +547,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   };
 
   const generatePoruthamPDF = async () => {
-    console.log("Profile from:", loginuser_profileId);
-    console.log("Profile to:", idparam);
+    // //console.log("Profile from:", loginuser_profileId);
+    // //console.log("Profile to:", idparam);
 
     try {
       const response = await apiClient.post(
@@ -597,7 +592,7 @@ export const ProfileDetailsExpressInterest: React.FC<
         link.click();
         link.remove();
 
-        console.log("PDF downloaded successfully.");
+        ////console.log("PDF downloaded successfully.");
       } else {
         NotifyError("Failed to generate compatibility report.");
       }
@@ -606,8 +601,8 @@ export const ProfileDetailsExpressInterest: React.FC<
         // Handle 400 error from the API
         if (error.response?.status === 400) {
           const errorData = error.response.data;
-          console.log("errorData",errorData)
-          console.log("errorData")
+          // //console.log("errorData",errorData)
+          // //console.log("errorData")
           if (typeof errorData === 'object' && errorData !== null) {
             setApimsgMatchingScore(errorData.message || "No access to see the compatibility report");
           } else {
@@ -711,7 +706,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const handleViewPdf = () => {
     handleDownloadPdf();
-    console.log(`Viewing PDF in ${selectedLanguage}`);
+   // console.log(`Viewing PDF in ${selectedLanguage}`);
     // Add your logic to view the PDF in the selected language
   };
 

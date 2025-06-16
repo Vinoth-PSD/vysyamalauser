@@ -26,7 +26,7 @@ const AdvanceSearchCard = () => {
   }
 
   const { searchProfileData } = context;
-  console.log(searchProfileData, "searchProfileData");
+  //console.log(searchProfileData, "searchProfileData");
 
   // Redux
   // const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const AdvanceSearchCard = () => {
     navigate(`/ProfileDetails?id=${searchProfileData[0]?.profile_id}`);
   };
 
-  console.log(searchProfileData[0]?.matching_score, "lll");
+  //console.log(searchProfileData[0]?.matching_score, "lll");
   return (
     // <Link to={`/ProfileDetails/${searchProfileData[0]?.profile_id}`}>
     <div

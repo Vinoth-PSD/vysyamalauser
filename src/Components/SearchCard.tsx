@@ -26,7 +26,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     setSelectedProfiles: () => { },
   };
   const navigate = useNavigate();
-  console.log("searchvalues", searchvalues);
+  ////console.log("searchvalues", searchvalues);
   useEffect(() => {
     const bookmarkedProfiles = JSON.parse(
       localStorage.getItem("bookmarkedProfiles") || "[]"
@@ -85,7 +85,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         navigate(
           `/ProfileDetails?id=${profile.profile_id}`
         );
-        console.log("Profile visit created successfully:", response.data);
+        ////console.log("Profile visit created successfully:", response.data);
       } else {
         console.error("Failed to create profile visit:", response.statusText);
       }

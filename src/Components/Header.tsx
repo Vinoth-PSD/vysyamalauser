@@ -44,7 +44,7 @@
 
 //   const handleCloseAccountSetup = () => {
 //     setIsAccountSetupOpen(false);
-//     console.log("Closing PopupModal popup"); // Debug log
+//     //console.log("Closing PopupModal popup"); // Debug log
 //   };
 
 //   // Register Popup
@@ -59,7 +59,7 @@
 
 //   const handleCloseLoginPopup = () => {
 //     setIsLoginPopupOpen(false);
-//     console.log("Closing Login PopupModal popup"); // Debug log
+//     //console.log("Closing Login PopupModal popup"); // Debug log
 //   };
 
 //   const handleLogout = () => {
@@ -259,7 +259,7 @@ import { ProfileContext } from "../ProfileContext";
 
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  console.log(isScrolled, "Scrolled");
+  //console.log(isScrolled, "Scrolled");
   const context = useContext(ProfileContext);
   
   if (!context) {
@@ -293,7 +293,7 @@ export const Header: React.FC = () => {
 
   const handleCloseAccountSetup = () => {
     setIsAccountSetupOpen(false);
-    console.log("Closing PopupModal popup"); // Debug log
+    ////console.log("Closing PopupModal popup"); // Debug log
   };
 
   // Register Popup
@@ -308,7 +308,7 @@ export const Header: React.FC = () => {
 
   const handleCloseLoginPopup = () => {
     setIsLoginPopupOpen(false);
-    console.log("Closing Login PopupModal popup"); // Debug log
+    ////console.log("Closing Login PopupModal popup"); // Debug log
   };
 
   const handleLogout = () => {

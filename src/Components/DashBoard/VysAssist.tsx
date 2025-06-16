@@ -19,7 +19,7 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ dashBoardAgain }
 
     // const [totalPages,setTotalPages]=useState<number>(0)
 
-    console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
+    //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
 
     const [pageNumber, setPageNumber] = useState<number>(1);
     const fetchData = async () => {
@@ -31,10 +31,7 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ dashBoardAgain }
         );
         setTotalRecords(response.data.
             vysassist_count)
-        console.log(response, "response")
-
-
-
+        //console.log(response, "response")
     };
     useEffect(() => {
         fetchData();

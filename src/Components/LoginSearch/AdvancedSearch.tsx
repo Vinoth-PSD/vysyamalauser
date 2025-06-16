@@ -140,7 +140,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   ) => {
     const value = e.target.checked ? 1 : 0;
     setPeopleOnlyWithPhoto(value);
-    console.log("Checked value:", value);
+    //console.log("Checked value:", value);
   };
 
   const handleMaritalStatusChange = (statusId: number, isChecked: boolean) => {

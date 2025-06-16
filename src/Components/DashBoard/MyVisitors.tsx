@@ -19,7 +19,7 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
   const toptalPages = dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
   // const [totalPages,setTotalPages]=useState<number>(0)
 
-  console.log(ViewCount, "ViewCount");
+  //console.log(ViewCount, "ViewCount");
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const fetchData = async () => {
@@ -29,8 +29,7 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
         profile_id: loginuser_profileId,
       }
     );
-    console.log(response, "response")
-
+    //console.log(response, "response")
     setTotalRecords(response.data.data.total_records || 0);
     setDataPerPage(response.data.data.per_page || 0);
     setViewCount(response.data.viewd_count || 0)

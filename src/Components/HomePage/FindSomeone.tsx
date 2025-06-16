@@ -83,7 +83,7 @@ const FindProfessionals = () => {
       );
 
       const profiles = response.data.data;
-      console.log("profile found", profiles)
+      //console.log("profile found", profiles)
 
 
       // Scroll to the top of the page
@@ -97,7 +97,7 @@ const FindProfessionals = () => {
 
         // Navigate to ProfileNotFound if no profiles found
         navigate("/ProfileNotFound");
-        console.log("ProfileNotFound")
+        //console.log("ProfileNotFound")
       } else {
         // Navigate to the FindSomeOneCard page and pass the profiles data via state
         navigate("/FindSomeOneSpecial", { state: { profiles } });
@@ -106,7 +106,7 @@ const FindProfessionals = () => {
     } catch (err) {
       console.error("Failed to fetch search results");
       navigate("/ProfileNotFound"); // Navigate to ProfileNotFound on error as well
-      console.log("profile not found")
+      //console.log("profile not found")
 
     }
   };

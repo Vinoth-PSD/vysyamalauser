@@ -52,14 +52,14 @@ export const ChangePassword = () => {
         setSuccessMessage(null); // Clear success message if any
       } else {
         // Handle successful password change
-        console.log('Password changed successfully');
+        //console.log('Password changed successfully');
         setSuccessMessage('Password Updated Successfully.');
         setErrorMessage(null); // Clear error message if any
       }
     } catch (error) {
       // Handle API errors
       if (error instanceof AxiosError) {
-        console.log('Error changing password:', error.response?.data);
+       // console.log('Error changing password:', error.response?.data);
         if(error.response?.data?.status === "error") {
           setErrorMessage(error.response.data.message);
           setSuccessMessage(null);

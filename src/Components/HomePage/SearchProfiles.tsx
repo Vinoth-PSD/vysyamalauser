@@ -79,7 +79,7 @@ const SearchProfiles = () => {
   const SearchProfiles = async (professionId?: number, StateId?: number, id?:number) => {
     try {
       // Log gender and profession for debugging purposes
-      console.log("Selected Profession:", professionId);
+      //console.log("Selected Profession:", professionId);
       const response = await apiClient.post(
         "/auth/Searchbeforelogin/",
         {
@@ -97,17 +97,17 @@ const SearchProfiles = () => {
         }
       );
 
-      console.log("API Response: ", response.data.data);
+      //console.log("API Response: ", response.data.data);
       // You can handle the response and update the UI as needed
       // Navigate to "FindSomeOneSpecial" after the API call
 
       const profiles = response.data.data; // Ensure profiles are in the expected format
-      console.log("Profiles: ", profiles); // Check if this logs correctly
+      //console.log("Profiles: ", profiles); // Check if this logs correctly
       navigate("/FindSomeOneSpecial", { state: { profiles } });
     } catch (error) {
       console.error("API call error: ", error);
       navigate("/ProfileNotFound"); // Navigate to ProfileNotFound on error as well
-      console.log("profile not found");
+      //console.log("profile not found");
     }
 
 

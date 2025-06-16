@@ -171,7 +171,7 @@ const HappyStories = () => {
       onClose={handleCloseLoginPopup}
       onForgetPassword={() => {
         // Placeholder for forget password functionality
-        console.log("Forget password clicked");
+        //console.log("Forget password clicked");
       }}
       isopen={false}
     />

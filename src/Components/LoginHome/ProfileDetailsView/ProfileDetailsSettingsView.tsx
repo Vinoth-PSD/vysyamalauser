@@ -121,12 +121,12 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     // Effect to watch the currentProfileId and re-fetch if changed
     useEffect(() => {
         // Debugging: Log the current profile IDs and index
-        console.log("Profile IDs:", profileIds);
-        console.log("Current Profile ID:", currentProfileId);
+        //console.log("Profile IDs:", profileIds);
+        //console.log("Current Profile ID:", currentProfileId);
 
         if (profileIds.length > 0) {
             const index = profileIds.indexOf(currentProfileId.toString()); // Ensure comparison is done with string
-            console.log("Current Index:", index); // Log the index
+            //console.log("Current Index:", index); // Log the index
 
             if (index !== -1) {
                 setCurrentIndex(index);
@@ -148,7 +148,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     const handleNext = () => {
         if (currentIndex < profileIds.length - 1) {
             const newIndex = currentIndex + 1;
-            console.log("Navigating to next profile, New Index:", newIndex); // Debugging log
+            //console.log("Navigating to next profile, New Index:", newIndex); // Debugging log
             setCurrentIndex(newIndex);
             navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
             setTimeout(() => {

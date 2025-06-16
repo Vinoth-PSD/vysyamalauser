@@ -96,7 +96,7 @@ export const fetchSearchProfiles = async (searchId: string,profession: string,ag
     // if (response.data.Status !== 1) {
     //   throw new Error(`Failed to fetch profiles: ${response.data.message || 'Unknown error'}`);
     // }
-    console.log(response.data);
+    //console.log(response.data);
     if(response.data.Status === 1){
     return response.data; // Adjust based on actual response structure
     }else{
@@ -119,7 +119,7 @@ export const fetchFooterContent = async (pageId?: string) => {
     const response = await apiClient.post("/auth/Get_page_details/", {
       page_id: pageId,
     });
-    console.log("fetchFooterContent response", response.data);
+    ////console.log("fetchFooterContent response", response.data);
 
     // Assuming the API returns an object with a `status` field and a `data` field
     if (!response.data || response.status !== 200) {
@@ -141,7 +141,7 @@ export const fetchFooterContent = async (pageId?: string) => {
 // export const supportcontent = async () => {
 //   try {
 //     const response = await apiClient.get("/auth/Get_footer/");
-//     console.log("fetchFooterContent response", response.data);
+//     //console.log("fetchFooterContent response", response.data);
 
 //     // Assuming the API returns an object with a `status` field and a `data` field
 //     if (!response.data || response.status !== 200) {
@@ -170,7 +170,7 @@ export const getGallerylists = async (pageNumber:number) => {
     );
     return response;
   } catch (error) {
-    console.log("gallery commonapi call error",error);
+    ////console.log("gallery commonapi call error",error);
   }
 };
 
@@ -183,7 +183,7 @@ export const justRegistered = async () => {
 
     return response;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 export const GetProfession = async () => {
@@ -193,7 +193,7 @@ export const GetProfession = async () => {
     );
     return response;
   } catch (error) {
-    console.log(error);
+   // console.log(error);
   }
 };
 
@@ -206,7 +206,7 @@ export const GetState = async () => {
 
     return response;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -222,7 +222,7 @@ export const GetCity = async () => {
 
     return response.data;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -233,7 +233,7 @@ export const searchBeforeLoging = async () => {
     );
     return response;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 };
 
@@ -248,7 +248,7 @@ export const createOrder = async (amount: number, profileID:string, planID:numbe
     });
 
     // Log the response data
-    console.log("Create Order response:", response.data);
+    ////console.log("Create Order response:", response.data);
 
     // Check if the response is successful (status code 200 or 201)
     if (!response.data || (response.status !== 200 )) {
@@ -284,7 +284,7 @@ export const verifyPayment = async (
     });
 
     // Log the response data
-    console.log("Verify Payment response:", response.data);
+    ////console.log("Verify Payment response:", response.data);
 
     // Check if the response is successful (status code 200 or 201)
     if (!response.data || (response.status !== 200 && response.status !== 201)) {
@@ -311,7 +311,7 @@ export const cancelPayment = async (profileID:string, orderId: string, Status:nu
           status: Status,
       });
 
-      console.log("Cancel Payment response:", response.data);
+      ////console.log("Cancel Payment response:", response.data);
 
       if (!response.data || (response.status !== 200)) {
           throw new Error("Failed to cancel payment. Unexpected response.");
@@ -344,7 +344,7 @@ export const savePlanPackage = async (
         total_amount: total_amount,
       }
     );
-console.log("response",response)
+////console.log("response",response)
     return response.data;
   } catch (error) {
     console.error("Error saving the package:", error);

@@ -139,7 +139,7 @@ const RasiGridview: React.FC<RasiGridProps> = ({
 
   useEffect(() => {
     const formattedData = formatGridData();
-    console.log("Rasi Contents:", formattedData);
+    //console.log("Rasi Contents:", formattedData);
 
     sessionStorage.setItem("formattedData", JSON.stringify(formattedData));
   }, [rasiContents]);

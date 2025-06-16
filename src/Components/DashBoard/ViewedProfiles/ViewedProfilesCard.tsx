@@ -24,17 +24,17 @@ interface Profile {
   visited_Profile_img: string;
   visited_profile_age: number;
   visited_verified: number;
-  visited_height:number;
-  visited_star:string;
-  visited_profession:string;
-  visited_city:string;
-  visited_degree:string;
+  visited_height: number;
+  visited_star: string;
+  visited_profession: string;
+  visited_city: string;
+  visited_degree: string;
   visited_match_score: number;
-  visited_views:number;
-  visited_lastvisit:string;
-  visited_userstatus:string;
-  visited_horoscope:string;
-  visited_profile_wishlist:number;
+  visited_views: number;
+  visited_lastvisit: string;
+  visited_userstatus: string;
+  visited_horoscope: string;
+  visited_profile_wishlist: number;
 }
 
 interface ApiResponse {
@@ -96,7 +96,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       );
       if (response.data.Status === 1) {
         toast.success("Profile added to wishlist!");
-   console.log("Profile added to wishlist!");
+        ////console.log("Profile added to wishlist!");
         setBookmarkedProfiles((prev) => [...prev, profileId]);
         sessionStorage.setItem(
           "bookmarkedProfiles",
@@ -122,7 +122,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       );
       if (response.data.Status === 1) {
         toast.error("Profile removed from wishlist.");
-      console.log("Profile removed from wishlist.");
+        ////console.log("Profile removed from wishlist.");
         const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
         setBookmarkedProfiles(updatedBookmarks);
         sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
@@ -137,10 +137,10 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
     navigate(`/ProfileDetails?id=${profileId}&page=4`);
   };
 
-  console.log(profiles, "profilesssssss");
+  //console.log(profiles, "profilesssssss");
   return (
     <div className="">
-             <ToastContainer  />
+      <ToastContainer />
       {profiles.map((profile) => (
         <div
           key={profile.visited_profileid}
@@ -156,7 +156,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                 />
 
-{bookmarkedProfiles.includes(profile.visited_profileid) ? (
+                {bookmarkedProfiles.includes(profile.visited_profileid) ? (
                   <MdBookmark
                     onClick={(e) => {
                       e.stopPropagation();
@@ -201,7 +201,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                 <div className="flex items-center space-x-3 mb-2">
                   <p className="flex items-center text-sm text-primary font-normal">
                     <IoCalendar className="mr-2 text-primary" />
-                    {profile.visited_profile_age } yrs
+                    {profile.visited_profile_age} yrs
                   </p>
                 </div>
 
@@ -209,7 +209,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                 <div className="mb-2">
                   <p className="flex items-center text-sm text-primary font-normal">
                     <MdStars className="mr-2 text-primary" />
-                    {profile.visited_star }
+                    {profile.visited_star}
                   </p>
                 </div>
                 <div className="mb-2">
@@ -221,13 +221,13 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                 <div className="mb-2">
                   <p className="flex items-center text-sm text-primary font-normal">
                     <FaSuitcase className="mr-2 text-primary" />
-                    {profile.visited_profession }
+                    {profile.visited_profession}
                   </p>
                 </div>
                 <div className="mb-2">
                   <p className="flex items-center text-sm text-primary font-normal">
                     <FaLocationDot className="mr-2 text-primary" />
-                    {profile.visited_city }
+                    {profile.visited_city}
                   </p>
                 </div>
 
@@ -235,23 +235,23 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                 <div className=" hidden justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
-                      <MdOutlineGrid3X3 className="mr-2 text-primary" /> {profile.visited_horoscope }
+                      <MdOutlineGrid3X3 className="mr-2 text-primary" /> {profile.visited_horoscope}
                     </p>
                   </div>
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
-                      <FaUser className="mr-2 text-primary" /> {profile.visited_userstatus }
+                      <FaUser className="mr-2 text-primary" /> {profile.visited_userstatus}
                     </p>
                   </div>
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                       <IoCalendar className="mr-2 text-primary" /> Last visit on {profile.visited_lastvisit}
-                      
+
                     </p>
                   </div>
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
-                      <IoEye className="mr-2 text-primary" /> {profile.visited_views } views
+                      <IoEye className="mr-2 text-primary" /> {profile.visited_views} views
                     </p>
                   </div>
                 </div>

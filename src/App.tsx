@@ -82,7 +82,7 @@ function AppContent({ token }: AppContentProps) {
   const navigate = useNavigate();
 
   // useEffect(() => {
-  //   console.log("Current token:", token);
+  //   //console.log("Current token:", token);
   //   sessionStorage.removeItem("searchvalue");
 
   //   const handlePopState = () => {
@@ -102,7 +102,7 @@ function AppContent({ token }: AppContentProps) {
   // }, [token, navigate]);
 
   useEffect(() => {
-    console.log("Current token:", token);
+    ////console.log("Current token:", token);
     sessionStorage.removeItem("searchvalue");
 
     const handlePopState = () => {

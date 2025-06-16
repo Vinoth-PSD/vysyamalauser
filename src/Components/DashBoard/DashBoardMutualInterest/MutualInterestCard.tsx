@@ -114,7 +114,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
       );
       if (response.data.Status === 1) {
         toast.success("Profile added to wishlist!");
-        console.log("Profile added to wishlist!");
+       // //console.log("Profile added to wishlist!");
         setBookmarkedProfiles((prev) => [...prev, profileId]);
         sessionStorage.setItem(
           "bookmarkedProfiles",
@@ -141,7 +141,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
       );
       if (response.data.Status === 1) {
         toast.error("Profile removed from wishlist.");
-        console.log("Profile removed from wishlist.");
+        ////console.log("Profile removed from wishlist.");
         const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
         setBookmarkedProfiles(updatedBookmarks);
         sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));

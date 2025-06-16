@@ -44,7 +44,7 @@ export const Footer = () => {
 
       setShowFooterContent(!showFooterContent);
 
-      console.log(data);
+      //console.log(data);
       window.scrollTo({ top: 0, behavior: "smooth" });
 
 

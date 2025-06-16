@@ -82,7 +82,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
   // Handle form submission
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    console.log("Login pressed!!");
+    //console.log("Login pressed!!");
     const trimmedData = {
       profileID: data.profileID.trim(),
       password: data.password.trim(),
@@ -97,13 +97,13 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
         "profile_completion",
         response.data.profile_completion
       );
-      console.log("Login Response:", response.data);
+      //console.log("Login Response:", response.data);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user_profile_image", response.data.profile_image);
-      const selectedstar= localStorage.setItem("selectedstar", response.data.birth_star_id);
-      console.log("selectedstar", selectedstar)
-      const selectedRasi =localStorage.setItem("selectedRasi", response.data.birth_rasi_id);
-      console.log("selectedRasi", selectedRasi)
+      //const selectedstar= localStorage.setItem("selectedstar", response.data.birth_star_id);
+      //console.log("selectedstar", selectedstar)
+      //const selectedRasi =localStorage.setItem("selectedRasi", response.data.birth_rasi_id);
+      //console.log("selectedRasi", selectedRasi)
       localStorage.setItem("gender", response.data.gender);
       
       localStorage.setItem("ProfileId", response.data.profile_id);

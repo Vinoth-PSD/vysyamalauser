@@ -84,7 +84,7 @@
 
 //   const handleCloseLoginPopup = () => {
 //     setIsLoginPopupOpen(false);
-//     console.log("Closing Login PopupModal popup");
+//     //console.log("Closing Login PopupModal popup");
 //   };
 
 //   if (loading) return <p>Loading...</p>;
@@ -131,7 +131,7 @@
 //           <LoginPopupModal
 //             onClose={handleCloseLoginPopup}
 //             onForgetPassword={() => {
-//               console.log("Forgot password clicked.");
+//               //console.log("Forgot password clicked.");
 //             }}
 //             isopen={true} // Set it to true to show the modal when triggered
 //           />
@@ -235,7 +235,7 @@ export const FeaturedBride: React.FC = () => {
 
   const handleCloseLoginPopup = () => {
     setIsLoginPopupOpen(false);
-    console.log("Closing Login PopupModal popup");
+    //console.log("Closing Login PopupModal popup");
   };
 
   if (loading) return <p>Loading...</p>;
@@ -311,7 +311,7 @@ export const FeaturedBride: React.FC = () => {
           <LoginPopupModal
             onClose={handleCloseLoginPopup}
             onForgetPassword={() => {
-              console.log("Forgot password clicked.");
+              //console.log("Forgot password clicked.");
             }}
             isopen={true} // Set it to true to show the modal when triggered
           />

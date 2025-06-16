@@ -69,7 +69,7 @@ export const Share: React.FC<ShareProps> = ({ closePopup, profileId,
         navigator.clipboard
             .writeText(shareMessage)  // Copy the full shareMessage instead of just the URL
             .then(() => {
-                console.log("Link copied to clipboard!");
+                ////console.log("Link copied to clipboard!");
                 setButtonText("Copied");
                 setTimeout(() => setButtonText("Copy Link"), 2000); // Reset the button text after 2 seconds
             })

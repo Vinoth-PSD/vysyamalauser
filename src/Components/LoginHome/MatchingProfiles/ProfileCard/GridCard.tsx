@@ -90,7 +90,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
 
       if (response.data.Status === 1) {
         navigate(`/ProfileDetails?id=${ profile.profile_id}&rasi=1`);
-        console.log("Profile visit created successfully:", response.data);
+        //console.log("Profile visit created successfully:", response.data);
       } else {
         console.error("Failed to create profile visit:", response.statusText);
       }

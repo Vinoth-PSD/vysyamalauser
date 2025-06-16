@@ -50,8 +50,9 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  console.log(setError, "error");
+  // const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
+  //console.log(setError, "error");
 
 
 
@@ -98,7 +99,7 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
   }, [loginuser_profileId, MatchingProfilepageNumber, MatchingProfileperPage, sortOrder, setGridListCardData]);
 
 
-  console.log("searchvalues", searchvalues);
+  ////console.log("searchvalues", searchvalues);
 
 
   if (loading)
@@ -120,8 +121,8 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
   if (error) return <p>{error}</p>;
 
   const searchvalue = sessionStorage.getItem("searchvalue") || " ";
-  console.log(advanceSearchData, "v");
-  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", searchvalues);
+  // console.log(advanceSearchData, "v");
+  // //console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh", searchvalues);
   
 
   const noResults =

@@ -68,7 +68,8 @@ const PhotoRequestCard = ({
   data,
 }: proptype) => {
   const navigate = useNavigate();
-  const [photoRequests, setPhotoRequests] = useState<PhotoRequestData[]>([]);
+  // const [photoRequests, setPhotoRequests] = useState<PhotoRequestData[]>([]);
+  const [, setPhotoRequests] = useState<PhotoRequestData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -94,7 +95,7 @@ const PhotoRequestCard = ({
 
    // Added state to capture the selected from_profile_id for messaging
    const [, setSelectedFromProfileId] = useState<string | null>(null);
-   console.log("setSelectedFromProfileId",setSelectedFromProfileId)
+   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
  
  
    const handleMessage = async (fromProfileId: string) => {
@@ -186,7 +187,7 @@ const PhotoRequestCard = ({
     fetchPhotoRequests();
   }, [loginuser_profileId]);
 
-  console.log(photoRequests, "ddddddddddddddd");
+  //console.log(photoRequests, "ddddddddddddddd");
 
   
 

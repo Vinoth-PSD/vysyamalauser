@@ -67,7 +67,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
   //const [uploadedFiles, setUploadedFiles] = useState(images);
 
-  // console.log("ppppppppppppppppp",Param);
+  // //console.log("ppppppppppppppppp",Param);
   const fileInputRefs = {
     images: useRef<HTMLInputElement>(null),
     horoscope: useRef<HTMLInputElement>(null),
@@ -171,10 +171,10 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         "/auth/Get_save_details/",
         formData
       );
-      console.log("saveImageDetails", response);
+      //console.log("saveImageDetails", response);
 
       if (response.status === 200) {
-        console.log("Image details saved successfully", response.data);
+        //console.log("Image details saved successfully", response.data);
         NotifySuccess("Image details saved successfully");
       }
     } catch (error) {
@@ -210,7 +210,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
           await saveImageDetails(profileId as string, fieldName);
         }
 
-        console.log("UploadImageResponse", response.data);
+        //console.log("UploadImageResponse", response.data);
       } catch (error) {
         console.error("Error uploading files:", error);
       }
@@ -261,7 +261,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         }
       );
 
-      console.log("fetchUploadedImages", response);
+      //console.log("fetchUploadedImages", response);
 
       if (response.data.Status === 1) {
         const data = response.data.data;

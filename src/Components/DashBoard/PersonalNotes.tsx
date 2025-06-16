@@ -19,7 +19,7 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ dashBoardAgain }) 
 
     // const [totalPages,setTotalPages]=useState<number>(0)
 
-    console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
+    //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
 
     const [pageNumber, setPageNumber] = useState<number>(1);
     const fetchData = async () => {
@@ -31,10 +31,7 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ dashBoardAgain }) 
         );
         setTotalRecords(response.data.
             personal_note_count)
-        console.log(response, "response")
-
-
-
+        //console.log(response, "response")
     };
     useEffect(() => {
         fetchData();

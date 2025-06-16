@@ -78,7 +78,7 @@ export const Messages = () => {
   useEffect(() => {
     const savedProfile = sessionStorage.getItem('selectedProfile');
 
-    console.log("savedProfile",savedProfile)
+    //console.log("savedProfile",savedProfile)
     
     if (savedProfile) {
       setSelectedProfile(JSON.parse(savedProfile));

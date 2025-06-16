@@ -52,13 +52,12 @@ export const Family = () => {
     number | string
   >("");
   const [occupations, setOccupations] = useState<Occupation[]>([]);
-  const [selectedOccupationId, setSelectedOccupationId] = useState<
-    number | string
-  >("");
+  // const [selectedOccupationId, setSelectedOccupationId] = useState<
+  //   number | string
+  // >("");
+  const [, setSelectedOccupationId] = useState<number | string>("");
   const [occupations1, setOccupations1] = useState<Occupation1[]>([]);
-  const [, setSelectedOccupationId1] = useState<
-    number | string
-  >("");
+  const [, setSelectedOccupationId1] = useState<number | string>("");
   const [refreshData, setRefreshData] = useState(false);
   const [errors, setErrors] = useState({
     personal_father_name: "",
@@ -244,7 +243,7 @@ export const Family = () => {
       return;
     }
 
-    console.log(selectedOccupationId, "mothocc");
+    //console.log(selectedOccupationId, "mothocc");
     try {
       const response = await apiClient.post(
         "/auth/update_myprofile_family/",
