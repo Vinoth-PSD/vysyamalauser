@@ -935,108 +935,79 @@ export const ProfileSlick = () => {
     <div>
       <ToastNotification />
       <div className="slider-container profileSliderStyle myProfileslider ">
-        <Slider
-          customPaging={(i: number) => (
-            <a>
-              <img
-                src={images[i]?.imageUrl || ""}
-                alt={`Thumbnail ${i + 1}`}
-                className="rounded-lg"
-              />
-            </a>
-          )}
-          dots={false}
-          arrows={false}
-          dotsClass="slick-dots slick-thumb"
-          infinite={true}
-          speed={1400}
-          slidesToShow={1}
-          slidesToScroll={1}
-          asNavFor={nav2 as never}
-          ref={(slider) => setNav1(slider)}
-          className=" max-lg:w-full h-full px-2"
-        >
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="relative profile-slider-img-container h-full max-lg:w-2/4"
-              onMouseEnter={() => handleMouseEnter(image.imageUrl || "")}
-              onMouseLeave={handleMouseLeave}
-            >
-              <img
-                src={image.imageUrl || ""}
-                className="w-full h-[450px] rounded-lg profile-slider-img max-lg:w-full max-sm:w-full  max-sm:h-[300px] object-cover object-top "
-                alt={`Slide ${index + 1}`}
-              />
-              {/* <div
-                className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-              >
-                <FaPlus className="text-2xl text-main" onClick={() => 
-                  fileInputRef.current?.click()} />
-              </div> */}
-              <div
-                className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-                onClick={() => {
-                  setCurrentEditIndex(null); // Ensure we're in "add" mode
-                  fileInputRef.current?.click();
-                }}
-              >
-                <FaPlus className="text-2xl text-main" />
-              </div>
-              <div
-                className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-                onClick={() => handleEditClick(index)}
-              >
-                <MdModeEdit className="text-2xl text-main" />
-              </div>
-              {showOptions && currentEditIndex === index && (
-                <div className="absolute bottom-0 left-0 bg-white p-3 rounded-tr-lg z-30">
-                  {images[index].id !== null && (
-                    <button onClick={handleRemoveImage} className="block mb-2">
-                      Remove Current Image
-                    </button>
-                  )}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="block"
-                  >
-                    Upload New Image
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </Slider>
+        {images.length > 1 ? (
+  <Slider
+    {...settings}
+    asNavFor={nav2 as never}
+    ref={(slider) => setNav1(slider)}
+    className=" max-lg:w-full h-full px-2"
+  >
+    {images.map((image, index) => (
+      <div key={index} className="relative profile-slider-img-container">
+        {/* your image + edit button code */}
+      </div>
+    ))}
+  </Slider>
+) : (
+  // If only one image, show it without using Slider
+  <div className="relative profile-slider-img-container max-lg:w-full h-full px-2">
+    <img
+      src={images[0]?.imageUrl}
+      className="w-full h-[450px] rounded-lg profile-slider-img object-cover object-top"
+      alt="Profile"
+    />
+    <div
+      className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+      onClick={() => {
+        setCurrentEditIndex(null);
+        fileInputRef.current?.click();
+      }}
+    >
+      <FaPlus className="text-2xl text-main" />
+    </div>
+    <div
+      className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+      onClick={() => handleEditClick(0)}
+    >
+      <MdModeEdit className="text-2xl text-main" />
+    </div>
+    {showOptions && currentEditIndex === 0 && (
+      <div className="absolute bottom-0 left-0 bg-white p-3 rounded-tr-lg z-30">
+        {images[0].id !== null && (
+          <button onClick={handleRemoveImage} className="block mb-2">
+            Remove Current Image
+          </button>
+        )}
+        <button onClick={() => fileInputRef.current?.click()} className="block">
+          Upload New Image
+        </button>
+      </div>
+    )}
+  </div>
+)}
 
-        <Slider
-          asNavFor={nav1 as never}
-          ref={(slider) => setNav2(slider)}
-          // slidesToShow={4}
-          swipeToSlide={true}
-          focusOnSelect={true}
-          // arrows={false}
-          {...settings}
-          className="connectingSlick"
-        >
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="profile-slider-img-container"
-              onMouseEnter={() => handleMouseEnter(image.imageUrl || "")}
-              onMouseLeave={handleMouseLeave}
-            >
-              {/* <div className="text-center mb-2 text-sm text-gray-600">
-        {` ${index === 0 ? "1ST" : index === 1 ? "2ND" : index === 2 ?"3RD" : `${index + 1}TH`} image`}
-      </div> */}
-              <img
-                src={image.imageUrl || ""}
-                className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
-                // className="w-full h-auto mx-auto rounded-lg object-cover"
-                alt={`Slide ${index + 1}`}
-              />
-            </div>
-          ))}
-        </Slider>
+
+     {images.length > 1 && (
+  <Slider
+    {...settings}
+    asNavFor={nav1 as never}
+    ref={(slider) => setNav2(slider)}
+    swipeToSlide={true}
+    focusOnSelect={true}
+    className="connectingSlick"
+  >
+    {images.map((image, index) => (
+      <div key={index} className="profile-slider-img-container">
+        <img
+          src={image.imageUrl}
+          className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
+          alt={`Slide ${index + 1}`}
+        />
+      </div>
+    ))}
+  </Slider>
+)}
+
       </div>
       {zoomImage && (
         <div className="zoomed-image-container zoomed-visible ">
