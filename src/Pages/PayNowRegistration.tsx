@@ -18,7 +18,7 @@ export const PayNowRegistration: React.FC = () => {
   const location = useLocation();
   // Destructure the state data passed via navigate
   const { packageName } = location.state || {};
-   console.log("packageName", packageName);
+  console.log("packageName", packageName);
 
   const [membershipPlane, setMemberShipPlane] = useState<Package[]>([]);
   const navigate = useNavigate();
@@ -47,8 +47,7 @@ export const PayNowRegistration: React.FC = () => {
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<number[]>([]);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState<boolean>(false);
-  // const [gpayPaymentSuccessful, setgpayPaymentSuccessful] = useState(false);
-  const [gpayPaymentSuccessful] = useState(false);
+  const [gpayPaymentSuccessful, setgpayPaymentSuccessful] = useState(false);
   const [isGPayClicked, setIsGPayClicked] = useState(false);
   const [isOnlinePaymentClicked, setIsOnlinePaymentClicked] = useState(false);
   const [showGPayPopup, setShowGPayPopup] = useState(false);
@@ -162,8 +161,6 @@ export const PayNowRegistration: React.FC = () => {
   const Save_plan_package = async () => {
     try {
       const addonPackageIdsString = selectedPackageIds.join(",");
-      //console.log("addonPackageIdsString", addonPackageIdsString);
-      //console.log("totalAmount", totalAmount);
 
       // Call the savePlanPackage function from the common API file
       const response = await savePlanPackage(
@@ -172,9 +169,6 @@ export const PayNowRegistration: React.FC = () => {
         addonPackageIdsString,
         totalAmount
       );
-
-      // Log the full response to check its structure
-      //console.log("Response from savePlanPackage:", response);
 
       // Check if the response and status exist before accessing them
       if (response && response.status === "success") {
@@ -238,22 +232,6 @@ export const PayNowRegistration: React.FC = () => {
     setShowGPayPopup(true);
   };
 
-  // Add a function to handle GPay confirmation
-  // const handleGPayConfirm = async () => {
-  //   setShowGPayPopup(false);
-  //   try {
-  //     // Add actual GPay payment processing logic here
-  //     // For now, simulate success after 2 seconds
-  //     setTimeout(() => {
-  //       setgpayPaymentSuccessful(true);
-  //       NotifySuccess("GPay payment successful!");
-  //       Save_plan_package();
-  //     }, 2000);
-  //   } catch (error) {
-  //     NotifyError("GPay payment failed");
-  //     setIsGPayClicked(false);
-  //   }
-  // };
 
   const handlePayNow = async () => {
     try {
@@ -411,12 +389,27 @@ export const PayNowRegistration: React.FC = () => {
           </div>
         </div>
       </div>
-      <GPayPopup isOpen={showGPayPopup} onClose={() => {
+      {/* <GPayPopup isOpen={showGPayPopup} onClose={() => {
         setShowGPayPopup(false);
         setIsGPayClicked(false);
       }}
-       //onConfirm={handleGPay}
+      /> */}
+      <GPayPopup
+        isOpen={showGPayPopup}
+        onClose={() => {
+          setShowGPayPopup(false);
+          setIsGPayClicked(false);
+        }}
+        onConfirm={async () => {
+          try {
+            await Save_plan_package();
+            setgpayPaymentSuccessful(true); // Mark GPay payment as successful
+          } catch (error) {
+            console.error("Error saving package:", error);
+          }
+        }}
       />
+
       <ToastNotification />
     </div>
   );

@@ -331,10 +331,10 @@ export const PartnerSettings: React.FC = () => {
     }
   };
 
-  const storedBirthStar = localStorage.getItem("selectedstar");
+  const storedBirthStar = localStorage.getItem("selectedstar") || sessionStorage.getItem("selectedstar");
   ////console.log("storedBirthStar", storedBirthStar);
   const storedGender = localStorage.getItem("gender");
-  const storedRasi = localStorage.getItem("selectedRasi");
+  const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
  // //console.log("storedRasi", storedRasi);
   useEffect(() => {
     if (storedBirthStar && storedGender) {
@@ -660,6 +660,15 @@ export const PartnerSettings: React.FC = () => {
               />
               No
             </label>
+            <label className="inline-flex items-center text-ash">
+              <input
+                type="radio"
+                value="Both"
+                {...register("rahuKetuDhosam")}
+                className="mr-2 "
+              />
+              Both
+            </label>
             {errors.rahuKetuDhosam && (
               <span className="text-red-500">
                 {errors.rahuKetuDhosam.message}
@@ -691,6 +700,15 @@ export const PartnerSettings: React.FC = () => {
                 className="mr-2"
               />
               No
+            </label>
+            <label className="inline-flex items-center text-ash">
+              <input
+                type="radio"
+                value="Both"
+                {...register("chevvaiDhosam")}
+                className="mr-2 "
+              />
+              Both
             </label>
             {errors.chevvaiDhosam && (
               <span className="text-red-500">

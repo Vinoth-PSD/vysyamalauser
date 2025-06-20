@@ -100,12 +100,12 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
       //console.log("Login Response:", response.data);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user_profile_image", response.data.profile_image);
-      //const selectedstar= localStorage.setItem("selectedstar", response.data.birth_star_id);
+      localStorage.setItem("selectedstar", response.data.birth_star_id);
       //console.log("selectedstar", selectedstar)
-      //const selectedRasi =localStorage.setItem("selectedRasi", response.data.birth_rasi_id);
+      localStorage.setItem("selectedRasi", response.data.birth_rasi_id);
       //console.log("selectedRasi", selectedRasi)
       localStorage.setItem("gender", response.data.gender);
-      
+
       localStorage.setItem("ProfileId", response.data.profile_id);
       localStorage.setItem("profile_id", response.data.profile_id);
       localStorage.setItem("profile_id_new", response.data.profile_id);

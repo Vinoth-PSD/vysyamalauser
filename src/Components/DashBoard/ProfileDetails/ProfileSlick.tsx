@@ -745,7 +745,7 @@ export const ProfileSlick = () => {
     throw new Error("ProfileContext must be used within a ProfileContextProvider");
   }
 
-  const { images, setImages, zoomImage, handleMouseEnter, handleMouseLeave, fetchImages } = context;
+  const { images, setImages, zoomImage,  fetchImages } = context;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -942,7 +942,7 @@ export const ProfileSlick = () => {
     ref={(slider) => setNav1(slider)}
     className=" max-lg:w-full h-full px-2"
   >
-    {images.map((image, index) => (
+    {images.map((_image, index) => (
       <div key={index} className="relative profile-slider-img-container">
         {/* your image + edit button code */}
       </div>
