@@ -52,7 +52,7 @@ const schema = z.object({
   maritalstatus: z
     .array(z.string())
     .nonempty("Please select at least one maritalstatus option."),
-  income: z.string().nonempty("Please select an min annnual income."),
+  income: z.string().nonempty("Please select an min annual income."),
   annualIncomemax: z.string().nonempty("please select an max annual income"),
   rahuKetuDhosam: z.string().nonempty("Please select Rahu/Ketu Dhosam option."),
   chevvaiDhosam: z.string().nonempty("Please select Chevvai Dhosam option."),
@@ -110,15 +110,11 @@ export const PartnerSettings: React.FC = () => {
   const [prefilledStarRasiArray, setPrefilledStarRasiArray] = useState<
     string[]
   >([]); // Declare the state for prefilled values
-  const [selectedAnnualIncomes, setSelectedAnnualIncomes] = useState<string[]>(
-    []
-  );
+  const [selectedAnnualIncomes, setSelectedAnnualIncomes] = useState<string[]>([]);
 
 //  //console.log("selectedAnnualIncomes other serttings", selectedAnnualIncomes);
 
-  const [selectedMaxAnnualIncome, setSelectedMaxAnnualIncome] = useState<
-    string[]
-  >([]);
+  const [selectedMaxAnnualIncome, setSelectedMaxAnnualIncome] = useState<string[]>([]);
   // const [, setSelectedAnnualIncomesmax] = useState<string[]>(
   //   []
   // );
@@ -127,6 +123,14 @@ export const PartnerSettings: React.FC = () => {
   //   "selectedMaxAnnualIncome other serttings",
   //   selectedMaxAnnualIncome
   // );
+
+
+  useEffect(() => {
+  if (selectedAnnualIncomes[0]) {
+    setValue("income", selectedAnnualIncomes[0]);
+  }
+}, [selectedAnnualIncomes, setValue]);
+
 
   useEffect(() => {
     apiClient
@@ -591,7 +595,7 @@ export const PartnerSettings: React.FC = () => {
                 // id="annualIncome_min"
                 {...register("income")}
                 className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                value={selectedAnnualIncomes[0] || ""} // Bind the first selected value
+               // value={selectedAnnualIncomes[0] || ""} // Bind the first selected value
                 onChange={(e) => handleAnnualIncomeChange(e.target.value)} // Handle change
               >
                 <option value="" disabled>
@@ -603,10 +607,11 @@ export const PartnerSettings: React.FC = () => {
                   </option>
                 ))}
               </select>
+               <IoMdArrowDropdown />
               {errors.income && (
                 <span className="text-red-500">{errors.income.message}</span>
               )}
-              <IoMdArrowDropdown />
+             
             </div>
 
             <div className="relative w-full ">
@@ -651,7 +656,7 @@ export const PartnerSettings: React.FC = () => {
               />
               Yes
             </label>
-            <label className="inline-flex items-center text-ash">
+            <label className="inline-flex items-center text-ash mr-4">
               <input
                 type="radio"
                 value="No"
@@ -692,7 +697,7 @@ export const PartnerSettings: React.FC = () => {
               />
               Yes
             </label>
-            <label className="inline-flex items-center text-ash">
+            <label className="inline-flex items-center mr-4 text-ash">
               <input
                 type="radio"
                 value="No"
