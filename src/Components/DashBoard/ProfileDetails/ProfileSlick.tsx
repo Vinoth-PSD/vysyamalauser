@@ -1,6 +1,3 @@
-
-
-
 // import { useState, useEffect, useRef, useContext, useCallback } from "react";
 // import Slider from "react-slick";
 // import "./ProfileSlickStyle.css";
@@ -41,14 +38,11 @@
 //     };
 //   }, [fetchImages]);
 
-
 //   useEffect(() => {
 //     debouncedFetchImages();
 //     setNav1(sliderRef1.current);
 //     setNav2(sliderRef2.current);
 //   }, [debouncedFetchImages, removePhotoIndicator]);
-
-
 
 //   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 //   const files = event.target.files;
@@ -250,10 +244,10 @@
 //               {/* <div
 //                 className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
 //               >
-//                 <FaPlus className="text-2xl text-main" onClick={() => 
+//                 <FaPlus className="text-2xl text-main" onClick={() =>
 //                   fileInputRef.current?.click()} />
 //               </div> */}
-//               <div 
+//               <div
 //   className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
 //   onClick={() => {
 //     setCurrentEditIndex(null); // Ensure we're in "add" mode
@@ -334,7 +328,6 @@
 //   );
 // };
 
-
 // import { useState, useEffect, useRef, useContext, useCallback } from "react";
 // import Slider from "react-slick";
 // import "./ProfileSlickStyle.css";
@@ -375,13 +368,11 @@
 //     };
 //   }, [fetchImages]);
 
-
 //   useEffect(() => {
 //     debouncedFetchImages();
 //     setNav1(sliderRef1.current);
 //     setNav2(sliderRef2.current);
 //   }, [debouncedFetchImages, removePhotoIndicator]);
-
 
 //   // const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 //   //   const files = event.target.files;
@@ -636,10 +627,10 @@
 //               {/* <div
 //                 className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
 //               >
-//                 <FaPlus className="text-2xl text-main" onClick={() => 
+//                 <FaPlus className="text-2xl text-main" onClick={() =>
 //                   fileInputRef.current?.click()} />
 //               </div> */}
-//               <div 
+//               <div
 //   className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
 //   onClick={() => {
 //     setCurrentEditIndex(null); // Ensure we're in "add" mode
@@ -720,8 +711,6 @@
 //   );
 // };
 
-
-
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import Slider from "react-slick";
 import "./ProfileSlickStyle.css";
@@ -729,7 +718,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdModeEdit } from "react-icons/md";
 //import axios from "axios";
-import { NotifyError, NotifySuccess, ToastNotification } from "../../Toast/ToastNotification";
+import {
+  NotifyError,
+  NotifySuccess,
+  ToastNotification,
+} from "../../Toast/ToastNotification";
 import { FaPlus } from "react-icons/fa6";
 import { ProfileContext } from "../../../ProfileContext";
 import apiClient from "../../../API";
@@ -742,15 +735,37 @@ export const ProfileSlick = () => {
   const context = useContext(ProfileContext);
 
   if (!context) {
-    throw new Error("ProfileContext must be used within a ProfileContextProvider");
+    throw new Error(
+      "ProfileContext must be used within a ProfileContextProvider"
+    );
   }
 
-  const { images, setImages, zoomImage,  fetchImages } = context;
+  const { images, setImages, fetchImages } = context;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [currentEditIndex, setCurrentEditIndex] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState<boolean>(false);
-  const [removePhotoIndicator, setRemovePhotoIndicator] = useState<boolean>(false);
+  const [removePhotoIndicator, setRemovePhotoIndicator] =
+    useState<boolean>(false);
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
 
+  const handleMouseEnter = useCallback((image: string) => {
+    setTimeout(() => setZoomImage(image), 100);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setTimeout(() => setZoomImage(null), 100);
+  }, []);
+
+  const ZoomedImage: React.FC<{ image: string | null }> = ({ image }) => {
+  if (!image) return null;
+
+  return (
+    <div className="zoomed-image-container zoomed-visible">
+      <img src={image} className="zoomed-image object-top object-contain" alt="Zoomed" />
+    </div>
+  );
+};
+    
   const debouncedFetchImages = useCallback(() => {
     // Debounced fetch logic to prevent continuous calls
     let timeout: NodeJS.Timeout;
@@ -762,16 +777,15 @@ export const ProfileSlick = () => {
     };
   }, [fetchImages]);
 
-
   useEffect(() => {
     debouncedFetchImages();
     setNav1(sliderRef1.current);
     setNav2(sliderRef2.current);
   }, [debouncedFetchImages, removePhotoIndicator]);
 
-
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
@@ -790,7 +804,12 @@ export const ProfileSlick = () => {
       }
 
       // Add preview image immediately for better UX
-      const previewImage = { id: null, imageUrl: URL.createObjectURL(file), url: "", alt: "" };
+      const previewImage = {
+        id: null,
+        imageUrl: URL.createObjectURL(file),
+        url: "",
+        alt: "",
+      };
       setImages((prev) => [...prev, previewImage]);
 
       try {
@@ -799,7 +818,10 @@ export const ProfileSlick = () => {
 
         // Only include replace logic if we're in edit mode
         if (currentEditIndex !== null && images[currentEditIndex]?.id) {
-          formData.append("replace_image_ids", images[currentEditIndex].id.toString());
+          formData.append(
+            "replace_image_ids",
+            images[currentEditIndex].id.toString()
+          );
           formData.append("replace_image_files", file);
         } else {
           // Default case: just add new image
@@ -809,12 +831,14 @@ export const ProfileSlick = () => {
         const response = await apiClient.post("/auth/ImageSetEdit/", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("response", response)
+        console.log("response", response);
         NotifySuccess("Image uploaded successfully");
       } catch (error: any) {
         console.error("Error uploading image:", error);
         // Remove the preview image if upload fails
-        setImages((prev) => prev.filter((img) => img.imageUrl !== previewImage.imageUrl));
+        setImages((prev) =>
+          prev.filter((img) => img.imageUrl !== previewImage.imageUrl)
+        );
 
         if (error.response?.data?.error) {
           NotifyError(error.response.data.error);
@@ -857,7 +881,9 @@ export const ProfileSlick = () => {
             console.error("Failed to remove image:", response.data.message);
           }
         } else {
-          console.warn("Image does not have an ID, cannot be removed from server.");
+          console.warn(
+            "Image does not have an ID, cannot be removed from server."
+          );
         }
       } catch (error) {
         console.error("Error removing image:", error);
@@ -908,7 +934,6 @@ export const ProfileSlick = () => {
         settings: {
           slidesToShow: 4,
           autoplay: true,
-
         },
       },
       {
@@ -925,7 +950,6 @@ export const ProfileSlick = () => {
           slidesToShow: 3,
           autoplay: true,
           arrows: false,
-
         },
       },
     ],
@@ -936,84 +960,130 @@ export const ProfileSlick = () => {
       <ToastNotification />
       <div className="slider-container profileSliderStyle myProfileslider ">
         {images.length > 1 ? (
-  <Slider
-    {...settings}
-    asNavFor={nav2 as never}
-    ref={(slider) => setNav1(slider)}
-    className=" max-lg:w-full h-full px-2"
-  >
-    {images.map((_image, index) => (
-      <div key={index} className="relative profile-slider-img-container">
-        {/* your image + edit button code */}
-      </div>
-    ))}
-  </Slider>
-) : (
-  // If only one image, show it without using Slider
-  <div className="relative profile-slider-img-container max-lg:w-full h-full px-2">
-    <img
-      src={images[0]?.imageUrl}
-      className="w-full h-[450px] rounded-lg profile-slider-img object-cover object-top"
-      alt="Profile"
-    />
-    <div
-      className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-      onClick={() => {
-        setCurrentEditIndex(null);
-        fileInputRef.current?.click();
-      }}
-    >
-      <FaPlus className="text-2xl text-main" />
-    </div>
-    <div
-      className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-      onClick={() => handleEditClick(0)}
-    >
-      <MdModeEdit className="text-2xl text-main" />
-    </div>
-    {showOptions && currentEditIndex === 0 && (
-      <div className="absolute bottom-0 left-0 bg-white p-3 rounded-tr-lg z-30">
-        {images[0].id !== null && (
-          <button onClick={handleRemoveImage} className="block mb-2">
-            Remove Current Image
-          </button>
+          <Slider
+            dots={false}
+            arrows={false}
+            dotsClass="slick-dots slick-thumb"
+            infinite={true}
+            // autoplay={true}
+            speed={1400}
+            slidesToShow={1}
+            slidesToScroll={1}
+            asNavFor={nav2 as Slider}
+            ref={(slider) => setNav1(slider)}
+            className=" max-lg:w-full h-full px-2"
+          >
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className="relative profile-slider-img-container  max-lg:w-full h-full px-2"
+              >
+                <img
+                  src={image.imageUrl}
+                  className="w-full h-[450px] rounded-lg object-cover object-top"
+                  alt={`Profile ${index + 1}`}
+                   onMouseEnter={() => handleMouseEnter(image.imageUrl)}
+                  onMouseLeave={handleMouseLeave}
+                />
+                <div
+                  className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                  onClick={() => {
+                    setCurrentEditIndex(null);
+                    fileInputRef.current?.click();
+                  }}
+                >
+                  <FaPlus className="text-2xl text-main" />
+                </div>
+                <div
+                  className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                  onClick={() => handleEditClick(0)}
+                >
+                  <MdModeEdit className="text-2xl text-main" />
+                </div>
+                {showOptions && currentEditIndex === 0 && (
+                  <div className="absolute bottom-0 left-0 bg-white p-3 rounded-tr-lg z-30">
+                    {images[0].id !== null && (
+                      <button
+                        onClick={handleRemoveImage}
+                        className="block mb-2"
+                      >
+                        Remove Current Image
+                      </button>
+                    )}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="block"
+                    >
+                      Upload New Image
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </Slider>
+        ) : (
+          // If only one image, show it without using Slider
+          <div className="relative profile-slider-img-container max-lg:w-full h-full px-2">
+            <img
+              src={images[0]?.imageUrl}
+              className="w-full h-[450px] rounded-lg profile-slider-img object-cover object-top"
+              alt="Profile"
+            />
+            <div
+              className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+              onClick={() => {
+                setCurrentEditIndex(null);
+                fileInputRef.current?.click();
+              }}
+            >
+              <FaPlus className="text-2xl text-main" />
+            </div>
+            <div
+              className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+              onClick={() => handleEditClick(0)}
+            >
+              <MdModeEdit className="text-2xl text-main" />
+            </div>
+            {showOptions && currentEditIndex === 0 && (
+              <div className="absolute bottom-0 left-0 bg-white p-3 rounded-tr-lg z-30">
+                {images[0].id !== null && (
+                  <button onClick={handleRemoveImage} className="block mb-2">
+                    Remove Current Image
+                  </button>
+                )}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="block"
+                >
+                  Upload New Image
+                </button>
+              </div>
+            )}
+          </div>
         )}
-        <button onClick={() => fileInputRef.current?.click()} className="block">
-          Upload New Image
-        </button>
-      </div>
-    )}
-  </div>
-)}
 
-
-     {images.length > 1 && (
-  <Slider
-    {...settings}
-    asNavFor={nav1 as never}
-    ref={(slider) => setNav2(slider)}
-    swipeToSlide={true}
-    focusOnSelect={true}
-    className="connectingSlick"
-  >
-    {images.map((image, index) => (
-      <div key={index} className="profile-slider-img-container">
-        <img
-          src={image.imageUrl}
-          className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
-          alt={`Slide ${index + 1}`}
-        />
+        {images.length > 1 && (
+          <Slider
+            {...settings}
+            asNavFor={nav1 as never}
+            ref={(slider) => setNav2(slider)}
+            swipeToSlide={true}
+            focusOnSelect={true}
+            className="connectingSlick"
+          >
+            {images.map((image, index) => (
+              <div key={index} className="profile-slider-img-container">
+                <img
+                  src={image.imageUrl}
+                  className="w-[90px] h-[90px] mx-0 my-5 rounded-lg object-cover object-top"
+                  alt={`Slide ${index + 1}`}
+                />
+              </div>
+            ))}
+          </Slider>
+        )}
       </div>
-    ))}
-  </Slider>
-)}
-
-      </div>
-      {zoomImage && (
-        <div className="zoomed-image-container zoomed-visible ">
-          <img src={zoomImage} className="zoomed-image object-top object-contain" alt="Zoomed" />
-        </div>
-      )}
+     <ZoomedImage image={zoomImage} />
       <input
         type="file"
         accept="image/*"
