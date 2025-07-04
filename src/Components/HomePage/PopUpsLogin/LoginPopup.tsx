@@ -186,7 +186,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
             type={showPassword ? "text" : "password"}
             id="password"
             className="w-full px-3 py-2 text-ash border-[1px] border-footer-text-gray rounded-[4px] focus-visible:outline-none"
-            placeholder="Create Password"
+            placeholder="Enter Password"
             {...register("password", {
               required: true,
               setValueAs: (value) => value.trim(),
