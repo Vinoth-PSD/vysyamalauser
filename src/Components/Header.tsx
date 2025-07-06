@@ -12,7 +12,7 @@
 //   const [isScrolled, setIsScrolled] = useState(false);
 //   console.log(isScrolled, "Scrolled");
 //   const context = useContext(ProfileContext);
-  
+
 //   if (!context) {
 //     throw new Error("MyComponent must be used within a ProfileProvider");
 //   }
@@ -248,7 +248,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Vysyamalalogo from "../assets/icons/VysyamalaLogo.png";
 // import VysyamalaWhiteLogo from "../assets/icons/VysyamalaWhite.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { PopupModal } from "./HomePage/PopUpsReg/PopupModal";
 import { LoginPopupModal } from "./HomePage/PopUpsLogin/LoginPopupModal";
 import { IoClose } from "react-icons/io5";
@@ -261,11 +261,14 @@ export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   //console.log(isScrolled, "Scrolled");
   const context = useContext(ProfileContext);
-  
+
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");
   }
-  const {setKey}=context;
+  const { setKey } = context;
+
+  const location = useLocation();
+  const hideLoginButton = location.state?.hideLoginButton;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -341,7 +344,7 @@ export const Header: React.FC = () => {
           }
            `}
       >
-      {/* <header className="fixed top-0 left-0 right-0 transition-all duration-300 z-[1] shadow-md px-5 bg-white w-full  max-2xl:px-4"> */}
+        {/* <header className="fixed top-0 left-0 right-0 transition-all duration-300 z-[1] shadow-md px-5 bg-white w-full  max-2xl:px-4"> */}
         <div className="container mx-auto flex justify-between items-center py-5 bg-transparent">
           <div>
             <Link to="/" className="">
@@ -365,12 +368,12 @@ export const Header: React.FC = () => {
 
           <nav className="max-lg:hidden">
             <ul className={`flex justify-center items-center  ${isScrolled
-            ? "text-black "
-            : "text-white" }
+              ? "text-black "
+              : "text-white"}
           }`}>
               {!profile_completion && (
                 <>
-                  <li onClick={()=>setKey(true)}  className="text-[16px] cursor-pointer font-medium"
+                  <li onClick={() => setKey(true)} className="text-[16px] cursor-pointer font-medium"
                   >Search</li>
                   <li
                     className="text-[16px] cursor-pointer px-10 font-medium "
@@ -385,26 +388,28 @@ export const Header: React.FC = () => {
               </div>
               {profile_completion != null ? (
                 <ul className="flex items-center gap-8">
-                {/*  <li className="text-base text-primary flex items-center gap-4">
+                  {/*  <li className="text-base text-primary flex items-center gap-4">
                   <FaPhoneAlt className="w-5" />
                     012345678</li>
                   <li className="text-base text-primary flex items-center gap-4">
                             <WhatsappIcon className="w-5" round />
                     012345678</li> */}
-                <li
-                  className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </li>
+                  <li
+                    className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </li>
                 </ul>
               ) : (
+                 !hideLoginButton && ( // Only show login if the flag is not set
                 <li
                   className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer"
                   onClick={handleLoginClick}
                 >
                   Login
                 </li>
+                 )
               )}
 
               {/* {isAccountSetupOpen && (
@@ -449,7 +454,7 @@ export const Header: React.FC = () => {
                     <ul className="flex flex-col justify-center item-start text-black gap-8">
                       {!profile_completion && (
                         <>
-                          <li onClick={()=>setKey(true)}  className="text-[18px] cursor-pointer font-medium">Search</li>
+                          <li onClick={() => setKey(true)} className="text-[18px] cursor-pointer font-medium">Search</li>
                           <li
                             className="text-[18px] cursor-pointer font-medium"
                             onClick={handleRegisterClick}

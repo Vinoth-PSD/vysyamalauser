@@ -86,11 +86,13 @@ export const PayNowRegistration: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
+       const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
         amountInPaise,
         String(profile_id),
-        Number(id)
+        Number(id),
+        addonPackageIdsString
       );
 
       if (orderResponse && orderResponse.order && orderResponse.order.id) {

@@ -323,11 +323,11 @@
 
 //     const [isShareVisible, setIsShareVisible] = useState(false);
 //     const dropdownRef = useRef<HTMLDivElement | null>(null); // Define ref type
-  
+
 //     const toggleShareVisibility = () => {
 //       setIsShareVisible((prevState) => !prevState);
 //     };
-  
+
 //     // Hide dropdown when clicking outside
 //     useEffect(() => {
 //       function handleClickOutside(event: MouseEvent) { // Define event type
@@ -335,7 +335,7 @@
 //           setIsShareVisible(false);
 //         }
 //       }
-  
+
 //       document.addEventListener("mousedown", handleClickOutside);
 //       return () => {
 //         document.removeEventListener("mousedown", handleClickOutside);
@@ -1069,7 +1069,7 @@ export const MyProfile = () => {
         //   setError("Unexpected error occurred");
         // }
         let errorMessage = "Unable to fetch profile details";
-      
+
         if (axios.isAxiosError(error)) {
           if (error.response) {
             // Server responded with error status code
@@ -1084,7 +1084,7 @@ export const MyProfile = () => {
             errorMessage = "Network error. Please check your connection.";
           }
         }
-        
+
         setError(errorMessage);
         console.error("Profile fetch error:", error);
       } finally {
@@ -1094,7 +1094,7 @@ export const MyProfile = () => {
 
     fetchGetMyProfilePersonal();
   }, [loginuser_profileId]); // Add `loginuser_profileId` to the dependency array if it's dynamic
-  
+
   // const toggleDropdown = () => {
   //   setIsOpen(!isOpen);
   // };
@@ -1104,7 +1104,7 @@ export const MyProfile = () => {
     // link.href = `https://apiupg.rainyseasun.com/auth/generate-pdf/${loginuser_profileId}/${Get_profile_det_match?.profile_id}`;
     // link.download = `pdf_${Get_profile_det_match?.profile_id}.pdf`; // Customize the file name
 
-     link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_horoscope_pdf_color/${get_myprofile_personal?.profile_id}/`;
+    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_horoscope_pdf_color/${get_myprofile_personal?.profile_id}/`;
     //link.href = `http://103.214.132.20:8000/auth/My_horoscope_pdf_color/${get_myprofile_personal?.profile_id}/`;
 
     // link.download = `pdf_${get_myprofile_personal?.profile_id}.pdf`; // Customize the file name
@@ -1119,7 +1119,7 @@ export const MyProfile = () => {
     // link.download = `pdf_${Get_profile_det_match?.profile_id}.pdf`; // Customize the file name
 
     link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_horoscope_black/${get_myprofile_personal?.profile_id}/`;
-   // link.href = `http://103.214.132.20:8000/auth/My_horoscope_black/${get_myprofile_personal?.profile_id}/`;
+    // link.href = `http://103.214.132.20:8000/auth/My_horoscope_black/${get_myprofile_personal?.profile_id}/`;
 
     // link.download = `pdf_${get_myprofile_personal?.profile_id}.pdf`; // Customize the file name
 
@@ -1154,6 +1154,7 @@ export const MyProfile = () => {
           profileId: loginuser_profileId,
           packageName: get_myprofile_personal?.package_name,
           //profileCompletion: percentage,
+          hideLoginButton: true, // Pass flag here
         },
       });
     }
@@ -1309,8 +1310,8 @@ export const MyProfile = () => {
         />
         <meta
           property="og:image"
-           content={'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/media/default_groom.png'} // Use placeholder if no image
-         // content={'http://103.214.132.20:8000/media/default_groom.png'} // Use placeholder if no image
+          content={'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/media/default_groom.png'} // Use placeholder if no image
+        // content={'http://103.214.132.20:8000/media/default_groom.png'} // Use placeholder if no image
         />
         <meta property="og:url" content={'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/media/default_groom.png'} />
         {/* <meta property="og:url" content={'http://103.214.132.20:8000/media/default_groom.png'} /> */}
@@ -1319,7 +1320,7 @@ export const MyProfile = () => {
         <div className="container mx-auto">
           <div className="mb-8  ">
             <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-sm:text-[20px]">
-              My Profile 
+              My Profile
             </h4>
           </div>
 

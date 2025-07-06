@@ -77,17 +77,18 @@ export const UpgradePayNow: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
+       const addonPackageIdsString = selectedPackageIds.join(",");
       //const plan_id = sessionStorage.getItem("plan_id"); // Get cur_plan_id
 
       const orderResponse = await createOrder(
         amountInPaise,
         String(profile_id),
-        Number(id)
+        Number(id),
+        addonPackageIdsString
       );
 
       if (orderResponse && orderResponse.order && orderResponse.order.id) {
         const order_id = orderResponse.order.id; // The order_id returned from createOrder API
-
         // Proceed with Razorpay payment flow
         return order_id; // Return the order_id to be used for Razorpay
       } else {

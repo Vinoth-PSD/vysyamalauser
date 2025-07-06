@@ -7,7 +7,7 @@ import { ProfileContext } from "../../ProfileContext";
 import { useNavigate } from "react-router-dom";  // Import the useNavigate hook
 import { FaCheck } from "react-icons/fa6";
 //import { toast, ToastContainer } from 'react-toastify';
-import {  ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -61,18 +61,17 @@ export const UpgradePlan: React.FC = () => {
 
 
     const navigate = useNavigate(); // Initialize navigate function
-
-
-
-
-
     const [plans, setPlans] = useState<any[]>([]); // State to hold plans data
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id") || localStorage.getItem("profile_id_new");
+
 
     useEffect(() => {
         // Define an async function to fetch plans data
         const fetchPlans = async () => {
             try {
-                const response = await apiClient.post(`/auth/Get_palns/`);
+                const formData = new FormData();
+                formData.append('profile_id', String(loginuser_profileId)); // 👈 Pass profile_id here
+                const response = await apiClient.post(`/auth/Get_palns/`,formData);
                 const { data } = response.data;
 
                 const updatedPlans = Object.keys(data).map(planName => ({
@@ -151,26 +150,26 @@ export const UpgradePlan: React.FC = () => {
                 <div className="flex justify-center  mx-auto  rounded-3xl relative mt-14  max-lg:w-full  max-lg:flex-wrap max-lg:justify-start max-sm:justify-center max-sm:shadow-none max-sm:gap-y-8  max-sm:bg-transparent max-md:mt-14">
                     <div className="w-full flex flex-row justify-between bg-white p-8 rounded-3xl shadow-profileCardShadow max-lg:flex-col max-sm:w-[300px] max-sm:flex-col">
                         <div>
-                        <h4 className={`text-[22px] text-main font-bold mb-2 max-2xl:text-[28px] max-xl:text-[20px]`}>
-                            VYSYAMALA DELIGHT
-                        </h4>
-                        <p className="text-sm text-black font-semibold mb-4">
-                            {/* Contact 99448 51550 for the Price<br></br> */}
-                            <span className="text-base font-semibold">Valid for 12 months</span>
-                        </p>
-                        <p className="relative text-sm text-ash pl-[30px] mb-4">
-                            <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
-                            Special Matrimonial package for Rich and Affluent</p>
-                        <p className="relative text-sm text-ash pl-[30px] mb-4">
-                            <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
-                            Al-based matching profile report for 10 matches Special Attention from Founder</p>
-                        <p className="relative text-sm text-ash pl-[30px] mb-4">
-                            <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
-                            AI based matching report (10 matches) & support</p>
-                        <p className="relative text-sm text-ash pl-[30px] mb-4">
-                            <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
-                            Special attention from Founder</p>
-                            </div>
+                            <h4 className={`text-[22px] text-main font-bold mb-2 max-2xl:text-[28px] max-xl:text-[20px]`}>
+                                VYSYAMALA DELIGHT
+                            </h4>
+                            <p className="text-sm text-black font-semibold mb-4">
+                                {/* Contact 99448 51550 for the Price<br></br> */}
+                                <span className="text-base font-semibold">Valid for 12 months</span>
+                            </p>
+                            <p className="relative text-sm text-ash pl-[30px] mb-4">
+                                <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
+                                Special Matrimonial package for Rich and Affluent</p>
+                            <p className="relative text-sm text-ash pl-[30px] mb-4">
+                                <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
+                                Al-based matching profile report for 10 matches Special Attention from Founder</p>
+                            <p className="relative text-sm text-ash pl-[30px] mb-4">
+                                <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
+                                AI based matching report (10 matches) & support</p>
+                            <p className="relative text-sm text-ash pl-[30px] mb-4">
+                                <FaCheck className="absolute top-0.5 left-[-0px] text-[14px] text-checkGreen bg-[#ffffff1a] w-[20px] h-[20px] p-1  rounded-full" />
+                                Special attention from Founder</p>
+                        </div>
                         <button
                             onClick={handleContactClick}
 

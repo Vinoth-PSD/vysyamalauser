@@ -159,8 +159,6 @@ function AppContent({ token }: AppContentProps) {
         <Route path="/ProfileNotFound" element={<ProfileNotFound />} />
         <Route path="/ProfileImage" element={<ImagePage />} />
         <Route path="/BasicInfoPdf" element={<BasicInfoPdf />} />
-
-
       </Route>
 
 

@@ -93,11 +93,13 @@ export const PayNow: React.FC = () => {
     try {
       const amountInPaise = totalAmount;
       const plan_id = sessionStorage.getItem("plan_id"); // Get cur_plan_id
+       const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
         amountInPaise,
         String(profile_id),
-        Number(plan_id)
+        Number(plan_id),
+        addonPackageIdsString
       );
 
       if (orderResponse && orderResponse.order && orderResponse.order.id) {
@@ -179,7 +181,7 @@ export const PayNow: React.FC = () => {
   const Save_plan_package = async () => {
     try {
       const addonPackageIdsString = selectedPackageIds.join(",");
-      const plan_id = sessionStorage.getItem("plan_id"); // Get cur_plan_id
+      const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
       //console.log("plan_id", plan_id);
       //console.log("addonPackageIdsString", addonPackageIdsString);
       //console.log("totalAmount", totalAmount);

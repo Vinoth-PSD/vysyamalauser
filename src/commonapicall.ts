@@ -237,14 +237,15 @@ export const searchBeforeLoging = async () => {
   }
 };
 
-export const createOrder = async (amount: number, profileID:string, planID:number) => {
+export const createOrder = async (amount: number, profileID:string, planID:number, AddonPackageID:string) => {
   try {
     
     // Sending the POST request with the required params
     const response = await apiClient.post('/auth/create-orderid/', {
       amount:amount,
       profile_id:profileID,
-      plan_id:planID
+      plan_id:planID,
+      addon_package_id : AddonPackageID
     });
 
     // Log the response data
@@ -261,7 +262,7 @@ export const createOrder = async (amount: number, profileID:string, planID:numbe
     console.error("Error creating order:", error.message || error);
 
     // Provide a user-friendly message only for actual errors
-    const errorMessage = error.response?.data?.message || "Unable to create order. Please try again later.";
+    const errorMessage = error.message || "Unable to create order. Please try again later.";
     throw new Error(errorMessage);
   }
 };
