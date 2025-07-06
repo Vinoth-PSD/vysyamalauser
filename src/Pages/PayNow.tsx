@@ -92,7 +92,7 @@ export const PayNow: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
-      const plan_id = sessionStorage.getItem("plan_id"); // Get cur_plan_id
+      const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
        const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
@@ -111,8 +111,8 @@ export const PayNow: React.FC = () => {
         NotifyError("Failed to create the order. Please try again.");
         throw new Error("Failed to create order.");
       }
-    } catch (error) {
-      NotifyError("Failed to create order. Please try again.");
+    } catch (error:any) {
+      NotifyError(error.message || "Failed to create order. Please try again.");
       console.error("Error creating order:", error);
       throw error;
     }
@@ -322,9 +322,9 @@ export const PayNow: React.FC = () => {
 
       // Open the Razorpay payment window
       rzp1.open();
-    } catch (error) {
+    } catch (error:any) {
       // Handle any error that occurred during the order creation or payment process
-      NotifyError("Failed to create order. Please try again.");
+      //NotifyError(error.message || "Failed to create order. Please try again.");
       console.error("Error creating order or opening Razorpay:", error);
     }
   };

@@ -258,12 +258,24 @@ export const createOrder = async (amount: number, profileID:string, planID:numbe
 
     // If successful, return the order details (response.data)
     return response.data; 
-  } catch (error: any) {
-    console.error("Error creating order:", error.message || error);
+//   } catch (error: any) {
+//     console.error("Error creating order:", error.message || error);
 
-    // Provide a user-friendly message only for actual errors
-    const errorMessage = error.message || "Unable to create order. Please try again later.";
-    throw new Error(errorMessage);
+//     // Provide a user-friendly message only for actual errors
+//     const errorMessage = error.message || "Unable to create order. Please try again later.";
+//     throw new Error(errorMessage);
+//   }
+// };
+  } catch (error: any) {
+    console.error("Error creating order:", error.response?.data?.error || error.message || error);
+
+    // Pass the backend error message to the caller
+    const backendError = error.response?.data?.error;
+    if (backendError) {
+      throw new Error(backendError);
+    } else {
+      throw new Error("Unable to create order. Please try again later.");
+    }
   }
 };
 

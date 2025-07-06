@@ -48,12 +48,15 @@ export const UpgradePayNow: React.FC = () => {
   const price = queryParams.get("price");
   const planName = queryParams.get("planName");
   //console.log("planName", planName);
+  if (id) {
+    localStorage.setItem("plan_id", id);
+  }
 
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<number[]>([]);
-  const [isPaymentSuccessful, setIsPaymentSuccessful] =useState<boolean>(false);
+  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState<boolean>(false);
 
-  const handleAddOnChange = (rate: number,checked: boolean,packageId: number) => {
+  const handleAddOnChange = (rate: number, checked: boolean, packageId: number) => {
     if (checked) {
       setSelectedValues([...selectedValues, rate]);
       setSelectedPackageIds([...selectedPackageIds, packageId]);
@@ -77,7 +80,7 @@ export const UpgradePayNow: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
-       const addonPackageIdsString = selectedPackageIds.join(",");
+      const addonPackageIdsString = selectedPackageIds.join(",");
       //const plan_id = sessionStorage.getItem("plan_id"); // Get cur_plan_id
 
       const orderResponse = await createOrder(
