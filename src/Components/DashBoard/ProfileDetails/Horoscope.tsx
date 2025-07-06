@@ -106,8 +106,8 @@ export const Horoscope = () => {
           setSelectedLagnamId(matchedLagnam.didi_id);
         }
 
-        setSelectedBirthStarId(data.personal_bthstar_id);
-        setSelectedRasiId(data.personal_bth_rasi_id);
+        setSelectedBirthStarId(data.personal_bthstar_id || "");
+        setSelectedRasiId(data.personal_bth_rasi_id || "");
         sessionStorage.setItem("formattedDatarasi", data.personal_rasi_katt);
         sessionStorage.setItem("formattedDatamsam", data.personal_amsa_katt);
       } catch (error) {
@@ -152,7 +152,7 @@ export const Horoscope = () => {
 
   useEffect(() => {
     const fetchRasis = async () => {
-      if (!selectedRasiId) return;
+      // if (!selectedRasiId) return;
 
       try {
         const response = await apiClient.post(
@@ -169,7 +169,7 @@ export const Horoscope = () => {
     };
 
     fetchRasis();
-  }, [selectedBirthStarId, selectedRasiId, refreshData]);
+  }, [selectedBirthStarId, refreshData]);
 
   const handleBirthStarChange = (
     event: React.ChangeEvent<HTMLSelectElement>
