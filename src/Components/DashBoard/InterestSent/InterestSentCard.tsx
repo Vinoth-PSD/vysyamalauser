@@ -19,7 +19,7 @@ import {
 // import MatchingScoreImg from "../../../assets/images/MatchingScore.png";
 import MatchingScore from "../ProfileDetails/MatchingScore";
 import Spinner from "../../Spinner";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
 // import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
@@ -35,17 +35,17 @@ export interface Profile {
   myint_profileid: string;
   myint_profile_age: number;
   myint_verified: number;
-  myint_height:number;
-  myint_star:string;
-  myint_profession:string;
-  myint_city:string;
-  myint_degree:string;
+  myint_height: number;
+  myint_star: string;
+  myint_profession: string;
+  myint_city: string;
+  myint_degree: string;
   myint_match_score?: number;
-  myint_views:number;
-  myint_lastvisit:string;
-  myint_userstatus:string;
-  myint_horoscope:string;
-  myint_profile_wishlist:number;
+  myint_views: number;
+  myint_lastvisit: string;
+  myint_userstatus: string;
+  myint_horoscope: string;
+  myint_profile_wishlist: number;
 }
 
 type InterestSentCardProps = {
@@ -76,67 +76,67 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
 
 
 
-   // Added state to capture the selected from_profile_id for messaging
-   const [, setSelectedFromProfileId] = useState<string | null>(null);
-   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
- 
- 
-   const handleMessage = async (fromProfileId: string) => {
-     try {
-       // First API call to Create_or_retrievechat
-       const response = await apiClient.post("/auth/Create_or_retrievechat/", {
-         profile_id: loginuser_profileId,
-         profile_to: fromProfileId, // Use the passed fromProfileId
-       });
- 
-   
-       if (response.data.statue === 1) {
-         const { room_id_name } = response.data;
-   
-         // Second API call to Get_user_chatlist
-         const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
-           profile_id: loginuser_profileId ,
-         });
-   
-         if (chatListResponse.data.status === 1) {
-           // Extract relevant profile data
-           const profileData = chatListResponse.data.data.find(
-             (item: { room_name_id: any; }) => item.room_name_id === room_id_name
-           );
-   
-           // Structure profileData with actual details from chatListResponse
-           const selectedProfileData = {
-             room_name_id: profileData.room_name_id,
-             profile_image: profileData.profile_image,
-             profile_user_name: profileData.profile_user_name,
-             profile_lastvist: profileData.profile_lastvist,
-           };
-   
-           // Save profile data with room ID to sessionStorage
-           sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
-           //console.log(selectedProfileData, "selectedProfileData");
-   
-           // Set state and navigate to messages page
-           setRoomId(room_id_name);
-           setIsRedirect(true);
-           navigate("/Messages");
-         } else {
-           console.error("Failed to fetch chat list:", chatListResponse.data.mesaage);
-         }
-       } else {
-         console.error("Failed to create chat room:", response.data.Message);
-       }
-     } catch (error) {
-       console.error("Error creating or fetching chat room:", error);
-     }
-   };
-   
- 
-   useEffect(() => {
-     if (isRedirect) {
-       window.location.href = `/messages/${roomId}/${userName}`;
-     }
-   }, [isRedirect, roomId, userName]);
+  // Added state to capture the selected from_profile_id for messaging
+  const [, setSelectedFromProfileId] = useState<string | null>(null);
+  ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
+
+
+  const handleMessage = async (fromProfileId: string) => {
+    try {
+      // First API call to Create_or_retrievechat
+      const response = await apiClient.post("/auth/Create_or_retrievechat/", {
+        profile_id: loginuser_profileId,
+        profile_to: fromProfileId, // Use the passed fromProfileId
+      });
+
+
+      if (response.data.statue === 1) {
+        const { room_id_name } = response.data;
+
+        // Second API call to Get_user_chatlist
+        const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
+          profile_id: loginuser_profileId,
+        });
+
+        if (chatListResponse.data.status === 1) {
+          // Extract relevant profile data
+          const profileData = chatListResponse.data.data.find(
+            (item: { room_name_id: any; }) => item.room_name_id === room_id_name
+          );
+
+          // Structure profileData with actual details from chatListResponse
+          const selectedProfileData = {
+            room_name_id: profileData.room_name_id,
+            profile_image: profileData.profile_image,
+            profile_user_name: profileData.profile_user_name,
+            profile_lastvist: profileData.profile_lastvist,
+          };
+
+          // Save profile data with room ID to sessionStorage
+          sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
+          //console.log(selectedProfileData, "selectedProfileData");
+
+          // Set state and navigate to messages page
+          setRoomId(room_id_name);
+          setIsRedirect(true);
+          navigate("/Messages");
+        } else {
+          console.error("Failed to fetch chat list:", chatListResponse.data.mesaage);
+        }
+      } else {
+        console.error("Failed to create chat room:", response.data.Message);
+      }
+    } catch (error) {
+      console.error("Error creating or fetching chat room:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    if (isRedirect) {
+      window.location.href = `/messages/${roomId}/${userName}`;
+    }
+  }, [isRedirect, roomId, userName]);
 
 
   // Fetch data from the API
@@ -154,7 +154,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
           {
             profile_id: loginuser_profileId,
             page_number: pageNumber,
-           
+
           }
         );
 
@@ -185,7 +185,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
     };
 
     fetchProfiles();
-  }, [loginuser_profileId,pageNumber]);
+  }, [loginuser_profileId, pageNumber]);
 
   if (loading) {
     return <Spinner />;
@@ -198,8 +198,8 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
   if (noData) {
     return (
       <div className="py-20">
-            <ProfileNotFound />
-          </div>
+        <ProfileNotFound />
+      </div>
     );
   }
 
@@ -223,7 +223,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
       );
       if (response.data.Status === 1) {
         toast.success("Profile added to wishlist!");
-   ////console.log("Profile added to wishlist!");
+        ////console.log("Profile added to wishlist!");
         setBookmarkedProfiles((prev) => [...prev, profileId]);
         sessionStorage.setItem(
           "bookmarkedProfiles",
@@ -249,7 +249,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
       );
       if (response.data.Status === 1) {
         toast.error("Profile removed from wishlist.");
-      ////console.log("Profile removed from wishlist.");
+        ////console.log("Profile removed from wishlist.");
         const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
         setBookmarkedProfiles(updatedBookmarks);
         sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
@@ -261,12 +261,61 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
     }
   };
 
-  const handleProfileClick = (profileId: string) => {
-      navigate(`/ProfileDetails?id=${profileId}&page=3`);
+  // const handleProfileClick = (profileId: string) => {
+  //   navigate(`/ProfileDetails?id=${profileId}&page=3`);
+  // };
+
+ const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  const handleProfileClick = async (profileId: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
+    try {
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
+        {
+          profile_id: loginuser_profileId,
+          user_profile_id: profileId,
+          page_id: page_id,
+        }
+      );
+
+      // Check for failure response
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        return;
+      }
+
+      // If successful, create profile visit and navigate
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+
+      await apiClient.post(
+        "/auth/Create_profile_visit/",
+        {
+          profile_id: loginuser_profileId,
+          viewed_profile: profileId,
+        }
+      );
+    } catch (error) {
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <div className="">
-            <ToastContainer  />
+      <ToastContainer />
 
       {profile.map((profile) => (
         <div
@@ -300,7 +349,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
                     className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                   />
                 )} */}
-                     {bookmarkedProfiles.includes(profile.myint_profileid) ? (
+                {bookmarkedProfiles.includes(profile.myint_profileid) ? (
                   <MdBookmark
                     onClick={(e) => {
                       e.stopPropagation();
@@ -324,11 +373,11 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
                 {/* Name & Profile ID */}
                 <div className="relative mb-2">
                   <div className="flex items-center">
-                    <h5 
-                     onClick={() =>
-                      handleProfileClick(profile.myint_profileid)
-                    }
-                    className="text-[20px] text-secondary font-semibold cursor-pointer">
+                    <h5
+                      onClick={() =>
+                        handleProfileClick(profile.myint_profileid)
+                      }
+                      className="text-[20px] text-secondary font-semibold cursor-pointer">
                       {profile.myint_profile_name}{" "}
                       <span className="text-sm text-ashSecondary">
                         ({profile.myint_profileid})
@@ -420,11 +469,11 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
 
                 {/* Message button */}
                 <button className="text-main text-sm font-medium flex items-center rounded-lg py-5 cursor-pointer"
-                
-                onClick={() => {
-                  setSelectedFromProfileId(profile.myint_profileid); // Set the selected profile ID
-                  handleMessage(profile.myint_profileid); // Pass the ID to the handler
-                }}
+
+                  onClick={() => {
+                    setSelectedFromProfileId(profile.myint_profileid); // Set the selected profile ID
+                    handleMessage(profile.myint_profileid); // Pass the ID to the handler
+                  }}
                 >
                   <MdMessage className="text-main text-[20px] mr-2" /> Message
                 </button>

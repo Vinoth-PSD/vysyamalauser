@@ -25,12 +25,18 @@ export const ContactView: React.FC = () => {
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const navigate = useNavigate();
 
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
     useEffect(() => {
         const fetchContactDetails = async () => {
           try {
             const response = await apiClient.post("/auth/Get_profile_det_match/", {
               profile_id: loginuser_profileId,
-              user_profile_id:id
+              user_profile_id:id,
+              page_id:page_id
             });
             //console.log("API Response:", response.data);
             // Accessing the contact_details property in the response data

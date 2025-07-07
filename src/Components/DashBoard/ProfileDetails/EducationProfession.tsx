@@ -32,7 +32,9 @@ interface EducationProfessionDetails {
   personal_work_pin: string;
   personal_career_plans: string;
   persoanl_field_ofstudy: string;
+  persoanl_field_ofstudy_name:string;
   persoanl_degree: string;
+  persoanl_degree_name:string;
   persoanl_edu_other: string;
 }
 interface EducationProfessionPayload {
@@ -1213,11 +1215,11 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                   {educationProfessionDetails.personal_edu_name}
                 </span>
               </h5>
-              {educationProfessionDetails.persoanl_field_ofstudy && (
+              {educationProfessionDetails.persoanl_field_ofstudy_name && (
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Field of Study:
                   <span className="font-normal">
-                    {educationProfessionDetails.persoanl_field_ofstudy}
+                    {educationProfessionDetails.persoanl_field_ofstudy_name}
                   </span>
                 </h5>
               )}
@@ -1225,7 +1227,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Specific Field:
                   <span className="font-normal">
-                    {educationProfessionDetails.persoanl_degree}
+                    {educationProfessionDetails.persoanl_degree_name}
                   </span>
                 </h5>
               )}

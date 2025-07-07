@@ -12,7 +12,7 @@ import {
 } from "react-icons/md";
 import { IoCalendar, IoEye, IoSchool } from "react-icons/io5";
 import { FaUser, FaSuitcase } from "react-icons/fa";
-import {  useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import MatchingScore from "../ProfileDetails/MatchingScore";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
@@ -190,8 +190,56 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   onBookmarkToggle,
 }) => {
   const navigate = useNavigate();
-  const handleProfileClick = (profileId: string) => {
-    navigate(`/ProfileDetails?id=${profileId}`);
+  // const handleProfileClick = (profileId: string) => {
+  //   navigate(`/ProfileDetails?id=${profileId}`);
+  // };
+
+ const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  const handleProfileClick = async (profileId: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
+    try {
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
+        {
+          profile_id: loginuser_profileId,
+          user_profile_id: profileId,
+          page_id: page_id,
+        }
+      );
+
+      // Check for failure response
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        return;
+      }
+
+      // If successful, create profile visit and navigate
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+
+      await apiClient.post(
+        "/auth/Create_profile_visit/",
+        {
+          profile_id: loginuser_profileId,
+          viewed_profile: profileId,
+        }
+      );
+    } catch (error) {
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

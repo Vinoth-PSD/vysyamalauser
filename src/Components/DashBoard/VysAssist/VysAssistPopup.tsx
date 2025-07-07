@@ -34,18 +34,24 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
         "No response from the opposite side"
     ];
 
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+        page_id = "1";
+    }
+
     const getProfileDetMatch = async () => {
         try {
             const formData = new FormData();
             formData.append('profile_id', loginuser_profileId as string);
             formData.append('user_profile_id', id as string);
+            formData.append('page_id', page_id as string);
 
             const response = await apiClient.post('/auth/Get_profile_det_match/', formData, {
                 headers: { 'Content-Type': "multipart/form-data" },
             });
 
             console.log(response.data.basic_details);
-        setVysassistEnable(response.data.basic_details.vysy_assist_enable);
+            setVysassistEnable(response.data.basic_details.vysy_assist_enable);
             setVysassits(response.data.basic_details.vys_assits)
             setData(response.data.basic_details.vys_list)
         } catch (error) {
@@ -187,7 +193,7 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
 
 
             {
-                VysassistEnable === 0 && vysassits === false && data === null &&(
+                VysassistEnable === 0 && vysassits === false && data === null && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={closePopup}>
                         <div className="bg-white w-[36rem] rounded-lg container mx-auto relative">
                             <div className="rounded-lg">

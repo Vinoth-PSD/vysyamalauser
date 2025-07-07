@@ -222,9 +222,15 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
 
   const fetchProfileData = useCallback(async () => {
     setLoading(true);
+
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
     try {
       if (profileId) {
-        const data = await fetchProfilesDetails(profileId);
+        const data = await fetchProfilesDetails(profileId, page_id);
         setUserImages(data.user_images);
         setError(null);
       }
@@ -252,7 +258,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
         );
 
         if (response.status === 200) {
-          const {  photo_protection } = response.data;
+          const { photo_protection } = response.data;
           sessionStorage.setItem(
             `userImages_${id}`,
             JSON.stringify(userImages)
@@ -327,7 +333,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
               arrows={false}
               dotsClass="slick-dots slick-thumb"
               infinite={true}
-          // autoplay={true}
+              // autoplay={true}
               speed={1400}
               slidesToShow={1}
               slidesToScroll={1}
@@ -337,13 +343,12 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
               {images.map((image, index) => (
                 <div
                   key={index}
-                  className={`profile-slider-img-container ${
-                    photoLock === 0 || PhotoPasswordlock === 0
+                  className={`profile-slider-img-container ${photoLock === 0 || PhotoPasswordlock === 0
                       ? ""
                       : !storedProtectedImg
-                      ? "fade-img-effect"
-                      : ""
-                  }`}
+                        ? "fade-img-effect"
+                        : ""
+                    }`}
                   onMouseEnter={() => handleMouseEnter(image)}
                   onMouseLeave={handleMouseLeave}
                 >

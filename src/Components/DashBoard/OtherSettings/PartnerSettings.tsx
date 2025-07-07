@@ -208,7 +208,7 @@ export const PartnerSettings: React.FC = () => {
         const selectedEducation = data.partner_edu_id
           .split(",")
           .map((id: string) => id.trim());
-        const selectedMaritalStatus = data.partner_edu_id
+        const selectedMaritalStatus = data.partner_marital_status
           .split(",")
           .map((id: string) => id.trim());
         const selectedProfession = data.partner_profe
@@ -598,7 +598,7 @@ export const PartnerSettings: React.FC = () => {
                // value={selectedAnnualIncomes[0] || ""} // Bind the first selected value
                 onChange={(e) => handleAnnualIncomeChange(e.target.value)} // Handle change
               >
-                <option value="" disabled>
+                <option value="">
                   Select min Annual Income
                 </option>
                 {incomeOptions.map((option) => (
@@ -624,7 +624,7 @@ export const PartnerSettings: React.FC = () => {
                   handleMaximumAnnualIncomeChange(e.target.value)
                 } // Handle change
               >
-                <option>Select max Annual Income</option>
+                <option value="">Select max Annual Income</option>
                 {incomeOptions.map((option) => (
                   <option key={option.id} value={option.id}>
                     {option.name}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
+
 interface CustomMessagePopupProps {
   setOpenCustomMsgShow: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenCustomMsg: (value: string) => void;

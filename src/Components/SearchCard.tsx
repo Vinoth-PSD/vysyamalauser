@@ -101,8 +101,8 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     }
   };
 
-     const isEmpty = !Array.isArray(searchvalues);
-  
+  const isEmpty = !Array.isArray(searchvalues);
+
 
   return (
     <div>

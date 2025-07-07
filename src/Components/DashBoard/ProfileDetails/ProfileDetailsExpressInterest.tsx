@@ -23,7 +23,7 @@ import MatchingScore from "./MatchingScore";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import CustomMessagePopUp from "./CustomMessagePopup";
-import {NotifySuccess,NotifyError} from "../../Toast/ToastNotification";
+import { NotifySuccess, NotifyError } from "../../Toast/ToastNotification";
 import { toast } from "react-toastify";
 import { PersonalNotesPopup } from "../PersonalNotes/PersonalNotesPopup";
 // import { Share } from "./Share";
@@ -119,7 +119,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   const interestParam = queryParams.get("interest");
   const idparam = queryParams.get("id") || "";
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
-  const custom_message = sessionStorage.getItem("custom_message");
+  const custom_message = localStorage.getItem("custom_message");
   const storedPlanId = sessionStorage.getItem("plan_id");
   ////console.log("vysya", storedPlanId);
   const navigate = useNavigate();
@@ -256,11 +256,27 @@ export const ProfileDetailsExpressInterest: React.FC<
 
     const fetchProfileData = async () => {
       try {
+
         const response = await apiClient.post(
           "/auth/Get_profile_det_match/",
           {
-            profile_id: loginuser_profileId, // Replace with the appropriate value or extract from route params if needed
+            profile_id: loginuser_profileId,
             user_profile_id: idparam,
+          }
+        );
+
+        // const response = await apiClient.post(
+        //   "/auth/Get_profile_det_match/",
+        //   {
+        //     profile_id: loginuser_profileId, // Replace with the appropriate value or extract from route params if needed
+        //     user_profile_id: idparam,
+        //   }
+        // );
+        await apiClient.post(
+          "/auth/Create_profile_visit/",
+          {
+            profile_id: loginuser_profileId,
+            viewed_profile: idparam,
           }
         );
         setProfileData(response.data);
@@ -445,6 +461,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const handleHeartMark = async () => {
     try {
+
       const response = await apiClient.post(
         "/auth/Send_profile_intrests/",
         {
@@ -620,6 +637,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   useEffect(() => {
     const fetchProfileData = async () => {
+
       try {
         const response = await apiClient.post('/auth/Get_prof_list_match/', {
           profile_id: loginuser_profileId,
@@ -686,7 +704,16 @@ export const ProfileDetailsExpressInterest: React.FC<
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
     // link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/My_horoscope_black/${idparam}`;
+    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/New_horoscope_black/${idparam}/${loginuser_profileId}/`;
+    // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.download = `pdf_${idparam}.pdf`; // Customize the file name
+    link.click();
+  };
+   const handleDownloadColorPdf = () => {
+    const link = document.createElement("a");
+    link.target = '_blank'; // Open in a new tab
+    // link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/New_horoscope_color/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -706,7 +733,13 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const handleViewPdf = () => {
     handleDownloadPdf();
-   // console.log(`Viewing PDF in ${selectedLanguage}`);
+    // console.log(`Viewing PDF in ${selectedLanguage}`);
+    // Add your logic to view the PDF in the selected language
+  };
+
+   const handleColorViewPdf = () => {
+    handleDownloadColorPdf();
+    // console.log(`Viewing PDF in ${selectedLanguage}`);
     // Add your logic to view the PDF in the selected language
   };
 
@@ -996,20 +1029,29 @@ export const ProfileDetailsExpressInterest: React.FC<
                     {interestParam !== "1" && status !== 2 && status !== 3 && loginuser_profileId && (
                       <div className="flex justify-start gap-4 items-end">
                         <button
-                          onClick={
-                            custom_message && !isHeartMarked
-                              ? openMsgPopUp
-                              : handleHeartMark
-                          }
+                          // onClick={
+                          //   custom_message && !isHeartMarked
+                          //     ? openMsgPopUp
+                          //     : handleHeartMark
+                          // }
+                          onClick={() => {
+                            if (custom_message && !isHeartMarked) {
+                              openMsgPopUp();
+                            } else {
+                              handleHeartMark();
+                            }
+                          }}
                           className="bg-gradient text-white flex items-center rounded-md px-5 py-3 cursor-pointer"
                         >
                           <FaHeart
                             className={`text-[22px] mr-2 ${isHeartMarked ? "text-red-500" : "text-gray-400"
                               }`}
                           />
-                          {isHeartMarked
-                            ? "Remove from Interest"
-                            : "Express Interest"}
+                          {
+                            isHeartMarked
+                              ? "Remove from Interest"
+                              : "Express Interest"
+                          }
 
                           {/* Toast Notifications */}
                         </button>
@@ -1183,7 +1225,7 @@ export const ProfileDetailsExpressInterest: React.FC<
                             </li>
                             <li
                               className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
-                              onClick={handleViewPdf}
+                              onClick={handleColorViewPdf}
                             >
                               Print PDF
                             </li>
@@ -1203,19 +1245,25 @@ export const ProfileDetailsExpressInterest: React.FC<
             <FeaturedProfiles />
             <VysyaBazaar />
             <SuggestedProfiles /> */}
-      {expressPopup && (
-        <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={apimsgExpressInt} />
-      )}
+      {
+        expressPopup && (
+          <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={apimsgExpressInt} />
+        )
+      }
 
-      {bookMarkPopup && (
-        <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={apimsgPhotoReq} />
-      )}
+      {
+        bookMarkPopup && (
+          <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={apimsgPhotoReq} />
+        )
+      }
 
 
-      {matchingScorePopup && (
-        <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={apimsgMatchingScore} />
-      )}
-    </div>
+      {
+        matchingScorePopup && (
+          <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={apimsgMatchingScore} />
+        )
+      }
+    </div >
   );
 };
 

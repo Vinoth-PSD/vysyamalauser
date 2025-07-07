@@ -30,13 +30,14 @@ export const fetchProfiles = async (
   }
 };
 
-export const fetchProfilesDetails = async (profileId: string): Promise<any> => {
+export const fetchProfilesDetails = async (profileId: string, PageID:string): Promise<any> => {
   try {
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
     const response = await apiClient.post("/auth/Get_profile_det_match/", {
       profile_id: loginuser_profileId,
       user_profile_id: profileId, // Adjust as needed based on your API requirements
+      Page_id:PageID,
     });
 
     // if (response.data.Status !== 1) {

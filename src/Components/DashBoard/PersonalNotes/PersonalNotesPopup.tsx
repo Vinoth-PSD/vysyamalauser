@@ -16,6 +16,11 @@ export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePop
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
+    
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
 
     // Fetch personal notes when the component mounts
     useEffect(() => {
@@ -23,7 +28,8 @@ export const PersonalNotesPopup: React.FC<PersonalNotesPopupProps> = ({ closePop
             try {
                 const response = await apiClient.post('/auth/Get_profile_det_match/', {
                     profile_id: loginuser_profileId,
-                    user_profile_id: id
+                    user_profile_id: id,
+                    page_id:page_id
                 });
 
                 const personalNotes = response.data.basic_details.personal_notes;

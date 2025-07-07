@@ -17,9 +17,11 @@ import {
   FaPersonArrowUpFromLine,
   FaSuitcase,
 } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
 import apiClient from "../../../API";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Define the profile and API response types
 interface Profile {
@@ -88,15 +90,63 @@ export const MyVisitorsCard = () => {
     fetchProfileData();
   }, [loginuser_profileId]);
 
-  const handleProfileClick = (profileId: string) => {
-    navigate(`/ProfileDetails?id=${profileId}&page=5`);
+  // const handleProfileClick = (profileId: string) => {
+  //   navigate(`/ProfileDetails?id=${profileId}&page=5`);
+  // };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  const handleProfileClick = async (profileId: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
+    try {
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
+        {
+          profile_id: loginuser_profileId,
+          user_profile_id: profileId,
+          page_id: page_id,
+        }
+      );
+
+      // Check for failure response
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        return;
+      }
+
+      // If successful, create profile visit and navigate
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+
+      await apiClient.post(
+        "/auth/Create_profile_visit/",
+        {
+          profile_id: loginuser_profileId,
+          viewed_profile: profileId,
+        }
+      );
+    } catch (error) {
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (profiles.length === 0) {
     return (
       <div className="py-20">
-            <ProfileNotFound />
-            </div>
+        <ProfileNotFound />
+      </div>
     );
   }
 

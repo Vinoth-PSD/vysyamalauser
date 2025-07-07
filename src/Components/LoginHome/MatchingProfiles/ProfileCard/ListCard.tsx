@@ -2,7 +2,6 @@
 
 
 import React, { useState, useContext, useEffect } from "react";
-import axios from "axios";
 import {
   MdVerifiedUser,
   // MdOutlineGrid3X3,
@@ -20,12 +19,13 @@ import {
 import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
 // import MatchingScoreImg from '../../../../assets/images/MatchingScore.png';
 import { ProfileContext, Profile } from "../../../../ProfileContext"; // Adjust the path as needed
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MatchingScore from "../../../DashBoard/ProfileDetails/MatchingScore";
 import Spinner from "../../../Spinner";
 import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 interface ListCardProps {
@@ -86,36 +86,43 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
   };
   const navigate = useNavigate();
 
-  const handleCardClick = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+  const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (isLoading) return;
+    setIsLoading(true);
     e.stopPropagation();
-    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
 
     try {
-      const response = await apiClient.post(
-        "/auth/Create_profile_visit/",
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
         {
           profile_id: loginuser_profileId,
-          viewed_profile: profile.profile_id,
+          user_profile_id: profile.profile_id,
+          page_id: page_id,
         }
       );
 
-      if (response.data.Status === 1) {
-        //console.log("Profile visit created successfully:", response.data);
-        navigate(`/ProfileDetails?id=${ profile.profile_id}&rasi=1`);
-      } else {
-        console.error("Failed to create profile visit:", response.statusText);
+      // Check for failure response
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        return;
       }
+
+      // If successful, create profile visit and navigate
+      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "Error creating profile visit:",
-          error.response ? error.response.data : error.message
-        );
-      } else {
-        console.error("Unexpected error:", error);
-      }
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -140,7 +147,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
     star,
     degree,
     profession,
-    location,
+    location: profile_location,
     matching_score,
     // user_profile_views,
     verified,
@@ -198,11 +205,15 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
           <div className="max-md:w-full">
             {/* {/ Name & Profile ID /} */}
             <div className="relative mb-2 max-md:w-full">
-              <Link to={`/ProfileDetails?id=${profile_id}&rasi=1`}>
+              {/* <Link to={`/ProfileDetails?id=${profile_id}&rasi=1`}> */}
                 <div className="flex items-center">
-                  <h5 className="text-[20px] text-secondary font-semibold cursor-pointer">
+                  <h5 
+                  onClick={handleCardClick}
+                  className="text-[20px] text-secondary font-semibold cursor-pointer">
                     {profile_name || "Unknown"}{" "}
-                    <span className="text-sm text-ashSecondary">
+                    <span 
+                    onClick={handleCardClick}
+                    className="text-sm text-ashSecondary">
                       ({profile_id || "N/A"})
                     </span>
                   </h5>
@@ -210,7 +221,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
                     <MdVerifiedUser className="ml-2 text-checkGreen text-[20px]" />
                   )}
                 </div>
-              </Link>
+              {/* </Link> */}
             </div>
 
             {/* {/ Years & Height /} */}
@@ -256,7 +267,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
             <div className="mb-[6px]">
               <p className="flex items-center text-sm text-ashSecondary font-normal">
                 <FaLocationDot className="mr-2" />
-                {location || "N/A"}
+                {profile_location || "N/A"}
               </p>
             </div>
 

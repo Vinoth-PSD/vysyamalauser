@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import ContentBlackCard from "../Components/RegistrationForm/ContentBlackCard";
 import InputField from "../Components/RegistrationForm/InputField";
@@ -240,14 +238,29 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
   }, [selectedCountryId, countryOptions]);
 
   const validateDaughterMobileNumber = (value: string) => {
-    const regex = /^\d{10}$/;
-    if (value && !regex.test(value)) {
+    if (!value) {
+      clearErrors("daughterMobileNumber");
+      return;
+    }
+
+    // Validate the actual input value length
+    if (value.length < 12) {
+      clearErrors("daughterMobileNumber"); // no error while typing
+    } else if (value.length === 12) {
+      const regex = /^\d{12}$/;
+      if (!regex.test(value)) {
+        setError("daughterMobileNumber", {
+          type: "manual",
+          message: "Mobile number must be exactly 10 digits",
+        });
+      } else {
+        clearErrors("daughterMobileNumber");
+      }
+    } else {
       setError("daughterMobileNumber", {
         type: "manual",
         message: "Mobile number must be exactly 10 digits",
       });
-    } else {
-      clearErrors("daughterMobileNumber");
     }
   };
 

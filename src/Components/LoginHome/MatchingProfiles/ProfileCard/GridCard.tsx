@@ -1,15 +1,16 @@
 
 import React, { useState, useContext, useEffect } from "react";
-
 import { IoCalendar } from "react-icons/io5";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { MdBookmark, MdBookmarkBorder, MdVerifiedUser } from "react-icons/md";
-import axios from "axios";
 import { ProfileContext, Profile } from "../../../../ProfileContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Spinner from "../../../Spinner";
 import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 // import { toast } from "react-toastify";
 
 
@@ -73,38 +74,92 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
 
   const navigate = useNavigate();
 
-  const handleCardClick = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+
+  // const handleCardClick = async (
+  //   e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  // ) => {
+  //   e.stopPropagation();
+  //   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+  //   try {
+  //     const response = await apiClient.post(
+  //       "/auth/Create_profile_visit/",
+  //       {
+  //         profile_id: loginuser_profileId,
+  //         viewed_profile: profile.profile_id,
+  //       }
+  //     );
+
+  //     if (response.data.Status === 1) {
+  //       navigate(`/ProfileDetails?id=${ profile.profile_id}&rasi=1`);
+  //       //console.log("Profile visit created successfully:", response.data);
+  //     } else {
+  //       console.error("Failed to create profile visit:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.error(
+  //         "Error creating profile visit:",
+  //         error.response ? error.response.data : error.message
+  //       );
+  //     } else {
+  //       console.error("Unexpected error:", error);
+  //     }
+  //   }
+  // };
+
+  // const handleCardClick = (
+  //   e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  // ) => {
+  //   e.stopPropagation();
+  //   navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`);
+  // };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+
+  // Updated handleCardClick in GridCard component
+  const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (isLoading) return;
+    setIsLoading(true);
     e.stopPropagation();
+
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
     try {
-      const response = await apiClient.post(
-        "/auth/Create_profile_visit/",
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
         {
           profile_id: loginuser_profileId,
-          viewed_profile: profile.profile_id,
+          user_profile_id: profile.profile_id,
+          page_id: page_id,
         }
       );
 
-      if (response.data.Status === 1) {
-        navigate(`/ProfileDetails?id=${ profile.profile_id}&rasi=1`);
-        //console.log("Profile visit created successfully:", response.data);
-      } else {
-        console.error("Failed to create profile visit:", response.statusText);
+      // Check for failure response
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        return;
       }
+
+      // If successful, create profile visit and navigate
+      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "Error creating profile visit:",
-          error.response ? error.response.data : error.message
-        );
-      } else {
-        console.error("Unexpected error:", error);
-      }
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+
+
 
   // useEffect(() => {
   //   window.scrollTo(0, 0);
@@ -162,24 +217,24 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
         )}
       </div>
 
-
-
-
-
       <div>
-        <Link to={`/ProfileDetails?id=${profile.profile_id}&rasi=1`}>
-          <div className="flex">
-            <h4 className="text-secondary text-[20px] font-semibold cursor-pointer mb-1">
-              {profile.profile_name}{" "}
-              <span className="text-sm text-ashSecondary font-semibold">
-                ({profile.profile_id})
-              </span>
-            </h4>
-            {profile.verified === 1 && (
-              <MdVerifiedUser className="ml-2 mt-2 text-checkGreen text-[20px]" />
-            )}
-          </div>
-        </Link>
+        {/* <Link to={`/ProfileDetails?id=${profile.profile_id}&rasi=1`}> */}
+        <div className="flex">
+          <h4
+            onClick={handleCardClick}
+            className="text-secondary text-[20px] font-semibold cursor-pointer mb-1">
+            {profile.profile_name}{" "}
+            <span
+              onClick={handleCardClick}
+              className="text-sm text-ashSecondary font-semibold">
+              ({profile.profile_id})
+            </span>
+          </h4>
+          {profile.verified === 1 && (
+            <MdVerifiedUser className="ml-2 mt-2 text-checkGreen text-[20px]" />
+          )}
+        </div>
+        {/* </Link> */}
 
         <div className="flex justify-between items-center">
           <p className="text-primary flex items-center">

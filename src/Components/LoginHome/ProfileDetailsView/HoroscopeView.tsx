@@ -36,6 +36,11 @@ export const HoroscopeView: React.FC = () => {
     const id = queryParams.get('id');
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
     useEffect(() => {
         const fetchHoroscopeDetails = async () => {
             //console.log("logggeddduser", loginuser_profileId);
@@ -43,7 +48,8 @@ export const HoroscopeView: React.FC = () => {
             try {
                 const response = await apiClient.post("/auth/Get_profile_det_match/", {
                     profile_id: loginuser_profileId,
-                    user_profile_id: id
+                    user_profile_id: id,
+                    page_id:page_id
                 });
 
                 //console.log("API Response:", response.data);

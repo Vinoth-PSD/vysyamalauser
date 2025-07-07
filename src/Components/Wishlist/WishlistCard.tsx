@@ -11,11 +11,13 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
 import { IoEye } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MatchingScore from "../DashBoard/ProfileDetails/MatchingScore";
 import { ProfileContext } from "../../ProfileContext";
 import { WhishlistNotFound } from "./WhishlistNotFound";
 import apiClient from "../../API";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Define the shape of your wishlist profile
 interface WishlistProfile {
@@ -29,23 +31,23 @@ interface WishlistProfile {
   wishlist_profile_age: number;
   wishlist_verified?: number;
   wishlist_match_score?: number;
-  wishlist_height:number;
-  wishlist_star:string;
-  wishlist_profession:string;
-  wishlist_degree:string;
-  wishlist_city:string;
-  wishlist_views:number;
-  wishlist_lastvisit:string;
-  wishlist_userstatus:string;
-  wishlist_horoscope:string;
-  wishlist_profile:number;
+  wishlist_height: number;
+  wishlist_star: string;
+  wishlist_profession: string;
+  wishlist_degree: string;
+  wishlist_city: string;
+  wishlist_views: number;
+  wishlist_lastvisit: string;
+  wishlist_userstatus: string;
+  wishlist_horoscope: string;
+  wishlist_profile: number;
 }
 interface WishlistCardProps {
   page: number;
-  perPage:number;
+  perPage: number;
 }
 
-export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
+export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
   const navigate = useNavigate();
 
   const context = useContext(ProfileContext);
@@ -69,8 +71,8 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
         "/auth/Get_profile_wishlist/",
         {
           profile_id: profileId,
-          page_number:page,
-           // Include the profile_id in the request body
+          page_number: page,
+          // Include the profile_id in the request body
         }
       );
 
@@ -82,12 +84,12 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
         console.log(response.data.data, "lllllllllllll");
         // Assuming you have a state to store the profiles
         setWishlistProfiles(response.data.data.profiles);
-         // Scroll to the top of the window
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // Optional: Adds smooth scrolling effect
-      });
-      
+        // Scroll to the top of the window
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth", // Optional: Adds smooth scrolling effect
+        });
+
       } else {
         console.error(
           "Failed to fetch wishlist profiles:",
@@ -110,8 +112,55 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
     }
   }, [page]);
 
-  const handleProfileClick = (profileId: string) => {
-    navigate(`/ProfileDetails?id=${profileId}&page=2`);
+  // const handleProfileClick = (profileId: string) => {
+  //   navigate(`/ProfileDetails?id=${profileId}&page=2`);
+  // };
+  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  const handleProfileClick = async (profileId: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+
+    let page_id = "2"; // Default
+    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+      page_id = "1";
+    }
+
+    try {
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
+        {
+          profile_id: loginuser_profileId,
+          user_profile_id: profileId,
+          page_id: page_id,
+        }
+      );
+
+      // Check for failure response
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        return;
+      }
+
+      // If successful, create profile visit and navigate
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+
+      await apiClient.post(
+        "/auth/Create_profile_visit/",
+        {
+          profile_id: loginuser_profileId,
+          viewed_profile: profileId,
+        }
+      );
+    } catch (error) {
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -119,7 +168,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
       <div>
         {wishlistProfiles.length === 0 ? (
           <div className="py-20">
-          <WhishlistNotFound />
+            <WhishlistNotFound />
           </div>
         ) : (
           <div>
@@ -155,7 +204,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
                           >
                             {profile.wishlist_profile_name}
                             <span className="text-sm text-ashSecondary">
-                              ({profile.wishlist_profileid })
+                              ({profile.wishlist_profileid})
                             </span>
                           </h5>
                           {profile.wishlist_verified === 1 && (
@@ -168,14 +217,14 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
                       <div className="flex items-center space-x-3 mb-2">
                         <p className="flex items-center text-sm text-primary font-normal">
                           <IoCalendar className="mr-2 text-primary" />
-                          {profile.wishlist_profile_age } yrs
+                          {profile.wishlist_profile_age} yrs
                         </p>
 
                         <p className="text-gray font-semibold">|</p>
 
                         <p className="flex items-center text-sm text-primary font-normal">
                           <FaPersonArrowUpFromLine className="mr-2 text-primary" />
-                          {profile.wishlist_height }
+                          {profile.wishlist_height}
                         </p>
                       </div>
 
@@ -199,7 +248,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
                       <div className="mb-2">
                         <p className="flex items-center text-sm text-primary font-normal">
                           <FaSuitcase className="mr-2 text-primary" />
-                          {profile.wishlist_profession }
+                          {profile.wishlist_profession}
                         </p>
                       </div>
 
@@ -207,7 +256,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
                       <div className="mb-2 ">
                         <p className="flex items-center text-sm text-primary font-normal ">
                           <FaLocationDot className="mr-2 text-primary" />
-                          {profile.wishlist_city }
+                          {profile.wishlist_city}
                         </p>
                       </div>
 
@@ -215,7 +264,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
                         {/* Horoscope Available */}
                         <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
-                            <MdOutlineGrid3X3 className="mr-2 text-primary" />  {profile.wishlist_horoscope }
+                            <MdOutlineGrid3X3 className="mr-2 text-primary" />  {profile.wishlist_horoscope}
                           </p>
                         </div>
 
@@ -236,7 +285,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page}) => {
                         {/* views */}
                         <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
-                            <IoEye className="mr-2 text-primary" /> {profile.wishlist_views } views
+                            <IoEye className="mr-2 text-primary" /> {profile.wishlist_views} views
                           </p>
                         </div>
                       </div>
