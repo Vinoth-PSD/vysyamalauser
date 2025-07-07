@@ -27,7 +27,7 @@ export const ThankYouReg = () => {
             </h1>
 
             <FaCheck className="w-full text-8xl text-[#00c96a] mb-5 max-sm:text-6xl" />
-            <p className="text-vysyamalaBlack">{Save_plan_package_message}</p>
+            {/* <p className="text-vysyamalaBlack">{Save_plan_package_message}</p> */}
 
             <p className="text-vysyamalaBlack">Thank you for Registering your profile in Vysyamala. Your Profile ID is <span className="text-main font-semibold">{profileid}</span>. Thanks a bunch for filling that out. It means a lot to us, just like you do! We really appreciate you giving us a moment of your time today. Thanks for being you. </p>
           </div>
