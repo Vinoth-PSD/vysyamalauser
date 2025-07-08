@@ -468,7 +468,7 @@ export const Header: React.FC = () => {
                           className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer w-fit"
                           onClick={handleLogout}
                         >
-                          Logout
+                          Logout 
                         </li>
                       ) : (
                         <li

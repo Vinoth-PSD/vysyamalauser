@@ -43,7 +43,7 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ dashBoardAgain }
                 <div className="flex items-center mb-5">
                     <IoArrowBackOutline onClick={dashBoardAgain} className="text-[24px] mr-2 cursor-pointer" />
                     <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold"> Vysassist Notes
-                        <span className="text-sm text-primary"> (05)</span>
+                        <span className="text-sm text-primary"> ({totalRecords})</span>
                     </h4>
                 </div>
 

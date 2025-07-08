@@ -69,6 +69,7 @@ export const MembershipPlan: React.FC = () => {
           response.data.data_message
         );
         sessionStorage.setItem("register_token", response.data.token);
+        localStorage.setItem("user_profile_image", response.data.profile_image);
         setTimeout(() => {
           navigate("/ThankYouReg");
         }, 2000);

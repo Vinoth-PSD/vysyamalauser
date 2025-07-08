@@ -194,6 +194,7 @@ export const UpgradePayNow: React.FC = () => {
             response.data_message
           );
           sessionStorage.setItem("register_token", response.token);
+          localStorage.setItem("user_profile_image", response.profile_image);
           //console.log("Save_plan_package", response);
 
           // Navigate to the next page
@@ -250,7 +251,8 @@ export const UpgradePayNow: React.FC = () => {
         key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
         amount: amountInPaise, // Amount in paise
         currency: "INR",
-        name: "Dhivya P", // Your company or name
+        name: "Vysyamala", // Your company or name
+        image: "https://vysyamaladev2025.blob.core.windows.net/vysyamala/VysyamalaLogo-i_e8O9Ou.png",
         description: "Purchase Credits",
         order_id: order_id, // The order_id from createOrder API
         handler: async function (response: {

@@ -332,6 +332,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         setUploadedIDProof(data.Profile_idproof || "");
         // Set the video URL from the API response
         setUrl(data.Video_url || ""); // Set the video URL in the state
+        
       }
     } catch (error) {
       console.error("Error fetching uploaded images:", error);

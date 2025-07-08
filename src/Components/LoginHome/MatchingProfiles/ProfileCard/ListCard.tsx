@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useContext, useEffect } from "react";
 import {
   MdVerifiedUser,
@@ -19,14 +16,14 @@ import {
 import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
 // import MatchingScoreImg from '../../../../assets/images/MatchingScore.png';
 import { ProfileContext, Profile } from "../../../../ProfileContext"; // Adjust the path as needed
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MatchingScore from "../../../DashBoard/ProfileDetails/MatchingScore";
 import Spinner from "../../../Spinner";
 import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
+import { Hearts } from "react-loader-spinner";
 
 interface ListCardProps {
   profile: Profile;
@@ -87,7 +84,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
+  //const location = useLocation();
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -95,10 +92,10 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
     setIsLoading(true);
     e.stopPropagation();
 
-    let page_id = "2"; // Default
-    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-      page_id = "1";
-    }
+    let page_id = "1"; // Default
+    // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+    //   page_id = "1";
+    // }
 
     try {
       const checkResponse = await apiClient.post(
@@ -159,6 +156,21 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
       className="flex justify-between items-start space-x-5 relative rounded-xl shadow-profileCardShadow p-6 mb-5 max-md:w-[400px] max-sm:w-[300px]"
       onClick={handleCardClick}
     >
+      {isLoading && (
+        <div className="absolute inset-0 z-20 flex flex-col justify-center items-center bg-white bg-opacity-80 rounded-xl">
+          <div className="flex flex-col items-center justify-center">
+            <Hearts
+              height="80"
+              width="80"
+              color="#FF6666"
+              ariaLabel="hearts-loading"
+              visible={true}
+            />
+            <p className="mt-2 text-sm text-primary">Please wait...</p>
+          </div>
+        </div>
+      )}
+
       <div className="w-full flex justify-between items-center max-md:flex-col">
         <div className="flex justify-between md:items-center space-x-5 max-md:flex-col max-md:w-full">
           {/* {/ Profile Image /} */}
@@ -206,21 +218,21 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
             {/* {/ Name & Profile ID /} */}
             <div className="relative mb-2 max-md:w-full">
               {/* <Link to={`/ProfileDetails?id=${profile_id}&rasi=1`}> */}
-                <div className="flex items-center">
-                  <h5 
+              <div className="flex items-center">
+                <h5
                   onClick={handleCardClick}
                   className="text-[20px] text-secondary font-semibold cursor-pointer">
-                    {profile_name || "Unknown"}{" "}
-                    <span 
+                  {profile_name || "Unknown"}{" "}
+                  <span
                     onClick={handleCardClick}
                     className="text-sm text-ashSecondary">
-                      ({profile_id || "N/A"})
-                    </span>
-                  </h5>
-                  {verified === 1 && (
-                    <MdVerifiedUser className="ml-2 text-checkGreen text-[20px]" />
-                  )}
-                </div>
+                    ({profile_id || "N/A"})
+                  </span>
+                </h5>
+                {verified === 1 && (
+                  <MdVerifiedUser className="ml-2 text-checkGreen text-[20px]" />
+                )}
+              </div>
               {/* </Link> */}
             </div>
 

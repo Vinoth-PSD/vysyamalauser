@@ -2,7 +2,7 @@
 
 
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MdVerifiedUser, MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
 import { ProfileContext, Profile } from "../../../../ProfileContext"; // Adjust the path as needed
@@ -16,6 +16,7 @@ import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 // import { toast } from "react-toastify";
 // import { ToastNotification } from "../../../Toast/ToastNotification";
 
@@ -25,7 +26,7 @@ interface GridListCardProps {
   profile: Profile;
 }
 
-export const GridListCard: React.FC<GridListCardProps> = ({  profile }) => {
+export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
   const context = useContext(ProfileContext);
 
   if (!context) {
@@ -135,17 +136,17 @@ export const GridListCard: React.FC<GridListCardProps> = ({  profile }) => {
 
 
   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
+  //const location = useLocation();
 
   const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (isLoading) return;
     setIsLoading(true);
     e.stopPropagation();
 
-    let page_id = "2"; // Default
-    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-      page_id = "1";
-    }
+    let page_id = "1"; // Default
+    // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+    //   page_id = "1";
+    // }
 
     try {
       const checkResponse = await apiClient.post(
@@ -185,6 +186,9 @@ export const GridListCard: React.FC<GridListCardProps> = ({  profile }) => {
   //   if(searchProfile){}
   // },[searchProfile])
 
+
+
+
   const {
     profile_img,
     profile_name,
@@ -204,6 +208,12 @@ export const GridListCard: React.FC<GridListCardProps> = ({  profile }) => {
       className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow px-4 py-[18px]  max-sm:w-fit max-sm:mx-auto "
       onClick={handleCardClick}
     >
+      {isLoading && (
+        <div className="absolute inset-0 bg-white bg-opacity-80 z-10 flex flex-col items-center justify-center rounded-xl">
+          <Hearts height="80" width="80" color="#FF6666" visible={true} />
+          <p className="text-sm mt-2 text-primary">Please wait...</p>
+        </div>
+      )}
 
 
       <div className="flex justify-between gap-x-4 max-sm:flex-col max-sm:w-full max-sm:gap-2">

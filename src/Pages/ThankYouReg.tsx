@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 export const ThankYouReg = () => {
-  const Save_plan_package_message = sessionStorage.getItem(
-    "Save_plan_package_message"
-  );
+  
+  // const Save_plan_package_message = sessionStorage.getItem(
+  //   "Save_plan_package_message"
+  // );
   const profileid = localStorage.getItem("profile_id_new") || "0"; // Default to "0" if not found
 
   const navigate = useNavigate();

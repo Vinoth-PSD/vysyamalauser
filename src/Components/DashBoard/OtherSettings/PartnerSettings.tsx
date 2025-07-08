@@ -45,15 +45,10 @@ const schema = z.object({
     .refine((val) => val.length > 0, {
       message: "The education field is required.",
     }),
-  profession: z
-    .array(z.string())
-    .nonempty("Please select at least one profession option."),
-
-  maritalstatus: z
-    .array(z.string())
-    .nonempty("Please select at least one maritalstatus option."),
+  profession: z.array(z.string()).nonempty("Please select at least one profession option."),
+  maritalstatus: z.array(z.string()).nonempty("Please select at least one maritalstatus option."),
   income: z.string().nonempty("Please select an min annual income."),
-  annualIncomemax: z.string().nonempty("please select an max annual income"),
+  annualIncomemax: z.string().nonempty("Please select an max annual income"),
   rahuKetuDhosam: z.string().nonempty("Please select Rahu/Ketu Dhosam option."),
   chevvaiDhosam: z.string().nonempty("Please select Chevvai Dhosam option."),
   foreignInterest: z
@@ -112,7 +107,7 @@ export const PartnerSettings: React.FC = () => {
   >([]); // Declare the state for prefilled values
   const [selectedAnnualIncomes, setSelectedAnnualIncomes] = useState<string[]>([]);
 
-//  //console.log("selectedAnnualIncomes other serttings", selectedAnnualIncomes);
+  //  //console.log("selectedAnnualIncomes other serttings", selectedAnnualIncomes);
 
   const [selectedMaxAnnualIncome, setSelectedMaxAnnualIncome] = useState<string[]>([]);
   // const [, setSelectedAnnualIncomesmax] = useState<string[]>(
@@ -126,10 +121,10 @@ export const PartnerSettings: React.FC = () => {
 
 
   useEffect(() => {
-  if (selectedAnnualIncomes[0]) {
-    setValue("income", selectedAnnualIncomes[0]);
-  }
-}, [selectedAnnualIncomes, setValue]);
+    if (selectedAnnualIncomes[0]) {
+      setValue("income", selectedAnnualIncomes[0]);
+    }
+  }, [selectedAnnualIncomes, setValue]);
 
 
   useEffect(() => {
@@ -183,7 +178,7 @@ export const PartnerSettings: React.FC = () => {
           id: item.marital_sts_id,
           name: item.marital_sts_name,
         }));
-       // //console.log("Get_Marital_Status", data);
+        // //console.log("Get_Marital_Status", data);
         setMaritalOptions(data);
       })
       .catch((error) => console.error("Error fetching marital data:", error));
@@ -200,8 +195,8 @@ export const PartnerSettings: React.FC = () => {
         ////console.log("Get_myprofile_partner", data);
         const prefilledStarRasiArray = data.partner_porutham_star_rasi
           ? data.partner_porutham_star_rasi
-              .split(",")
-              .map((item: string) => item.trim())
+            .split(",")
+            .map((item: string) => item.trim())
           : [];
         setPrefilledStarRasiArray(prefilledStarRasiArray);
         // Map the selected values for education, profession, and income
@@ -231,6 +226,9 @@ export const PartnerSettings: React.FC = () => {
 
         setSelectedAnnualIncomes(annualIncomeArray);
         setSelectedMaxAnnualIncome(annualIncomeArraymax);
+        if (annualIncomeArraymax[0]) {
+          setValue("annualIncomemax", annualIncomeArraymax[0]); // ✅ add this
+        }
         const selectedStarIdsFromApi = data.partner_porutham_ids
           .split(",")
           .map((id: string) => ({
@@ -339,7 +337,7 @@ export const PartnerSettings: React.FC = () => {
   ////console.log("storedBirthStar", storedBirthStar);
   const storedGender = localStorage.getItem("gender");
   const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
- // //console.log("storedRasi", storedRasi);
+  // //console.log("storedRasi", storedRasi);
   useEffect(() => {
     if (storedBirthStar && storedGender) {
       const fetchMatchingStars = async () => {
@@ -354,7 +352,7 @@ export const PartnerSettings: React.FC = () => {
             response.data
           ).map((matchCount: any) => matchCount);
           setMatchStars(matchCountArrays);
-         // //console.log("Response from server:", matchCountArrays);
+          // //console.log("Response from server:", matchCountArrays);
         } catch (error) {
           console.error("Error fetching matching star options:", error);
         }
@@ -595,7 +593,7 @@ export const PartnerSettings: React.FC = () => {
                 // id="annualIncome_min"
                 {...register("income")}
                 className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-               // value={selectedAnnualIncomes[0] || ""} // Bind the first selected value
+                // value={selectedAnnualIncomes[0] || ""} // Bind the first selected value
                 onChange={(e) => handleAnnualIncomeChange(e.target.value)} // Handle change
               >
                 <option value="">
@@ -607,11 +605,11 @@ export const PartnerSettings: React.FC = () => {
                   </option>
                 ))}
               </select>
-               <IoMdArrowDropdown />
+              <IoMdArrowDropdown />
               {errors.income && (
                 <span className="text-red-500">{errors.income.message}</span>
               )}
-             
+
             </div>
 
             <div className="relative w-full ">
@@ -620,8 +618,10 @@ export const PartnerSettings: React.FC = () => {
                 {...register("annualIncomemax")}
                 className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                 value={selectedMaxAnnualIncome[0] || ""} // Bind the selected value
-                onChange={(e) =>
-                  handleMaximumAnnualIncomeChange(e.target.value)
+                onChange={(e) => {
+                  setValue("annualIncomemax", e.target.value);
+                  handleMaximumAnnualIncomeChange(e.target.value);
+                }
                 } // Handle change
               >
                 <option value="">Select max Annual Income</option>

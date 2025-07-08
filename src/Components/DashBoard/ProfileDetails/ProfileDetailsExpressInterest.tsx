@@ -1006,7 +1006,8 @@ export const ProfileDetailsExpressInterest: React.FC<
                   </div>
 
                   {/* Matching Meter */}
-                  <div onClick={() => generatePoruthamPDF()} title="Click to download pdf" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
+                  <div onClick={() => generatePoruthamPDF()} title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
+                   {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
                     <MatchingScore
                       scorePercentage={profileData?.basic_details?.matching_score}
                     />

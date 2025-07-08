@@ -1,15 +1,15 @@
-
 import React, { useState, useContext, useEffect } from "react";
 import { IoCalendar } from "react-icons/io5";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { MdBookmark, MdBookmarkBorder, MdVerifiedUser } from "react-icons/md";
 import { ProfileContext, Profile } from "../../../../ProfileContext";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Spinner from "../../../Spinner";
 import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 // import { toast } from "react-toastify";
 
@@ -70,53 +70,10 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
     );
     setIsBookmarked(!isBookmarked);
   };
-
-
   const navigate = useNavigate();
 
-
-  // const handleCardClick = async (
-  //   e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  // ) => {
-  //   e.stopPropagation();
-  //   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
-
-  //   try {
-  //     const response = await apiClient.post(
-  //       "/auth/Create_profile_visit/",
-  //       {
-  //         profile_id: loginuser_profileId,
-  //         viewed_profile: profile.profile_id,
-  //       }
-  //     );
-
-  //     if (response.data.Status === 1) {
-  //       navigate(`/ProfileDetails?id=${ profile.profile_id}&rasi=1`);
-  //       //console.log("Profile visit created successfully:", response.data);
-  //     } else {
-  //       console.error("Failed to create profile visit:", response.statusText);
-  //     }
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error)) {
-  //       console.error(
-  //         "Error creating profile visit:",
-  //         error.response ? error.response.data : error.message
-  //       );
-  //     } else {
-  //       console.error("Unexpected error:", error);
-  //     }
-  //   }
-  // };
-
-  // const handleCardClick = (
-  //   e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  // ) => {
-  //   e.stopPropagation();
-  //   navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`);
-  // };
-
   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
+  //const location = useLocation();
 
 
   // Updated handleCardClick in GridCard component
@@ -127,10 +84,10 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
-    let page_id = "2"; // Default
-    if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-      page_id = "1";
-    }
+    let page_id = "1"; // Default
+    // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+    //   page_id = "1";
+    // }
 
     try {
       const checkResponse = await apiClient.post(
@@ -173,11 +130,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
       </div>
     );
 
-
-
   return (
-
-
     <div
       onClick={handleCardClick}
       className="relative sm:w-fit md:w-11/12 rounded-xl shadow-profileCardShadow px-3 py-3 mx-auto"
@@ -189,7 +142,12 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
           className="w-full rounded-[6px] mx-auto"
         />
       </div> */}
-
+      {isLoading && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+          <Hearts height="80" width="80" color="#FF6666" visible={true} />
+          <p className="mt-2 text-sm text-primary">Please wait...</p>
+        </div>
+      )}
 
       <div className="mb-3">
         {profile.photo_protection === 1 ? (

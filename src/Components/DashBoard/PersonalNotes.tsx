@@ -29,13 +29,13 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ dashBoardAgain }) 
                 profile_id: loginuser_profileId,
             }
         );
-        setTotalRecords(response.data.
-            personal_note_count)
+        setTotalRecords(response.data.personal_note_count)
         //console.log(response, "response")
     };
     useEffect(() => {
         fetchData();
     }, []);
+
     return (
         <div className="bg-grayBg pt-10">
             <div className="container mx-auto">
@@ -43,7 +43,7 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ dashBoardAgain }) 
                 <div className="flex items-center mb-5">
                     <IoArrowBackOutline onClick={dashBoardAgain} className="text-[24px] mr-2 cursor-pointer max-md:text-[18px]" />
                     <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold"> Personal Notes
-                        <span className="text-sm text-primary"> (05)</span>
+                        <span className="text-sm text-primary"> ({totalRecords})</span>
                     </h4>
                 </div>
 

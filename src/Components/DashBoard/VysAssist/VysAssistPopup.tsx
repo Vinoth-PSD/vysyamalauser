@@ -268,7 +268,8 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
                             <div className="">
                                 <div className="bg-white rounded-t-lg flex justify-between items-center border-b-[1px] border-ashBorder py-2 mb-2">
                                     <h4 className="text-[24px] text-primary font-bold">
-                                        VysAssist applied on 24th Dec 2024
+                                        {/* VysAssist applied on 24th Dec 2024 */}
+                                        VysAssist applied on {data?.[0]?.update_at ? formDate(data[0].update_at) : ""}
                                     </h4>
                                     <IoClose onClick={closePopup} className="text-[22px] text-primary cursor-pointer" />
                                 </div>
