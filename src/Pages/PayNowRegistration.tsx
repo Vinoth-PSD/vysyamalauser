@@ -43,7 +43,6 @@ export const PayNowRegistration: React.FC = () => {
   const price = queryParams.get("price");
   const profile_id = localStorage.getItem("profile_id_new");
   const planName = queryParams.get("planName");
-
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<number[]>([]);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState<boolean>(false);
@@ -51,6 +50,11 @@ export const PayNowRegistration: React.FC = () => {
   const [isGPayClicked, setIsGPayClicked] = useState(false);
   const [isOnlinePaymentClicked, setIsOnlinePaymentClicked] = useState(false);
   const [showGPayPopup, setShowGPayPopup] = useState(false);
+  useEffect(() => {
+    if (id) {
+      localStorage.setItem("userplanid", id);
+    }
+  }, [id]);
 
 
   const handleAddOnChange = (
@@ -86,7 +90,7 @@ export const PayNowRegistration: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
-       const addonPackageIdsString = selectedPackageIds.join(",");
+      const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
         amountInPaise,

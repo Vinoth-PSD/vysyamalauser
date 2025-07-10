@@ -22,6 +22,7 @@ import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFoun
 import apiClient from "../../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 // Define the profile and API response types
 interface Profile {
@@ -53,11 +54,11 @@ interface ApiResponse {
 
 export const MyVisitorsCard = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]); // Store multiple profiles
-  const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({});
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const location = useLocation();
 
   // Function to handle the bookmark toggle
   const handleBookmark = (profileId: string) => {
@@ -94,16 +95,13 @@ export const MyVisitorsCard = () => {
   //   navigate(`/ProfileDetails?id=${profileId}&page=5`);
   // };
 
-  const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
-
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
 
-    let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
       page_id = "1";
     }
@@ -118,27 +116,19 @@ export const MyVisitorsCard = () => {
         }
       );
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
         return;
       }
 
-      // If successful, create profile visit and navigate
+      // Navigate after validation
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setActiveProfileId(null); // reset loading
     }
   };
 
@@ -157,6 +147,12 @@ export const MyVisitorsCard = () => {
           key={profile.viwed_profileid}
           className="border-b-[1px] border-footer-text-gray mb-4"
         >
+          {activeProfileId === profile.viwed_profileid && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+              <Hearts height="80" width="80" color="#FF6666" visible={true} />
+              <p className="mt-2 text-sm text-primary">Please wait...</p>
+            </div>
+          )}
           <div className="flex justify-start items-center space-x-5 relative rounded-xl shadow-sm py-5">
             <div className="w-full flex justify-between items-center">
               <div className="flex justify-between items-start space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
@@ -245,7 +241,7 @@ export const MyVisitorsCard = () => {
                   </div>
 
                   {/* Tags */}
-                  <div className="hidden flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                  <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
                     <div>
                       <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                         <MdOutlineGrid3X3 className="mr-2 text-primary" />{" "}

@@ -17,6 +17,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
 import apiClient from "../../../API";
+import { Hearts } from "react-loader-spinner";
 // Define types for API response
 interface Profile {
   visited_profileid: string;
@@ -56,6 +57,9 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
   });
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const location = useLocation();
+
   useEffect(() => {
     // Fetch the data from the API
     apiClient
@@ -137,16 +141,14 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
   //   navigate(`/ProfileDetails?id=${profileId}&page=4`);
   // };
 
-   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
 
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
 
-    let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
       page_id = "1";
     }
@@ -161,27 +163,19 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
         }
       );
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
         return;
       }
 
-      // If successful, create profile visit and navigate
+      // Navigate after validation
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setActiveProfileId(null); // reset loading
     }
   };
 
@@ -194,6 +188,12 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
           key={profile.visited_profileid}
           className="flex justify-start items-center space-x-5 relative  py-5  border-b-[1px] border-ashSecondary rounded-none"
         >
+          {activeProfileId === profile.visited_profileid && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+              <Hearts height="80" width="80" color="#FF6666" visible={true} />
+              <p className="mt-2 text-sm text-primary">Please wait...</p>
+            </div>
+          )}
           <div className="w-full flex justify-between items-center">
             <div className="flex justify-between items-start space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
               {/* Profile Image */}

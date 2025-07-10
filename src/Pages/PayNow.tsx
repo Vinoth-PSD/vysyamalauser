@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { AddOns } from "../Components/PayNow/AddOns";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  cancelPayment,
-  createOrder,
-  Get_addon_packages,
-  savePlanPackage,
-  verifyPayment,
-} from "../commonapicall";
+import { cancelPayment, createOrder, Get_addon_packages, savePlanPackage, verifyPayment } from "../commonapicall";
 import axios from "axios";
-import {
-  ToastNotification,
-  NotifyError,
-  NotifySuccess,
-} from "../Components/Toast/ToastNotification";
+import { ToastNotification, NotifyError, NotifySuccess } from "../Components/Toast/ToastNotification";
 
 interface Package {
   package_id: number;
@@ -27,7 +17,6 @@ export const PayNow: React.FC = () => {
   // Destructure the state data passed via navigate
   const { packageName } = location.state || {};
   //console.log("packageName", packageName);
-
   const [membershipPlane, setMemberShipPlane] = useState<Package[]>([]);
   // const profile_id = localStorage.getItem("profile_id_new");
   const navigate = useNavigate();
@@ -52,10 +41,16 @@ export const PayNow: React.FC = () => {
   const price = queryParams.get("price");
   const profile_id = localStorage.getItem("profile_id_new");
   //const plan_id = sessionStorage.getItem("cur_plan_id"); // Get cur_plan_id
-
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<number[]>([]);
-  const [isPaymentSuccessful, setIsPaymentSuccessful] =useState<boolean>(false);
+  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState<boolean>(false);
+  const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
+  useEffect(() => {
+    if (plan_id) {
+      localStorage.setItem("userplanid", plan_id);
+    }
+  }, [plan_id]);
+
 
   const handleAddOnChange = (
     rate: number,
@@ -93,7 +88,7 @@ export const PayNow: React.FC = () => {
     try {
       const amountInPaise = totalAmount;
       const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
-       const addonPackageIdsString = selectedPackageIds.join(",");
+      const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
         amountInPaise,
@@ -111,7 +106,7 @@ export const PayNow: React.FC = () => {
         NotifyError("Failed to create the order. Please try again.");
         throw new Error("Failed to create order.");
       }
-    } catch (error:any) {
+    } catch (error: any) {
       NotifyError(error.message || "Failed to create order. Please try again.");
       console.error("Error creating order:", error);
       throw error;
@@ -193,7 +188,7 @@ export const PayNow: React.FC = () => {
         addonPackageIdsString,
         totalAmount
       );
-       
+
 
       // Log the full response to check its structure
       //console.log("Response from savePlanPackage:", response);
@@ -283,8 +278,8 @@ export const PayNow: React.FC = () => {
             response.razorpay_payment_id,
             response.razorpay_signature
           );
-           // Set the payment as successful
-        setIsPaymentSuccessful(true);
+          // Set the payment as successful
+          setIsPaymentSuccessful(true);
         },
         prefill: {
           name: "User", // User's name
@@ -311,7 +306,7 @@ export const PayNow: React.FC = () => {
               String(profile_id),
               response.error.metadata.order_id
             );
-           console.log("cancelResponse", cancelResponse);
+            console.log("cancelResponse", cancelResponse);
           } catch (error: any) {
             console.error(
               "Error during payment cancellation:",
@@ -324,7 +319,7 @@ export const PayNow: React.FC = () => {
 
       // Open the Razorpay payment window
       rzp1.open();
-    } catch (error:any) {
+    } catch (error: any) {
       // Handle any error that occurred during the order creation or payment process
       //NotifyError(error.message || "Failed to create order. Please try again.");
       console.error("Error creating order or opening Razorpay:", error);
@@ -391,7 +386,7 @@ export const PayNow: React.FC = () => {
             disabled={isPaymentSuccessful} // Disable if payment is successful
             style={{ cursor: isPaymentSuccessful ? 'not-allowed' : 'pointer' }} // Change cursor on disabled state
           >
-          {isPaymentSuccessful ? "Payment Successful" : "Pay Now"}
+            {isPaymentSuccessful ? "Payment Successful" : "Pay Now"}
           </button>
         </div>
       </div>

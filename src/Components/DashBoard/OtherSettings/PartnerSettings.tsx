@@ -93,6 +93,7 @@ export const PartnerSettings: React.FC = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<PartnerSettingsForm>({
     resolver: zodResolver(schema),
@@ -376,6 +377,78 @@ export const PartnerSettings: React.FC = () => {
     setSelectedMaxAnnualIncome([value]); // Ensure it's always a single value
   };
 
+
+
+  // Add these state variables at the top of your component
+const [selectAllEducation, setSelectAllEducation] = useState(false);
+const [selectAllMaritalStatus, setSelectAllMaritalStatus] = useState(false);
+const [selectAllProfession, setSelectAllProfession] = useState(false);
+
+// Add these handlers
+const handleSelectAllEducation = () => {
+  const newSelectAll = !selectAllEducation;
+  setSelectAllEducation(newSelectAll);
+  
+  if (newSelectAll) {
+    const allEducationIds = educationOptions.map(option => option.id);
+    setValue("education", allEducationIds as [string, ...string[]]);
+  } else {
+    setValue("education", [] as unknown as [string, ...string[]]);
+  }
+};
+
+const handleSelectAllMaritalStatus = () => {
+  const newSelectAll = !selectAllMaritalStatus;
+  setSelectAllMaritalStatus(newSelectAll);
+  
+  if (newSelectAll) {
+    const allMaritalIds = maritalOptions.map(option => option.id);
+    setValue("maritalstatus", allMaritalIds as [string, ...string[]]);
+  } else {
+    setValue("maritalstatus", [] as unknown as [string, ...string[]]);
+  }
+};
+
+const handleSelectAllProfession = () => {
+  const newSelectAll = !selectAllProfession;
+  setSelectAllProfession(newSelectAll);
+  
+  if (newSelectAll) {
+    const allProfessionIds = professionOptions.map(option => option.id);
+    setValue("profession", allProfessionIds as [string, ...string[]]);
+  } else {
+    setValue("profession", [] as unknown as [string, ...string[]]);
+  }
+};
+
+// Watch the form values to update the "select all" states
+const watchedEducation = watch("education");
+const watchedMaritalStatus = watch("maritalstatus");
+const watchedProfession = watch("profession");
+
+useEffect(() => {
+  setSelectAllEducation(
+    watchedEducation?.length === educationOptions.length && 
+    educationOptions.length > 0
+  );
+}, [watchedEducation, educationOptions]);
+
+useEffect(() => {
+  setSelectAllMaritalStatus(
+    watchedMaritalStatus?.length === maritalOptions.length && 
+    maritalOptions.length > 0
+  );
+}, [watchedMaritalStatus, maritalOptions]);
+
+useEffect(() => {
+  setSelectAllProfession(
+    watchedProfession?.length === professionOptions.length && 
+    professionOptions.length > 0
+  );
+}, [watchedProfession, professionOptions]);
+
+
+
   return (
     <div>
       <ToastNotification />
@@ -463,7 +536,7 @@ export const PartnerSettings: React.FC = () => {
         </div>
 
         {/* Maritalstatus */}
-        <div className="mb-5">
+        {/* <div className="mb-5">
           <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
             Marital Status
           </h4>
@@ -492,10 +565,56 @@ export const PartnerSettings: React.FC = () => {
                 {errors.maritalstatus.message}
               </span>
             )}
-        </div>
+        </div> */}
+
+<div className="mb-5">
+  <div className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      checked={selectAllMaritalStatus}
+      onChange={handleSelectAllMaritalStatus}
+      className="mr-2"
+    />
+    <h4 
+      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
+      onClick={handleSelectAllMaritalStatus}
+    >
+      Marital Status
+    </h4>
+  </div>
+  <div className="grid grid-cols-2 gap-4 justify-between items-center max-2xl:grid-cols-2 max-xl:grid-cols-2 max-sm:grid-cols-1">
+    {maritalOptions.map((option) => (
+      <div className="flex items-center mb-2 w-full" key={option.id}>
+        <input
+          type="checkbox"
+          id={`maritalstatus-${option.id}`}
+          value={option.id}
+          checked={watchedMaritalStatus?.includes(option.id) || false}
+          onChange={(e) => {
+            const newValue = e.target.checked
+              ? [...(watchedMaritalStatus || []), option.id]
+              : (watchedMaritalStatus || []).filter(id => id !== option.id);
+            setValue("maritalstatus", newValue as [string, ...string[]]);
+          }}
+          className="mr-2"
+        />
+        <label
+          htmlFor={`maritalstatus-${option.id}`}
+          className="text-[18px] text-primary font-normal block"
+        >
+          {option.name}
+        </label>
+      </div>
+    ))}
+  </div>
+  {errors.maritalstatus?.message &&
+    typeof errors.maritalstatus.message === "string" && (
+      <span className="text-red-500">{errors.maritalstatus.message}</span>
+  )}
+</div>
 
         {/* Education */}
-        <div className="mb-5">
+        {/* <div className="mb-5">
           <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
             Education
           </h4>
@@ -522,10 +641,58 @@ export const PartnerSettings: React.FC = () => {
             typeof errors.education.message === "string" && (
               <span className="text-red-500">{errors.education.message}</span>
             )}
-        </div>
+        </div> */}
+
+
+        <div className="mb-5">
+  <div className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      checked={selectAllEducation}
+      onChange={handleSelectAllEducation}
+      className="mr-2"
+    />
+    <h4 
+      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
+      onClick={handleSelectAllEducation}
+    >
+      Education
+    </h4>
+  </div>
+  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
+    {educationOptions.map((option) => (
+      <div className="flex items-center mb-2 w-full" key={option.id}>
+        <input
+          type="checkbox"
+          id={`education-${option.id}`}
+          value={option.id}
+          checked={watchedEducation?.includes(option.id) || false}
+          onChange={(e) => {
+            const newValue = e.target.checked
+              ? [...(watchedEducation || []), option.id]
+              : (watchedEducation || []).filter(id => id !== option.id);
+            setValue("education", newValue as [string, ...string[]]);
+          }}
+          className="mr-2"
+        />
+        <label
+          htmlFor={`education-${option.id}`}
+          className="text-[18px] text-primary font-normal block"
+        >
+          {option.name}
+        </label>
+      </div>
+    ))}
+  </div>
+  {errors.education?.message &&
+    typeof errors.education.message === "string" && (
+      <span className="text-red-500">{errors.education.message}</span>
+  )}
+</div>
+
 
         {/* Profession */}
-        <div className="mb-5">
+        {/* <div className="mb-5">
           <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
             Profession
           </h4>
@@ -552,7 +719,54 @@ export const PartnerSettings: React.FC = () => {
             typeof errors.profession.message === "string" && (
               <span className="text-red-500">{errors.profession.message}</span>
             )}
-        </div>
+        </div> */}
+
+
+        <div className="mb-5">
+  <div className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      checked={selectAllProfession}
+      onChange={handleSelectAllProfession}
+      className="mr-2"
+    />
+    <h4 
+      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
+      onClick={handleSelectAllProfession}
+    >
+      Profession
+    </h4>
+  </div>
+  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
+    {professionOptions.map((option) => (
+      <div className="flex items-center mb-2 w-full" key={option.id}>
+        <input
+          type="checkbox"
+          id={`profession-${option.id}`}
+          value={option.id}
+          checked={watchedProfession?.includes(option.id) || false}
+          onChange={(e) => {
+            const newValue = e.target.checked
+              ? [...(watchedProfession || []), option.id]
+              : (watchedProfession || []).filter(id => id !== option.id);
+            setValue("profession", newValue as [string, ...string[]]);
+          }}
+          className="mr-2"
+        />
+        <label
+          htmlFor={`profession-${option.id}`}
+          className="text-[18px] text-primary font-normal block"
+        >
+          {option.name}
+        </label>
+      </div>
+    ))}
+  </div>
+  {errors.profession?.message &&
+    typeof errors.profession.message === "string" && (
+      <span className="text-red-500">{errors.profession.message}</span>
+  )}
+</div>
 
         {/* Income */}
         {/* <div className="mb-5">

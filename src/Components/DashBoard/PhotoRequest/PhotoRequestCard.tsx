@@ -33,6 +33,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 interface PhotoRequestData {
   req_Profile_img: string;
@@ -76,86 +77,82 @@ const PhotoRequestCard = ({
   const [error, setError] = useState<string | null>(null);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [RejectMsg] = useState<string>("");
- // const [, setShowPhotoRequestNotesPopup] = useState<boolean>(false);
+  // const [, setShowPhotoRequestNotesPopup] = useState<boolean>(false);
 
   //const [showMessageButton, setShowMessageButton] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
- // const [requestHandled, setRequestHandled] = useState(false);
+  // const [requestHandled, setRequestHandled] = useState(false);
   const [showPhotoRequestPopup, setshowPhotoRequestPopup] = useState(false);
   //const [declineButtonVisible, setDeclineButtonVisible] = useState(true); // State to control the visibility of the Decline button
   ///const [responseMessage, setResponseMessage] = useState<string | null>(null);
 
-  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(
-    null
-  );
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
-  
+  // Added state to capture the selected from_profile_id for messaging
+  const [, setSelectedFromProfileId] = useState<string | null>(null);
+  ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const location = useLocation();
 
 
+  const handleMessage = async (fromProfileId: string) => {
+    try {
+      // First API call to Create_or_retrievechat
+      const response = await apiClient.post("/auth/Create_or_retrievechat/", {
+        profile_id: loginuser_profileId,
+        profile_to: fromProfileId, // Use the passed fromProfileId
+      });
 
-   // Added state to capture the selected from_profile_id for messaging
-   const [, setSelectedFromProfileId] = useState<string | null>(null);
-   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
- 
- 
-   const handleMessage = async (fromProfileId: string) => {
-     try {
-       // First API call to Create_or_retrievechat
-       const response = await apiClient.post("/auth/Create_or_retrievechat/", {
-         profile_id: loginuser_profileId,
-         profile_to: fromProfileId, // Use the passed fromProfileId
-       });
- 
-   
-       if (response.data.statue === 1) {
-         const { room_id_name } = response.data;
-   
-         // Second API call to Get_user_chatlist
-         const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
-           profile_id: loginuser_profileId,
-         });
-   
-         if (chatListResponse.data.status === 1) {
-           // Extract relevant profile data
-           const profileData = chatListResponse.data.data.find(
-             (item: { room_name_id: any; }) => item.room_name_id === room_id_name
-           );
-   
-           // Structure profileData with actual details from chatListResponse
-           const selectedProfileData = {
-             room_name_id: profileData.room_name_id,
-             profile_image: profileData.profile_image,
-             profile_user_name: profileData.profile_user_name,
-             profile_lastvist: profileData.profile_lastvist,
-           };
-   
-           // Save profile data with room ID to sessionStorage
-           sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
-           console.log(selectedProfileData, "selectedProfileData");
-   
-           // Set state and navigate to messages page
-           setRoomId(room_id_name);
-           setIsRedirect(true);
-           navigate("/Messages");
-         } else {
-           console.error("Failed to fetch chat list:", chatListResponse.data.mesaage);
-         }
-       } else {
-         console.error("Failed to create chat room:", response.data.Message);
-       }
-     } catch (error) {
-       console.error("Error creating or fetching chat room:", error);
-     }
-   };
-   
- 
-   useEffect(() => {
-     if (isRedirect) {
-       window.location.href = `/messages/${roomId}/${userName}`;
-     }
-   }, [isRedirect, roomId, userName]);
+
+      if (response.data.statue === 1) {
+        const { room_id_name } = response.data;
+
+        // Second API call to Get_user_chatlist
+        const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
+          profile_id: loginuser_profileId,
+        });
+
+        if (chatListResponse.data.status === 1) {
+          // Extract relevant profile data
+          const profileData = chatListResponse.data.data.find(
+            (item: { room_name_id: any; }) => item.room_name_id === room_id_name
+          );
+
+          // Structure profileData with actual details from chatListResponse
+          const selectedProfileData = {
+            room_name_id: profileData.room_name_id,
+            profile_image: profileData.profile_image,
+            profile_user_name: profileData.profile_user_name,
+            profile_lastvist: profileData.profile_lastvist,
+          };
+
+          // Save profile data with room ID to sessionStorage
+          sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
+          console.log(selectedProfileData, "selectedProfileData");
+
+          // Set state and navigate to messages page
+          setRoomId(room_id_name);
+          setIsRedirect(true);
+          navigate("/Messages");
+        } else {
+          console.error("Failed to fetch chat list:", chatListResponse.data.mesaage);
+        }
+      } else {
+        console.error("Failed to create chat room:", response.data.Message);
+      }
+    } catch (error) {
+      console.error("Error creating or fetching chat room:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    if (isRedirect) {
+      window.location.href = `/messages/${roomId}/${userName}`;
+    }
+  }, [isRedirect, roomId, userName]);
 
   useEffect(() => {
     const fetchPhotoRequests = async () => {
@@ -191,16 +188,16 @@ const PhotoRequestCard = ({
 
   //console.log(photoRequests, "ddddddddddddddd");
 
-  
+
 
   const handleUpdateInterest = async (status: string) => {
     const payload = {
       profile_id: loginuser_profileId,
       profile_from: data.req_profileid,
-      status: status === "2" ? "2" : "3", 
+      status: status === "2" ? "2" : "3",
       response_message: status === "3" ? RejectMsg : undefined,
     };
-  
+
     try {
       const response = await axios.post(Update_photo_request, payload);
       if (response.status === 200 && response.data.Status === 1) {
@@ -209,7 +206,7 @@ const PhotoRequestCard = ({
         } else {
           NotifyError("Photo request declined");
         }
-  
+
         setNewUPDatedData(!NewUpdatedData); // Trigger a refresh
       } else {
         NotifyError("Failed to update photo request");
@@ -229,10 +226,10 @@ const PhotoRequestCard = ({
     setshowPhotoRequestPopup(!showPhotoRequestPopup); // Toggle the popup
   };
 
-  
+
   const handleDeclineSubmit = async (message: string) => {
     if (!selectedProfileId) return;
-  
+
     try {
       const response = await axios.post(Update_photo_request, {
         profile_id: loginuser_profileId,
@@ -240,7 +237,7 @@ const PhotoRequestCard = ({
         status: "3",
         response_message: message,
       });
-  
+
       if (response.data.Status === 1) {
         setNewUPDatedData(!NewUpdatedData); // Trigger a refresh
       } else {
@@ -251,7 +248,7 @@ const PhotoRequestCard = ({
       alert("An error occurred while updating the photo request.");
     }
   };
-  
+
 
   if (loading) return <Spinner />;
   if (error) return <div>{error}</div>;
@@ -260,16 +257,13 @@ const PhotoRequestCard = ({
   //   navigate(`/ProfileDetails?id=${profileId}&page=6`);
   // };
 
-   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
-
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
 
-    let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
       page_id = "1";
     }
@@ -284,29 +278,23 @@ const PhotoRequestCard = ({
         }
       );
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
         return;
       }
 
-      // If successful, create profile visit and navigate
+      // Navigate after validation
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setActiveProfileId(null); // reset loading
     }
   };
+
+
   return (
     <div>
       <ToastNotification />
@@ -315,6 +303,12 @@ const PhotoRequestCard = ({
         key={data.req_profileid}
         className=""
       >
+        {activeProfileId === data.req_profileid && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+            <Hearts height="80" width="80" color="#FF6666" visible={true} />
+            <p className="mt-2 text-sm text-primary">Please wait...</p>
+          </div>
+        )}
         <div className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow   py-5">
           <div className="w-full flex justify-between items-center">
             <div className="flex justify-between items-center space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
@@ -323,6 +317,7 @@ const PhotoRequestCard = ({
                   src={data.req_Profile_img}
                   alt="Profile-image"
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
+                  onClick={() => handleProfileClick(data.req_profileid)} // ✅ Add this line
                 />
                 {isBookmarked ? (
                   <MdBookmark
@@ -403,7 +398,7 @@ const PhotoRequestCard = ({
                   </p>
                 </div>
 
-                <div className="hidden flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                       <MdOutlineGrid3X3 className="mr-2 text-primary" /> {data.req_horoscope}
@@ -490,10 +485,10 @@ const PhotoRequestCard = ({
                   {/* {showMessageButton && data.req_status === 2  ( */}
                   {data.req_status === 2 && (
                     <button className="text-main font-semibold flex items-center rounded-lg py-5 cursor-pointer"
-                    onClick={() => {
-                      setSelectedFromProfileId(data.req_profileid); // Set the selected profile ID
-                      handleMessage(data.req_profileid); // Pass the ID to the handler
-                    }}
+                      onClick={() => {
+                        setSelectedFromProfileId(data.req_profileid); // Set the selected profile ID
+                        handleMessage(data.req_profileid); // Pass the ID to the handler
+                      }}
 
 
                     >

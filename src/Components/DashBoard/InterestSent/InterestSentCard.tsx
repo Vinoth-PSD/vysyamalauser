@@ -1,32 +1,19 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
-import {
-  MdVerifiedUser,
-  MdBookmark,
-  MdBookmarkBorder,
-  MdStars,
-  MdOutlineGrid3X3,
-  MdMessage,
-} from "react-icons/md";
+import { MdVerifiedUser, MdBookmark, MdBookmarkBorder, MdStars, MdOutlineGrid3X3, MdMessage, } from "react-icons/md";
 import { IoCalendar, IoSchool, IoEye } from "react-icons/io5";
-import {
-  FaPersonArrowUpFromLine,
-  FaSuitcase,
-  FaLocationDot,
-  FaUser,
-} from "react-icons/fa6";
+import { FaPersonArrowUpFromLine, FaSuitcase, FaLocationDot, FaUser } from "react-icons/fa6";
 // import MatchingScoreImg from "../../../assets/images/MatchingScore.png";
 import MatchingScore from "../ProfileDetails/MatchingScore";
-import Spinner from "../../Spinner";
+// import Spinner from "../../Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
 // import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
 import apiClient from "../../../API";
-
-
+import { Hearts } from "react-loader-spinner";
 
 // Define the Profile interface
 export interface Profile {
@@ -73,13 +60,12 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
   const [roomId, setRoomId] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
-
-
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const location = useLocation();
 
   // Added state to capture the selected from_profile_id for messaging
-  const [, setSelectedFromProfileId] = useState<string | null>(null);
+  // const [, setSelectedFromProfileId] = useState<string | null>(null);
   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
-
 
   const handleMessage = async (fromProfileId: string) => {
     try {
@@ -138,7 +124,6 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
     }
   }, [isRedirect, roomId, userName]);
 
-
   // Fetch data from the API
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -147,7 +132,6 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
         setLoading(false);
         return;
       }
-
       try {
         const response = await apiClient.post(
           "/auth/My_intrests_list/",
@@ -157,7 +141,6 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
 
           }
         );
-
         // Check the response status
         if (response.data.Status === 1) {
           setProfiles(response.data.data.profiles);
@@ -183,12 +166,24 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
         setLoading(false);
       }
     };
-
     fetchProfiles();
   }, [loginuser_profileId, pageNumber]);
 
   if (loading) {
-    return <Spinner />;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -265,16 +260,15 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
   //   navigate(`/ProfileDetails?id=${profileId}&page=3`);
   // };
 
- const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
+
 
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
 
-    let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
       page_id = "1";
     }
@@ -289,29 +283,27 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
         }
       );
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
         return;
       }
 
-      // If successful, create profile visit and navigate
+      // Navigate after validation
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
 
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
+      // await apiClient.post("/auth/Create_profile_visit/", {
+      //   profile_id: loginuser_profileId,
+      //   viewed_profile: profileId,
+      // });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setActiveProfileId(null); // reset loading
     }
   };
+
 
   return (
     <div className="">
@@ -322,6 +314,13 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
           key={profile.myint_profileid}
           className="flex justify-start items-center space-x-5 relative rounded-xl py-5"
         >
+          {activeProfileId === profile.myint_profileid && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+              <Hearts height="80" width="80" color="#FF6666" visible={true} />
+              <p className="mt-2 text-sm text-primary">Please wait...</p>
+            </div>
+          )}
+
           <div className="w-full flex justify-between items-center">
             <div className="flex justify-between items-center space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
               {/* Profile Image */}
@@ -331,6 +330,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
                   alt="Profile-image"
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                 />
+
 
                 {/* {isBookmarked[profile.myint_profileid] ? (
                   <MdBookmark
@@ -469,9 +469,8 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
 
                 {/* Message button */}
                 <button className="text-main text-sm font-medium flex items-center rounded-lg py-5 cursor-pointer"
-
                   onClick={() => {
-                    setSelectedFromProfileId(profile.myint_profileid); // Set the selected profile ID
+                    //setSelectedFromProfileId(profile.myint_profileid); // Set the selected profile ID
                     handleMessage(profile.myint_profileid); // Pass the ID to the handler
                   }}
                 >

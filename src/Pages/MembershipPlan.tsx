@@ -50,8 +50,6 @@ export const MembershipPlan: React.FC = () => {
   // Handle "Skip for Free" action
   const handleSkipClick = async () => {
     try {
-
-
       const response = await apiClient.post(
         "/auth/Save_plan_package/",
         {
@@ -61,7 +59,6 @@ export const MembershipPlan: React.FC = () => {
           total_amount: 0,
         }
       );
-
       if (response.status === 200) {
         NotifySuccess("Plans and packages updated successfully");
         sessionStorage.setItem(
@@ -84,10 +81,7 @@ export const MembershipPlan: React.FC = () => {
     alert("Thanks for choosing Vysyamala Delight, our premium customer support executive will contact you shortly.")
     // toast.success('Thanks for choosing Vysyamala Delight, our premium customer support executive will contact you shortly.');
   };
-
-
-
-
+  
   return (
     <div className="bg-grayBg">
       <div className="container  mx-auto pt-32 pb-20 max-lg:pt-28 max-lg:pb-16 max-md:pt-24 max-md:pb-10 ">

@@ -55,6 +55,7 @@ export const ProfileVisibility: React.FC = () => {
   const {
     register,
     handleSubmit,
+    watch,
     setValue,
     formState: { errors },
   } = useForm<ProfileVisibilityForm>({
@@ -170,7 +171,83 @@ export const ProfileVisibility: React.FC = () => {
     }
   };
 
+  const [selectAllEducation, setSelectAllEducation] = useState(false);
+const [selectAllProfession, setSelectAllProfession] = useState(false);
+const [selectAllIncome, setSelectAllIncome] = useState(false);
+
+const watchedEducation = watch("education");
+const watchedProfession = watch("profession");
+const watchedIncome = watch("income");
   
+useEffect(() => {
+  setSelectAllEducation(watchedEducation?.length === educationOptions.length && educationOptions.length > 0);
+}, [watchedEducation, educationOptions]);
+
+useEffect(() => {
+  setSelectAllProfession(watchedProfession?.length === professionOptions.length && professionOptions.length > 0);
+}, [watchedProfession, professionOptions]);
+
+useEffect(() => {
+  setSelectAllIncome(watchedIncome?.length === incomeOptions.length && incomeOptions.length > 0);
+}, [watchedIncome, incomeOptions]);
+
+
+
+
+useEffect(() => {
+  setSelectAllEducation(watchedEducation?.length === educationOptions.length && educationOptions.length > 0);
+}, [watchedEducation, educationOptions]);
+
+useEffect(() => {
+  setSelectAllProfession(watchedProfession?.length === professionOptions.length && professionOptions.length > 0);
+}, [watchedProfession, professionOptions]);
+
+useEffect(() => {
+  setSelectAllIncome(watchedIncome?.length === incomeOptions.length && incomeOptions.length > 0);
+}, [watchedIncome, incomeOptions]);
+
+
+const handleSelectAllEducation = () => {
+  const newSelectAll = !selectAllEducation;
+  setSelectAllEducation(newSelectAll);
+  
+  if (newSelectAll) {
+    const allEducationIds = educationOptions.map(option => option.id);
+    if (allEducationIds.length > 0) {
+      setValue("education", allEducationIds as [string, ...string[]]);
+    }
+  } else {
+    setValue("education", [] as unknown as [string, ...string[]]);
+  }
+};
+
+const handleSelectAllProfession = () => {
+  const newSelectAll = !selectAllProfession;
+  setSelectAllProfession(newSelectAll);
+  
+  if (newSelectAll) {
+    const allProfessionIds = professionOptions.map(option => option.id);
+    if (allProfessionIds.length > 0) {
+      setValue("profession", allProfessionIds as [string, ...string[]]);
+    }
+  } else {
+    setValue("profession", [] as unknown as [string, ...string[]]);
+  }
+};
+
+const handleSelectAllIncome = () => {
+  const newSelectAll = !selectAllIncome;
+  setSelectAllIncome(newSelectAll);
+  
+  if (newSelectAll) {
+    const allIncomeIds = incomeOptions.map(option => option.id);
+    if (allIncomeIds.length > 0) {
+      setValue("income", allIncomeIds as [string, ...string[]]);
+    }
+  } else {
+    setValue("income", [] as unknown as [string, ...string[]]);
+  }
+};
   return (
     <div>
       <div>
@@ -273,8 +350,8 @@ export const ProfileVisibility: React.FC = () => {
           </div>
 
           {/* Education */}
-          <div className="mb-5">
-            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
+          {/* <div className="mb-5">
+            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px] cursor-pointer"   onClick={handleSelectAllEducation}>
               Education
             </h4>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -296,11 +373,56 @@ export const ProfileVisibility: React.FC = () => {
             {errors.education && (
               <span className="text-red-500">{errors.education.message}</span>
             )}
-          </div>
+          </div> */}
+
+
+          <div className="mb-5">
+  <div className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      checked={selectAllEducation}
+      onChange={handleSelectAllEducation}
+      className="mr-2"
+    />
+    <h4 
+      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
+      onClick={handleSelectAllEducation}
+    >
+      Education
+    </h4>
+  </div>
+  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
+    {educationOptions.map((option) => (
+      <div key={option.id} className="flex items-center mb-2 w-full">
+        <input
+          type="checkbox"
+          id={`education-${option.id}`}
+          value={option.id}
+          checked={watchedEducation?.includes(option.id) || false}
+          onChange={(e) => {
+            const currentValues = watchedEducation || [];
+            const newValue = e.target.checked
+              ? [...currentValues, option.id]
+              : currentValues.filter(id => id !== option.id);
+            
+            setValue("education", newValue as [string, ...string[]]);
+          }}
+          className="mr-2"
+        />
+        <label htmlFor={`education-${option.id}`} className="text-[20px] text-ash">
+          {option.name}
+        </label>
+      </div>
+    ))}
+  </div>
+  {errors.education && (
+    <span className="text-red-500">{errors.education.message}</span>
+  )}
+</div>
 
           {/* Profession */}
-          <div className="mb-5">
-            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
+          {/* <div className="mb-5">
+            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px] cursor-pointer"   onClick={handleSelectAllProfession}>
               Profession
             </h4>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -322,11 +444,54 @@ export const ProfileVisibility: React.FC = () => {
             {errors.profession && (
               <span className="text-red-500">{errors.profession.message}</span>
             )}
-          </div>
+          </div> */}
+<div className="mb-5">
+  <div className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      checked={selectAllProfession}
+      onChange={handleSelectAllProfession}
+      className="mr-2"
+    />
+    <h4 
+      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
+      onClick={handleSelectAllProfession}
+    >
+      Profession
+    </h4>
+  </div>
+  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
+    {professionOptions.map((option) => (
+      <div key={option.id} className="flex items-center mb-2 w-full">
+        <input
+          type="checkbox"
+          id={`profession-${option.id}`}
+          value={option.id}
+          checked={watchedProfession?.includes(option.id) || false}
+          onChange={(e) => {
+            const currentValues = watchedProfession || [];
+            const newValue = e.target.checked
+              ? [...currentValues, option.id]
+              : currentValues.filter(id => id !== option.id);
+            
+            setValue("profession", newValue as [string, ...string[]]);
+          }}
+          className="mr-2"
+        />
+        <label htmlFor={`profession-${option.id}`} className="text-[20px] text-ash">
+          {option.name}
+        </label>
+      </div>
+    ))}
+  </div>
+  {errors.profession && (
+    <span className="text-red-500">{errors.profession.message}</span>
+  )}
+</div>
 
           {/* Income */}
-          <div className="mb-5">
-            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
+          {/* <div className="mb-5">
+            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px] cursor-pointer" onClick={handleSelectAllIncome}>
               Annual Income
             </h4>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -348,7 +513,51 @@ export const ProfileVisibility: React.FC = () => {
             {errors.income && (
               <span className="text-red-500">{errors.income.message}</span>
             )}
-          </div>
+          </div> */}
+
+          <div className="mb-5">
+  <div className="flex items-center mb-2">
+    <input
+      type="checkbox"
+      checked={selectAllIncome}
+      onChange={handleSelectAllIncome}
+      className="mr-2"
+    />
+    <h4 
+      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
+      onClick={handleSelectAllIncome}
+    >
+      Annual Income
+    </h4>
+  </div>
+  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
+    {incomeOptions.map((option) => (
+      <div key={option.id} className="flex items-center mb-2 w-full">
+        <input
+          type="checkbox"
+          id={`income-${option.id}`}
+          value={option.id}
+          checked={watchedIncome?.includes(option.id) || false}
+          onChange={(e) => {
+            const currentValues = watchedIncome || [];
+            const newValue = e.target.checked
+              ? [...currentValues, option.id]
+              : currentValues.filter(id => id !== option.id);
+            
+            setValue("income", newValue as [string, ...string[]]);
+          }}
+          className="mr-2"
+        />
+        <label htmlFor={`income-${option.id}`} className="text-[20px] text-ash">
+          {option.name}
+        </label>
+      </div>
+    ))}
+  </div>
+  {errors.income && (
+    <span className="text-red-500">{errors.income.message}</span>
+  )}
+</div>
 
           {/* Rahu/Ketu Dhosam */}
           <div className="mb-5">

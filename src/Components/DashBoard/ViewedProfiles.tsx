@@ -82,7 +82,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                     </div> */}
                 </div>
 
-                {/* Interest Sent Card */}
+                {/* viewed profiles Card */}
                 {loading ? (
                     <div className='flex flex-col items-center justify-center min-h-[300px]'>
                         <Hearts

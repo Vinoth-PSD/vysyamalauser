@@ -22,6 +22,7 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
 }) => {
   // Corresponding Component State Declaration
   const [activeSection, setActiveSection] = useState<string>("AlertSettings");
+  const planID = localStorage.getItem("userplanid");
 
   const renderSection = () => {
     switch (activeSection) {
@@ -63,11 +64,10 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
               <ul className="w-full space-y-10 max-lg:flex max-lg:flex-row max-lg:flex-wrap max-lg:gap-x-10 max-lg:justify-between max-lg:space-y-0 max-lg:mb-8 max-md:gap-x-0 max-sm:flex-col max-sm:gap-0 max-sm:divide-y-[1px] max-sm:divide-ashBorder max-sm:w-full ">
                 <li
                   className={`flex items-center text-[20px] text-white cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
-                                 ${
-                                   activeSection === "AlertSettings"
-                                     ? "active"
-                                     : ""
-                                 }`}
+                                 ${activeSection === "AlertSettings"
+                      ? "active"
+                      : ""
+                    }`}
                   onClick={() => setActiveSection("AlertSettings")}
                 >
                   <FaBell className="text-[22px] mr-2 max-sm:text-base " />
@@ -76,9 +76,8 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
 
                 <li
                   className={`flex items-center text-[20px] text-white cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px]  
-                            ${
-                              activeSection === "PhotoSettings" ? "active" : ""
-                            }`}
+                            ${activeSection === "PhotoSettings" ? "active" : ""
+                    }`}
                   onClick={() => setActiveSection("PhotoSettings")}
                 >
                   <MdImage className="text-[22px] mr-2 max-sm:text-base " />
@@ -87,11 +86,10 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
 
                 <li
                   className={`flex items-center text-[20px] text-white cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
-                                 ${
-                                   activeSection === "PartnerSettings"
-                                     ? "active"
-                                     : ""
-                                 }`}
+                                 ${activeSection === "PartnerSettings"
+                      ? "active"
+                      : ""
+                    }`}
                   onClick={() => setActiveSection("PartnerSettings")}
                 >
                   <MdManageAccounts className="text-[22px] mr-2 max-sm:text-base " />
@@ -110,19 +108,18 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
                   <IoMdLock className="text-[22px] mr-2 max-sm:text-base " />
                   Change Password
                 </li> */}
-
-                <li
-                  className={`flex items-center text-[20px] text-white cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
-                                 ${
-                                   activeSection === "ProfileVisibility"
-                                     ? "active"
-                                     : ""
-                                 }`}
-                  onClick={() => setActiveSection("ProfileVisibility")}
-                >
-                  <BiSolidUserCircle className="text-[22px] mr-2 max-sm:text-base " />
-                  Profile Visibility
-                </li>
+                {planID !== "3" && (
+                  <li
+                    className={`flex items-center text-[20px] text-white cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
+                                 ${activeSection === "ProfileVisibility"
+                        ? "active"
+                        : ""
+                      }`}
+                    onClick={() => setActiveSection("ProfileVisibility")}
+                  >
+                    <BiSolidUserCircle className="text-[22px] mr-2 max-sm:text-base " />
+                    Profile Visibility
+                  </li>)}
               </ul>
             </div>
 

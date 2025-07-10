@@ -251,9 +251,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   // //console.log("valueeee", status);
   // console.log(idparam, "id");
   useEffect(() => {
-
     setLoading(true);
-
     const fetchProfileData = async () => {
       try {
 
@@ -672,14 +670,26 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // Personal Notes Popup
   const [showVysassist, setShowVysassist] = useState(false);
+
   // const navigate = useNavigate();
+  // const handleVysassistpopup = () => {
+  //   setShowVysassist(!showVysassist);
+  // };
   const handleVysassistpopup = () => {
-    setShowVysassist(!showVysassist);
+    try {
+      setLoading(true);
+      console.log("VysAssit LOading------------")
+      setShowVysassist(true);
+    } finally{
+      setLoading(false);
+    }
+   
   };
 
   const closeVysassistpopup = () => {
     setShowVysassist(false);
   };
+
 
   // const [isShareVisible, setIsShareVisible] = useState(false);
 
@@ -709,7 +719,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };
-   const handleDownloadColorPdf = () => {
+  const handleDownloadColorPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
     // link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
@@ -737,7 +747,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     // Add your logic to view the PDF in the selected language
   };
 
-   const handleColorViewPdf = () => {
+  const handleColorViewPdf = () => {
     handleDownloadColorPdf();
     // console.log(`Viewing PDF in ${selectedLanguage}`);
     // Add your logic to view the PDF in the selected language
@@ -746,6 +756,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   // if (loading) {
   //   return <div>Loading Divya...</div>;
   // }
+
+
 
   return (
     <div>
@@ -1006,8 +1018,8 @@ export const ProfileDetailsExpressInterest: React.FC<
                   </div>
 
                   {/* Matching Meter */}
-                  <div onClick={() => generatePoruthamPDF()} title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
-                   {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
+                  <div onClick={() => generatePoruthamPDF()} title="Matching Score pdf" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
+                    {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
                     <MatchingScore
                       scorePercentage={profileData?.basic_details?.matching_score}
                     />

@@ -6,6 +6,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
 import Pagination from "../Pagination";
 import apiClient from "../../API";
+import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
 
 interface DashBoardMyProfileProps {
   dashBoardAgain: () => void;
@@ -50,6 +51,8 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
     getPhotoRequest();
   }, [NewUpdatedData, pageNumber]);
 
+
+
   return (
     // <div className="ml-10">
     //   <div className="flex gap-4">
@@ -83,7 +86,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
         </div>
 
         {/* Personal Notes Card */}
-        <div>
+        {/* <div>
           {photoRequestData.map((requests) => (
             <PhotoRequestCard
               toptalPages={toptalPages}
@@ -93,8 +96,25 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
               data={requests}
             />
           ))}
+        </div> */}
+        <div>
+          {photoRequestData.length === 0 ? (
+            <div className="text-center text-gray-500 py-10 text-lg font-semibold">
+              <ProfileNotFound />
+            </div>
+          ) : (
+            photoRequestData.map((requests) => (
+              <PhotoRequestCard
+                toptalPages={toptalPages}
+                totalRecords={totalRecords}
+                NewUpdatedData={NewUpdatedData}
+                setNewUPDatedData={setNewUPDatedData}
+                data={requests}
+              />
+            ))
+          )}
         </div>
-        <div className="mb-10 max-md:mb-5"> 
+        <div className="mb-10 max-md:mb-5">
           <Pagination
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}

@@ -16,6 +16,9 @@ const CustomMessagePopup: React.FC<CustomMessagePopupProps> = ({
 }) => {
   const [message, setMessage] = useState<string>("");
   const [selectValue, setSelectValue] = useState<string>("");
+  const restrictedPlanIds = ["1", "2", "3", "14", "15", "17"];
+  const userPlanId = localStorage.getItem("userplanid");
+
 
   const handleSend = () => {
     setOpenCustomMsg(message);
@@ -53,7 +56,7 @@ const CustomMessagePopup: React.FC<CustomMessagePopupProps> = ({
             {/* Input Field */}
             <form>
               <div className="px-3 py-3">
-                {!selectValue && custom_message !== "0" && (
+                {!selectValue && custom_message !== "0" &&  !restrictedPlanIds.includes(userPlanId || "") && (
                   <div>
                     <textarea
                       name="message"

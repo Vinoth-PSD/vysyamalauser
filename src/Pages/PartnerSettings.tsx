@@ -705,6 +705,71 @@ const PartnerSettings: React.FC = () => {
   }, [maritalStatuses, selectedMaritalStatuses]);
 
 
+  const handleSelectAllMaritalStatus = () => {
+  // Check if all are already selected
+  const allSelected = maritalStatuses.every(status => 
+    selectedMaritalStatuses.includes(status.marital_sts_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedMaritalStatuses([]);
+  } else {
+    // Select all
+    const allIds = maritalStatuses.map(status => status.marital_sts_id.toString());
+    setSelectedMaritalStatuses(allIds);
+  }
+};
+
+const handleSelectAllProfessions = () => {
+  // Check if all are already selected
+  const allSelected = ProfPref.every(prof => 
+    selectedProfession.includes(prof.Profes_Pref_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedProfession([]);
+  } else {
+    // Select all
+    const allIds = ProfPref.map(prof => prof.Profes_Pref_id.toString());
+    setSelectedProfession(allIds);
+  }
+};
+
+const handleSelectAllEducation = () => {
+  // Check if all are already selected
+  const allSelected = eduPref.every(edu => 
+    selectedEducations.includes(edu.Edu_Pref_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedEducations([]);
+  } else {
+    // Select all
+    const allIds = eduPref.map(edu => edu.Edu_Pref_id.toString());
+    setSelectedEducations(allIds);
+  }
+};
+
+
+const handleSelectAllFieldOfStudy = () => {
+  // Check if all are already selected
+  const allSelected = fieldOfStudy.every(field => 
+    selectedFieldOfStudy.includes(field.study_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedFieldOfStudy([]);
+  } else {
+    // Select all
+    const allIds = fieldOfStudy.map(field => field.study_id.toString());
+    setSelectedFieldOfStudy(allIds);
+  }
+};
+
   return (
     <div className="mt-24 max-lg:mt-20">
       <ContentBlackCard
@@ -820,7 +885,7 @@ const PartnerSettings: React.FC = () => {
             {/* Marital Status */}
             {/* Marital Status */}
             <div>
-              <h5 className="text-[18px] text-primary font-semibold mb-5 block">
+              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer"  onClick={handleSelectAllMaritalStatus}>
                 Marital Status
               </h5>
               <div className="grid grid-cols-2 gap-4 justify-between items-center max-2xl:grid-cols-2 max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -863,7 +928,7 @@ const PartnerSettings: React.FC = () => {
             {/* Profession */}
             {/* Profession */}
             <div>
-              <h5 className="text-[18px] text-primary font-semibold mb-5 block">
+              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer"  onClick={handleSelectAllProfessions}>
                 Profession
               </h5>
               <div className="grid grid-cols-3 gap-4  max-2xl:grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -904,7 +969,7 @@ const PartnerSettings: React.FC = () => {
 
             {/* Education */}
             <div>
-              <label className="text-[18px] text-primary font-semibold mb-3 block">
+              <label className="text-[18px] text-primary font-semibold mb-3 block cursor-pointer"  onClick={handleSelectAllEducation}>
                 Education
               </label>
               <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -940,7 +1005,7 @@ const PartnerSettings: React.FC = () => {
 
             {/* field of study */}
             <div>
-              <label className="text-[18px] text-primary font-semibold mb-3 block">
+              <label className="text-[18px] text-primary font-semibold mb-3 block cursor-pointer" onClick={handleSelectAllFieldOfStudy}>
                 Field Of Study
               </label>
               <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">

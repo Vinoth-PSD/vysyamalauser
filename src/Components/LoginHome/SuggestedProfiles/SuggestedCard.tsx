@@ -90,10 +90,13 @@ import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import apiClient from "../../../API";
+import { Hearts } from "react-loader-spinner";
 
 interface SuggestedCardProps {
   profileImg?: string;
-  profile_name?:string;
+  profile_name?: string;
   profileId: string;
   age: string;
   height: string;
@@ -123,16 +126,47 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
     event.stopPropagation();
     setIsBookmarked(!isBookmarked);
   };
-  const navigate = useNavigate();
 
-  const handleProfileClick = () => {
-    navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+  const navigate = useNavigate();
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+
+  const handleProfileClick = async (profileId: string) => {
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
+
+    const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
+
+    try {
+      const checkResponse = await apiClient.post(
+        "/auth/Get_profile_det_match/",
+        {
+          profile_id: loginuser_profileId,
+          user_profile_id: profileId,
+          page_id: page_id,
+        }
+      );
+
+      if (checkResponse.data.status === "failure") {
+        toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
+        return;
+      }
+
+      // Navigate after validation
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+    } catch (error) {
+      toast.error("Error accessing profile.");
+      console.error("API Error:", error);
+    } finally {
+      setActiveProfileId(null); // reset loading
+    }
   };
   return (
     <div
       // onClick={handleCardClick}
       className="relative w-[90%] mx-auto !h-auto bg-white rounded-xl shadow-md px-3 py-3 my-5 cursor-pointer"
-      onClick={handleProfileClick}
+      onClick={() => handleProfileClick(profileId)}
     >
       <div className="mb-3 !h-auto ">
         {profileImg ? (
@@ -142,11 +176,19 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
             <span className="text-gray-500">No Image</span>
           </div>
         )}
+        {activeProfileId === profileId && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+            <Hearts height="80" width="80" color="#FF6666" visible={true} />
+            <p className="mt-2 text-sm text-primary">Please wait...</p>
+          </div>
+        )}
       </div>
       <div className="!h-auto">
-        <h4 className=" text-secondary text-[20px] font-semibold">
+        <h4
+          onClick={() => handleProfileClick(profileId)}
+          className=" text-secondary text-[20px] font-semibold">
           {/* Harini{" "} */}
-         ({profile_name})
+          ({profile_name})
           <span className="text-vysyamalaBlack text-[12px] font-normal">
             ({profileId})
           </span>

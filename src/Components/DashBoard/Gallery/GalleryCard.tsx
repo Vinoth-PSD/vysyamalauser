@@ -4,6 +4,7 @@ import apiClient from "../../../API";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 
 interface GalleryCardProps {
@@ -12,55 +13,34 @@ interface GalleryCardProps {
 
 
 const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
-
-  const navigate=useNavigate()
-
-  
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
+  const [loadingProfileId, setLoadingProfileId] = useState<string | null>(null);
   //const location = useLocation();
 
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (loadingProfileId) return;
+    setLoadingProfileId(profileId);
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
-    let page_id = "1"; // Default
-    // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-    //   page_id = "1";
-    // }
-
     try {
-      const checkResponse = await apiClient.post(
-        "/auth/Get_profile_det_match/",
-        {
-          profile_id: loginuser_profileId,
-          user_profile_id: profileId,
-          page_id: page_id,
-        }
-      );
+      const checkResponse = await apiClient.post("/auth/Get_profile_det_match/", {
+        profile_id: loginuser_profileId,
+        user_profile_id: profileId,
+        page_id: "1",
+      });
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
         return;
       }
 
-      // If successful, create profile visit and navigate
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setLoadingProfileId(null);
     }
   };
 
@@ -74,15 +54,21 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
               alt={`Gallery image ${profile.profile_id}`}
               className="w-full h-[350px] object-cover rounded-lg transition-transform transform duration-500 scale-100 group-hover:scale-105 object-top"
             />
-             <p className="mt-2 text-center">{profile.profile_id}</p>
+            <p className="mt-2 text-center">{profile.profile_id}</p>
+            {loadingProfileId === profile.profile_id && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-lg">
+              <Hearts height="80" width="80" color="#FF6666" visible={true} />
+              <p className="mt-2 text-sm text-primary">Please wait...</p>
+            </div>
+          )}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <button 
-              //onClick={()=> navigate(`/ProfileDetails?id=${profile.profile_id}`)} 
-              onClick={() => handleProfileClick(profile.profile_id)}
-              className="bg-white  text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+              <button
+                //onClick={()=> navigate(`/ProfileDetails?id=${profile.profile_id}`)} 
+                onClick={() => handleProfileClick(profile.profile_id)}
+                className="bg-white  text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
                 View
               </button>
-             
+
             </div>
           </div>
           // <div key={profile.profile_id} classNameName="p-4">

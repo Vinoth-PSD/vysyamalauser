@@ -15,6 +15,10 @@ import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 // import MatchingScoreImg from "../../../assets/images/MatchingScore.png";
 import MatchingScore from "../ProfileDetails/MatchingScore";
 import apiClient from "../../../API";
+import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 // Define the interface for the profile data
 interface ProfileData {
@@ -55,6 +59,9 @@ export const VysAssistCard: React.FC = () => {
     const [profiles, setProfiles] = useState<ProfileData[]>([]); // Store all profiles
     const [noVysassistFound, setNoVysassistFound] = useState(false); // Track if no vysassist is found
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    const navigate = useNavigate();
+    const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+    const location = useLocation();
 
     const handleBookmark = (profileId: string) => {
         setIsBookmarked(prevState => ({
@@ -82,13 +89,56 @@ export const VysAssistCard: React.FC = () => {
         fetchProfileData();
     }, []);
 
+    const handleProfileClick = async (profileId: string) => {
+        if (activeProfileId) return;
+        setActiveProfileId(profileId); // set the card that's loading
+
+        const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+        let page_id = "2";
+
+        if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+            page_id = "1";
+        }
+
+        try {
+            const checkResponse = await apiClient.post(
+                "/auth/Get_profile_det_match/",
+                {
+                    profile_id: loginuser_profileId,
+                    user_profile_id: profileId,
+                    page_id: page_id,
+                }
+            );
+
+            if (checkResponse.data.status === "failure") {
+                toast.error(checkResponse.data.message || "Limit reached to view profile");
+                setActiveProfileId(null);
+                return;
+            }
+            // Navigate after validation
+            navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+        } catch (error) {
+            toast.error("Error accessing profile.");
+            console.error("API Error:", error);
+        } finally {
+            setActiveProfileId(null); // reset loading
+        }
+    };
+
     return (
         <div className="space-y-5 rounded-xl shadow-profileCardShadow p-5 mb-5">
+
             {noVysassistFound ? (
                 <div>No Vysassist found for the given profile ID</div>
             ) : (
                 profiles.map(profile => (
                     <div key={profile.vys_profileid} className="flex justify-start items-center space-x-5 relative rounded-xl py-5">
+                        {activeProfileId === profile.vys_profileid && (
+                            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+                                <Hearts height="80" width="80" color="#FF6666" visible={true} />
+                                <p className="mt-2 text-sm text-primary">Please wait...</p>
+                            </div>
+                        )}
                         <div className="w-full flex justify-between items-center">
                             <div className="flex justify-between items-center space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
                                 {/* Profile Image */}
@@ -96,6 +146,7 @@ export const VysAssistCard: React.FC = () => {
                                     <img
                                         src={profile.vys_Profile_img || ProfileListImg}
                                         alt="Profile-image"
+                                        onClick={() => handleProfileClick(profile.vys_profileid)}
                                         className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                                     />
                                     {isBookmarked[profile.vys_profileid] ? (
@@ -115,7 +166,9 @@ export const VysAssistCard: React.FC = () => {
                                 <div>
                                     {/* Name & Profile ID */}
                                     <div className="relative mb-2">
-                                        <h5 className="flex gap-1    text-[20px] text-secondary font-semibold cursor-pointer">
+                                        <h5
+                                            onClick={() => handleProfileClick(profile.vys_profileid)}
+                                            className="flex gap-1    text-[20px] text-secondary font-semibold cursor-pointer">
                                             {profile.vys_profile_name}{" "}
                                             <span className="text-sm text-ashSecondary">
                                                 ({profile.vys_profileid})

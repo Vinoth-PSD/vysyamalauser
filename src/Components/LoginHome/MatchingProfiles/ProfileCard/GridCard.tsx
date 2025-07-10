@@ -88,7 +88,6 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
     // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
     //   page_id = "1";
     // }
-
     try {
       const checkResponse = await apiClient.post(
         "/auth/Get_profile_det_match/",
