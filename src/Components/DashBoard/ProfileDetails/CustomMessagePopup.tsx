@@ -56,7 +56,7 @@ const CustomMessagePopup: React.FC<CustomMessagePopupProps> = ({
             {/* Input Field */}
             <form>
               <div className="px-3 py-3">
-                {!selectValue && custom_message !== "0" &&  !restrictedPlanIds.includes(userPlanId || "") && (
+                {!selectValue && custom_message !== "0" &&  restrictedPlanIds.includes(userPlanId || "") && (
                   <div>
                     <textarea
                       name="message"
