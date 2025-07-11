@@ -1,5 +1,5 @@
+
 import React, { useEffect, useState } from "react";
-//import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -30,7 +30,11 @@ const schema = z.object({
     .nonempty("Please select at least one profession option."),
   income: z
     .array(z.string())
-    .nonempty("Please select at least one income option."),
+    .nonempty("Please select at least one income option.")
+    .refine(
+      (items) => items.join(",").length <= 50,
+      "Selected incomes exceed maximum length"
+    ),
   rahuKetuDhosam: z.string().nonempty("Please select Rahu/Ketu Dhosam option."),
   chevvaiDhosam: z.string().nonempty("Please select Chevvai Dhosam option."),
   foreignInterest: z
@@ -51,52 +55,45 @@ export const ProfileVisibility: React.FC = () => {
   const [educationOptions, setEducationOptions] = useState<Option[]>([]);
   const [professionOptions, setProfessionOptions] = useState<Option[]>([]);
   const [incomeOptions, setIncomeOptions] = useState<Option[]>([]);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ProfileVisibilityForm>({
     resolver: zodResolver(schema),
   });
 
+  // Watch the checkbox values
+  const educationValues = watch("education") || [];
+  const professionValues = watch("profession") || [];
+  const incomeValues = watch("income") || [];
+
   const fetchOptions = async () => {
     try {
-      const educationRes = await apiClient.post(
-        "/auth/Get_Highest_Education/"
-      );
-      /////console.log("Education Response:", educationRes.data); // Log to check structure
-
-      // Convert object to array using Object.values()
+      const educationRes = await apiClient.post("/auth/Get_Highest_Education/");
       setEducationOptions(
         Object.values(educationRes.data).map((item: any) => ({
-          id: item.education_id,
+          id: item.education_id.toString(),
           name: item.education_description,
         }))
       );
 
-      const professionRes = await apiClient.post(
-        "/auth/Get_Profes_Pref/"
-      );
-      ////console.log("Profession Response:", professionRes.data);
-
+      const professionRes = await apiClient.post("/auth/Get_Profes_Pref/");
       setProfessionOptions(
         Object.values(professionRes.data).map((item: any) => ({
-          id: item.Profes_Pref_id,
+          id: item.Profes_Pref_id.toString(),
           name: item.Profes_name,
         }))
       );
 
-      const incomeRes = await apiClient.post(
-        "/auth/Get_Annual_Income/"
-      );
-      ////console.log("Income Response:", incomeRes.data);
-
+      const incomeRes = await apiClient.post("/auth/Get_Annual_Income/");
       setIncomeOptions(
         Object.values(incomeRes.data).map((item: any) => ({
-          id: item.income_id,
+          id: item.income_id.toString(),
           name: item.income_description,
         }))
       );
@@ -118,16 +115,15 @@ export const ProfileVisibility: React.FC = () => {
           }
         );
         const profileData = profileRes.data.data[0];
-        ////console.log("Get_profile_visibility",profileRes)
 
         // Prefill form values
         setValue("ageFrom", profileData.visibility_age_from || "");
         setValue("ageTo", profileData.visibility_age_to || "");
         setValue("heightFrom", profileData.visibility_height_from || "");
         setValue("heightTo", profileData.visibility_height_to || "");
-        setValue("education", profileData.visibility_education.split(","));
-        setValue("profession", profileData.visibility_profession.split(","));
-        setValue("income", profileData.visibility_anual_income.split(","));
+        setValue("education", profileData.visibility_education?.split(",") || []);
+        setValue("profession", profileData.visibility_profession?.split(",") || []);
+        setValue("income", profileData.visibility_anual_income?.split(",") || []);
         setValue("rahuKetuDhosam", profileData.visibility_ragukethu || "");
         setValue("chevvaiDhosam", profileData.visibility_chevvai || "");
         setValue(
@@ -142,112 +138,69 @@ export const ProfileVisibility: React.FC = () => {
     fetchProfileData();
   }, [setValue]);
 
+  // Toggle all checkboxes in a section
+  const toggleAllCheckboxes = (
+    field: "education" | "profession" | "income",
+    options: Option[]
+  ) => {
+    const currentValues = watch(field) || [];
+    const allValues = options.map((opt) => opt.id);
+    
+    if (currentValues.length === allValues.length) {
+      setValue(field, [] as unknown as [string, ...string[]]);
+    } else {
+      setValue(field, allValues as [string, ...string[]]);
+    }
+  };
+
   const onSubmit = async (data: ProfileVisibilityForm) => {
-    const payload = {
-      profile_id: localStorage.getItem("loginuser_profile_id"),
-      visibility_age_from: data.ageFrom,
-      visibility_age_to: data.ageTo,
-      visibility_height_from: data.heightFrom,
-      visibility_height_to: data.heightTo,
-      visibility_education: data.education.join(","),
-      visibility_profession: data.profession.join(","),
-      visibility_anual_income: data.income.join(","),
-      visibility_ragukethu: data.rahuKetuDhosam,
-      visibility_chevvai: data.chevvaiDhosam,
-      visibility_foreign_interest: data.foreignInterest,
-      status: 1,
-    };
-//console.log(payload,"Update_profile_visibility")
     try {
+      // Log form data and errors to console
+      console.log("Form submission data:", data);
+      console.log("Form errors:", errors);
+
+      const payload = {
+        profile_id: localStorage.getItem("loginuser_profile_id"),
+        visibility_age_from: data.ageFrom,
+        visibility_age_to: data.ageTo,
+        visibility_height_from: data.heightFrom,
+        visibility_height_to: data.heightTo,
+        visibility_education: data.education.join(","),
+        visibility_profession: data.profession.join(","),
+        visibility_anual_income: data.income.join(","),
+        visibility_ragukethu: data.rahuKetuDhosam,
+        visibility_chevvai: data.chevvaiDhosam,
+        visibility_foreign_interest: data.foreignInterest,
+        status: 1,
+      };
+
+      console.log("API payload:", payload);
+
       const response = await apiClient.post(
         "/auth/Update_profile_visibility/",
         payload
       );
-      alert(response.data.message || "Profile visibility updated successfully");
-      NotifySuccess( "Profile visibility updated successfully");
-    } catch (error) {
-      console.error("Error updating profile visibility:", error);
-      NotifyError("Error updating profile visibility");
+      
+      console.log("API response:", response.data);
+      
+      NotifySuccess(response.data.message || "Profile visibility updated successfully");
+    } catch (error: any) {
+      console.error("API error:", error);
+      
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error status:", error.response.status);
+        console.error("Error headers:", error.response.headers);
+        
+        if (error.response.data) {
+          setFormErrors(error.response.data);
+        }
+      }
+      
+      NotifyError(error.response?.data?.message || "Error updating profile visibility");
     }
   };
 
-  const [selectAllEducation, setSelectAllEducation] = useState(false);
-const [selectAllProfession, setSelectAllProfession] = useState(false);
-const [selectAllIncome, setSelectAllIncome] = useState(false);
-
-const watchedEducation = watch("education");
-const watchedProfession = watch("profession");
-const watchedIncome = watch("income");
-  
-useEffect(() => {
-  setSelectAllEducation(watchedEducation?.length === educationOptions.length && educationOptions.length > 0);
-}, [watchedEducation, educationOptions]);
-
-useEffect(() => {
-  setSelectAllProfession(watchedProfession?.length === professionOptions.length && professionOptions.length > 0);
-}, [watchedProfession, professionOptions]);
-
-useEffect(() => {
-  setSelectAllIncome(watchedIncome?.length === incomeOptions.length && incomeOptions.length > 0);
-}, [watchedIncome, incomeOptions]);
-
-
-
-
-useEffect(() => {
-  setSelectAllEducation(watchedEducation?.length === educationOptions.length && educationOptions.length > 0);
-}, [watchedEducation, educationOptions]);
-
-useEffect(() => {
-  setSelectAllProfession(watchedProfession?.length === professionOptions.length && professionOptions.length > 0);
-}, [watchedProfession, professionOptions]);
-
-useEffect(() => {
-  setSelectAllIncome(watchedIncome?.length === incomeOptions.length && incomeOptions.length > 0);
-}, [watchedIncome, incomeOptions]);
-
-
-const handleSelectAllEducation = () => {
-  const newSelectAll = !selectAllEducation;
-  setSelectAllEducation(newSelectAll);
-  
-  if (newSelectAll) {
-    const allEducationIds = educationOptions.map(option => option.id);
-    if (allEducationIds.length > 0) {
-      setValue("education", allEducationIds as [string, ...string[]]);
-    }
-  } else {
-    setValue("education", [] as unknown as [string, ...string[]]);
-  }
-};
-
-const handleSelectAllProfession = () => {
-  const newSelectAll = !selectAllProfession;
-  setSelectAllProfession(newSelectAll);
-  
-  if (newSelectAll) {
-    const allProfessionIds = professionOptions.map(option => option.id);
-    if (allProfessionIds.length > 0) {
-      setValue("profession", allProfessionIds as [string, ...string[]]);
-    }
-  } else {
-    setValue("profession", [] as unknown as [string, ...string[]]);
-  }
-};
-
-const handleSelectAllIncome = () => {
-  const newSelectAll = !selectAllIncome;
-  setSelectAllIncome(newSelectAll);
-  
-  if (newSelectAll) {
-    const allIncomeIds = incomeOptions.map(option => option.id);
-    if (allIncomeIds.length > 0) {
-      setValue("income", allIncomeIds as [string, ...string[]]);
-    }
-  } else {
-    setValue("income", [] as unknown as [string, ...string[]]);
-  }
-};
   return (
     <div>
       <div>
@@ -255,8 +208,8 @@ const handleSelectAllIncome = () => {
           Profile Visibility
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-         
-          <div className="flex justify-between items-center mb-5 max-2xl:flex-col max-2xl:items-start">
+          {/* Age and Height sections remain the same as before */}
+            <div className="flex justify-between items-center mb-5 max-2xl:flex-col max-2xl:items-start">
             {/* Age */}
             <div className="flex justify-center items-end gap-2 max-sm:flex-col">
               <div className="w-full">
@@ -348,218 +301,133 @@ const handleSelectAllIncome = () => {
               </div>
             </div>
           </div>
-
           {/* Education */}
-          {/* <div className="mb-5">
-            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px] cursor-pointer"   onClick={handleSelectAllEducation}>
-              Education
-            </h4>
+          <div className="mb-5">
+            <div 
+              className="flex justify-between items-center mb-2 cursor-pointer"
+              onClick={() => toggleAllCheckboxes("education", educationOptions)}
+            >
+              <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                Education
+              </h4>
+              {/* <span className="text-sm text-blue-500">
+                {educationValues.length === educationOptions.length 
+                  ? "Unselect All" 
+                  : "Select All"}
+              </span> */}
+            </div>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
               {educationOptions.map((option) => (
-                <div
-                  key={option.id}
-                  className="flex items-center mb-2 w-full"
-                >
+                <div key={option.id} className="flex items-center mb-2 w-full">
                   <input
                     type="checkbox"
+                    id={`education-${option.id}`}
                     value={option.id}
                     {...register("education")}
+                    checked={educationValues.includes(option.id)}
                     className="mr-2"
                   />
-                  <label className="text-[20px] text-ash">{option.name}</label>
+                  <label 
+                    htmlFor={`education-${option.id}`}
+                    className="text-[20px] text-ash cursor-pointer"
+                  >
+                    {option.name}
+                  </label>
                 </div>
               ))}
             </div>
             {errors.education && (
               <span className="text-red-500">{errors.education.message}</span>
             )}
-          </div> */}
-
-
-          <div className="mb-5">
-  <div className="flex items-center mb-2">
-    <input
-      type="checkbox"
-      checked={selectAllEducation}
-      onChange={handleSelectAllEducation}
-      className="mr-2"
-    />
-    <h4 
-      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
-      onClick={handleSelectAllEducation}
-    >
-      Education
-    </h4>
-  </div>
-  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
-    {educationOptions.map((option) => (
-      <div key={option.id} className="flex items-center mb-2 w-full">
-        <input
-          type="checkbox"
-          id={`education-${option.id}`}
-          value={option.id}
-          checked={watchedEducation?.includes(option.id) || false}
-          onChange={(e) => {
-            const currentValues = watchedEducation || [];
-            const newValue = e.target.checked
-              ? [...currentValues, option.id]
-              : currentValues.filter(id => id !== option.id);
-            
-            setValue("education", newValue as [string, ...string[]]);
-          }}
-          className="mr-2"
-        />
-        <label htmlFor={`education-${option.id}`} className="text-[20px] text-ash">
-          {option.name}
-        </label>
-      </div>
-    ))}
-  </div>
-  {errors.education && (
-    <span className="text-red-500">{errors.education.message}</span>
-  )}
-</div>
+          </div>
 
           {/* Profession */}
-          {/* <div className="mb-5">
-            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px] cursor-pointer"   onClick={handleSelectAllProfession}>
-              Profession
-            </h4>
+          <div className="mb-5">
+            <div 
+              className="flex justify-between items-center mb-2 cursor-pointer"
+              onClick={() => toggleAllCheckboxes("profession", professionOptions)}
+            >
+              <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                Profession
+              </h4>
+              {/* <span className="text-sm text-blue-500">
+                {professionValues.length === professionOptions.length 
+                  ? "Unselect All" 
+                  : "Select All"}
+              </span> */}
+            </div>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
               {professionOptions.map((option) => (
-                <div
-                  key={option.id}
-                  className="flex items-center mb-2 w-full"
-                >
+                <div key={option.id} className="flex items-center mb-2 w-full">
                   <input
                     type="checkbox"
+                    id={`profession-${option.id}`}
                     value={option.id}
                     {...register("profession")}
+                    checked={professionValues.includes(option.id)}
                     className="mr-2"
                   />
-                  <label className="text-[20px] text-ash">{option.name}</label>
+                  <label 
+                    htmlFor={`profession-${option.id}`}
+                    className="text-[20px] text-ash cursor-pointer"
+                  >
+                    {option.name}
+                  </label>
                 </div>
               ))}
             </div>
             {errors.profession && (
               <span className="text-red-500">{errors.profession.message}</span>
             )}
-          </div> */}
-<div className="mb-5">
-  <div className="flex items-center mb-2">
-    <input
-      type="checkbox"
-      checked={selectAllProfession}
-      onChange={handleSelectAllProfession}
-      className="mr-2"
-    />
-    <h4 
-      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
-      onClick={handleSelectAllProfession}
-    >
-      Profession
-    </h4>
-  </div>
-  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
-    {professionOptions.map((option) => (
-      <div key={option.id} className="flex items-center mb-2 w-full">
-        <input
-          type="checkbox"
-          id={`profession-${option.id}`}
-          value={option.id}
-          checked={watchedProfession?.includes(option.id) || false}
-          onChange={(e) => {
-            const currentValues = watchedProfession || [];
-            const newValue = e.target.checked
-              ? [...currentValues, option.id]
-              : currentValues.filter(id => id !== option.id);
-            
-            setValue("profession", newValue as [string, ...string[]]);
-          }}
-          className="mr-2"
-        />
-        <label htmlFor={`profession-${option.id}`} className="text-[20px] text-ash">
-          {option.name}
-        </label>
-      </div>
-    ))}
-  </div>
-  {errors.profession && (
-    <span className="text-red-500">{errors.profession.message}</span>
-  )}
-</div>
+          </div>
 
           {/* Income */}
-          {/* <div className="mb-5">
-            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px] cursor-pointer" onClick={handleSelectAllIncome}>
-              Annual Income
-            </h4>
+          <div className="mb-5">
+            <div 
+              className="flex justify-between items-center mb-2 cursor-pointer"
+              onClick={() => toggleAllCheckboxes("income", incomeOptions)}
+            >
+              <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                Annual Income
+              </h4>
+              {/* <span className="text-sm text-blue-500">
+                {incomeValues.length === incomeOptions.length 
+                  ? "Unselect All" 
+                  : "Select All"}
+              </span> */}
+            </div>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
               {incomeOptions.map((option) => (
-                <div
-                  key={option.id}
-                  className="flex items-center mb-2 w-full"
-                >
+                <div key={option.id} className="flex items-center mb-2 w-full">
                   <input
                     type="checkbox"
+                    id={`income-${option.id}`}
                     value={option.id}
                     {...register("income")}
+                    checked={incomeValues.includes(option.id)}
                     className="mr-2"
                   />
-                  <label className="text-[20px] text-ash">{option.name}</label>
+                  <label 
+                    htmlFor={`income-${option.id}`}
+                    className="text-[20px] text-ash cursor-pointer"
+                  >
+                    {option.name}
+                  </label>
                 </div>
               ))}
             </div>
             {errors.income && (
               <span className="text-red-500">{errors.income.message}</span>
             )}
-          </div> */}
+            {formErrors.visibility_anual_income && (
+              <span className="text-red-500">
+                {formErrors.visibility_anual_income}
+              </span>
+            )}
+          </div>
 
-          <div className="mb-5">
-  <div className="flex items-center mb-2">
-    <input
-      type="checkbox"
-      checked={selectAllIncome}
-      onChange={handleSelectAllIncome}
-      className="mr-2"
-    />
-    <h4 
-      className="text-[20px] text-primary font-semibold max-md:text-[18px] cursor-pointer"
-      onClick={handleSelectAllIncome}
-    >
-      Annual Income
-    </h4>
-  </div>
-  <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
-    {incomeOptions.map((option) => (
-      <div key={option.id} className="flex items-center mb-2 w-full">
-        <input
-          type="checkbox"
-          id={`income-${option.id}`}
-          value={option.id}
-          checked={watchedIncome?.includes(option.id) || false}
-          onChange={(e) => {
-            const currentValues = watchedIncome || [];
-            const newValue = e.target.checked
-              ? [...currentValues, option.id]
-              : currentValues.filter(id => id !== option.id);
-            
-            setValue("income", newValue as [string, ...string[]]);
-          }}
-          className="mr-2"
-        />
-        <label htmlFor={`income-${option.id}`} className="text-[20px] text-ash">
-          {option.name}
-        </label>
-      </div>
-    ))}
-  </div>
-  {errors.income && (
-    <span className="text-red-500">{errors.income.message}</span>
-  )}
-</div>
-
-          {/* Rahu/Ketu Dhosam */}
+          {/* Rest of the form sections (radio buttons) remain the same */}
+ {/* Rahu/Ketu Dhosam */}
           <div className="mb-5">
             <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
               Rahu/Ketu Dhosam
@@ -663,7 +531,6 @@ const handleSelectAllIncome = () => {
               </span>
             )}
           </div>
-
           <div className="flex justify-end items-center space-x-5">
             <button
               type="submit"
