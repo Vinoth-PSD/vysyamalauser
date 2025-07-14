@@ -145,7 +145,7 @@ export const ProfileVisibility: React.FC = () => {
   ) => {
     const currentValues = watch(field) || [];
     const allValues = options.map((opt) => opt.id);
-    
+
     if (currentValues.length === allValues.length) {
       setValue(field, [] as unknown as [string, ...string[]]);
     } else {
@@ -180,26 +180,35 @@ export const ProfileVisibility: React.FC = () => {
         "/auth/Update_profile_visibility/",
         payload
       );
-      
+
       console.log("API response:", response.data);
-      
+
       NotifySuccess(response.data.message || "Profile visibility updated successfully");
     } catch (error: any) {
       console.error("API error:", error);
-      
+
       if (error.response) {
         console.error("Error response data:", error.response.data);
         console.error("Error status:", error.response.status);
         console.error("Error headers:", error.response.headers);
-        
+
         if (error.response.data) {
           setFormErrors(error.response.data);
         }
       }
-      
+
       NotifyError(error.response?.data?.message || "Error updating profile visibility");
     }
   };
+
+  const isAllEducationSelected = educationOptions.length > 0 &&
+    educationOptions.every((opt) => educationValues.includes(opt.id));
+
+  const isAllProfessionSelected = professionOptions.length > 0 &&
+    professionOptions.every((opt) => professionValues.includes(opt.id));
+
+      const isAllAnnualIncomeSelected = incomeOptions.length > 0 &&
+    incomeOptions.every((opt) => incomeValues.includes(opt.id));
 
   return (
     <div>
@@ -209,7 +218,7 @@ export const ProfileVisibility: React.FC = () => {
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Age and Height sections remain the same as before */}
-            <div className="flex justify-between items-center mb-5 max-2xl:flex-col max-2xl:items-start">
+          <div className="flex justify-between items-center mb-5 max-2xl:flex-col max-2xl:items-start">
             {/* Age */}
             <div className="flex justify-center items-end gap-2 max-sm:flex-col">
               <div className="w-full">
@@ -219,7 +228,7 @@ export const ProfileVisibility: React.FC = () => {
                 >
                   Age
                 </label>{" "}
-                
+
                 <input
                   type="text"
                   {...register("ageFrom")}
@@ -239,7 +248,7 @@ export const ProfileVisibility: React.FC = () => {
                 >
                   Age
                 </label>{" "}
-                
+
                 <input
                   type="text"
                   id="ageTo"
@@ -262,7 +271,7 @@ export const ProfileVisibility: React.FC = () => {
                 >
                   Height
                 </label>{" "}
-                
+
                 <input
                   type="text"
                   id="fromHeight"
@@ -284,7 +293,6 @@ export const ProfileVisibility: React.FC = () => {
                 >
                   Height
                 </label>{" "}
-                
                 <input
                   type="text"
                   // name="toHeight"
@@ -303,13 +311,25 @@ export const ProfileVisibility: React.FC = () => {
           </div>
           {/* Education */}
           <div className="mb-5">
-            <div 
+            <div
               className="flex justify-between items-center mb-2 cursor-pointer"
               onClick={() => toggleAllCheckboxes("education", educationOptions)}
             >
-              <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
-                Education
-              </h4>
+              <div className="flex items-center gap-x-2">
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                    toggleAllCheckboxes("education", educationOptions);
+                  }}
+                  checked={isAllEducationSelected}
+                  readOnly
+                  className="cursor-pointer"
+                />
+                <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                  Education
+                </h4>
+              </div>
               {/* <span className="text-sm text-blue-500">
                 {educationValues.length === educationOptions.length 
                   ? "Unselect All" 
@@ -327,7 +347,7 @@ export const ProfileVisibility: React.FC = () => {
                     checked={educationValues.includes(option.id)}
                     className="mr-2"
                   />
-                  <label 
+                  <label
                     htmlFor={`education-${option.id}`}
                     className="text-[20px] text-ash cursor-pointer"
                   >
@@ -343,18 +363,30 @@ export const ProfileVisibility: React.FC = () => {
 
           {/* Profession */}
           <div className="mb-5">
-            <div 
+            <div
               className="flex justify-between items-center mb-2 cursor-pointer"
               onClick={() => toggleAllCheckboxes("profession", professionOptions)}
             >
-              <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
-                Profession
-              </h4>
-              {/* <span className="text-sm text-blue-500">
+              <div className="flex items-center gap-x-2">
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                    toggleAllCheckboxes("profession", professionOptions);
+                  }}
+                  checked={isAllProfessionSelected}
+                  readOnly
+                  className="cursor-pointer"
+                />
+                <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                  Profession
+                </h4>
+                {/* <span className="text-sm text-blue-500">
                 {professionValues.length === professionOptions.length 
                   ? "Unselect All" 
                   : "Select All"}
               </span> */}
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
               {professionOptions.map((option) => (
@@ -367,7 +399,7 @@ export const ProfileVisibility: React.FC = () => {
                     checked={professionValues.includes(option.id)}
                     className="mr-2"
                   />
-                  <label 
+                  <label
                     htmlFor={`profession-${option.id}`}
                     className="text-[20px] text-ash cursor-pointer"
                   >
@@ -383,13 +415,25 @@ export const ProfileVisibility: React.FC = () => {
 
           {/* Income */}
           <div className="mb-5">
-            <div 
+            <div
               className="flex justify-between items-center mb-2 cursor-pointer"
               onClick={() => toggleAllCheckboxes("income", incomeOptions)}
             >
+                <div className="flex items-center gap-x-2">
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                    toggleAllCheckboxes("income", incomeOptions);
+                  }}
+                  checked={isAllAnnualIncomeSelected}
+                  readOnly
+                  className="cursor-pointer"
+                />
               <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
                 Annual Income
               </h4>
+              </div>
               {/* <span className="text-sm text-blue-500">
                 {incomeValues.length === incomeOptions.length 
                   ? "Unselect All" 
@@ -407,7 +451,7 @@ export const ProfileVisibility: React.FC = () => {
                     checked={incomeValues.includes(option.id)}
                     className="mr-2"
                   />
-                  <label 
+                  <label
                     htmlFor={`income-${option.id}`}
                     className="text-[20px] text-ash cursor-pointer"
                   >
@@ -427,7 +471,7 @@ export const ProfileVisibility: React.FC = () => {
           </div>
 
           {/* Rest of the form sections (radio buttons) remain the same */}
- {/* Rahu/Ketu Dhosam */}
+          {/* Rahu/Ketu Dhosam */}
           <div className="mb-5">
             <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
               Rahu/Ketu Dhosam

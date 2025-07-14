@@ -116,7 +116,7 @@ interface MatchingStarsProps {
     rasi: string,
     star: string
   ) => void;
-  
+
 }
 
 const MatchingStars: React.FC<MatchingStarsProps> = ({
@@ -137,16 +137,16 @@ const MatchingStars: React.FC<MatchingStarsProps> = ({
   // Handle select all/deselect all
   const handleSelectAll = () => {
     // Check if all are already selected
-    const allSelected = starAndRasi.every(item => 
-      selectedStarIds.some(selected => selected.id === item.id) && 
+    const allSelected = starAndRasi.every(item =>
+      selectedStarIds.some(selected => selected.id === item.id) &&
       !uncheckedDefaultIds.includes(item.id)
     );
-    
+
     if (allSelected) {
       // Deselect all
       const newUncheckedIds = starAndRasi.map(item => item.id);
       setUncheckedDefaultIds(newUncheckedIds);
-      const updatedIds = selectedStarIds.filter(item => 
+      const updatedIds = selectedStarIds.filter(item =>
         !starAndRasi.some(star => star.id === item.id)
       );
       onCheckboxChange(updatedIds, '', '');
@@ -190,21 +190,29 @@ const MatchingStars: React.FC<MatchingStarsProps> = ({
     sessionStorage.setItem("selectedStarIds", JSON.stringify(updatedIds));
   };
 
+  const isAllSelected = starAndRasi.every(item =>
+    selectedStarIds.some(selected => selected.id === item.id) &&
+    !uncheckedDefaultIds.includes(item.id)
+  );
+
   return (
     <div>
       <div className="my-5">
-        <h5 
-          className="text-[18px] text-ash font-semibold mb-2 cursor-pointer"
+
+        <h5
           onClick={handleSelectAll}
+          className="text-[18px] text-ash  font-semibold mb-2 cursor-pointer flex items-center"
         >
-          {initialPoruthas}
-          <span className="text-sm ml-2">
-            ({starAndRasi.every(item => 
-              selectedStarIds.some(selected => selected.id === item.id) && 
-              !uncheckedDefaultIds.includes(item.id)
-            ) })
-          </span>
+          <input
+            type="checkbox"
+            onChange={handleSelectAll}
+            checked={isAllSelected} // Optional: bind to selection state
+            className="cursor-pointer"
+          />
+          <span className="ml-2">{initialPoruthas}</span>
         </h5>
+
+        {/* Select All checkbox will be added in the next step */}
         <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
           {starAndRasi.map((item, index) => (
             <div key={item.id}>

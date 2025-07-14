@@ -1051,7 +1051,7 @@ export const PartnerSettings: React.FC = () => {
         const profile_id = localStorage.getItem("loginuser_profile_id");
         const response = await apiClient.post("/auth/Get_myprofile_partner/", { profile_id });
         const data = response.data.data;
-        
+
         // Prefill star/rasi data
         const prefilledStarRasiArray = data.partner_porutham_star_rasi
           ? data.partner_porutham_star_rasi.split(",").map((item: string) => item.trim())
@@ -1115,7 +1115,7 @@ export const PartnerSettings: React.FC = () => {
           const matchCountArrays: MatchingStar[][] = Object.values(response.data)
             .map((matchCount: any) => matchCount)
             .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
-          
+
           setMatchStars(matchCountArrays);
         } catch (error) {
           console.error("Error fetching matching star options:", error);
@@ -1139,7 +1139,7 @@ export const PartnerSettings: React.FC = () => {
   ) => {
     const currentValues = watch(field) || [];
     const allValues = options.map((opt) => opt.id);
-    
+
     if (currentValues.length === allValues.length) {
       setValue(field, [] as unknown as [string, ...string[]]);
     } else {
@@ -1169,15 +1169,15 @@ export const PartnerSettings: React.FC = () => {
       // Prepare star data
       const starArray = selectedStarIds.map((item) => item.id);
       const starRasiArray = selectedStarIds.map((item) => `${item.star}-${item.rasi}`);
-      
+
       // Combine pre-filled and new selections
       const combinedStarRasiArray = [...new Set([...prefilledStarRasiArray, ...starRasiArray])];
-      
+
       // Detect removed items
       const removedStarRasiArray = prefilledStarRasiArray.filter(
         (prefilled) => !starRasiArray.includes(prefilled)
       );
-      
+
       // Final array excluding removed items
       const finalStarRasiArray = combinedStarRasiArray.filter(
         (combined) => !removedStarRasiArray.includes(combined)
@@ -1216,21 +1216,30 @@ export const PartnerSettings: React.FC = () => {
       }
     } catch (error: any) {
       console.error("API error:", error);
-      
+
       if (error.response) {
         console.error("Error response data:", error.response.data);
         console.error("Error status:", error.response.status);
-        
+
         if (error.response.data) {
           setFormErrors(error.response.data);
         }
       }
-      
+
       NotifyError(error.response?.data?.message || "Error updating profile visibility");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const isAllMaritalSelected = maritalOptions.length > 0 &&
+    maritalOptions.every((opt) => maritalValues.includes(opt.id));
+
+  const isAllEducationSelected = educationOptions.length > 0 &&
+    educationOptions.every((opt) => educationValues.includes(opt.id));
+
+  const isAllProfessionSelected = professionOptions.length > 0 &&
+    professionOptions.every((opt) => professionValues.includes(opt.id));
 
   return (
     <div>
@@ -1298,14 +1307,22 @@ export const PartnerSettings: React.FC = () => {
 
         {/* Marital Status Section */}
         <div className="mb-5">
-          <div 
-            className="flex justify-between items-center mb-2 cursor-pointer"
+          <div
+            className="flex items-center gap-2 mb-2 cursor-pointer"
             onClick={() => toggleAllCheckboxes("maritalstatus", maritalOptions)}
           >
-            <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+            <input
+              type="checkbox"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                toggleAllCheckboxes("maritalstatus", maritalOptions);
+              }}
+              checked={isAllMaritalSelected}
+              className="cursor-pointer"
+            />
+            <h4 className="text-[20px] cursor-pointer text-primary font-semibold max-md:text-[18px]">
               Marital Status
             </h4>
-         
           </div>
           <div className="grid grid-cols-2 gap-4 justify-between items-center max-2xl:grid-cols-2 max-xl:grid-cols-2 max-sm:grid-cols-1">
             {maritalOptions.map((option) => (
@@ -1331,14 +1348,23 @@ export const PartnerSettings: React.FC = () => {
 
         {/* Education Section */}
         <div className="mb-5">
-          <div 
-            className="flex justify-between items-center mb-2 cursor-pointer"
+          <div
+            className="flex items-center gap-2 mb-2 cursor-pointer"
             onClick={() => toggleAllCheckboxes("education", educationOptions)}
           >
+            <input
+              type="checkbox"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                toggleAllCheckboxes("education", educationOptions);
+              }}
+              checked={isAllEducationSelected}
+              readOnly
+              className="cursor-pointer"
+            />
             <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
               Education
             </h4>
-          
           </div>
           <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
             {educationOptions.map((option) => (
@@ -1364,14 +1390,23 @@ export const PartnerSettings: React.FC = () => {
 
         {/* Profession Section */}
         <div className="mb-5">
-          <div 
-            className="flex justify-between items-center mb-2 cursor-pointer"
+          <div
+            className="flex items-center gap-2 mb-2 cursor-pointer"
             onClick={() => toggleAllCheckboxes("profession", professionOptions)}
           >
+            <input
+              type="checkbox"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                toggleAllCheckboxes("profession", professionOptions);
+              }}
+              checked={isAllProfessionSelected}
+              readOnly
+              className="cursor-pointer"
+            />
             <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
               Profession
             </h4>
-           
           </div>
           <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
             {professionOptions.map((option) => (
@@ -1557,11 +1592,10 @@ export const PartnerSettings: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`bg-white text-main flex items-center rounded-lg font-semibold border-2 px-5 py-2.5 cursor-pointer ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`bg-white text-main flex items-center rounded-lg font-semibold border-2 px-5 py-2.5 cursor-pointer ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
-             Update Changes
+            Update Changes
           </button>
         </div>
       </form>
