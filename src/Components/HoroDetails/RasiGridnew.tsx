@@ -261,7 +261,7 @@ const RasiGridnew: React.FC<RasiGridProps> = ({ centerLabel, data, onChange, isE
                   key={labelIndex}
                   className="w-24 h-auto mx-auto relative bg-white text-[9px] px-1 py-1 my-1 text-center flex items-center justify-between max-2xl:w-[80px] max-sm:w-[90%]"
                 >
-                  {label}
+                  <span className="truncate w-[70px] block leading-tight">{label}</span>
                   {isEditing && (
                   <AiOutlineClose
                     className="cursor-pointer ml-2"

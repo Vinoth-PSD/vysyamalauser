@@ -90,10 +90,22 @@ export const Horoscope = () => {
         setHoroscopeDetails(data);
 
         // Parse dasa balance
+        // if (data.personal_dasa_bal) {
+        //   const [day, month, year] = data.personal_dasa_bal
+        //     .split(",")
+        //     .map((item: string) => item.split(":")[1]);
+        //   setDasaBalanceDay(day);
+        //   setDasaBalanceMonth(month);
+        //   setDasaBalanceYear(year);
+        // }
         if (data.personal_dasa_bal) {
-          const [day, month, year] = data.personal_dasa_bal
-            .split(",")
-            .map((item: string) => item.split(":")[1]);
+          const [dayPart, monthPart, yearPart] = data.personal_dasa_bal.split(',');
+
+          // Extract values and format with leading zeros
+          const day = dayPart.split(':')[1].padStart(2, '0');
+          const month = monthPart.split(':')[1].padStart(2, '0');
+          const year = yearPart.split(':')[1];
+
           setDasaBalanceDay(day);
           setDasaBalanceMonth(month);
           setDasaBalanceYear(year);
@@ -483,11 +495,15 @@ export const Horoscope = () => {
                         ${errors.personal_dasa_bal ? "border-red-500" : "focus:border-blue-500"}`}
                     >
                       <option value="">Day</option>
-                      {[...Array(31)].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
-                        </option>
-                      ))}
+                      <option value="00">00</option>
+                      {Array.from({ length: 31 }, (_, i) => {
+                        const day = (i + 1).toString().padStart(2, '0');
+                        return (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div className="relative w-full">
@@ -502,11 +518,15 @@ export const Horoscope = () => {
                         ${errors.personal_dasa_bal ? "border-red-500" : "focus:border-blue-500"}`}
                     >
                       <option value="">Month</option>
-                      {[...Array(12)].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
-                        </option>
-                      ))}
+                      <option value="00">00</option>
+                      {Array.from({ length: 12 }, (_, i) => {
+                        const month = (i + 1).toString().padStart(2, '0');
+                        return (
+                          <option key={month} value={month}>
+                            {month}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div className="relative w-full">

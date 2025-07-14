@@ -225,7 +225,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
         localStorage.setItem("loginuser_profile_id", profile_id);
 
 
-        sessionStorage.setItem("maritalStatus", data.maritalStatus);
+        localStorage.setItem("maritalStatus", data.maritalStatus);
         onClose();
         navigate("/ThankYou");
       } else {
@@ -300,7 +300,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
             onChange={(e) => {
               const selectedValue = e.target.value;
               // Store selected value in sessionStorage
-              sessionStorage.setItem("maritalStatus", selectedValue);
+              localStorage.setItem("maritalStatus", selectedValue);
             }}
           >
             <option value="" selected disabled>

@@ -13,11 +13,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AmsamGrid from "../Components/HoroDetails/AmsamGrid";
 import apiClient from "../API";
-import {
-  ToastNotification,
-  NotifyError,
-  NotifySuccess,
-} from "../Components/Toast/ToastNotification";
+import { ToastNotification, NotifyError, NotifySuccess } from "../Components/Toast/ToastNotification";
 //import axios from "axios";
 import { IoMdArrowDropdown } from "react-icons/io";
 
@@ -166,9 +162,12 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
           setNalikai(profileData.nalikai);
           // Parse and set dasa_balance values
           const dasaBalance1 = profileData.dasa_balance; // Assume this is the format you get: "day:3,month:2,year:4"
-          const [day, month, year] = dasaBalance1
-            .split(",")
-            .map((item: string) => item.split(":")[1]);
+          const [dayPart, monthPart, yearPart] = dasaBalance1
+          // .split(",")
+          // .map((item: string) => item.split(":")[1]);
+          const day = dayPart.split(':')[1].padStart(2, '0');
+          const month = monthPart.split(':')[1].padStart(2, '0');
+          const year = yearPart.split(':')[1];
           setValue("day", day);
           setValue("month", month);
           setValue("year", year);
@@ -480,7 +479,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                         </option>
                       ))}
                     </select>
-                    <IoMdArrowDropdown />
+                    <IoMdArrowDropdown
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                      size={20}
+                    />
                   </div>
                   <span>:</span>
                   <div className="relative w-full">
@@ -500,7 +502,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                         </option>
                       ))}
                     </select>
-                    <IoMdArrowDropdown />
+                    <IoMdArrowDropdown
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                      size={20}
+                    />
                   </div>
                   <div className="relative w-full">
                     <select
@@ -513,7 +518,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       <option value="AM">AM</option>
                       <option value="PM">PM</option>
                     </select>
-                    <IoMdArrowDropdown />
+                    <IoMdArrowDropdown
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                      size={20}
+                    />
                   </div>
                 </div>
                 {/* {errors.timeOfBirth && (
@@ -581,7 +589,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {errors.birthStar && (
                   <span className="text-red-500">{errors.birthStar.message}</span>
@@ -610,7 +621,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {errors.rasi && (
                   <span className="text-red-500">{errors.rasi.message}</span>
@@ -638,7 +652,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {/* {errors.lagnam && (
               <span className="text-red-500">{errors.lagnam.message}</span>
@@ -702,7 +719,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {errors.chevvaiDhosam && (
                   <span className="text-red-500">
@@ -732,7 +752,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {errors.sarpaDhosham && (
                   <span className="text-red-500">
@@ -780,7 +803,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
               </div>
 
@@ -788,7 +814,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                 <label htmlFor="dateOfBirth" className="block mb-1 text-primary font-medium ">
                   Dasa Balance
                 </label>
-                <div className="flex space-x-2 ">
+                <div className="flex space-x-2">
                   <div className=" w-full">
                     <div className="relative">
                       <select
@@ -800,13 +826,20 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                         <option value="" disabled>
                           Day
                         </option>
-                        {[...Array(31)].map((_, i) => (
-                          <option key={i + 1} value={i + 1}>
-                            {i + 1}
-                          </option>
-                        ))}
+                        <option value="00">00</option>
+                        {Array.from({ length: 31 }, (_, i) => {
+                          const day = (i + 1).toString().padStart(2, '0');
+                          return (
+                            <option key={day} value={day}>
+                              {day}
+                            </option>
+                          );
+                        })}
                       </select>
-                      <IoMdArrowDropdown />
+                      <IoMdArrowDropdown
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                        size={20}
+                      />
                     </div>
                     {errors.day && (
                       <span className="text-red-500">{errors.day.message}</span>
@@ -823,13 +856,20 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                         <option value="" disabled>
                           Month
                         </option>
-                        {[...Array(12)].map((_, i) => (
-                          <option key={i + 1} value={i + 1}>
-                            {i + 1}
-                          </option>
-                        ))}
+                        <option value="00">00</option>
+                        {Array.from({ length: 12 }, (_, i) => {
+                          const month = (i + 1).toString().padStart(2, '0');
+                          return (
+                            <option key={month} value={month}>
+                              {month}
+                            </option>
+                          );
+                        })}
                       </select>
-                      <IoMdArrowDropdown />
+                      <IoMdArrowDropdown
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                        size={20}
+                      />
                     </div>
                     {errors.month && (
                       <span className="text-red-500">{errors.month.message}</span>
@@ -852,7 +892,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                           </option>
                         ))}
                       </select>
-                      <IoMdArrowDropdown />
+                      <IoMdArrowDropdown
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                        size={20}
+                      />
                     </div>
                     {errors.year && (
                       <span className="text-red-500">{errors.year.message}</span>

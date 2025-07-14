@@ -9,7 +9,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import apiClient from "../API";
-import {ToastNotification,NotifyError,NotifySuccess,} from "../Components/Toast/ToastNotification";
+import { ToastNotification, NotifyError, NotifySuccess, } from "../Components/Toast/ToastNotification";
 //import axios from "axios";
 import currencyCodes from "currency-codes";
 import currencySymbolMap from "currency-symbol-map";
@@ -38,7 +38,7 @@ const schema = zod.object({
   pincode: zod.string().optional(),
   careerPlans: zod.string().optional(),
   OtherDegree: zod.string().optional(),
-  WorkOtherCity:zod.string().optional(),
+  WorkOtherCity: zod.string().optional(),
 });
 
 interface EduDetailsInputs {
@@ -68,9 +68,9 @@ interface EduDetailsInputs {
   other_degree: string;
   work_district: string;
   work_city: string;
-  WorkOtherCity:string;
+  WorkOtherCity: string;
 }
-interface EduDetailsProps {}
+interface EduDetailsProps { }
 interface HighesEducation {
   education_id: number;
   education_description: string;
@@ -117,6 +117,9 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     trigger,
   } = useForm<EduDetailsInputs>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      currency: "INR", // Set default currency to INR
+    },
   });
   const [, setSelectedProfession] = useState<string | null>(null);
   const [highestEdu, setHighestEdu] = useState<HighesEducation[]>([]);
@@ -134,22 +137,32 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
   const [degreeOptions, setDegreeOptions] = useState<DegreeOption[]>([]);
   const [eduLevel, setEduLevel] = useState(""); // Example initial value
   const [fieldOfStudy, setFieldOfStudy] = useState(""); // Example initial value
-  const [selectedProfessionId, setSelectedProfessionId] =React.useState<number>(0); // Default to 0
+  const [selectedProfessionId, setSelectedProfessionId] = React.useState<number>(0); // Default to 0
   const currencyOptions = currencyCodes.codes();
   const [, setSelectedDegree] = useState("");
   const [customDegree, setCustomDegree] = useState("");
   const [districtValue, setDistrictValue] = useState(""); // Add state for the district value
   const [customWorkCity, setCustomWorkCity] = useState("");
   const [selectedDegrees, setSelectedDegrees] = useState<number[]>([]);
-  
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
   const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
 
   const handleEduLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setEduLevel(e.target.value);
-    setFieldOfStudy(""); // Reset Field of Study
-    setSelectedDegree(""); // Reset Degree
-    setCustomDegree(""); // Reset Custom Degree
+    const newValue = e.target.value;
+
+    // Clear all degree-related fields
+    setSelectedDegrees([]);
+    setCustomDegree("");
+    setValue("degree", "");
+    setValue("other_degree", "");
+
+    // Reset field of study
+    setFieldOfStudy("");
+    setSelectedFieldOfStudy("");
+    setValue("field_ofstudy", "");
+
+    // Update education level
+    setEduLevel(newValue);
   };
 
   const handleProfessionChange = (id: number, name: string) => {
@@ -196,7 +209,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     }
   }, [state]);
 
-  useState(() => {});
+  useState(() => { });
   const fetchCities = async () => {
     try {
       const response = await apiClient.post(
@@ -238,13 +251,30 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     handleFocus(professionRef, errors.profession);
   }, [errors.profession]);
 
+  // const handleFieldOfStudyChange = (
+  //   e: React.ChangeEvent<HTMLSelectElement>
+  // ) => {
+  //   const selectedValue = e.target.value;
+  //   setFieldOfStudy(selectedValue); // Update state
+  //   setSelectedFieldOfStudy(selectedValue); // Sync with selectedFieldOfStudy
+  //   setValue("field_ofstudy", selectedValue); // Update form value
+  // };
+
   const handleFieldOfStudyChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedValue = e.target.value;
-    setFieldOfStudy(selectedValue); // Update state
-    setSelectedFieldOfStudy(selectedValue); // Sync with selectedFieldOfStudy
-    setValue("field_ofstudy", selectedValue); // Update form value
+
+    // Reset degree selections when field of study changes
+    setSelectedDegrees([]);
+    setCustomDegree("");
+    setValue("degree", "");
+    setValue("other_degree", "");
+
+    // Update field of study
+    setFieldOfStudy(selectedValue);
+    setSelectedFieldOfStudy(selectedValue);
+    setValue("field_ofstudy", selectedValue);
   };
 
   const profileId = localStorage.getItem("profile_id_new");
@@ -327,6 +357,14 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
             setWorkPlace(profileData.work_place);
             setValue("Workplace", profileData.work_place);
           }
+
+          // Inside fetchProfileData function
+          if (profileData.currency) {
+            setValue("currency", profileData.currency);
+          } else {
+            setValue("currency", "INR"); // Fallback to INR if no value exists
+          }
+
         } catch (error) {
           console.error("Error fetching profile data:", error);
         }
@@ -347,21 +385,21 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
   //   setValue("nature_of_business", "");
   // }, [selectedProfessionId, setValue]);
 
-   // Reset fields when profession changes
-  useEffect(() => { 
+  // Reset fields when profession changes
+  useEffect(() => {
     if (selectedProfessionId !== 1 && selectedProfessionId !== 7 && selectedProfessionId !== 6) {
-    setValue("company_name", "");
-    setValue("designation", "");
-    setValue("profession_details", ""); 
+      setValue("company_name", "");
+      setValue("designation", "");
+      setValue("profession_details", "");
     }
-    
+
     if (selectedProfessionId !== 2 && selectedProfessionId !== 6) {
-    setValue("business_name", "");
-    setValue("business_address", "");
-    setValue("nature_of_business", "");
+      setValue("business_name", "");
+      setValue("business_address", "");
+      setValue("nature_of_business", "");
     }
-    
-    }, [selectedProfessionId, setValue]);
+
+  }, [selectedProfessionId, setValue]);
 
   useEffect(() => {
     const fetchHighestEdu = async () => {
@@ -495,12 +533,12 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
         profession: selectedProfessionId, // Optional: you can send the profession name
         anual_income: data.annualIncome,
         annualIncome_max: data.annualIncome_max,
-        company_name:(selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.company_name : "",
+        company_name: (selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.company_name : "",
         designation: (selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.designation : "",
-        profession_details:(selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.profession_details : "",
-        business_name:(selectedProfessionId === 2 || selectedProfessionId === 6)? data.business_name:"",
-        business_address:(selectedProfessionId === 2 || selectedProfessionId === 6)? data.business_address:"",
-        nature_of_business: (selectedProfessionId === 2 || selectedProfessionId === 6) ?data.nature_of_business:"",
+        profession_details: (selectedProfessionId === 1 || selectedProfessionId === 7 || selectedProfessionId === 6) ? data.profession_details : "",
+        business_name: (selectedProfessionId === 2 || selectedProfessionId === 6) ? data.business_name : "",
+        business_address: (selectedProfessionId === 2 || selectedProfessionId === 6) ? data.business_address : "",
+        nature_of_business: (selectedProfessionId === 2 || selectedProfessionId === 6) ? data.nature_of_business : "",
         currency: data.currency,
         actual_income: data.actualIncome,
         work_pincode: data.pincode,
@@ -514,7 +552,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
         field_ofstudy: fieldOfStudy, // Pass the selected field_ofstudy ID here
         degree: degreePayload, // Combined degrees and custom degree
         other_degree: finalOtherDegree, // use customDegree instead of data.other_degree
-        work_other_city:data.WorkOtherCity,
+        work_other_city: data.WorkOtherCity,
       };
 
       //console.log("EducationDetails:", formattedData);
@@ -613,7 +651,6 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     "INR", // Indian Rupee - India
     "MYR", // Malaysian Ringgit - Malaysia
     "SGD", // Singapore Dollar - Singapore
-
     "GBP", // British Pound Sterling - United Kingdom
     "USD", // US Dollar - United States of America
     "AED", // United Arab Emirates Dirham - UAE
@@ -664,7 +701,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {errors.highestEducationLevel && (
                   <span className="text-red-500">
@@ -678,91 +718,96 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                 eduLevel === "2" ||
                 eduLevel === "3" ||
                 eduLevel === "4") && (
-                <>
-                  <div>
-                    <label
-                      htmlFor="fieldOfStudy"
-                      className="block mb-2 text-base text-primary font-medium"
-                    >
-                      Field of Study
-                    </label>
-
-                    <select
-                      id="fieldOfStudy"
-                      className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded"
-                      value={selectedFieldOfStudy || ""}
-                      onChange={handleFieldOfStudyChange}
-                    >
-                      <option value="" disabled selected>
-                        Select your Field of Study
-                      </option>
-                      {fieldOfStudyOptions.map((option) => (
-                        <option key={option.study_id} value={option.study_id}>
-                          {option.study_description}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="degree"
-                      className="block mb-2 text-base text-primary font-medium"
-                    >
-                      Specific Field
-                    </label>
-                    {degreeOptions.length > 0 ? (
-                      <Select
-                        isMulti
-                        value={selectedDegrees.map((id) => ({
-                          value: id,
-                          label:
-                            degreeOptions.find(
-                              (option) => option.degeree_id == id
-                            )?.degeree_description || id,
-                        }))}
-                        options={[
-                          ...degreeOptions.map((option) => ({
-                            value: option.degeree_id,
-                            label: option.degeree_description,
-                          })),
-                        ]}
-                        onChange={handleDegreeChangeMultiSelect}
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded"
-                        placeholder="Enter your degree"
-                        value={customDegree}
-                        onChange={(e) => setCustomDegree(e.target.value)}
-                      />
-                    )}
-                    {selectedDegrees.includes(86) && (
-                      <div className="mt-4">
-                         <label
-                      htmlFor="othereducation"
-                      className="block mb-2 text-base text-primary font-medium"
-                    >
-                      Other Education
-                     </label>
-                        <input
-                          type="text"
-                          id="customDegree"
-                          className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded"
-                          placeholder="Enter Specific field"
-                          value={customDegree}
-                          {...register("other_degree")}
-                          onChange={(e) => {
-                            setCustomDegree(e.target.value);
-                            setValue("other_degree", e.target.value);
-                          }}
+                  <>
+                    <div>
+                      <label
+                        htmlFor="fieldOfStudy"
+                        className="block mb-2 text-base text-primary font-medium"
+                      >
+                        Field of Study
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="fieldOfStudy"
+                          className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded appearance-none"
+                          value={selectedFieldOfStudy || ""}
+                          onChange={handleFieldOfStudyChange}
+                        >
+                          <option value="" disabled>
+                            Select your Field of Study
+                          </option>
+                          {fieldOfStudyOptions.map((option) => (
+                            <option key={option.study_id} value={option.study_id}>
+                              {option.study_description}
+                            </option>
+                          ))}
+                        </select>
+                        <IoMdArrowDropdown
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                          size={20}
                         />
                       </div>
-                    )}
-                  </div>
-                </>
-              )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="degree"
+                        className="block mb-2 text-base text-primary font-medium"
+                      >
+                        Specific Field
+                      </label>
+                      {degreeOptions.length > 0 ? (
+                        <Select
+                          isMulti
+                          value={selectedDegrees.map((id) => ({
+                            value: id,
+                            label:
+                              degreeOptions.find(
+                                (option) => option.degeree_id == id
+                              )?.degeree_description || id,
+                          }))}
+                          options={[
+                            ...degreeOptions.map((option) => ({
+                              value: option.degeree_id,
+                              label: option.degeree_description,
+                            })),
+                          ]}
+                          onChange={handleDegreeChangeMultiSelect}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded"
+                          placeholder="Enter your degree"
+                          value={customDegree}
+                          onChange={(e) => setCustomDegree(e.target.value)}
+                        />
+                      )}
+                      {selectedDegrees.includes(86) && (
+                        <div className="mt-4">
+                          <label
+                            htmlFor="othereducation"
+                            className="block mb-2 text-base text-primary font-medium"
+                          >
+                            Other Education
+                          </label>
+                          <input
+                            type="text"
+                            id="customDegree"
+                            className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded"
+                            placeholder="Enter Specific field"
+                            value={customDegree}
+                            {...register("other_degree")}
+                            onChange={(e) => {
+                              setCustomDegree(e.target.value);
+                              setValue("other_degree", e.target.value);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
             </div>
 
             <div>
@@ -1080,7 +1125,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                     <label
                       htmlFor="professionDetail"
                       className="block mb-2 text-base text-primary font-medium"
-                      //style={{ color: "#1A73E8" }} // Replace with the exact color if different
+                    //style={{ color: "#1A73E8" }} // Replace with the exact color if different
                     >
                       Profession Detail
                     </label>
@@ -1124,7 +1169,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
                 {errors.annualIncome && (
                   <span className="text-red-500">
@@ -1146,6 +1194,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                     id="currency"
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                     style={{ width: "300px" }} // Adjust the width as needed
+                    defaultValue="INR"
                     {...register("currency")}
                   >
                     <option value="" disabled>
@@ -1157,7 +1206,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
 
                 <input
@@ -1236,7 +1288,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                             </option>
                           ))}
                         </select>
-                        <IoMdArrowDropdown />
+                        <IoMdArrowDropdown
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                          size={20}
+                        />
                       </div>
                     </div>
 
@@ -1271,7 +1326,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                               </option>
                             ))}
                           </select>
-                          <IoMdArrowDropdown />
+                          <IoMdArrowDropdown
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                            size={20}
+                          />
                         </div>
                       </div>
                     ) : (
@@ -1331,7 +1389,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                             ))}
                             <option value="others">Others</option>
                           </select>
-                          <IoMdArrowDropdown />
+                          <IoMdArrowDropdown
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                            size={20}
+                          />
                         </div>
                       )}
                     </div>

@@ -340,7 +340,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
                   key={labelIndex}
                   className="w-24 h-auto mx-auto relative bg-white text-[9px] px-1 py-1 my-1 text-center flex items-center justify-between max-2xl:w-[80px]"
                 >
-                  {label}
+                 <span className="truncate w-[70px] block leading-tight">{label}</span>
                   <AiOutlineClose
                     className="cursor-pointer"
                     onClick={() => handleRemoveLabel(index, labelIndex)}

@@ -22,7 +22,8 @@ interface FamilyDetails {
   personal_bro: string;
   personal_bro_married: string;
   personal_prope_det: string;
-  personal_property_worth:string;
+  personal_property_worth: string;
+  personal_no_of_children: string;
 }
 
 interface FamilyStatus {
@@ -59,6 +60,8 @@ export const Family = () => {
   const [occupations1, setOccupations1] = useState<Occupation1[]>([]);
   const [, setSelectedOccupationId1] = useState<number | string>("");
   const [refreshData, setRefreshData] = useState(false);
+  const maritalStatus = localStorage.getItem("maritalStatus");
+  const showChildrenField = maritalStatus && ['2', '3', '5'].includes(maritalStatus);
   const [errors, setErrors] = useState({
     personal_father_name: "",
     personal_father_occu_name: "",
@@ -70,7 +73,8 @@ export const Family = () => {
     personal_bro: "",
     personal_bro_married: "",
     personal_prope_det: "",
-    personal_property_worth:"",
+    personal_property_worth: "",
+    personal_no_of_children: "",
     personal_about_fam: "",
   });
 
@@ -80,7 +84,7 @@ export const Family = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_family/",
           {
-            profile_id: loginuser_profileId , // replace with the actual profile_id if needed
+            profile_id: loginuser_profileId, // replace with the actual profile_id if needed
           }
         );
         const data = response.data.data;
@@ -164,7 +168,7 @@ export const Family = () => {
       persoanl_fam_sta_name: e.target.value,
     }));
   };
-  
+
   const handleEditClick = () => {
     if (isEditing) {
       // Reset form data to an empty object if exiting edit mode
@@ -196,6 +200,14 @@ export const Family = () => {
     }));
   };
 
+  const handleSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -204,13 +216,13 @@ export const Family = () => {
       personal_father_name: !formData.personal_father_name
         ? "Father's name is required."
         : "",
-        personal_father_occu_name: !formData.personal_father_occu_name
+      personal_father_occu_name: !formData.personal_father_occu_name
         ? "Father's occupation is required."
         : "",
       personal_mother_name: !formData.personal_mother_name
         ? "Mother's name is required."
         : "",
-        personal_mother_occu_name: !formData.personal_mother_occu_name
+      personal_mother_occu_name: !formData.personal_mother_occu_name
         ? "Mother's occupation is required."
         : "",
       selectedFamilyStatusId: !selectedFamilyStatusId
@@ -227,9 +239,12 @@ export const Family = () => {
       personal_prope_det: !formData.personal_prope_det
         ? "Property details are required."
         : "",
-        personal_property_worth:!formData.personal_property_worth
-        ?"property worth is required."
-        :"",
+      personal_property_worth: !formData.personal_property_worth
+        ? "property worth is required."
+        : "",
+      personal_no_of_children: !formData.personal_no_of_children
+        ? "Number of Children is required."
+        : "",
       personal_about_fam: !formData.personal_about_fam
         ? "About family is required."
         : "",
@@ -252,14 +267,15 @@ export const Family = () => {
           father_name: formData.personal_father_name,
           father_occupation: formData.personal_father_occu_name,
           mother_name: formData.personal_mother_name,
-          mother_occupation:formData.personal_mother_occu_name,
+          mother_occupation: formData.personal_mother_occu_name,
           family_status: selectedFamilyStatusId,
           no_of_sister: formData.personal_sis,
           no_of_sis_married: formData.personal_sis_married,
           no_of_brother: formData.personal_bro,
           no_of_bro_married: formData.personal_bro_married,
           property_details: formData.personal_prope_det,
-          property_worth:formData.personal_property_worth,
+          property_worth: formData.personal_property_worth,
+          no_of_children: formData.personal_no_of_children,
           about_family: formData.personal_about_fam,
         }
       );
@@ -306,11 +322,10 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_about_fam: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_about_fam
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_about_fam
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_about_fam && (
                   <p className="text-red-500 text-sm mt-1">
@@ -337,11 +352,10 @@ export const Family = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_father_name
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_father_name
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_father_name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -368,11 +382,10 @@ export const Family = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-      ${
-        errors.personal_father_occu_name
-          ? "border-red-500"
-          : "focus:border-blue-500"
-      }`}
+      ${errors.personal_father_occu_name
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_father_occu_name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -399,11 +412,10 @@ export const Family = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_mother_name
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_mother_name
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_mother_name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -412,7 +424,7 @@ export const Family = () => {
                 )}
               </label>
 
-             
+
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Mother Occupation:
                 <input
@@ -431,11 +443,10 @@ export const Family = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-      ${
-        errors.personal_mother_occu_name
-          ? "border-red-500"
-          : "focus:border-blue-500"
-      }`}
+      ${errors.personal_mother_occu_name
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_mother_occu_name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -457,11 +468,10 @@ export const Family = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.selectedFamilyStatusId
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.selectedFamilyStatusId
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 >
                   <option value="">Select Family Status</option>
                   {familyStatuses.map((status) => (
@@ -491,11 +501,10 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_sis: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_sis
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_sis
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_sis && (
                   <p className="text-red-500 text-sm mt-1">
@@ -519,11 +528,10 @@ export const Family = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_sis_married
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_sis_married
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_sis_married && (
                   <p className="text-red-500 text-sm mt-1">
@@ -543,11 +551,10 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_bro: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_bro
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_bro
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_bro && (
                   <p className="text-red-500 text-sm mt-1">
@@ -570,11 +577,10 @@ export const Family = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_bro_married
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_bro_married
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_bro_married && (
                   <p className="text-red-500 text-sm mt-1">
@@ -609,11 +615,10 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_prope_det: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_prope_det
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_prope_det
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_prope_det && (
                   <p className="text-red-500 text-sm mt-1">
@@ -631,11 +636,10 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_property_worth: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${
-                                          errors.personal_property_worth
-                                            ? "border-red-500"
-                                            : "focus:border-blue-500"
-                                        }`}
+                                        ${errors.personal_property_worth
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
+                    }`}
                 />
                 {errors.personal_property_worth && (
                   <p className="text-red-500 text-sm mt-1">
@@ -643,6 +647,37 @@ export const Family = () => {
                   </p>
                 )}
               </label>
+              {showChildrenField && (
+                <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                  Number of Children:
+                  <select
+                    name="personal_no_of_children"
+                    value={formData.personal_no_of_children || ""}
+                    onChange={(e) => {
+                      handleSelectChange(e);
+                      setErrors((prev) => ({
+                        ...prev,
+                        personal_no_of_children: "",
+                      })); // Clear error on change
+                    }}
+                    className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
+    ${errors.personal_no_of_children ? "border-red-500" : "focus:border-blue-500"}`}
+                  >
+                    <option value="">Select Number of Children</option>
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    ))}
+                  </select>
+
+                  {errors.personal_no_of_children && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.personal_no_of_children}
+                    </p>
+                  )}
+                </label>
+              )}
             </div>
           </div>
           {isEditing && (
@@ -762,6 +797,15 @@ export const Family = () => {
                   {familyDetails.personal_property_worth}
                 </span>
               </h5>
+              {showChildrenField && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Number of Children:
+                  <span className="font-normal">
+                    {" "}
+                    {familyDetails.personal_no_of_children}
+                  </span>
+                </h5>
+              )}
             </div>
           </div>
         </div>

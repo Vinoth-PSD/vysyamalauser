@@ -356,8 +356,6 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
   onNext,
   onClose,
   handleLoginClick,
-
-
 }) => {
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<boolean>(false); // State to track validation error

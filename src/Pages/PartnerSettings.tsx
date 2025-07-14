@@ -496,7 +496,7 @@ const PartnerSettings: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const storedMaritalStatus = sessionStorage.getItem("maritalStatus");
+    const storedMaritalStatus = localStorage.getItem("maritalStatus");
     if (storedMaritalStatus) {
       // Set the stored marital status in the state
       setSelectedMaritalStatuses([storedMaritalStatus]);

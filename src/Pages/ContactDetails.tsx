@@ -154,7 +154,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
     }
   }, [selectedDistrictId]);
 
-  const profileId =localStorage.getItem("profile_id_new") || localStorage.getItem("loginuser_profile_id");
+  const profileId = localStorage.getItem("profile_id_new") || localStorage.getItem("loginuser_profile_id");
   console.log(profileId);
   console.log(stateOptions, "stateOptions");
   useEffect(() => {
@@ -165,7 +165,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
             profile_id: profileId,
             page_id: 1,
           };
-          const response = await apiClient.post(`/auth/Get_save_details/`,requestData,
+          const response = await apiClient.post(`/auth/Get_save_details/`, requestData,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -415,7 +415,10 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                     </option>
                   ))}
                 </select>
-                <IoMdArrowDropdown />
+                <IoMdArrowDropdown
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                  size={20}
+                />
               </div>
               {errors.country && (
                 <span className="text-red-500">{errors.country.message}</span>
@@ -459,7 +462,10 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                         </option>
                       ))}
                     </select>
-                    <IoMdArrowDropdown />
+                    <IoMdArrowDropdown
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                      size={20}
+                    />
                   </div>
                   {errors.state && (
                     <span className="text-red-500">{errors.state.message}</span>
@@ -496,7 +502,10 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                           </option>
                         ))}
                       </select>
-                      <IoMdArrowDropdown />
+                      <IoMdArrowDropdown
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                        size={20}
+                      />
                     </div>
                     {errors.district && (
                       <span className="text-red-500">
@@ -583,7 +592,10 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                           ))}
                           <option value="others">Others</option>
                         </select>
-                        <IoMdArrowDropdown />
+                        <IoMdArrowDropdown
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                          size={20}
+                        />
                       </div>
                       {errors.city && (
                         <span className="text-red-500">

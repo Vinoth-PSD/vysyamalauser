@@ -186,7 +186,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
       setFiles([newFiles[0]]);
     }
   };
-  const maritalStatus = sessionStorage.getItem("maritalStatus");
+  const maritalStatus = localStorage.getItem("maritalStatus");
 
   const saveImageDetails = async (profileId: string, fileType: string) => {
     try {

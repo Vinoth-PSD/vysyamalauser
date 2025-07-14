@@ -410,11 +410,12 @@ type ProfileOption = {
 
 interface HeroSectionProps {
   onNext: (mobile: string) => void;
+  onEditNumber?: () => void; // Add new prop for edit number functionality
 }
 
 type FormData = z.infer<typeof schema>;
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onNext, onEditNumber }) => {
   const {
     register,
     setValue,
@@ -464,6 +465,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
   const handleMobileNumberChange = (value: string) => {
     setMobileNumber(value);
     setValue("mobile", value); // Update the form state
+    localStorage.setItem("mobile", value); // Save to sessionStorage
     sessionStorage.setItem("mobile", value); // Save to sessionStorage
   };
 
@@ -538,6 +540,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
     }
   };
 
+  // Add handler to clear mobile number and close popup
+  const handleEditNumber = () => {
+    setMobileNumber("");
+    setValue("mobile", "");
+    localStorage.removeItem("mobile");
+    sessionStorage.removeItem("mobile");
+    setShowOtpPopup(false);
+    if (onEditNumber) onEditNumber();
+  };
+
 
   const controls = useAnimation(); // Controls for the animation
   const [ref, inView] = useInView({
@@ -602,7 +614,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
                         </option>
                       ))}
                     </select>
-                    <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                    <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-vysyamalaBlack pointer-events-none"
+                    size={20}
+                  />
                   </div>
 
                   {errors.profileFor && (
@@ -626,7 +641,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
                         Female
                       </option>
                     </select>
-                    <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                    <IoMdArrowDropdown
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-vysyamalaBlack pointer-events-none"
+                      size={20}
+                    />
                   </div>
                   {errors.gender && (
                     <p className="text-red-500">{errors.gender.message}</p>
@@ -736,6 +754,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext }) => {
         <PopupModal
           mobileNumber={mobile}
           onClose={() => setShowOtpPopup(false)}
+          onEditNumber={handleEditNumber}
         />
       )}
     </div>

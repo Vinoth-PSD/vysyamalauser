@@ -9,7 +9,7 @@ import InputField from "../Components/RegistrationForm/InputField";
 import SideContent from "../Components/RegistrationForm/SideContent";
 import arrow from "../assets/icons/arrow.png";
 import apiClient from "../API";
-import {ToastNotification,NotifyError,NotifySuccess,} from "../Components/Toast/ToastNotification";
+import { ToastNotification, NotifyError, NotifySuccess, } from "../Components/Toast/ToastNotification";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoMdArrowDropdown } from "react-icons/io";
 
@@ -24,6 +24,7 @@ const schema = zod.object({
   // Modify the weight validation to allow only 3-digit numbers
   weight: zod.string().optional(),
   bloodGroup: zod.string().optional(),
+  no_of_children: zod.string().optional(),
   motherOccupation: zod.string().optional(),
   // brother: zod.number().optional(),
   // marriedBrother: zod.number().optional(),
@@ -39,7 +40,6 @@ const schema = zod.object({
   uncle_gothram: zod.string().optional(),
   ancestor_origin: zod.string().optional(),
   aboutMyFamily: zod.string().optional(),
-  
 });
 
 
@@ -63,6 +63,7 @@ interface FamilyDetailsInputs {
   uncle_gothram?: string;
   ancestor_origin?: string;
   aboutMyFamily?: string;
+  no_of_children: string;
   brother: number;
   marriedBrother: number;
   sister: number;
@@ -157,7 +158,6 @@ const FamilyDetails: React.FC = () => {
   const familyTypeRef = useRef<HTMLDivElement>(null);
   const familyValueRef = useRef<HTMLDivElement>(null);
   const familyStatusRef = useRef<HTMLDivElement>(null);
-
   const [familyType, setfamilyType] = useState<FamilyType[]>([]);
   const [selectedfamilyTypeId, setSelectedfamilyTypeId] = useState<
     number | null
@@ -177,6 +177,8 @@ const FamilyDetails: React.FC = () => {
   const [, setSelectedfamilyStatus] = useState<string | null>(null);
   const [bodytyoe, setBodytype] = useState("");
   const [bodywear, setBodyWear] = useState("");
+  const maritalStatus = localStorage.getItem("maritalStatus");
+  const showChildrenField = maritalStatus && ['2', '3', '5'].includes(maritalStatus);
 
   const handleFamilyTypeChange = (id: number, name: string) => {
     setSelectedFamilyType(name); // Update the displayed family type description
@@ -308,12 +310,11 @@ const FamilyDetails: React.FC = () => {
           setValue("aboutmyself", profileData.about_self);
           setValue("myhobbies", profileData.hobbies);
           setWeight(profileData.weight || "");
-          setValue("weight", profileData.weight );
+          setValue("weight", profileData.weight);
           setValue("body_type", profileData.body_type);
           setValue("eye_wear", profileData.eye_wear);
-
           setValue("bloodGroup", profileData.blood_group);
-
+          setValue("no_of_children", profileData.no_of_children);
           // Handle radio button for physically challenged
           setValue(
             "physicallyChallenged",
@@ -495,13 +496,13 @@ const FamilyDetails: React.FC = () => {
         family_name: familyName.trim(),
         about_self: data.aboutmyself,
         hobbies: data.myhobbies,
-
         weight: weight,
         // body_type: data.body_type || "",
         // eye_wear: data.eye_wear || "",
         body_type: bodytyoe || "",
         eye_wear: bodywear || "",
         blood_group: data.bloodGroup,
+        no_of_children: data.no_of_children,
         Pysically_changed: physicallyChallengedValue,
         no_of_brother: data.brother ?? undefined,
         no_of_bro_married: data.marriedBrother || 0,
@@ -513,12 +514,11 @@ const FamilyDetails: React.FC = () => {
         family_type: selectedfamilyTypeId ?? undefined,
         family_value: selectedfamilyValueId ?? undefined,
         family_status: selectedfamilyStatusId ?? undefined,
-
         about_family: data.aboutMyFamily,
         property_worth: data.propertyWorth,
         property_details: data.propertyDetails,
-        uncle_gothram:data.uncle_gothram,
-        ancestor_origin:data.ancestor_origin,
+        uncle_gothram: data.uncle_gothram,
+        ancestor_origin: data.ancestor_origin,
         suya_gothram: data.suyaGothram
 
         // Include other fields as necessary
@@ -567,7 +567,7 @@ const FamilyDetails: React.FC = () => {
 
   const aboutMyFamilyValue = watch("aboutMyFamily", "");
 
- 
+
   const handleKeyDownTextArea = (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     value: any
@@ -590,7 +590,7 @@ const FamilyDetails: React.FC = () => {
   return (
     <div className="mt-24 max-lg:mt-20">
       <ContentBlackCard
-      link="/UploadImages"
+        link="/UploadImages"
         heading="Family Details"
         desc="Please provide details about your family to help potential matches understand your values and lifestyle"
       />
@@ -693,9 +693,6 @@ const FamilyDetails: React.FC = () => {
             </div>
 
             <div className="w-full space-y-5">
-             
-
-
               <div>
                 <InputField
                   label="Weight (kg)"
@@ -728,20 +725,22 @@ const FamilyDetails: React.FC = () => {
                   Body Type{" "}
                 </label>
                 <div className="relative">
-
                   <select
                     id="body_type"
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                     {...register("body_type")}
-                  //  value={watch("body_type")} // Ensure the selected value is shown
-                  onChange={handleSelectChange}
+                    //  value={watch("body_type")} // Ensure the selected value is shown
+                    onChange={handleSelectChange}
                   >
                     <option value="">Select Body Type</option>
                     <option value="Slim">Slim</option>
                     <option value="Fat">Fat</option>
                     <option value="Normal">Normal</option>
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
               </div>
 
@@ -759,7 +758,6 @@ const FamilyDetails: React.FC = () => {
                     // {...register("eye_wear", {
                     //   setValueAs: (value) => value.trim(),
                     // })}
-                    
                     {...register("eye_wear")}
                     onChange={handleSelectChange}
                   >
@@ -767,7 +765,10 @@ const FamilyDetails: React.FC = () => {
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                   </select>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
               </div>
 
@@ -779,27 +780,56 @@ const FamilyDetails: React.FC = () => {
                   Blood Group
                 </label>
                 <div className="relative">
-                <select
-                  id="bloodGroup"
-                  className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                  {...register("bloodGroup", {
-                    setValueAs: (value) => value.trim(), // Ensure the value is trimmed
-                  })}
-                >
-                  <option value="" disabled selected>
-                    Select your Blood Group
-                  </option>
-                  {bloodGroups.map((group, index) => (
-                    <option key={index} value={group.abbreviation}>
-                      {group.abbreviation}
+                  <select
+                    id="bloodGroup"
+                    className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                    {...register("bloodGroup", {
+                      setValueAs: (value) => value.trim(), // Ensure the value is trimmed
+                    })}
+                  >
+                    <option value="" disabled selected>
+                      Select your Blood Group
                     </option>
-                  ))}
-                </select>
-                <IoMdArrowDropdown />
+                    {bloodGroups.map((group, index) => (
+                      <option key={index} value={group.abbreviation}>
+                        {group.abbreviation}
+                      </option>
+                    ))}
+                  </select>
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
                 </div>
               </div>
             </div>
-
+            {showChildrenField && (
+              <div>
+                <label className="block mb-2 text-base text-primary font-medium ">
+                  Number of Children
+                </label>
+                <div className="relative">
+                  <select
+                    id="no_of_children"
+                    className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                    {...register("no_of_children", {
+                      setValueAs: (value) => value.trim(), // Ensure the value is trimmed
+                    })}
+                  >
+                    <option value="" disabled selected>Select Number of Children</option>
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    ))}
+                  </select>
+                  <IoMdArrowDropdown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+                    size={20}
+                  />
+                </div>
+              </div>
+            )}
             <div>
               <label className="block mb-2 text-base text-primary font-medium ">
                 Physically Challenged
@@ -825,7 +855,6 @@ const FamilyDetails: React.FC = () => {
                 </label>
               </div>
             </div>
-
             {physicallyChallengedValue === "yes" && (
               <div>
                 <InputField label="please explain the physically challenged in detail" />

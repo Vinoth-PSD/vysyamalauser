@@ -105,7 +105,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
       localStorage.setItem("selectedRasi", response.data.birth_rasi_id);
       //console.log("selectedRasi", selectedRasi)
       localStorage.setItem("gender", response.data.gender);
-
+      localStorage.setItem("maritalStatus", response.data.marital_status);
       localStorage.setItem("ProfileId", response.data.profile_id);
       localStorage.setItem("profile_id", response.data.profile_id);
       localStorage.setItem("profile_id_new", response.data.profile_id);
