@@ -520,6 +520,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext, onEditNumber }
 
         sessionStorage.setItem("profile_owner", profile_owner);
         sessionStorage.setItem("gender", Gender);
+        localStorage.setItem("gender", Gender);
 
         onNext(data.mobile);
         setShowOtpPopup(true); // Show OTP popup after successful registration
@@ -615,9 +616,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext, onEditNumber }
                       ))}
                     </select>
                     <IoMdArrowDropdown
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-vysyamalaBlack pointer-events-none"
-                    size={20}
-                  />
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-vysyamalaBlack pointer-events-none"
+                      size={20}
+                    />
                   </div>
 
                   {errors.profileFor && (

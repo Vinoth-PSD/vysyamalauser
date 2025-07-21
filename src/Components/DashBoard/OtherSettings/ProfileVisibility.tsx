@@ -33,7 +33,7 @@ const schema = z.object({
     .nonempty("Please select at least one income option.")
     .refine(
       (items) => items.join(",").length <= 50,
-      "Selected incomes exceed maximum length"
+      "Please select a maximum of 20 annual incomes."
     ),
   rahuKetuDhosam: z.string().nonempty("Please select Rahu/Ketu Dhosam option."),
   chevvaiDhosam: z.string().nonempty("Please select Chevvai Dhosam option."),

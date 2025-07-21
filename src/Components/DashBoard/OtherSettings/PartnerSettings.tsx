@@ -936,6 +936,13 @@ const schema = z.object({
   profession: z.array(z.string()).nonempty("Please select at least one profession option."),
   maritalstatus: z.array(z.string()).nonempty("Please select at least one maritalstatus option."),
   income: z.string().nonempty("Please select an min annual income."),
+  // income: z
+  //   .array(z.string())
+  //   .nonempty("Please select at least one income option.")
+  //   .refine(
+  //     (items) => items.join(",").length <= 50,
+  //     "Please select a maximum of 20 annual incomes."
+  //   ),
   annualIncomemax: z.string().nonempty("Please select an max annual income"),
   rahuKetuDhosam: z.string().nonempty("Please select Rahu/Ketu Dhosam option."),
   chevvaiDhosam: z.string().nonempty("Please select Chevvai Dhosam option."),
@@ -1100,7 +1107,7 @@ export const PartnerSettings: React.FC = () => {
   // Fetch matching stars when birth star is available
   useEffect(() => {
     const storedBirthStar = localStorage.getItem("selectedstar") || sessionStorage.getItem("selectedstar");
-    const storedGender = localStorage.getItem("gender");
+    const storedGender = localStorage.getItem("gender") || sessionStorage.getItem("gender");
     const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
 
     if (storedBirthStar && storedGender) {
@@ -1331,8 +1338,15 @@ export const PartnerSettings: React.FC = () => {
                   type="checkbox"
                   id={`maritalstatus-${option.id}`}
                   value={option.id}
-                  {...register("maritalstatus")}
+                  // {...register("maritalstatus")}
                   checked={maritalValues.includes(option.id)}
+                  onChange={(e) => {
+                    const newValues = e.target.checked
+                      ? [...maritalValues, option.id]
+                      : maritalValues.filter((id) => id !== option.id);
+                    setValue("profession", newValues as [string, ...string[]], { shouldValidate: true });
+
+                  }}
                   className="mr-2"
                 />
                 <label htmlFor={`maritalstatus-${option.id}`} className="text-[18px] text-primary font-normal block">
@@ -1359,7 +1373,7 @@ export const PartnerSettings: React.FC = () => {
                 toggleAllCheckboxes("education", educationOptions);
               }}
               checked={isAllEducationSelected}
-              readOnly
+              /// readOnly
               className="cursor-pointer"
             />
             <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
@@ -1401,7 +1415,7 @@ export const PartnerSettings: React.FC = () => {
                 toggleAllCheckboxes("profession", professionOptions);
               }}
               checked={isAllProfessionSelected}
-              readOnly
+              // readOnly
               className="cursor-pointer"
             />
             <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
@@ -1415,9 +1429,16 @@ export const PartnerSettings: React.FC = () => {
                   type="checkbox"
                   id={`profession-${option.id}`}
                   value={option.id}
-                  {...register("profession")}
+                 // {...register("profession")}
                   checked={professionValues.includes(option.id)}
                   className="mr-2"
+                  onChange={(e) => {
+                    const newValues = e.target.checked
+                      ? [...professionValues, option.id]
+                      : professionValues.filter((id) => id !== option.id);
+                   setValue("profession", newValues as [string, ...string[]], { shouldValidate: true });
+
+                  }}
                 />
                 <label htmlFor={`profession-${option.id}`} className="text-[18px] text-primary font-normal block">
                   {option.name}

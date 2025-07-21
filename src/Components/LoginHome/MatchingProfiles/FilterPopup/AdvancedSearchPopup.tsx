@@ -369,7 +369,7 @@ export const AdvancedSearchPopup: React.FC<AdvancedSearchPopupProps> = ({ closeP
                                 {/* Buttons */}
                                 <div className="flex justify-end space-x-4">
                                     <button onClick={handleFindMatch} className="py-[10px] px-14 bg-white text-main font-semibold  rounded-[6px] mt-2">Cancel</button>
-                                    <button  type="submit" className="flex items-center py-[10px] px-14 bg-gradient text-white rounded-[6px] mt-2">Find Match</button>
+                                    <button type="submit" className="flex items-center py-[10px] px-14 bg-gradient text-white rounded-[6px] mt-2">Find Match</button>
                                 </div>
 
 

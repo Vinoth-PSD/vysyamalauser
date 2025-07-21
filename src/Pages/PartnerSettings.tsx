@@ -504,7 +504,8 @@ const PartnerSettings: React.FC = () => {
   }, []);
 
   const storedBirthStar = sessionStorage.getItem("selectedstar");
-  const storedGender = sessionStorage.getItem("gender");
+  // const storedGender = sessionStorage.getItem("gender");
+  const storedGender = localStorage.getItem("gender");
   // const storedMartialStatus = sessionStorage.getItem("maritalStatus");
   const storedHeight = sessionStorage.getItem("userHeight") || 0;
   // const quickreg = sessionStorage.getItem("quick_reg") || "0";
@@ -706,74 +707,74 @@ const PartnerSettings: React.FC = () => {
 
 
   const handleSelectAllMaritalStatus = () => {
-    // Check if all are already selected
-    const allSelected = maritalStatuses.every(status =>
-      selectedMaritalStatuses.includes(status.marital_sts_id.toString())
-    );
+  // Check if all are already selected
+  const allSelected = maritalStatuses.every(status => 
+    selectedMaritalStatuses.includes(status.marital_sts_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedMaritalStatuses([]);
+  } else {
+    // Select all
+    const allIds = maritalStatuses.map(status => status.marital_sts_id.toString());
+    setSelectedMaritalStatuses(allIds);
+  }
+};
 
-    if (allSelected) {
-      // Deselect all
-      setSelectedMaritalStatuses([]);
-    } else {
-      // Select all
-      const allIds = maritalStatuses.map(status => status.marital_sts_id.toString());
-      setSelectedMaritalStatuses(allIds);
-    }
-  };
+const handleSelectAllProfessions = () => {
+  // Check if all are already selected
+  const allSelected = ProfPref.every(prof => 
+    selectedProfession.includes(prof.Profes_Pref_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedProfession([]);
+  } else {
+    // Select all
+    const allIds = ProfPref.map(prof => prof.Profes_Pref_id.toString());
+    setSelectedProfession(allIds);
+  }
+};
 
-  const handleSelectAllProfessions = () => {
-    // Check if all are already selected
-    const allSelected = ProfPref.every(prof =>
-      selectedProfession.includes(prof.Profes_Pref_id.toString())
-    );
-
-    if (allSelected) {
-      // Deselect all
-      setSelectedProfession([]);
-    } else {
-      // Select all
-      const allIds = ProfPref.map(prof => prof.Profes_Pref_id.toString());
-      setSelectedProfession(allIds);
-    }
-  };
-
-  const handleSelectAllEducation = () => {
-    // Check if all are already selected
-    const allSelected = eduPref.every(edu =>
-      selectedEducations.includes(edu.Edu_Pref_id.toString())
-    );
-
-    if (allSelected) {
-      // Deselect all
-      setSelectedEducations([]);
-    } else {
-      // Select all
-      const allIds = eduPref.map(edu => edu.Edu_Pref_id.toString());
-      setSelectedEducations(allIds);
-    }
-  };
+const handleSelectAllEducation = () => {
+  // Check if all are already selected
+  const allSelected = eduPref.every(edu => 
+    selectedEducations.includes(edu.Edu_Pref_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedEducations([]);
+  } else {
+    // Select all
+    const allIds = eduPref.map(edu => edu.Edu_Pref_id.toString());
+    setSelectedEducations(allIds);
+  }
+};
 
 
-  const handleSelectAllFieldOfStudy = () => {
-    // Check if all are already selected
-    const allSelected = fieldOfStudy.every(field =>
-      selectedFieldOfStudy.includes(field.study_id.toString())
-    );
-
-    if (allSelected) {
-      // Deselect all
-      setSelectedFieldOfStudy([]);
-    } else {
-      // Select all
-      const allIds = fieldOfStudy.map(field => field.study_id.toString());
-      setSelectedFieldOfStudy(allIds);
-    }
-  };
+const handleSelectAllFieldOfStudy = () => {
+  // Check if all are already selected
+  const allSelected = fieldOfStudy.every(field => 
+    selectedFieldOfStudy.includes(field.study_id.toString())
+  );
+  
+  if (allSelected) {
+    // Deselect all
+    setSelectedFieldOfStudy([]);
+  } else {
+    // Select all
+    const allIds = fieldOfStudy.map(field => field.study_id.toString());
+    setSelectedFieldOfStudy(allIds);
+  }
+};
 
   return (
     <div className="mt-24 max-lg:mt-20">
       <ContentBlackCard
-        link="/HoroDetails"
+      link="/HoroDetails"
         heading={"Partner Preference"}
         desc="Please provide your partner Preference to show potential matches."
       />
@@ -884,33 +885,27 @@ const PartnerSettings: React.FC = () => {
 
             {/* Marital Status */}
             <div>
-              <div className="flex items-center gap-2 mb-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAllMaritalStatus}
-                  checked={
-                    maritalStatuses.length > 0 &&
-                    maritalStatuses.every(status =>
-                      selectedMaritalStatuses.includes(status.marital_sts_id.toString())
-                    )
-                  }
-                  className="cursor-pointer"
-                />
-                <label
-                  className="text-[18px] text-primary font-semibold cursor-pointer"
-                  onClick={handleSelectAllMaritalStatus}
-                >
-                  Marital Status
-                </label>
-              </div>
+              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer"  onClick={handleSelectAllMaritalStatus}>
+                Marital Status
+              </h5>
               <div className="grid grid-cols-2 gap-4 justify-between items-center max-2xl:grid-cols-2 max-xl:grid-cols-2 max-sm:grid-cols-1">
                 {maritalStatuses.map((status) => (
-                  <div key={status.marital_sts_id} className="flex items-center">
+                  <div key={status.marital_sts_id}>
                     <input
                       type="checkbox"
                       id={`maritalStatus-${status.marital_sts_id}`}
                       value={status.marital_sts_id.toString()}
-                      checked={selectedMaritalStatuses.includes(status.marital_sts_id.toString())}
+                      // checked={selectedMaritalStatuses.includes(
+                      //   status.marital_sts_id.toString()
+                      // )}
+
+                      checked={
+                        selectedMaritalStatuses.includes(
+                          status.marital_sts_id.toString()
+                        ) ||
+                        status.marital_sts_name.toLowerCase() === "not married" // Default selection for "Not Married"
+                      }
+                      disabled={false} // Enable editing (false means not disabled)
                       onChange={(e) =>
                         handleMaritalStatusChange(
                           status.marital_sts_id.toString(),
@@ -918,6 +913,7 @@ const PartnerSettings: React.FC = () => {
                         )
                       }
                     />
+
                     <label
                       htmlFor={`maritalStatus-${status.marital_sts_id}`}
                       className="pl-2 text-primary"
@@ -930,25 +926,11 @@ const PartnerSettings: React.FC = () => {
             </div>
 
             {/* Profession */}
+            {/* Profession */}
             <div>
-              <div className="flex items-center gap-2 mb-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAllProfessions}
-                  checked={
-                    ProfPref.length > 0 &&
-                    ProfPref.every(status =>
-                      selectedProfession.includes(status.Profes_Pref_id.toString())
-                    )
-                  }
-                  className="cursor-pointer"
-                />
-                <h5
-                  className="text-[18px] text-primary font-semibold cursor-pointer"
-                  onClick={handleSelectAllProfessions}>
-                  Profession
-                </h5>
-              </div>
+              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer"  onClick={handleSelectAllProfessions}>
+                Profession
+              </h5>
               <div className="grid grid-cols-3 gap-4  max-2xl:grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1">
                 {ProfPref.map((option) => (
                   <div
@@ -987,24 +969,9 @@ const PartnerSettings: React.FC = () => {
 
             {/* Education */}
             <div>
-              <div className="flex items-center gap-2 mb-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAllEducation}
-                  checked={
-                    eduPref.length > 0 &&
-                    eduPref.every(education =>
-                      selectedEducations.includes(education.Edu_Pref_id.toString())
-                    )
-                  }
-                  className="cursor-pointer"
-                />
-                <label
-                  className="text-[18px] text-primary font-semibold cursor-pointer"
-                  onClick={handleSelectAllEducation}>
-                  Education
-                </label>
-              </div>
+              <label className="text-[18px] text-primary font-semibold mb-3 block cursor-pointer"  onClick={handleSelectAllEducation}>
+                Education
+              </label>
               <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
                 {eduPref.map((option) => (
                   <div
@@ -1038,24 +1005,9 @@ const PartnerSettings: React.FC = () => {
 
             {/* field of study */}
             <div>
-              <div className="flex items-center gap-2 mb-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAllFieldOfStudy}
-                  checked={
-                    fieldOfStudy.length > 0 &&
-                    fieldOfStudy.every(fieldofstudy =>
-                      selectedFieldOfStudy.includes(fieldofstudy.study_id.toString())
-                    )
-                  }
-                  className="cursor-pointer"
-                />
-                <label
-                  className="text-[18px] text-primary font-semibold cursor-pointer"
-                  onClick={handleSelectAllFieldOfStudy}>
-                  Field Of Study
-                </label>
-              </div>
+              <label className="text-[18px] text-primary font-semibold mb-3 block cursor-pointer" onClick={handleSelectAllFieldOfStudy}>
+                Field Of Study
+              </label>
               <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
                 {fieldOfStudy.map((option) => (
                   <div

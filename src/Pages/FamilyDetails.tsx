@@ -22,7 +22,8 @@ const schema = zod.object({
   aboutmyself: zod.string().optional(),
   myhobbies: zod.string().optional(),
   // Modify the weight validation to allow only 3-digit numbers
-  weight: zod.string().optional(),
+  // weight: zod.string().optional(),
+  weight: zod.string().nullable().optional(),
   bloodGroup: zod.string().optional(),
   no_of_children: zod.string().optional(),
   motherOccupation: zod.string().optional(),
@@ -50,7 +51,7 @@ interface FamilyDetailsInputs {
   familyname?: string;
   aboutmyself?: string;
   myhobbies?: string;
-  weight?: number;
+  weight?: string;
   body_type?: string;
   eye_wear?: string;
   motherOccupation?: string;
@@ -310,11 +311,11 @@ const FamilyDetails: React.FC = () => {
           setValue("aboutmyself", profileData.about_self);
           setValue("myhobbies", profileData.hobbies);
           setWeight(profileData.weight || "");
-          setValue("weight", profileData.weight);
+          setValue("weight", profileData.weight ?? "");
           setValue("body_type", profileData.body_type);
           setValue("eye_wear", profileData.eye_wear);
           setValue("bloodGroup", profileData.blood_group);
-          setValue("no_of_children", profileData.no_of_children);
+          setValue("no_of_children", profileData.no_of_children || 0);
           // Handle radio button for physically challenged
           setValue(
             "physicallyChallenged",
@@ -502,7 +503,7 @@ const FamilyDetails: React.FC = () => {
         body_type: bodytyoe || "",
         eye_wear: bodywear || "",
         blood_group: data.bloodGroup,
-        no_of_children: data.no_of_children,
+        no_of_children: data.no_of_children || 0 ,
         Pysically_changed: physicallyChallengedValue,
         no_of_brother: data.brother ?? undefined,
         no_of_bro_married: data.marriedBrother || 0,
@@ -527,7 +528,7 @@ const FamilyDetails: React.FC = () => {
       //console.log("FamilyDetails:", formattedData);
 
       // //console.log("Formatted Data:", formattedData);
-
+      console.log("family Submitting data:", data);
       setIsSubmitting(true);
       const response = await apiClient.post(
         `/auth/Family_registration/`,
@@ -817,7 +818,7 @@ const FamilyDetails: React.FC = () => {
                     })}
                   >
                     <option value="" disabled selected>Select Number of Children</option>
-                    {[1, 2, 3, 4, 5].map((num) => (
+                    {[0,1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
                         {num}
                       </option>

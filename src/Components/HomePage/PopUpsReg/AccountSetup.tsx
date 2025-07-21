@@ -683,7 +683,8 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
     const savedMobile = sessionStorage.getItem("mobile");
     const savedCountryCode = sessionStorage.getItem("countryCode");
     const savedAgreeToTerms = sessionStorage.getItem("agreeToTerms");
-    const savedGender = sessionStorage.getItem("gender"); // or localStorage
+   // const savedGender = sessionStorage.getItem("gender"); // or localStorage
+    const savedGender = localStorage.getItem("gender"); // or localStorage
 
 
     // if (savedProfileFor) setSelectedProfile(savedProfileFor);    
@@ -749,11 +750,12 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
         const { profile_id, profile_owner, Gender } = response.data;
 
         localStorage.setItem("profile_id", profile_id);
-        
+
         sessionStorage.setItem("profile_id", profile_id);
 
         sessionStorage.setItem("profile_owner", profile_owner);
         sessionStorage.setItem("gender", Gender);
+        localStorage.setItem("gender", Gender);
 
         onNext(data.mobile);
       }

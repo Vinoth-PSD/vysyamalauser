@@ -307,9 +307,11 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
 
   // sessionStorage.setItem("selectedstar", selectedStar);
   sessionStorage.setItem("selectedstar", birthStarId);
+  localStorage.setItem("selectedstar", birthStarId);
   //console.log("selectedstar", birthStarId);
 
   sessionStorage.setItem("selectedRasi", rasiId);
+  localStorage.setItem("selectedRasi", rasiId);
 
   //console.log("selectedRasi", rasiId);
 

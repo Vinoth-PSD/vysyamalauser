@@ -457,61 +457,101 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [selectValue, setSelectValue] = useState<string>("");
   const [apimsgExpressInt, setApiMsgExpressInt] = useState("");
 
+  // const handleHeartMark = async () => {
+  //   try {
+
+  //     const response = await apiClient.post(
+  //       "/auth/Send_profile_intrests/",
+  //       {
+  //         profile_id: loginuser_profileId,
+  //         profile_to: idparam,
+  //         status: !isHeartMarked ? "1" : "0",
+  //         to_express_message: openCustomMsg || selectValue, // Use message if provided, otherwise use an empty string
+  //       }
+  //     );
+  //     // Check for limit reached
+  //     if (response.data.Status === 0 && response.data.message)
+  //     //    {
+  //     //   toast.error("Send express interests limit reached");
+  //     //   return; // exit early
+  //     // }
+
+  //     {
+  //       setApiMsgExpressInt(response.data.message); // Store the API message
+  //       setExpressPopup(true)
+  //       return;
+  //     }
+
+  //     //    {
+  //     //   setShowVysassist(true); // Show the popup by setting state
+  //     //   return;
+  //     // }
+  //     if (response.status === 200) {
+  //       setIsHeartMarked(!isHeartMarked);
+
+  //       // Toast Notification
+  //       if (!isHeartMarked) {
+  //         toast.success("Your express interest has been sent successfully!");
+  //       } else {
+  //         toast.success("Your express interest has been removed successfully!");
+  //       }
+  //     } else {
+  //       // Toast Notification
+  //       // alert("Failed to update express interest");
+  //       toast.error("Failed to update express interest");
+
+  //       console.error("Failed to update express interest");
+  //     }
+  //   } catch (error) {
+  //     // Toast Notification
+  //     NotifyError("Error updating express interest");
+
+  //     console.error("Error updating express interest:", error);
+  //   } finally {
+  //     setOpenCustomMsg("");
+  //     setSelectValue("");
+  //   }
+  // };
+
   const handleHeartMark = async () => {
-    try {
-
-      const response = await apiClient.post(
-        "/auth/Send_profile_intrests/",
-        {
-          profile_id: loginuser_profileId,
-          profile_to: idparam,
-          status: !isHeartMarked ? "1" : "0",
-          to_express_message: openCustomMsg || selectValue, // Use message if provided, otherwise use an empty string
-        }
-      );
-      // Check for limit reached
-      if (response.data.Status === 0 && response.data.message)
-      //    {
-      //   toast.error("Send express interests limit reached");
-      //   return; // exit early
-      // }
-
+  try {
+    const isAdding = !isHeartMarked;
+    const response = await apiClient.post(
+      "/auth/Send_profile_intrests/",
       {
-        setApiMsgExpressInt(response.data.message); // Store the API message
-        setExpressPopup(true)
-        return;
+        profile_id: loginuser_profileId,
+        profile_to: idparam,
+        status: isAdding ? "1" : "0",
+        to_express_message: openCustomMsg || selectValue,
       }
+    );
 
-      //    {
-      //   setShowVysassist(true); // Show the popup by setting state
-      //   return;
-      // }
-      if (response.status === 200) {
-        setIsHeartMarked(!isHeartMarked);
-
-        // Toast Notification
-        if (!isHeartMarked) {
-          toast.success("Your express interest has been sent successfully!");
-        } else {
-          toast.success("Your express interest has been removed successfully!");
-        }
-      } else {
-        // Toast Notification
-        // alert("Failed to update express interest");
-        toast.error("Failed to update express interest");
-
-        console.error("Failed to update express interest");
-      }
-    } catch (error) {
-      // Toast Notification
-      NotifyError("Error updating express interest");
-
-      console.error("Error updating express interest:", error);
-    } finally {
-      setOpenCustomMsg("");
-      setSelectValue("");
+    // Only show upgrade popup if trying to ADD interest and upgrade is required
+    if (isAdding && response.data.Status === 0 && response.data.message) {
+      setApiMsgExpressInt(response.data.message);
+      setExpressPopup(true);
+      return;
     }
-  };
+
+    if (response.status === 200) {
+      setIsHeartMarked(!isHeartMarked);
+
+      if (isAdding) {
+        toast.success("Your express interest has been sent successfully!");
+      } else {
+        toast.success("Your express interest has been removed successfully!");
+      }
+    } else {
+      toast.error("Failed to update express interest");
+    }
+  } catch (error) {
+    NotifyError("Error updating express interest");
+    console.error("Error updating express interest:", error);
+  } finally {
+    setOpenCustomMsg("");
+    setSelectValue("");
+  }
+};
 
   useEffect(() => {
     if (openCustomMsg || selectValue) {

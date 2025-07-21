@@ -198,12 +198,12 @@ export const PayNow: React.FC = () => {
         // Since 'data_message' is directly in the response object, we can check for it directly
         if (response.data_message) {
           NotifySuccess("Plans and packages updated successfully");
-          sessionStorage.setItem(
-            "Save_plan_package_message",
-            response.data_message
-          );
+          sessionStorage.setItem("Save_plan_package_message",response.data_message);
+          localStorage.setItem("Save_plan_package_message",response.data_message);
           sessionStorage.setItem("register_token", response.token);
+          localStorage.setItem("register_token", response.token);
           localStorage.setItem("user_profile_image", response.profile_image);
+          localStorage.setItem("custom_message", response.custom_message);
           //console.log("Save_plan_package", response);
 
           // Navigate to the next page

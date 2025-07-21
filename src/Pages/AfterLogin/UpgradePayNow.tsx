@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { AddOns } from "../../Components/PayNow/AddOns";
 import { Link, useNavigate } from "react-router-dom";
-import {cancelPayment,createOrder,Get_addon_packages,savePlanPackage,verifyPayment} from "../../commonapicall";
+import { cancelPayment, createOrder, Get_addon_packages, savePlanPackage, verifyPayment } from "../../commonapicall";
 import axios from "axios";
-import {ToastNotification,NotifyError,NotifySuccess} from "../../Components/Toast/ToastNotification";
+import { ToastNotification, NotifyError, NotifySuccess } from "../../Components/Toast/ToastNotification";
 
 interface Package {
   package_id: number;
@@ -41,12 +41,12 @@ export const UpgradePayNow: React.FC = () => {
   if (id) {
     localStorage.setItem("plan_id", id);
   }
-   useEffect(() => {
+  useEffect(() => {
     if (id) {
       localStorage.setItem("userplanid", id);
     }
   }, [id]);
-  
+
 
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
   const [selectedPackageIds, setSelectedPackageIds] = useState<number[]>([]);
@@ -191,6 +191,9 @@ export const UpgradePayNow: React.FC = () => {
           );
           sessionStorage.setItem("register_token", response.token);
           localStorage.setItem("user_profile_image", response.profile_image);
+          localStorage.setItem("register_token", response.token);
+          localStorage.setItem("Save_plan_package_message", response.data_message);
+          localStorage.setItem("custom_message", response.custom_message);
           //console.log("Save_plan_package", response);
 
           // Navigate to the next page

@@ -12,14 +12,16 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 
 const profileIdSchema = z.object({
-  profile_id: z
-    .string()
-    .min(1, "Profile ID or Profile Name is required")
-    // .regex(/^VY\d{6}$/, "Profile ID must start with 'VY' followed by 6 digits"),
-    .regex(
-      /^(VY\d{6}|[A-Za-z\s]+)$/,
-      "Search input must be a Profile ID (e.g., VY123456) or a Profile Name"
-    ),
+  // profile_id: z
+  //   .string()
+  //   .min(1, "Profile ID or Profile Name is required")
+  //   // .regex(/^VY\d{6}$/, "Profile ID must start with 'VY' followed by 6 digits"),
+  //   .regex(
+  //     /^(VY\d{6}|[A-Za-z\s]+)$/,
+  //     "Search input must be a Profile ID (e.g., VY123456) or a Profile Name"
+  //   ),
+  profile_id: z.string().min(1, "Profile ID or Profile Name is required"),
+  
 });
 
 // Define the type for the form inputs based on the schema
@@ -50,9 +52,9 @@ interface Income {
   income_description: string;
 }
 
-interface FieldOfStudy{
-  study_id:number;
-  study_description:string;
+interface FieldOfStudy {
+  study_id: number;
+  study_description: string;
 }
 
 interface AdvancedSearchProps {
@@ -334,7 +336,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
 
 
-  const storedGender = sessionStorage.getItem("gender");
+  const storedGender = localStorage.getItem("gender");
   const storedHeight = sessionStorage.getItem("userheightfromapi") || 0;
 
   console.log(storedHeight, "adv height");
@@ -666,34 +668,34 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
               <br />
               <div>
-              <h5 className="text-secondary text-lg font-semibold mb-2  ">
-              Field of Study
-              </h5>
-              <div className="flex flex-wrap gap-4">
-                {fieldofstudyOptions.map((fieldofstudy) => (
-                  <div key={fieldofstudy.study_id}>
-                    <input
-                    
-                     onChange={(e) =>
-                      handlefieldofstudyChange(
-                        fieldofstudy.study_id,
-                         e.target.checked
-                       )
-                     }
-                      type="checkbox"
-                      id={`fieldofstudy-${fieldofstudy.study_id}`}
-                      value={fieldofstudy.study_id}
-                    />
-                    <label
-                      htmlFor={`fieldofstudy-${fieldofstudy.study_id}`}
-                      className="pl-1"
-                    >
-                      {fieldofstudy.study_description}
-                    </label>
-                  </div>
-                ))}
+                <h5 className="text-secondary text-lg font-semibold mb-2  ">
+                  Field of Study
+                </h5>
+                <div className="flex flex-wrap gap-4">
+                  {fieldofstudyOptions.map((fieldofstudy) => (
+                    <div key={fieldofstudy.study_id}>
+                      <input
+
+                        onChange={(e) =>
+                          handlefieldofstudyChange(
+                            fieldofstudy.study_id,
+                            e.target.checked
+                          )
+                        }
+                        type="checkbox"
+                        id={`fieldofstudy-${fieldofstudy.study_id}`}
+                        value={fieldofstudy.study_id}
+                      />
+                      <label
+                        htmlFor={`fieldofstudy-${fieldofstudy.study_id}`}
+                        className="pl-1"
+                      >
+                        {fieldofstudy.study_description}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
             </div>
 
@@ -705,45 +707,45 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               {/* <div className="relative"> */}
               <div className="flex  gap-4 max-lg:flex-col">
                 <div className="relative w-full ">
-                <select
-                  id="minincome"
-                  className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded appearance-none"
-                  onChange={handleIncomeChange}
-                >
-                  <option value="" selected disabled>
-                  Select your Min Income 
-                  </option>
-                  {incomeOptions.map((option) => (
-                    <option key={option.income_id} value={option.income_id}>
-                      {option.income_description}
+                  <select
+                    id="minincome"
+                    className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded appearance-none"
+                    onChange={handleIncomeChange}
+                  >
+                    <option value="" selected disabled>
+                      Select your Min Income
                     </option>
-                  ))}
-                </select>
-                <div className="absolute right-1 top-4 ">
-                  <IoMdArrowDropdown className="text-ashSecondary" />
+                    {incomeOptions.map((option) => (
+                      <option key={option.income_id} value={option.income_id}>
+                        {option.income_description}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-1 top-4 ">
+                    <IoMdArrowDropdown className="text-ashSecondary" />
+                  </div>
                 </div>
-              </div>
 
 
-              <div className="relative w-full ">
-                <select
-                  id="maxincome"
-                  className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded appearance-none"
-                  onChange={handleMaxIncomeChange}
-                >
-                  <option value="" selected disabled>
-                  Select your Max Income 
-                  </option>
-                  {incomeOptions.map((option) => (
-                    <option key={option.income_id} value={option.income_id}>
-                      {option.income_description}
+                <div className="relative w-full ">
+                  <select
+                    id="maxincome"
+                    className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded appearance-none"
+                    onChange={handleMaxIncomeChange}
+                  >
+                    <option value="" selected disabled>
+                      Select your Max Income
                     </option>
-                  ))}
-                </select>
-                <div className="absolute right-1 top-4 ">
-                  <IoMdArrowDropdown className="text-ashSecondary" />
+                    {incomeOptions.map((option) => (
+                      <option key={option.income_id} value={option.income_id}>
+                        {option.income_description}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-1 top-4 ">
+                    <IoMdArrowDropdown className="text-ashSecondary" />
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
 
