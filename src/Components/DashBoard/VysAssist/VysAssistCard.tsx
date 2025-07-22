@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //import axios from "axios";
-import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
+//import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
@@ -62,6 +62,12 @@ export const VysAssistCard: React.FC = () => {
     const navigate = useNavigate();
     const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
     const location = useLocation();
+    const gender = localStorage.getItem("gender");
+    const defaultImgUrl =
+        gender === "male"
+            ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+            : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
 
     const handleBookmark = (profileId: string) => {
         setIsBookmarked(prevState => ({
@@ -144,8 +150,12 @@ export const VysAssistCard: React.FC = () => {
                                 {/* Profile Image */}
                                 <div className="relative max-sm:w-full">
                                     <img
-                                        src={profile.vys_Profile_img || ProfileListImg}
+                                        src={profile.vys_Profile_img || defaultImgUrl}
                                         alt="Profile-image"
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null; // Prevent infinite loop
+                                            e.currentTarget.src = defaultImgUrl; // Set default image
+                                        }}
                                         onClick={() => handleProfileClick(profile.vys_profileid)}
                                         className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                                     />

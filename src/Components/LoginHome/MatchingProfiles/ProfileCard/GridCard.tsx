@@ -120,6 +120,12 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
   // useEffect(() => {
   //   window.scrollTo(0, 0);
   // }, []);
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   if (!profile)
@@ -152,8 +158,12 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
         {profile.photo_protection === 1 ? (
           <div className="relative">
             <img
-              src={profile.profile_img}
+              src={profile.profile_img || defaultImgUrl}
               alt={profile.profile_name}
+              onError={(e) => {
+                e.currentTarget.onerror = null; // Prevent infinite loop
+                e.currentTarget.src = defaultImgUrl; // Set default image
+              }}
               className="w-[321px] h-[321px] rounded-[6px] mx-auto opacity-50" // Reduced opacity to indicate locked state
             />
             <div className="absolute top-0 left-0 w-full h-full rounded-[6px] flex items-center justify-center bg-black bg-opacity-40">
@@ -167,8 +177,12 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
           </div>
         ) : (
           <img
-            src={profile.profile_img}
+            src={profile.profile_img || defaultImgUrl}
             alt={profile.profile_name}
+            onError={(e) => {
+              e.currentTarget.onerror = null; // Prevent infinite loop
+              e.currentTarget.src = defaultImgUrl; // Set default image
+            }}
             className="w-[320px] h-[280px] rounded-[6px] mx-auto object-cover object-top"
           />
         )}

@@ -113,6 +113,14 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
     }
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
+
   return (
     <div
       className="w-10/12 relative fade-bottom mx-auto my-5 cursor-pointer rounded-lg after:!rounded-lg after:left-0"
@@ -128,7 +136,13 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
         </div>
       )}
 
-      <img src={profileImage} alt={profileName} className="w-full h-[250px] rounded-lg object-cover object-top" />
+      <img src={profileImage || defaultImgUrl}
+        alt={profileName}
+        onError={(e) => {
+          e.currentTarget.onerror = null; // Prevent infinite loop
+          e.currentTarget.src = defaultImgUrl; // Set default image
+        }}
+        className="w-full h-[250px] rounded-lg object-cover object-top" />
       <div className="w-full absolute bottom-0 px-3 py-3 z-10">
         <h5
           onClick={() => handleProfileClick(profileId)}

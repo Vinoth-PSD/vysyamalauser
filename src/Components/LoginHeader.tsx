@@ -62,6 +62,12 @@ export const LoginHeader: React.FC = () => {
   const [refreshNotifications, setRefreshNotifications] = useState(false); // Trigger for refresh
   ////console.log("setSelectedFromProfileId", setSelectedFromProfileId);
   const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
+  const gender = localStorage.getItem("gender");
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+
 
   const getUnreadMessageCount = async () => {
     try {
@@ -474,8 +480,12 @@ export const LoginHeader: React.FC = () => {
                           >
                             <div>
                               <img
-                                src={notification.profile_image}
+                                src={notification.profile_image || defaultImgUrl}
                                 alt={notification.notify_profile_name}
+                                onError={(e) => {
+                                  e.currentTarget.onerror = null; // Prevent infinite loop
+                                  e.currentTarget.src = defaultImgUrl; // Set default image
+                                }}
                                 className="!w-8 h-8 rounded-full"
                               />
                             </div>
@@ -492,11 +502,11 @@ export const LoginHeader: React.FC = () => {
                               {notification.notification_type ===
                                 "express_interests_accept" ? (
                                 <button
-                                onClick={() => handleMessage(notification.from_profile_id)}
-                                className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
+                                  onClick={() => handleMessage(notification.from_profile_id)}
+                                  className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
                                   Message
                                 </button>
-                              ) : (notification.notification_type === "Profile_update" || notification.notification_type === "express_interests")? (
+                              ) : (notification.notification_type === "Profile_update" || notification.notification_type === "express_interests") ? (
                                 <button
                                   className="text-main rounded-md border-[2px] border-main px-2 py-1"
                                   onClick={() => navigate(`/ProfileDetails?id=${notification.from_profile_id}`)}
@@ -564,8 +574,12 @@ export const LoginHeader: React.FC = () => {
               onMouseLeave={handleMouseLeave}
             >
               <img
-                src={userProfileImage ? userProfileImage : ProfileImg}
+                src={userProfileImage ? userProfileImage : ProfileImg || defaultImgUrl}
                 alt="Profile-image"
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // Prevent infinite loop
+                  e.currentTarget.src = defaultImgUrl; // Set default image
+                }}
                 className="w-11 h-11 rounded-full cursor-pointer object-cover"
               />
 

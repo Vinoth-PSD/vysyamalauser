@@ -150,10 +150,14 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
           setBirthStarId(profileData.birthstar_name);
           setRasiId(profileData.birth_rasi_name);
           setDidi(profileData.lagnam_didi);
+          setValue("placeOfBirth", profileData.place_of_birth);
+          setValue("birthStar", profileData.birthstar_name);
+          setValue("rasi", profileData.birth_rasi_name);
+          setValue("lagnam", profileData.lagnam_didi);
           setValue("chevvaiDhosam", profileData.chevvai_dosaham);
           setValue("sarpaDhosham", profileData.ragu_dosham);
           setValue("naalikai", profileData.nalikai);
-          // setValue("dasaName", profileData.dasa_name);
+          setValue("dasaName", profileData.dasa_name);
           setValue("horoscopeHints", profileData.horoscope_hints);
           setChevvaiDhosam(profileData.chevvai_dosaham);
           setSarpaDhosham(profileData.ragu_dosham);
@@ -175,6 +179,9 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
           const timeOfBirth = profileData.time_of_birth;
           const [time, period] = timeOfBirth.split(" ");
           const [hours, minutes] = time.split(":");
+          setValue("hour", hours);
+          setValue("minute", minutes);
+          setValue("period", period);
           sethour(hours);
           setminute(minutes);
           setperiod(period);

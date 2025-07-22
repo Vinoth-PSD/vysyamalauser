@@ -44,23 +44,35 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
     }
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
+
   return (
     <>
       <div className="grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-2 max-sm:grid-cols-1 gap-5">
         {profiles.map((profile) => (
           <div className="group cursor-pointer relative">
             <img
-              src={profile.img_url}
+              src={profile.img_url || defaultImgUrl}
               alt={`Gallery image ${profile.profile_id}`}
+              onError={(e) => {
+                e.currentTarget.onerror = null; // Prevent infinite loop
+                e.currentTarget.src = defaultImgUrl; // Set default image
+              }}
               className="w-full h-[350px] object-cover rounded-lg transition-transform transform duration-500 scale-100 group-hover:scale-105 object-top"
             />
             <p className="mt-2 text-center">{profile.profile_id}</p>
             {loadingProfileId === profile.profile_id && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-lg">
-              <Hearts height="80" width="80" color="#FF6666" visible={true} />
-              <p className="mt-2 text-sm text-primary">Please wait...</p>
-            </div>
-          )}
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-lg">
+                <Hearts height="80" width="80" color="#FF6666" visible={true} />
+                <p className="mt-2 text-sm text-primary">Please wait...</p>
+              </div>
+            )}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 //onClick={()=> navigate(`/ProfileDetails?id=${profile.profile_id}`)} 

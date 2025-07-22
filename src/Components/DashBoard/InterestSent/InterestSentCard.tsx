@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
+//import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
 import { MdVerifiedUser, MdBookmark, MdBookmarkBorder, MdStars, MdOutlineGrid3X3, MdMessage, } from "react-icons/md";
 import { IoCalendar, IoSchool, IoEye } from "react-icons/io5";
 import { FaPersonArrowUpFromLine, FaSuitcase, FaLocationDot, FaUser } from "react-icons/fa6";
@@ -304,6 +304,13 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
     }
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
 
   return (
     <div className="">
@@ -326,8 +333,12 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
               {/* Profile Image */}
               <div className="relative  max-sm:w-full">
                 <img
-                  src={profile.myint_Profile_img || ProfileListImg}
+                  src={profile.myint_Profile_img || defaultImgUrl}
                   alt="Profile-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                    e.currentTarget.src = defaultImgUrl; // Set default image
+                  }}
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                 />
 

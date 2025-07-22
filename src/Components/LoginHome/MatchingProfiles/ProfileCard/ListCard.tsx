@@ -13,7 +13,7 @@ import {
   FaLocationDot,
   // FaUser,
 } from "react-icons/fa6";
-import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
+//import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
 // import MatchingScoreImg from '../../../../assets/images/MatchingScore.png';
 import { ProfileContext, Profile } from "../../../../ProfileContext"; // Adjust the path as needed
 import { useNavigate } from "react-router-dom";
@@ -150,6 +150,14 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
     verified,
   } = profile;
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
+
   return (
     // <Link to="/ProfileDetails" target="_blank">
     <div
@@ -178,8 +186,12 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
             {profile.photo_protection === 1 ? (
               <>
                 <img
-                  src={profile_img || ProfileListImg}
+                  src={profile_img || defaultImgUrl}
                   alt="Profile-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                    e.currentTarget.src = defaultImgUrl; // Set default image
+                  }}
                   className="w-[218px] h-[218px] rounded-[6px] max-md:w-full max-md:h-[280px] opacity-50" // Reduced opacity when locked
                 />
                 {/* Lock overlay */}
@@ -192,8 +204,12 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
               </>
             ) : (
               <img
-                src={profile_img || ProfileListImg}
+                src={profile_img || defaultImgUrl}
                 alt="Profile-image"
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // Prevent infinite loop
+                  e.currentTarget.src = defaultImgUrl; // Set default image
+                }}
                 className="w-[218px] h-[218px] rounded-[6px]  max-md:w-full max-md:h-[280px] object-cover object-top"
               />
             )}

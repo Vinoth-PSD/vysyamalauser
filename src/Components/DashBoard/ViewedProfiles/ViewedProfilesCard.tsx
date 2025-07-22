@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 //import axios from "axios";
-import ProfileListImg from "../../../assets/images/ProfileListImg.png";
+//import ProfileListImg from "../../../assets/images/ProfileListImg.png";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
 import { MdStars } from "react-icons/md";
@@ -179,6 +179,13 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
     }
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
   //console.log(profiles, "profilesssssss");
   return (
     <div className="">
@@ -199,8 +206,12 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
               {/* Profile Image */}
               <div className="relative  max-sm:w-full cursor-pointer" onClick={() => handleProfileClick(profile.visited_profileid)}>
                 <img
-                  src={profile.visited_Profile_img || ProfileListImg}
+                  src={profile.visited_Profile_img || defaultImgUrl}
                   alt="Profile-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                    e.currentTarget.src = defaultImgUrl; // Set default image
+                  }}
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                 />
 

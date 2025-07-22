@@ -4,7 +4,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdVerifiedUser, MdBookmark, MdBookmarkBorder } from "react-icons/md";
-import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
+//import ProfileListImg from "../../../../assets/images/ProfileListImg.png";
 import { ProfileContext, Profile } from "../../../../ProfileContext"; // Adjust the path as needed
 // import { Link } from "react-router-dom";
 // import { fetchProfiles } from "../../../../commonapicall"; // Import the API function
@@ -185,8 +185,12 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
   //   const count =0
   //   if(searchProfile){}
   // },[searchProfile])
+  const gender = localStorage.getItem("gender");
 
-
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   const {
@@ -243,8 +247,12 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
           {profile.photo_protection === 1 ? (
             <>
               <img
-                src={profile_img || ProfileListImg}
+                src={profile_img || defaultImgUrl}
                 alt="Profile-image"
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // Prevent infinite loop
+                  e.currentTarget.src = defaultImgUrl; // Set default image
+                }}
                 className="w-[180px] h-[180px] rounded-[6px] max-sm:w-full max-sm:h-[250px] object-cover object-top"
               />
               {/* Lock overlay */}
@@ -257,8 +265,12 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
             </>
           ) : (
             <img
-              src={profile_img || ProfileListImg}
+              src={profile_img || defaultImgUrl}
               alt="Profile-image"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = defaultImgUrl;
+              }}
               className="w-[180px] h-[180px] rounded-[6px] max-sm:w-full max-sm:h-[250px] object-cover object-top"
             />
           )}

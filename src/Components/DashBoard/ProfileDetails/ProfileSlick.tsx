@@ -757,15 +757,15 @@ export const ProfileSlick = () => {
   }, []);
 
   const ZoomedImage: React.FC<{ image: string | null }> = ({ image }) => {
-  if (!image) return null;
+    if (!image) return null;
 
-  return (
-    <div className="zoomed-image-container zoomed-visible">
-      <img src={image} className="zoomed-image object-top object-contain" alt="Zoomed" />
-    </div>
-  );
-};
-    
+    return (
+      <div className="zoomed-image-container zoomed-visible">
+        <img src={image} className="zoomed-image object-top object-contain" alt="Zoomed" />
+      </div>
+    );
+  };
+
   const debouncedFetchImages = useCallback(() => {
     // Debounced fetch logic to prevent continuous calls
     let timeout: NodeJS.Timeout;
@@ -955,6 +955,14 @@ export const ProfileSlick = () => {
     ],
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+
+
   return (
     <div>
       <ToastNotification />
@@ -979,10 +987,14 @@ export const ProfileSlick = () => {
                 className="relative profile-slider-img-container  max-lg:w-full h-full px-2"
               >
                 <img
-                  src={image.imageUrl}
+                  src={image.imageUrl || defaultImgUrl}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                    e.currentTarget.src = defaultImgUrl; // Set default image
+                  }}
                   className="w-full h-[450px] rounded-lg object-cover object-top"
                   alt={`Profile ${index + 1}`}
-                   onMouseEnter={() => handleMouseEnter(image.imageUrl)}
+                  onMouseEnter={() => handleMouseEnter(image.imageUrl)}
                   onMouseLeave={handleMouseLeave}
                 />
                 <div
@@ -1025,7 +1037,11 @@ export const ProfileSlick = () => {
           // If only one image, show it without using Slider
           <div className="relative profile-slider-img-container max-lg:w-full h-full px-2">
             <img
-              src={images[0]?.imageUrl}
+              src={images[0]?.imageUrl || defaultImgUrl}
+              onError={(e) => {
+                e.currentTarget.onerror = null; // Prevent infinite loop
+                e.currentTarget.src = defaultImgUrl; // Set default image
+              }}
               className="w-full h-[450px] rounded-lg profile-slider-img object-cover object-top"
               alt="Profile"
             />
@@ -1083,7 +1099,7 @@ export const ProfileSlick = () => {
           </Slider>
         )}
       </div>
-     <ZoomedImage image={zoomImage} />
+      <ZoomedImage image={zoomImage} />
       <input
         type="file"
         accept="image/*"

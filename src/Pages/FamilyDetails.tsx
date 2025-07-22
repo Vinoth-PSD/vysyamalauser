@@ -160,21 +160,13 @@ const FamilyDetails: React.FC = () => {
   const familyValueRef = useRef<HTMLDivElement>(null);
   const familyStatusRef = useRef<HTMLDivElement>(null);
   const [familyType, setfamilyType] = useState<FamilyType[]>([]);
-  const [selectedfamilyTypeId, setSelectedfamilyTypeId] = useState<
-    number | null
-  >(null);
+  const [selectedfamilyTypeId, setSelectedfamilyTypeId] = useState<number | null>(null);
   const [, setSelectedFamilyType] = useState<string | null>(null);
-
   const [familyValue, setfamilyValue] = useState<FamilyValue[]>([]);
-  const [selectedfamilyValueId, setSelectedfamilyValueId] = useState<
-    number | null
-  >(null);
+  const [selectedfamilyValueId, setSelectedfamilyValueId] = useState<number | null>(null);
   const [, setSelectedfamilyValue] = useState<string | null>(null);
-
   const [familyStatus, setfamilyStatus] = useState<FamilyStatus[]>([]);
-  const [selectedfamilyStatusId, setSelectedfamilyStatusId] = useState<
-    number | null
-  >(null);
+  const [selectedfamilyStatusId, setSelectedfamilyStatusId] = useState<number | null>(null);
   const [, setSelectedfamilyStatus] = useState<string | null>(null);
   const [bodytyoe, setBodytype] = useState("");
   const [bodywear, setBodyWear] = useState("");
@@ -263,20 +255,13 @@ const FamilyDetails: React.FC = () => {
     handleFocus(familyTypeRef, errors.familyType);
     handleFocus(familyValueRef, errors.familyValue);
     handleFocus(familyStatusRef, errors.familyStatus);
-  }, [
-    errors.brother,
-    errors.marriedBrother,
-    errors.sister,
-    errors.familyType,
-    errors.familyValue,
-    errors.familyStatus,
-  ]);
+  }, [errors.brother,errors.marriedBrother,errors.sister,errors.familyType,errors.familyValue,errors.familyStatus]);
 
   const physicallyChallengedValue = watch("physicallyChallenged");
-
   const profileId = localStorage.getItem("profile_id_new");
   const [weight, setWeight] = useState<string>("");
   const [familyName, setFamilyName] = useState<string>("");
+
   useEffect(() => {
     const fetchFamilyData = async () => {
       if (profileId) {
@@ -297,9 +282,7 @@ const FamilyDetails: React.FC = () => {
           );
 
           //console.log("API Response:", response.data);
-
           const profileData = response.data.data;
-
           //console.log("Profile Data:", profileData);
 
           // Set form values here after fetching data
@@ -315,7 +298,11 @@ const FamilyDetails: React.FC = () => {
           setValue("body_type", profileData.body_type);
           setValue("eye_wear", profileData.eye_wear);
           setValue("bloodGroup", profileData.blood_group);
-          setValue("no_of_children", profileData.no_of_children || 0);
+          // setValue("no_of_children", profileData.no_of_children || 0);
+          if (['2', '3', '5'].includes((maritalStatus) as string)) {
+            setValue("no_of_children", profileData.no_of_children || 0);
+          }
+
           // Handle radio button for physically challenged
           setValue(
             "physicallyChallenged",
@@ -503,7 +490,10 @@ const FamilyDetails: React.FC = () => {
         body_type: bodytyoe || "",
         eye_wear: bodywear || "",
         blood_group: data.bloodGroup,
-        no_of_children: data.no_of_children || 0 ,
+        // no_of_children: data.no_of_children || 0 ,
+        ...(maritalStatus && ['2', '3', '5'].includes(maritalStatus) && {
+          no_of_children: data.no_of_children || 0,
+        }),
         Pysically_changed: physicallyChallengedValue,
         no_of_brother: data.brother ?? undefined,
         no_of_bro_married: data.marriedBrother || 0,
@@ -818,7 +808,7 @@ const FamilyDetails: React.FC = () => {
                     })}
                   >
                     <option value="" disabled selected>Select Number of Children</option>
-                    {[0,1, 2, 3, 4, 5].map((num) => (
+                    {[0, 1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
                         {num}
                       </option>

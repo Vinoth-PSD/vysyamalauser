@@ -144,7 +144,6 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
             <GridListCard
               key={profile.profile_id}
               profileId={profile.profile_id}
-
               profile={profile}
               searchvalues={searchvalues}
             />
@@ -165,7 +164,6 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
               key={profile.profile_id}
               profileId={profile.profile_id}
               profile={profile}
-
               searchvalues={searchvalues}
             />
           ))
@@ -174,8 +172,6 @@ export const GridListView: React.FC<SearchResultProps> = ({ searchvalues }) => {
             <ProfileNotFound />
           </div>
         )}
-
-
         {/* </div> */}
       </div>
     </div>

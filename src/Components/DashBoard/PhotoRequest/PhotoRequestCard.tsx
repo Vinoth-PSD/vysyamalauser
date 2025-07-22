@@ -294,6 +294,13 @@ const PhotoRequestCard = ({
     }
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
 
   return (
     <div>
@@ -314,8 +321,12 @@ const PhotoRequestCard = ({
             <div className="flex justify-between items-center space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
               <div className="relative  max-sm:w-full">
                 <img
-                  src={data.req_Profile_img}
+                  src={data.req_Profile_img || defaultImgUrl}
                   alt="Profile-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // Prevent infinite loop
+                    e.currentTarget.src = defaultImgUrl; // Set default image
+                  }}
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                   onClick={() => handleProfileClick(data.req_profileid)} // ✅ Add this line
                 />

@@ -2,17 +2,11 @@
 
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import axios from "axios";
-import ProfileListImg from "../../../assets/images/ProfileListImg.png";
-import {
-  MdVerifiedUser,
-  MdBookmark,
-  MdBookmarkBorder,
-  MdOutlineGrid3X3,
-  MdStars,
-} from "react-icons/md";
+//import ProfileListImg from "../../../assets/images/ProfileListImg.png";
+import { MdVerifiedUser, MdBookmark, MdBookmarkBorder, MdOutlineGrid3X3, MdStars } from "react-icons/md";
 import { IoCalendar, IoEye, IoSchool } from "react-icons/io5";
 import { FaUser, FaSuitcase } from "react-icons/fa";
-import {  useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import MatchingScore from "../ProfileDetails/MatchingScore";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
@@ -114,7 +108,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
       );
       if (response.data.Status === 1) {
         toast.success("Profile added to wishlist!");
-       // //console.log("Profile added to wishlist!");
+        // //console.log("Profile added to wishlist!");
         setBookmarkedProfiles((prev) => [...prev, profileId]);
         sessionStorage.setItem(
           "bookmarkedProfiles",
@@ -156,7 +150,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
 
   return (
     <div className="">
-        <ToastContainer /> {/* Include ToastContainer */}
+      <ToastContainer /> {/* Include ToastContainer */}
       {profiles.length ? (
         profiles.map((profile) => (
           <ProfileCard
@@ -194,7 +188,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   //   navigate(`/ProfileDetails?id=${profileId}`);
   // };
 
- const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
   const handleProfileClick = async (profileId: string) => {
@@ -242,6 +236,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     }
   };
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
+
   return (
     <div
       className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow p-5 mb-5"
@@ -251,8 +253,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <div className="flex justify-between items-center space-x-5 max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
           <div className="relative max-sm:w-full">
             <img
-              src={profile.mutint_Profile_img || ProfileListImg}
+              src={profile.mutint_Profile_img || defaultImgUrl}
               alt="Profile image"
+              onError={(e) => {
+                e.currentTarget.onerror = null; // Prevent infinite loop
+                e.currentTarget.src = defaultImgUrl; // Set default image
+              }}
               className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
             />
             {isBookmarked ? (
@@ -314,7 +320,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </p>
             </div>
 
-            <div className="hidden flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+            <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
               <div>
                 <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                   <MdOutlineGrid3X3 className="mr-2 text-primary" />{" "}

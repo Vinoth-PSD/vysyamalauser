@@ -162,6 +162,15 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
       setActiveProfileId(null); // reset loading
     }
   };
+ 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
+
   return (
     <div
       // onClick={handleCardClick}
@@ -170,7 +179,12 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
     >
       <div className="mb-3 !h-auto ">
         {profileImg ? (
-          <img src={profileImg} alt="Profile" className="w-full h-[260px] object-cover object-top" />
+          <img src={profileImg || defaultImgUrl} alt="Profile" 
+           onError={(e) => {
+                  e.currentTarget.onerror = null; // Prevent infinite loop
+                  e.currentTarget.src = defaultImgUrl; // Set default image
+                }}
+          className="w-full h-[260px] object-cover object-top" />
         ) : (
           <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
             <span className="text-gray-500">No Image</span>
