@@ -262,11 +262,14 @@ export const PersonalNotesCard = () => {
                 </div>
 
                 {/* Matching Score */}
-                <div className="max-lg:hidden">
-                  <div>
-                    <MatchingScore scorePercentage={profileData.notes_match_score} />
-                  </div>
-                </div>
+                {profileData.notes_match_score !== undefined &&
+                  profileData.notes_match_score > 50 && (
+                    <div className="max-lg:hidden">
+                      <div>
+                        <MatchingScore scorePercentage={profileData.notes_match_score} />
+                      </div>
+                    </div>
+                  )}
               </div>
             </div>
 

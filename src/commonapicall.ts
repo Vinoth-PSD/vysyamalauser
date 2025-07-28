@@ -55,28 +55,28 @@ export const fetchProfilesDetails = async (profileId: string, PageID:string): Pr
 };
 
 export const Update_photo_request =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Update_photo_request/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Update_photo_request/";
  // "http://103.214.132.20:8000/auth/Update_photo_request/";
 export const Get_profile_det_match =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_profile_det_match/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_profile_det_match/";
  // "http://103.214.132.20:8000/auth/Get_profile_det_match/";
 export const Get_photo_bypassword =
-  "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_photo_bypassword/";
+  "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_photo_bypassword/";
   //"http://103.214.132.20:8000/auth/Get_photo_bypassword/";
 export const Get_addon_packages =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_addon_packages/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_addon_packages/";
   //"http://103.214.132.20:8000/auth/Get_addon_packages/";
 export const Save_plan_package =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Save_plan_package/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Save_plan_package/";
  // "http://103.214.132.20:8000/auth/Save_plan_package/";
 export const update_photo_password =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Update_photo_password/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Update_photo_password/";
   //"http://103.214.132.20:8000/auth/Update_photo_password/";
 export const photo_protection =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_photo_protection/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_photo_protection/";
   //"http://103.214.132.20:8000/auth/Get_photo_protection/";
 export const Get_advance_search =
-   "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_advance_search/";
+   "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_advance_search/";
   //"http://103.214.132.20:8000/auth/Get_advance_search/";
 
 export const fetchSearchProfiles = async (searchId: string,profession: string,age:string,location:string,pageNo:number,sortOrder:number): Promise<any> => {

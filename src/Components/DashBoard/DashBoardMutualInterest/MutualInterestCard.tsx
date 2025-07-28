@@ -14,6 +14,7 @@ import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFoun
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
 import apiClient from "../../../API";
+import { Hearts } from "react-loader-spinner";
 
 // Define the Profile interface
 export interface Profile {
@@ -188,16 +189,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   //   navigate(`/ProfileDetails?id=${profileId}`);
   // };
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
 
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
 
-    let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
       page_id = "1";
     }
@@ -212,27 +214,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         }
       );
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
         return;
       }
 
-      // If successful, create profile visit and navigate
+      // Navigate after validation
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setActiveProfileId(null); // reset loading
     }
   };
 
@@ -249,6 +243,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow p-5 mb-5"
       onClick={() => handleProfileClick(profile.mutint_profileid)}
     >
+      {activeProfileId === profile.mutint_profileid && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+          <Hearts height="80" width="80" color="#FF6666" visible={true} />
+          <p className="mt-2 text-sm text-primary">Please wait...</p>
+        </div>
+      )}
       <div className="w-full flex justify-between items-center">
         <div className="flex justify-between items-center space-x-5 max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
           <div className="relative max-sm:w-full">
@@ -346,10 +346,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </div>
           </div>
         </div>
-
-        <div className="max-lg:hidden">
-          <MatchingScore scorePercentage={profile.mutint_match_score} />
-        </div>
+        {profile.mutint_match_score !== undefined &&
+          profile.mutint_match_score > 50 && (
+            <div className="max-lg:hidden">
+              <MatchingScore scorePercentage={profile.mutint_match_score} />
+            </div>
+          )}
       </div>
     </div>
   );

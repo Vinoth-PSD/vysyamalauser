@@ -303,10 +303,12 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
           </div>
         </div>
 
-
-        <div className="sm:hidden md:block">
-          <MatchingScore scorePercentage={matching_score} />
-        </div>
+        {matching_score !== undefined &&
+          Number(matching_score) > 50 && (
+            <div className="sm:hidden md:block">
+              <MatchingScore scorePercentage={matching_score} />
+            </div>
+          )}
       </div>
     </div>
     // </Link>

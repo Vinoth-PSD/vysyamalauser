@@ -318,16 +318,19 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
             </div>
 
             {/* Matching Score */}
-            <div>
-              <div className="max-lg:hidden">
-                {/* <img
+            {profile.visited_match_score !== undefined &&
+              profile.visited_match_score > 50 && (
+                <div>
+                  <div className="max-lg:hidden">
+                    {/* <img
                                     src={MatchingScoreImg}
                                     alt="Matching Score"
                                     className="w-full"
                                 /> */}
-                <MatchingScore scorePercentage={profile.visited_match_score} />
-              </div>
-            </div>
+                    <MatchingScore scorePercentage={profile.visited_match_score} />
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       ))}

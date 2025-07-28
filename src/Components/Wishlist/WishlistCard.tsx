@@ -18,6 +18,7 @@ import { WhishlistNotFound } from "./WhishlistNotFound";
 import apiClient from "../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 // Define the shape of your wishlist profile
 interface WishlistProfile {
@@ -63,9 +64,11 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
   const [wishlistProfiles, setWishlistProfiles] = useState<WishlistProfile[]>(
     []
   );
-
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // Fetch data from API
   const fetchWishlistProfiles = async (profileId: string) => {
+    setIsLoading(true); // Start loading
     try {
       const response = await apiClient.post(
         "/auth/Get_profile_wishlist/",
@@ -98,6 +101,8 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
       }
     } catch (error) {
       console.error("Error fetching wishlist profiles:", error);
+    } finally {
+      setIsLoading(false); // End loading
     }
   };
 
@@ -115,16 +120,16 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
   // const handleProfileClick = (profileId: string) => {
   //   navigate(`/ProfileDetails?id=${profileId}&page=2`);
   // };
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
   const handleProfileClick = async (profileId: string) => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (activeProfileId) return;
+    setActiveProfileId(profileId); // set the card that's loading
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+    let page_id = "2";
 
-    let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
       page_id = "1";
     }
@@ -139,27 +144,19 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
         }
       );
 
-      // Check for failure response
       if (checkResponse.data.status === "failure") {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
+        setActiveProfileId(null);
         return;
       }
 
-      // If successful, create profile visit and navigate
+      // Navigate after validation
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-
-      await apiClient.post(
-        "/auth/Create_profile_visit/",
-        {
-          profile_id: loginuser_profileId,
-          viewed_profile: profileId,
-        }
-      );
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setIsLoading(false);
+      setActiveProfileId(null); // reset loading
     }
   };
 
@@ -174,7 +171,18 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
   return (
     <div>
       <div>
-        {wishlistProfiles.length === 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center min-h-[300px]">
+            <Hearts
+              height="100"
+              width="100"
+              color="#FF6666"
+              ariaLabel="hearts-loading"
+              visible={true}
+            />
+            <p className="text-sm">Loading your wishlist, please wait...</p>
+          </div>
+        ) : wishlistProfiles.length === 0 ? (
           <div className="py-20">
             <WhishlistNotFound />
           </div>
@@ -185,6 +193,12 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
                 key={profile.wishlist_profileid}
                 className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow px-3 py-3 mb-5"
               >
+                {activeProfileId === profile.wishlist_profileid && (
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
+                    <Hearts height="80" width="80" color="#FF6666" visible={true} />
+                    <p className="mt-2 text-sm text-primary">Please wait...</p>
+                  </div>
+                )}
                 <div className="w-full flex justify-between items-center">
                   <div className="flex justify-between items-center space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
                     {/* Profile Image */}
@@ -272,7 +286,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
                         </p>
                       </div>
 
-                      <div className="hidden flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                      <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
                         {/* Horoscope Available */}
                         <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
@@ -305,16 +319,19 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
                   </div>
 
                   {/* Matching Score */}
-                  <div className="max-lg:hidden">
-                    <div>
-                      {/* <img
+                  {profile.wishlist_match_score !== undefined &&
+                    profile.wishlist_match_score > 50 && (
+                      <div className="max-lg:hidden">
+                        <div>
+                          {/* <img
                     src={MatchingScoreImg}
                     alt="Matching Score"
                     className="w-full"
                   /> */}
-                      <MatchingScore scorePercentage={profile.wishlist_match_score} />
-                    </div>
-                  </div>
+                          <MatchingScore scorePercentage={profile.wishlist_match_score} />
+                        </div>
+                      </div>
+                    )}
                 </div>
               </div>
             ))}

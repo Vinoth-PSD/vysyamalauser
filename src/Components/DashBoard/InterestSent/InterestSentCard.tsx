@@ -491,16 +491,19 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
             </div>
 
             {/* Matching Score */}
-            <div>
-              <div className="max-lg:hidden">
-                {/* <img
+            {profile.myint_match_score !== undefined &&
+              profile.myint_match_score > 50 && (
+                <div>
+                  <div className="max-lg:hidden">
+                    {/* <img
                                     src={MatchingScoreImg}
                                     alt="Matching Score"
                                     className="w-full"
                                 /> */}
-                <MatchingScore scorePercentage={profile.myint_match_score} />
-              </div>
-            </div>
+                    <MatchingScore scorePercentage={profile.myint_match_score} />
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       ))}

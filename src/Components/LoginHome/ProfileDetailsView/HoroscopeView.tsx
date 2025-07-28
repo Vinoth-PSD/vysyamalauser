@@ -22,6 +22,7 @@ interface HoroscopeDetails {
     // rasiTemp:string;
     rasi_kattam: string;
     amsa_kattam: string;
+    madulamn:string;
 }
 
 export const HoroscopeView: React.FC = () => {
@@ -128,7 +129,7 @@ export const HoroscopeView: React.FC = () => {
 
 
                     <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Madhulam :
-                        <span className="font-normal"> Vasthrakula</span></h5>
+                        <span className="font-normal"> {horoscopeDetails?.madulamn}</span></h5>
 
                     {horoscopeDetails?.dasa_name && horoscopeDetails.dasa_name !== "" && horoscopeDetails.dasa_name !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Dasa Name:

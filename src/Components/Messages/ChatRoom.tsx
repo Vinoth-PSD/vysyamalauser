@@ -19,7 +19,7 @@ export const ChatRoom: React.FC = () => {
     // Fetch chat history from the server
     const fetchChatHistory = async () => {
         try {
-            const response = await fetch(`https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/getMessages/${room_name}/`, {
+            const response = await fetch(`https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/getMessages/${room_name}/`, {
                 //const response = await fetch(`http://103.214.132.20:8000/auth/getMessages/${room_name}/`, {
                 method: 'GET',
                 headers: {

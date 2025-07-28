@@ -26,7 +26,7 @@ interface ApiResponse {
     profiles: Profile[];
 }
 
-const API_URL = "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Get_featured_profiles/";
+const API_URL = "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_featured_profiles/";
 //const API_URL = "http://103.214.132.20:8000/auth/Get_featured_profiles/";
 
 export const FeaturedBrideCard: React.FC = () => {

@@ -121,7 +121,7 @@ return (
           <IoArrowBackOutline onClick={dashBoardAgain} className="text-[24px] mr-2 cursor-pointer" />
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold">
             Wishlist
-            <span className="text-sm text-primary"> ({TotalRecords?.toString()})</span>
+            <span className="text-lg text-primary"> ({TotalRecords?.toString()})</span>
           </h4>
         </div>
 

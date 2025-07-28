@@ -43,7 +43,7 @@ export const ProfileChatArea: React.FC<ProfileChatAreaProps> = ({ selectedProfil
         if (!roomName) return;
 
         try {
-           const response = await fetch('https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/GetMessages/', {
+           const response = await fetch('https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/GetMessages/', {
               //  const response = await fetch('http://103.214.132.20:8000/auth/GetMessages/', {
                 method: 'POST',
                 headers: {

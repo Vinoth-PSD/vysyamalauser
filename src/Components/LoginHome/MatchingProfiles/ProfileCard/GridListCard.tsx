@@ -348,7 +348,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
           <div className="mb-1">
             <p className="flex items-center text-sm text-primary-400">
               {/* <FaLocationDot className="mr-2" /> */}
-              {profile_location || "N/A"}
+              {profile_location || "N/A"} salem
             </p>
           </div>
         </div>

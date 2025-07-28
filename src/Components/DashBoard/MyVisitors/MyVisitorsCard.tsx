@@ -285,9 +285,12 @@ export const MyVisitorsCard = () => {
               </div>
 
               {/* Matching Score */}
-              <div className="max-lg:hidden">
-                <MatchingScore scorePercentage={profile.viwed_match_score} />
-              </div>
+              {profile.viwed_match_score !== undefined &&
+                profile.viwed_match_score > 50 && (
+                  <div className="max-lg:hidden">
+                    <MatchingScore scorePercentage={profile.viwed_match_score} />
+                  </div>
+                )}
             </div>
           </div>
         </div>

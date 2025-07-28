@@ -256,25 +256,25 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
     await uploadImages(
       selectedFiles,
-       "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/ImageSetUpload/",
+       "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/ImageSetUpload/",
       //"http://103.214.132.20:8000/auth/ImageSetUpload/",
       "image_files"
     );
     await uploadImages(
       selectedHoroscopeFiles,
-      "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Horoscope_upload/",
+      "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Horoscope_upload/",
      // "http://103.214.132.20:8000/auth/Horoscope_upload/",
       "horoscope_file"
     );
     await uploadImages(
       selectedDivorceProofFiles,
-       "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Divorceproof_upload/",
+       "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Divorceproof_upload/",
       //"http://103.214.132.20:8000/auth/Divorceproof_upload/",
       "divorcepf_file"
     );
     await uploadImages(
       selectedIDProofFiles,
-       "https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/Idproof_upload/",
+       "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Idproof_upload/",
      // "http://103.214.132.20:8000/auth/Idproof_upload/",
       "idproof_file"
     );

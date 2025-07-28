@@ -7,7 +7,8 @@ export const WhishlistNotFound = () => {
             <div className="flex flex-col gap-4 items-center">
                 <img src={WhishlistNotFoundImg} alt="noResultFound-img" />
                 <h5 className="text-[20px] font-bold text-black text-center">No Profiles added to wishlist</h5>
-                <p className="text-base text-black text-center">Sorry, we can’t find any profiles added to wishlist</p>
+                {/* <p className="text-base text-black text-center">Sorry, we can’t find any profiles added to wishlist</p> */}
+                <p className="text-base text-black text-center">You haven’t added any profiles to your wishlist yet</p>
             </div>
         </div>
     )

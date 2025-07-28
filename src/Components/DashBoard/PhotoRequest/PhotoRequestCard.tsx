@@ -525,10 +525,12 @@ const PhotoRequestCard = ({
                 </div>
               </div>
             </div>
-
-            <div className="max-lg:hidden">
-              <MatchingScore scorePercentage={data.req_match_score} />
-            </div>
+            {data.req_match_score !== undefined &&
+              data.req_match_score > 50 && (
+                <div className="max-lg:hidden">
+                  <MatchingScore scorePercentage={data.req_match_score} />
+                </div>
+              )}
           </div>
         </div>
         {showPhotoRequestPopup && (

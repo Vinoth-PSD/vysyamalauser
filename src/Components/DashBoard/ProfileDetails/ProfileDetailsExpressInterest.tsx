@@ -514,44 +514,44 @@ export const ProfileDetailsExpressInterest: React.FC<
   // };
 
   const handleHeartMark = async () => {
-  try {
-    const isAdding = !isHeartMarked;
-    const response = await apiClient.post(
-      "/auth/Send_profile_intrests/",
-      {
-        profile_id: loginuser_profileId,
-        profile_to: idparam,
-        status: isAdding ? "1" : "0",
-        to_express_message: openCustomMsg || selectValue,
+    try {
+      const isAdding = !isHeartMarked;
+      const response = await apiClient.post(
+        "/auth/Send_profile_intrests/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: idparam,
+          status: isAdding ? "1" : "0",
+          to_express_message: openCustomMsg || selectValue,
+        }
+      );
+
+      // Only show upgrade popup if trying to ADD interest and upgrade is required
+      if (isAdding && response.data.Status === 0 && response.data.message) {
+        setApiMsgExpressInt(response.data.message);
+        setExpressPopup(true);
+        return;
       }
-    );
 
-    // Only show upgrade popup if trying to ADD interest and upgrade is required
-    if (isAdding && response.data.Status === 0 && response.data.message) {
-      setApiMsgExpressInt(response.data.message);
-      setExpressPopup(true);
-      return;
-    }
+      if (response.status === 200) {
+        setIsHeartMarked(!isHeartMarked);
 
-    if (response.status === 200) {
-      setIsHeartMarked(!isHeartMarked);
-
-      if (isAdding) {
-        toast.success("Your express interest has been sent successfully!");
+        if (isAdding) {
+          toast.success("Your express interest has been sent successfully!");
+        } else {
+          toast.success("Your express interest has been removed successfully!");
+        }
       } else {
-        toast.success("Your express interest has been removed successfully!");
+        toast.error("Failed to update express interest");
       }
-    } else {
-      toast.error("Failed to update express interest");
+    } catch (error) {
+      NotifyError("Error updating express interest");
+      console.error("Error updating express interest:", error);
+    } finally {
+      setOpenCustomMsg("");
+      setSelectValue("");
     }
-  } catch (error) {
-    NotifyError("Error updating express interest");
-    console.error("Error updating express interest:", error);
-  } finally {
-    setOpenCustomMsg("");
-    setSelectValue("");
-  }
-};
+  };
 
   useEffect(() => {
     if (openCustomMsg || selectValue) {
@@ -720,10 +720,10 @@ export const ProfileDetailsExpressInterest: React.FC<
       setLoading(true);
       console.log("VysAssit LOading------------")
       setShowVysassist(true);
-    } finally{
+    } finally {
       setLoading(false);
     }
-   
+
   };
 
   const closeVysassistpopup = () => {
@@ -753,8 +753,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const handleDownloadPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    // link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/New_horoscope_black/${idparam}/${loginuser_profileId}/`;
+    // link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/New_horoscope_black/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -762,8 +762,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const handleDownloadColorPdf = () => {
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    // link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/New_horoscope_color/${idparam}/${loginuser_profileId}/`;
+    // link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/New_horoscope_color/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -965,7 +965,7 @@ export const ProfileDetailsExpressInterest: React.FC<
                     </span>
                   </h5> */}
 
-                    {profileData?.personal_details?.weight && profileData.personal_details.weight !== "" && profileData.personal_details.weight !== null && (
+                    {profileData?.personal_details?.weight && profileData.personal_details.weight !== "" && profileData.personal_details.weight !== null && Number(profileData.personal_details.weight) !== 0 && (
                       <h5 className="text-[18px] text-ash font-semibold max-sm:text-[16px] mb-3">
                         Weight:
                         <span className="font-normal">
@@ -1057,14 +1057,15 @@ export const ProfileDetailsExpressInterest: React.FC<
                     </div>
                   </div>
 
-                  {/* Matching Meter */}
-                  <div onClick={() => generatePoruthamPDF()} title="Matching Score pdf" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
-                    {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
-                    <MatchingScore
-                      scorePercentage={profileData?.basic_details?.matching_score}
-                    />
-                  </div>
-
+                  {/* {profileData?.basic_details?.matching_score !== undefined &&
+                    profileData.basic_details.matching_score > 50 && ( */}
+                      <div onClick={() => generatePoruthamPDF()} title="Matching Score pdf" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
+                        {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
+                        <MatchingScore
+                          scorePercentage={profileData?.basic_details?.matching_score}
+                        />
+                      </div>
+                    {/* )} */}
                 </div>
                 {openCustomMsgShow ? (
                   <CustomMessagePopUp

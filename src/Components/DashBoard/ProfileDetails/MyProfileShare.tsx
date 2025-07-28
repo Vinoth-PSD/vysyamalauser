@@ -34,10 +34,10 @@ export const MyProfileShare: React.FC<ShareProps> = ({
   // Dynamic URL to the profile share page
  // const shareUrl = `http://matrimonyapp.rainyseasun.com/ProfileImage?data=${encodedData}`;
 
- const shareUrl = `https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/profile/${profileId}/`;
- const shareUrlWithoutImage=`https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/auth/profile_view/${profileId}/`
+ const shareUrl = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/profile/${profileId}/`;
+ const shareUrlWithoutImage=`https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/profile_view/${profileId}/`
   const title = 'Check out this profile!';
-const registrationLink = 'https://vysyamaladevnew-aehaazdxdzegasfb.westus2-01.azurewebsites.net/'
+const registrationLink = 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/'
 
 // const shareUrl = `http://103.214.132.20:8000/auth/profile/${profileId}/`;
 // const shareUrlWithoutImage=`http://103.214.132.20:8000/auth/profile_view/${profileId}/`
