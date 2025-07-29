@@ -292,7 +292,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
         Profile_pincode: data.pincode,
         Profile_alternate_mobile: alterNativeNumber,
         Profile_whatsapp: whatsAppNumber,
-        Profile_mobile_no: whatsAppNumber,
+        Profile_mobile_no: data.daughterMobileNumber,
         Profile_district: data.district,
         Profile_emailid: data.daughterEmail, // Add this line to include the email
       };
@@ -304,7 +304,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
         const quickreg = sessionStorage.getItem("quick_reg") || "0"; // Default to "0" if not found
         setTimeout(() => {
           if (quickreg === "1") {
-            navigate("/FamilyDetails"); // Redirect to ThankYouReg page
+            navigate("/FamilyDetails"); // Redirect to ThankYouReg pageppe
           } else {
             navigate("/UploadImages"); // Redirect to UploadImages page
           }

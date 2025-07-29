@@ -651,9 +651,9 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
 
   useEffect(() => {
     if (selectedProfile === "2") {
-      setGender("male");
+      setGender("Male");
     } else if (selectedProfile === "1") {
-      setGender("female");
+      setGender("Female");
     }
   }, [selectedProfile]);
 
@@ -881,30 +881,30 @@ export const AccountSetup: React.FC<AccountSetupProps> = ({
           <div>
             <input
               type="radio"
-              id="male"
+              id="Male"
               {...register("gender", { required: true })}
               name="gender"
-              value="male"
-              checked={gender === "male"}
+              value="Male"
+              checked={gender === "Male"}
               disabled={selectedProfile === "1"} // Disable "Male" if profile is "Daughter"
               onChange={handleGenderChange}
             />
-            <label htmlFor="male" className="text-ash ml-1">
+            <label htmlFor="Male" className="text-ash ml-1">
               Male
             </label>
           </div>
           <div>
             <input
               type="radio"
-              id="female"
+              id="Female"
               {...register("gender", { required: true })}
               name="gender"
-              value="female"
-              checked={gender === "female"}
+              value="Female"
+              checked={gender === "Female"}
               disabled={selectedProfile === "2"} // Disable "Female" if profile is "Son"
               onChange={handleGenderChange}
             />
-            <label htmlFor="female" className="text-ash ml-1">
+            <label htmlFor="Female" className="text-ash ml-1">
               Female
             </label>
           </div>

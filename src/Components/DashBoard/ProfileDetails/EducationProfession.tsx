@@ -119,10 +119,10 @@ export const EducationProfession = () => {
   const [isOthersSelected, setIsOthersSelected] = useState(false);
   ////console.log("isOthersSelected", isOthersSelected)
   const [errors, setErrors] = useState({
-    personal_about_edu: "",
-    personal_gross_ann_inc: "",
-    personal_work_pin: "",
-    personal_career_plans: "",
+    // personal_about_edu: "",
+    // personal_gross_ann_inc: "",
+    // personal_work_pin: "",
+    // personal_career_plans: "",
     selectedEducationId: "",
     selectedProfessionId: "",
     // personal_company_name: "",
@@ -131,9 +131,9 @@ export const EducationProfession = () => {
     // personal_business_name: "",
     // personal_business_addresss: "",
     // personal_nature_of_business: "",
-    selectedIncomeId: "",
-    selectedWorkCountryId: "",
-    selectedWorkStateId: "",
+    // selectedIncomeId: "",
+    // selectedWorkCountryId: "",
+    // selectedWorkStateId: "",
     //persoanl_edu_other: "",
     // Add error states for other fields
   });
@@ -455,18 +455,18 @@ export const EducationProfession = () => {
     e.preventDefault();
 
     const newErrors = {
-      personal_about_edu: !formData.personal_about_edu
-        ? "About Education is required."
-        : "",
-      personal_gross_ann_inc: !formData.personal_gross_ann_inc
-        ? "Gross Annual Income is required."
-        : "",
-      personal_work_pin: !formData.personal_work_pin
-        ? "Work Pincode is required."
-        : "",
-      personal_career_plans: !formData.personal_career_plans
-        ? "Career Plans are required."
-        : "",
+      // personal_about_edu: !formData.personal_about_edu
+      //   ? "About Education is required."
+      //   : "",
+      // personal_gross_ann_inc: !formData.personal_gross_ann_inc
+      //   ? "Gross Annual Income is required."
+      //   : "",
+      // personal_work_pin: !formData.personal_work_pin
+      //   ? "Work Pincode is required."
+      //   : "",
+      // personal_career_plans: !formData.personal_career_plans
+      //   ? "Career Plans are required."
+      //   : "",
       selectedEducationId: !selectedEducationId ? "Education is required." : "",
       selectedProfessionId: !selectedProfessionId
         ? "Profession is required."
@@ -489,13 +489,13 @@ export const EducationProfession = () => {
       // personal_nature_of_business: !formData.personal_nature_of_business
       //   ? "Nature of Business are required."
       //   : "",
-      selectedIncomeId: !selectedIncomeId ? "Income source is required." : "",
-      selectedWorkCountryId: !selectedWorkCountryId
-        ? "Work Country is required."
-        : "",
-      selectedWorkStateId: !selectedWorkStateId
-        ? "Work State is required."
-        : "",
+      // selectedIncomeId: !selectedIncomeId ? "Income source is required." : "",
+      // selectedWorkCountryId: !selectedWorkCountryId
+      //   ? "Work Country is required."
+      //   : "",
+      // selectedWorkStateId: !selectedWorkStateId
+      //   ? "Work State is required."
+      //   : "",
     };
 
     // Check if there are any errors
@@ -672,7 +672,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                                         ${errors.selectedEducationId
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }`} // Conditional styling for error
                 >
                   <option value="" disabled selected>
@@ -784,17 +784,8 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                     handleInputChange(e); // Handle input change
                     setErrors((prev) => ({ ...prev, personal_about_edu: "" })); // Clear the error on change
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_about_edu
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional styling
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`} // Conditional styling
                 />
-                {errors.personal_about_edu && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_about_edu}
-                  </p>
-                )}
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Profession:
@@ -811,7 +802,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                                         ${errors.selectedProfessionId
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }`} // Conditional styling
                 >
                   <option value="">Select Profession </option>
@@ -989,11 +980,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                     handleIncomeChange(e); // Handle change event
                     setErrors((prev) => ({ ...prev, selectedIncomeId: "" })); // Clear error on change
                   }}
-                  className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${errors.selectedIncomeId
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional styling
+                  className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder`} // Conditional styling
                 >
                   <option value="">Select Annual Income</option>
                   {annualIncomes.map((income) => (
@@ -1002,11 +989,6 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                     </option>
                   ))}
                 </select>
-                {errors.selectedIncomeId && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.selectedIncomeId}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -1026,18 +1008,9 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                       })); // Clear error on change
                     }
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_gross_ann_inc
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional styling
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`} // Conditional styling
                 />
               </label>
-              {errors.personal_gross_ann_inc && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.personal_gross_ann_inc}
-                </p>
-              )}
             </div>
 
             <div>
@@ -1053,11 +1026,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                       selectedWorkCountryId: "",
                     })); // Clear error on change3
                   }}
-                  className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${errors.selectedWorkCountryId
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional styling
+                  className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder`} // Conditional styling
                 >
                   <option value="">Select Work Country</option>
                   {countries.map((country) => (
@@ -1066,11 +1035,6 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                     </option>
                   ))}
                 </select>
-                {errors.selectedWorkCountryId && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.selectedWorkCountryId}
-                  </p>
-                )}
               </label>
 
               {showStateTextbox ? (
@@ -1086,18 +1050,9 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                         personal_work_sta_name: e.target.value,
                       }));
                     }}
-                    className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-              ${errors.selectedWorkStateId
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                      }`}
+                    className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`}
                     placeholder="Enter Work State"
                   />
-                  {errors.selectedWorkStateId && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.selectedWorkStateId}
-                    </p>
-                  )}
                 </label>
               ) : (
                 <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -1112,11 +1067,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                         selectedWorkStateId: "",
                       })); // Clear error on change
                     }}
-                    className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-              ${errors.selectedWorkStateId
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                      }`}
+                    className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder`}
                   >
                     <option value="">Select Work State</option>
                     {states.map((state) => (
@@ -1125,11 +1076,6 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                       </option>
                     ))}
                   </select>
-                  {errors.selectedWorkStateId && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.selectedWorkStateId}
-                    </p>
-                  )}
                 </label>
               )}
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -1146,17 +1092,8 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                       setErrors((prev) => ({ ...prev, personal_work_pin: "" })); // Clear error on change
                     }
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_work_pin
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional styling
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`} // Conditional styling
                 />
-                {errors.personal_work_pin && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_work_pin}
-                  </p>
-                )}
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Career Plans:
@@ -1172,18 +1109,9 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                       personal_career_plans: "",
                     })); // Clear error on change
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_career_plans
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional styling
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`} // Conditional styling
                 />
               </label>
-              {errors.personal_career_plans && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.personal_career_plans}
-                </p>
-              )}
             </div>
           </div>
 
@@ -1212,14 +1140,14 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Education Level:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_edu_name}
+                  {educationProfessionDetails.personal_edu_name|| "N/A"}
                 </span>
               </h5>
               {educationProfessionDetails.persoanl_field_ofstudy_name && (
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Field of Study:
                   <span className="font-normal">
-                    {educationProfessionDetails.persoanl_field_ofstudy_name}
+                    {educationProfessionDetails.persoanl_field_ofstudy_name|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1227,7 +1155,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Specific Field:
                   <span className="font-normal">
-                    {educationProfessionDetails.persoanl_degree_name}
+                    {educationProfessionDetails.persoanl_degree_name|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1235,7 +1163,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Other Education:
                   <span className="font-normal">
-                    {educationProfessionDetails.persoanl_edu_other}
+                    {educationProfessionDetails.persoanl_edu_other|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1249,21 +1177,21 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   About Education:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_about_edu}
+                    {educationProfessionDetails.personal_about_edu|| "N/A"}
                   </span>
                 </h5>
               )}
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Profession:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_profession_name}
+                  {educationProfessionDetails.personal_profession_name|| "N/A"}
                 </span>
               </h5>
               {educationProfessionDetails.personal_company_name && (
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Company Name:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_company_name}
+                    {educationProfessionDetails.personal_company_name|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1271,7 +1199,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Designation:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_designation}
+                    {educationProfessionDetails.personal_designation|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1279,7 +1207,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Profession Details:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_profess_details}
+                    {educationProfessionDetails.personal_profess_details|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1287,7 +1215,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Business Name:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_business_name}
+                    {educationProfessionDetails.personal_business_name|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1295,7 +1223,7 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Business Address:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_business_addresss}
+                    {educationProfessionDetails.personal_business_addresss|| "N/A"}
                   </span>
                 </h5>
               )}
@@ -1303,20 +1231,20 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
                 <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                   Nature of Buisness:
                   <span className="font-normal">
-                    {educationProfessionDetails.personal_nature_of_business}
+                    {educationProfessionDetails.personal_nature_of_business|| "N/A"}
                   </span>
                 </h5>
               )}
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Annual Income:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_ann_inc_name}
+                  {educationProfessionDetails.personal_ann_inc_name|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Gross Annual Income:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_gross_ann_inc}
+                  {educationProfessionDetails.personal_gross_ann_inc|| "N/A"}
                 </span>
               </h5>
             </div>
@@ -1324,25 +1252,25 @@ if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProf
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Work Country:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_work_coun_name}
+                  {educationProfessionDetails.personal_work_coun_name|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Work State:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_work_sta_name}
+                  {educationProfessionDetails.personal_work_sta_name|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Work Pincode:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_work_pin}
+                  {educationProfessionDetails.personal_work_pin|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Career Plans:
                 <span className="font-normal">
-                  {educationProfessionDetails.personal_career_plans}
+                  {educationProfessionDetails.personal_career_plans|| "N/A"}
                 </span>
               </h5>
             </div>

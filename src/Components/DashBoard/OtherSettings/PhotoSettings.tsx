@@ -31,13 +31,13 @@ export const PhotoSettings = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const loginuser_profile_id = localStorage.getItem("loginuser_profile_id");
- // const [uploadedProfileImages, setUploadedProfileImages] = useState([]);
+  // const [uploadedProfileImages, setUploadedProfileImages] = useState([]);
   const [uploadedHoroscopeFile, setUploadedHoroscopeFile] = useState("");
   const [uploadedIDProof, setUploadedIDProof] = useState("");
   const [uploadedDivorceProof, setUploadedDivorceProof] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const [uploadingImages, ] = useState<string[]>([]);
-
+  const [uploadingImages,] = useState<string[]>([]);
+  const maritalStatus = localStorage.getItem("maritalStatus");
 
   const {
     register,
@@ -77,14 +77,14 @@ export const PhotoSettings = () => {
     );
     formData.append("photo_protection", isChecked ? "1" : "0");
     formData.append("Video_url", videoUrl); // Replace with actual static value
-  //  const filePreview = URL.createObjectURL(file);
-  //   setUploadingImages((prev) => [...prev, filePreview]);
+    //  const filePreview = URL.createObjectURL(file);
+    //   setUploadingImages((prev) => [...prev, filePreview]);
 
 
 
     try {
       const response = await fetch(
-         "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Photo_Id_Settings/",
+        "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Photo_Id_Settings/",
         //"http://103.214.132.20:8000/auth/Photo_Id_Settings/",
         {
           method: "POST",
@@ -98,14 +98,14 @@ export const PhotoSettings = () => {
         alert("Failed to upload. Please try again.");
         return;
       }
-     // setUploadingImages((prev) => prev.filter((img) => img !== filePreview));
+      // setUploadingImages((prev) => prev.filter((img) => img !== filePreview));
       const result = await response.json();
       console.log("Success:", result);
-     // alert("Data uploaded successfully.");
+      // alert("Data uploaded successfully.");
       NotifySuccess('Photo Settings updated successfully');
       reset(); // Reset form fields
-       // Re-fetch the uploaded images after successful upload
-    fetchUploadedImages();
+      // Re-fetch the uploaded images after successful upload
+      fetchUploadedImages();
     } catch (error) {
       console.error("Error:", error);
       NotifyError("An error occurred. Please try again.");
@@ -120,7 +120,7 @@ export const PhotoSettings = () => {
     setVideoUrl('');
     // Reset other states if necessary
   };
-  
+
   const renderFileUploadSection = (
     title: string,
     setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>,
@@ -144,31 +144,31 @@ export const PhotoSettings = () => {
           throw new Error("Function not implemented.");
         }}
       />
-       {file && (
-    <div className="flex items-center justify-between mt-4 border-b border-gray-200 py-2">
-      <div className="flex items-center space-x-4">
-        <img
-          src={URL.createObjectURL(file)}
-          alt={file.name}
-          className="h-16 w-16"
-        />
-        {uploadingImages.includes(URL.createObjectURL(file)) ? (
-          <span className="text-blue-500">Uploading...</span>
-        ) : (
-          <span className="text-lg font-semibold">{file.name}</span>
-        )}
-      </div>
-      {/* {!uploadingImages.includes(URL.createObjectURL(file)) && (
+      {file && (
+        <div className="flex items-center justify-between mt-4 border-b border-gray-200 py-2">
+          <div className="flex items-center space-x-4">
+            <img
+              src={URL.createObjectURL(file)}
+              alt={file.name}
+              className="h-16 w-16"
+            />
+            {uploadingImages.includes(URL.createObjectURL(file)) ? (
+              <span className="text-blue-500">Uploading...</span>
+            ) : (
+              <span className="text-lg font-semibold">{file.name}</span>
+            )}
+          </div>
+          {/* {!uploadingImages.includes(URL.createObjectURL(file)) && (
         <button onClick={() => setSelectedFile(null)} className="text-red-500">
           <img src={closebtn} alt="remove" className="h-4 w-4" />
         </button>
       )} */}
-    </div>
-  )}
+        </div>
+      )}
     </div>
   );
 
-  
+
 
   const profileId = loginuser_profile_id; // Replace with dynamic profile ID from session storage
   const pageId = "2";
@@ -186,7 +186,7 @@ export const PhotoSettings = () => {
 
       if (response.data.Status === 1) {
         const data = response.data.data;
-       // setUploadedProfileImages(data.images || []);
+        // setUploadedProfileImages(data.images || []);
         setUploadedHoroscopeFile(data.horoscope_file || "");
         setUploadedIDProof(data.Profile_idproof || "");
         setUploadedDivorceProof(data.Profile_divorceproof || "");
@@ -218,9 +218,9 @@ export const PhotoSettings = () => {
         <h1 className="text-primary text-xl font-semibold">{title} Uploaded</h1>
         <div className="flex items-center justify-between border-b border-gray-200 py-2">
           <div className="flex items-center space-x-4">
-            <img src={fileUrl}             
-            alt={typeof title === 'string' ? title : undefined} // Convert title to a string or undefined
-           className="h-16 w-16" />
+            <img src={fileUrl}
+              alt={typeof title === 'string' ? title : undefined} // Convert title to a string or undefined
+              className="h-16 w-16" />
             <h1 className="text-lg font-semibold">
               {fileUrl.split("/").pop()}
             </h1>
@@ -229,12 +229,12 @@ export const PhotoSettings = () => {
       </div>
     ) : null;
 
-    
+
 
   return (
     <div className="p-6">
-       <ToastNotification/>
-       <h2 className="flex items-center text-[30px] text-vysyamalaBlack font-bold mb-5 max-xl:text-[26px] max-md:text-[24px] max-sm:text-[18px] max-sm:justify-between max-sm:mb-2 ">Photo Settings</h2>
+      <ToastNotification />
+      <h2 className="flex items-center text-[30px] text-vysyamalaBlack font-bold mb-5 max-xl:text-[26px] max-md:text-[24px] max-sm:text-[18px] max-sm:justify-between max-sm:mb-2 ">Photo Settings</h2>
 
 
       {renderFileUploadSection(
@@ -253,13 +253,17 @@ export const PhotoSettings = () => {
       )}
       {renderSingleFile(uploadedIDProof, "ID Proof")}
 
-      {renderFileUploadSection(
-        "Upload Divorce Proof",
-        setSelectedDivorceProof,
-        selectedDivorceProof,
-        "Applicable for divorced individuals. JPG, PNG, PDF file size no more than 10MB."
+      {maritalStatus === "2" && (
+        <>
+          {renderFileUploadSection(
+            "Upload Divorce Proof",
+            setSelectedDivorceProof,
+            selectedDivorceProof,
+            "Applicable for divorced individuals. JPG, PNG, PDF file size no more than 10MB."
+          )}
+          {renderSingleFile(uploadedDivorceProof, "Divorce Proof")}
+        </>
       )}
-      {renderSingleFile(uploadedDivorceProof, "Divorce Proof")}
 
       {/* Password Protection Section */}
       <div className="my-5">
@@ -349,11 +353,11 @@ export const PhotoSettings = () => {
         </p>
       </div>
       <button
-     //   onClick={onSubmit}
-     onClick={() => {
-      onSubmit();
-      resetForm();
-    }}
+        //   onClick={onSubmit}
+        onClick={() => {
+          onSubmit();
+          resetForm();
+        }}
         className="flex items-center py-[10px] px-14 bg-gradient text-white shadow-redboxshadow rounded-[6px] mt-2 max-sm:px-8"
       >
         Submit

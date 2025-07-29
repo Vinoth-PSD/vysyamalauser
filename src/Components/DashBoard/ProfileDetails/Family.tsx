@@ -64,18 +64,18 @@ export const Family = () => {
   const showChildrenField = maritalStatus && ['2', '3', '5'].includes(maritalStatus);
   const [errors, setErrors] = useState({
     personal_father_name: "",
-    personal_father_occu_name: "",
-    personal_mother_name: "",
-    personal_mother_occu_name: "",
-    selectedFamilyStatusId: "",
-    personal_sis: "",
-    personal_sis_married: "",
-    personal_bro: "",
-    personal_bro_married: "",
-    personal_prope_det: "",
-    personal_property_worth: "",
-    personal_no_of_children: "",
-    personal_about_fam: "",
+    // personal_father_occu_name: "",
+    // personal_mother_name: "",
+    // personal_mother_occu_name: "",
+    // selectedFamilyStatusId: "",
+    // personal_sis: "",
+    // personal_sis_married: "",
+    // personal_bro: "",
+    // personal_bro_married: "",
+    // personal_prope_det: "",
+    // personal_property_worth: "",
+    // personal_no_of_children: "",
+    // personal_about_fam: "",
   });
 
   useEffect(() => {
@@ -216,38 +216,38 @@ export const Family = () => {
       personal_father_name: !formData.personal_father_name
         ? "Father's name is required."
         : "",
-      personal_father_occu_name: !formData.personal_father_occu_name
-        ? "Father's occupation is required."
-        : "",
-      personal_mother_name: !formData.personal_mother_name
-        ? "Mother's name is required."
-        : "",
-      personal_mother_occu_name: !formData.personal_mother_occu_name
-        ? "Mother's occupation is required."
-        : "",
-      selectedFamilyStatusId: !selectedFamilyStatusId
-        ? "Family status is required."
-        : "",
-      personal_sis: !formData.personal_sis ? "Sister's name is required." : "",
-      personal_sis_married: !formData.personal_sis_married
-        ? "Sister's marital status is required."
-        : "",
-      personal_bro: !formData.personal_bro ? "Brother's name is required." : "",
-      personal_bro_married: !formData.personal_bro_married
-        ? "Brother's marital status is required."
-        : "",
-      personal_prope_det: !formData.personal_prope_det
-        ? "Property details are required."
-        : "",
-      personal_property_worth: !formData.personal_property_worth
-        ? "property worth is required."
-        : "",
-      personal_no_of_children: !formData.personal_no_of_children
-        ? "Number of Children is required."
-        : "",
-      personal_about_fam: !formData.personal_about_fam
-        ? "About family is required."
-        : "",
+      // personal_father_occu_name: !formData.personal_father_occu_name
+      //   ? "Father's occupation is required."
+      //   : "",
+      // personal_mother_name: !formData.personal_mother_name
+      //   ? "Mother's name is required."
+      //   : "",
+      // personal_mother_occu_name: !formData.personal_mother_occu_name
+      //   ? "Mother's occupation is required."
+      //   : "",
+      // selectedFamilyStatusId: !selectedFamilyStatusId
+      //   ? "Family status is required."
+      //   : "",
+      // personal_sis: !formData.personal_sis ? "Sister's name is required." : "",
+      // personal_sis_married: !formData.personal_sis_married
+      //   ? "Sister's marital status is required."
+      //   : "",
+      // personal_bro: !formData.personal_bro ? "Brother's name is required." : "",
+      // personal_bro_married: !formData.personal_bro_married
+      //   ? "Brother's marital status is required."
+      //   : "",
+      // personal_prope_det: !formData.personal_prope_det
+      //   ? "Property details are required."
+      //   : "",
+      // personal_property_worth: !formData.personal_property_worth
+      //   ? "property worth is required."
+      //   : "",
+      // personal_no_of_children: !formData.personal_no_of_children
+      //   ? "Number of Children is required."
+      //   : "",
+      // personal_about_fam: !formData.personal_about_fam
+      //   ? "About family is required."
+      //   : "",
     };
 
     // Check if there are any errors
@@ -321,17 +321,8 @@ export const Family = () => {
                     handleInputChange(e);
                     setErrors((prev) => ({ ...prev, personal_about_fam: "" })); // Clear error on change
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_about_fam
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`}
                 />
-                {errors.personal_about_fam && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_about_fam}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -354,7 +345,7 @@ export const Family = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                                         ${errors.personal_father_name
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }`}
                 />
                 {errors.personal_father_name && (
@@ -381,17 +372,8 @@ export const Family = () => {
                       })); // Clear error on valid input
                     }
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-      ${errors.personal_father_occu_name
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`}
                 />
-                {errors.personal_father_occu_name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_father_occu_name}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -411,17 +393,8 @@ export const Family = () => {
                       })); // Clear error on valid input
                     }
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_mother_name
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`}
                 />
-                {errors.personal_mother_name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_mother_name}
-                  </p>
-                )}
               </label>
 
 
@@ -442,17 +415,8 @@ export const Family = () => {
                       })); // Clear error on valid input
                     }
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-      ${errors.personal_mother_occu_name
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`}
                 />
-                {errors.personal_mother_occu_name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_mother_occu_name}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -467,11 +431,7 @@ export const Family = () => {
                       selectedFamilyStatusId: "",
                     })); // Clear error on change
                   }}
-                  className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                                        ${errors.selectedFamilyStatusId
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                  className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder`}
                 >
                   <option value="">Select Family Status</option>
                   {familyStatuses.map((status) => (
@@ -483,11 +443,6 @@ export const Family = () => {
                     </option>
                   ))}
                 </select>
-                {errors.selectedFamilyStatusId && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.selectedFamilyStatusId}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -501,16 +456,8 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_sis: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_sis
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                                       `}
                 />
-                {errors.personal_sis && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_sis}
-                  </p>
-                )}
               </label>
             </div>
             <div>
@@ -528,16 +475,9 @@ export const Family = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_sis_married
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                                      `}
                 />
-                {errors.personal_sis_married && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_sis_married}
-                  </p>
-                )}
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -551,16 +491,9 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_bro: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_bro
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                                    `}
                 />
-                {errors.personal_bro && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_bro}
-                  </p>
-                )}
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -577,16 +510,9 @@ export const Family = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_bro_married
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                                      `}
                 />
-                {errors.personal_bro_married && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_bro_married}
-                  </p>
-                )}
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -615,16 +541,9 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_prope_det: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_prope_det
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                                       `}
                 />
-                {errors.personal_prope_det && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_prope_det}
-                  </p>
-                )}
+
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Property Worth:
@@ -636,16 +555,9 @@ export const Family = () => {
                     setErrors((prev) => ({ ...prev, personal_property_worth: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                        ${errors.personal_property_worth
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                                        `}
                 />
-                {errors.personal_property_worth && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_property_worth}
-                  </p>
-                )}
+
               </label>
               {showChildrenField && (
                 <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -661,7 +573,7 @@ export const Family = () => {
                       })); // Clear error on change
                     }}
                     className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
-    ${errors.personal_no_of_children ? "border-red-500" : "focus:border-blue-500"}`}
+   `}
                   >
                     <option value="">Select Number of Children</option>
                     {[1, 2, 3, 4, 5].map((num) => (
@@ -671,11 +583,7 @@ export const Family = () => {
                     ))}
                   </select>
 
-                  {errors.personal_no_of_children && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.personal_no_of_children}
-                    </p>
-                  )}
+
                 </label>
               )}
             </div>
@@ -706,7 +614,7 @@ export const Family = () => {
                 About My Family:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_about_fam}
+                  {familyDetails.personal_about_fam || "N/A"}
                 </span>
               </h5>
 
@@ -714,7 +622,7 @@ export const Family = () => {
                 Father Name:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_father_name}
+                  {familyDetails.personal_father_name || "N/A"}
                 </span>
               </h5>
 
@@ -722,7 +630,7 @@ export const Family = () => {
                 Father Occupation:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_father_occu_name}
+                  {familyDetails.personal_father_occu_name || "N/A"}
                 </span>
               </h5>
 
@@ -730,7 +638,7 @@ export const Family = () => {
                 Mother Name:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_mother_name}
+                  {familyDetails.personal_mother_name || "N/A"}
                 </span>
               </h5>
 
@@ -738,7 +646,7 @@ export const Family = () => {
                 Mother Occupation:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_mother_occu_name}
+                  {familyDetails.personal_mother_occu_name || "N/A"}
                 </span>
               </h5>
 
@@ -746,7 +654,7 @@ export const Family = () => {
                 Family Status:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_fam_sta_name}
+                  {familyDetails.personal_fam_sta_name || "N/A"}
                 </span>
               </h5>
 
@@ -754,7 +662,11 @@ export const Family = () => {
                 Sisters:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_sis}
+                  {familyDetails.personal_sis === "0"
+                    ? "No"
+                    : familyDetails.personal_sis?.toString().trim()
+                      ? familyDetails.personal_sis
+                      : "N/A"}
                 </span>
               </h5>
             </div>
@@ -763,7 +675,12 @@ export const Family = () => {
                 Sisters Married:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_sis_married}
+                  {/* {familyDetails.personal_sis_married || "N/A"} */}
+                  {familyDetails.personal_sis_married === "0"
+                    ? "No"
+                    : familyDetails.personal_sis_married?.toString().trim()
+                      ? familyDetails.personal_sis_married
+                      : "N/A"}
                 </span>
               </h5>
 
@@ -771,7 +688,12 @@ export const Family = () => {
                 Brothers:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_bro}
+                  {/* {familyDetails.personal_bro || "N/A"} */}
+                  {familyDetails.personal_bro === "0"
+                    ? "No"
+                    : familyDetails.personal_bro?.toString().trim()
+                      ? familyDetails.personal_bro
+                      : "N/A"}
                 </span>
               </h5>
 
@@ -779,7 +701,12 @@ export const Family = () => {
                 Brothers Married:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_bro_married}
+                  {/* {familyDetails.personal_bro_married || "N/A"} */}
+                   {familyDetails.personal_bro_married === "0"
+                    ? "No"
+                    : familyDetails.personal_bro_married?.toString().trim()
+                      ? familyDetails.personal_bro_married
+                      : "N/A"}
                 </span>
               </h5>
 
@@ -787,14 +714,14 @@ export const Family = () => {
                 Property Details:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_prope_det}
+                  {familyDetails.personal_prope_det || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Property Worth:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_property_worth}
+                  {familyDetails.personal_property_worth || "N/A"}
                 </span>
               </h5>
               {showChildrenField && (
@@ -802,7 +729,7 @@ export const Family = () => {
                   Number of Children:
                   <span className="font-normal">
                     {" "}
-                    {familyDetails.personal_no_of_children}
+                    {familyDetails.personal_no_of_children || "N/A"}
                   </span>
                 </h5>
               )}

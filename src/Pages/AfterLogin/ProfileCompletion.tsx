@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import apiClient from "../../API";
 import { NotifyError, NotifySuccess } from "../../Components/Toast/ToastNotification";
 import { useNavigate } from "react-router-dom";
+import { Hearts } from "react-loader-spinner";
 
 const ProfileCompletionForm = () => {
 
@@ -131,7 +132,20 @@ const ProfileCompletionForm = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-fit mx-auto py-40">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm text-center mt-2">Please wait...</p>
+      </div>
+    );
   }
 
   if (error) {

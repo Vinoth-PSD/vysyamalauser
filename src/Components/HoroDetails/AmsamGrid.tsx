@@ -39,7 +39,7 @@ const AmsamGrid: React.FC<AmsamGridProps> = ({ centerLabel, rasiTemp }) => {
       { id: 7, name: "Jupiter/Guru" },
       { id: 8, name: "Mercury/Budhan" },
       { id: 8, name: "Raghu/Rahu" },
-      { id: 9, name: "Satum/Sani" },
+      { id: 9, name: "Saturn/Sani" },
       { id: 10, name: "Lagnam" },
     ],
     []

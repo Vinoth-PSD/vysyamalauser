@@ -4,6 +4,7 @@ import { MdModeEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiClient from "../../../API";
+
 interface PersonalDetails {
   personal_profile_name: string;
   personal_gender: string;
@@ -76,23 +77,36 @@ export const Personal = () => {
   const [refreshData, setRefreshData] = useState(false);
   const [errors, setErrors] = useState({
     personal_profile_name: "",
-    personal_gender: "",
-    personal_age: "",
+    // personal_gender: "",
+    // personal_age: "",
     personal_profile_dob: "",
     personal_place_of_birth: "",
-    personal_time_of_birth: "",
+    // personal_time_of_birth: "",
     selectedHeight: "",
     // personal_weight: "",
     // personal_eye_wear: "",
     // personal_body_type: "",
     selectedMaritalStatusId: "",
-    personal_blood_group: "",
-    personal_about_self: "",
+    // personal_blood_group: "",
+    // personal_about_self: "",
     selectedComplexion: "",
-    personal_hobbies: "",
-    personal_pysically_changed: "",
-    selectedProfileHolder: "",
+    // personal_hobbies: "",
+    // personal_pysically_changed: "",
+    // selectedProfileHolder: "",
   });
+  const [hour, setHour] = useState("");
+  const [minute, setMinute] = useState("");
+  const [period, setPeriod] = useState<"AM" | "PM">("AM");
+
+  useEffect(() => {
+    if (personalDetails?.personal_time_of_birth) {
+      const [time, period] = personalDetails.personal_time_of_birth.split(" ");
+      const [hours, minutes] = time.split(":");
+      setHour(hours);
+      setMinute(minutes);
+      setPeriod(period as "AM" | "PM");
+    }
+  }, [personalDetails]);
 
   useEffect(() => {
     const fetchPersonalDetails = async () => {
@@ -100,7 +114,7 @@ export const Personal = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_personal/",
           {
-            profile_id: loginuser_profileId  ,
+            profile_id: loginuser_profileId,
           }
         );
 
@@ -207,11 +221,13 @@ export const Personal = () => {
   }, []);
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMaritalStatusId(e.target.value);
+    const selectedValue = e.target.value;
+    setSelectedMaritalStatusId(selectedValue);
     setFormData((prevState) => ({
       ...prevState,
-      personal_profile_marital_status_name: e.target.value,
+      personal_profile_marital_status_name: selectedValue,
     }));
+     localStorage.setItem("maritalStatus", selectedValue);
   };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -316,22 +332,33 @@ export const Personal = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const timeOfBirth = `${hour}:${minute} ${period}`;
+
+    // Validate time
+    // if (!hour || !minute || !period) {
+    //   setErrors(prev => ({
+    //     ...prev,
+    //     personal_time_of_birth: "Time of birth is required"
+    //   }));
+    //   return;
+    // }
     // Validate each field and store errors
     const newErrors = {
       personal_profile_name: !formData.personal_profile_name
         ? "Name is required."
         : "",
-      personal_gender: !formData.personal_gender ? "Gender is required." : "",
-      personal_age: !formData.personal_age ? "Age is required." : "",
+      // personal_gender: !formData.personal_gender ? "Gender is required." : "",
+      // personal_age: !formData.personal_age ? "Age is required." : "",
       personal_profile_dob: !formData.personal_profile_dob
         ? "Date of birth is required."
         : "",
       personal_place_of_birth: !formData.personal_place_of_birth
         ? "Place of birth is required."
         : "",
-      personal_time_of_birth: !formData.personal_time_of_birth
-        ? "Time of birth is required."
-        : "",
+      // personal_time_of_birth: !formData.personal_time_of_birth
+      //   ? "Time of birth is required."
+      //   : "",
+      // personal_time_of_birth: !timeOfBirth ? "Time of birth is required." : "",
       selectedHeight: !selectedHeight ? "Height is required." : "",
       // personal_weight: !formData.personal_weight ? "Weight is required." : "",
       // personal_eye_wear: !formData.personal_eye_wear
@@ -343,22 +370,22 @@ export const Personal = () => {
       selectedMaritalStatusId: !selectedMaritalStatusId
         ? "Marital status is required."
         : "",
-      personal_blood_group: !formData.personal_blood_group
-        ? "Blood group is required."
-        : "",
-      personal_about_self: !formData.personal_about_self
-        ? "About self is required."
-        : "",
+      // personal_blood_group: !formData.personal_blood_group
+      //   ? "Blood group is required."
+      //   : "",
+      // personal_about_self: !formData.personal_about_self
+      //   ? "About self is required."
+      //   : "",
       selectedComplexion: !selectedComplexion ? "Complexion is required." : "",
-      personal_hobbies: !formData.personal_hobbies
-        ? "Hobbies are required."
-        : "",
-      personal_pysically_changed: !formData.personal_pysically_changed
-        ? "Physical changes information is required."
-        : "",
-      selectedProfileHolder: !selectedProfileHolder
-        ? "Profile holder is required."
-        : "",
+      // personal_hobbies: !formData.personal_hobbies
+      //   ? "Hobbies are required."
+      //   : "",
+      // personal_pysically_changed: !formData.personal_pysically_changed
+      //   ? "Physical changes information is required."
+      //   : "",
+      // selectedProfileHolder: !selectedProfileHolder
+      //   ? "Profile holder is required."
+      //   : "",
       error: error ? "Please fill all fields correctly." : "", // Assuming 'error' is defined somewhere in your logic
     };
 
@@ -380,7 +407,7 @@ export const Personal = () => {
           personal_age: formData.personal_age,
           Profile_dob: formData.personal_profile_dob,
           place_of_birth: formData.personal_place_of_birth,
-          time_of_birth: formData.personal_time_of_birth,
+          time_of_birth: timeOfBirth,
           Profile_height: selectedHeight,
           weight: formData.personal_weight,
           eye_wear: formData.personal_eye_wear,
@@ -402,7 +429,7 @@ export const Personal = () => {
         const getResponse = await apiClient.post(
           "/auth/get_myprofile_personal/",
           {
-            profile_id: loginuser_profileId ,
+            profile_id: loginuser_profileId,
           }
         );
 
@@ -480,7 +507,7 @@ export const Personal = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                     ${errors.personal_profile_name
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }`}
                 />
                 {errors.personal_profile_name && (
@@ -507,7 +534,7 @@ export const Personal = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
       ${errors.personal_profile_dob
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }`}
                   // Prevent future dates and ensure date is 18 years ago
                   min="1975-01-01"
@@ -541,17 +568,14 @@ export const Personal = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${errors.personal_age
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                   `}
                   disabled
                 />
-                {errors.personal_age && (
+                {/* {errors.personal_age && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.personal_age}
                   </p>
-                )}
+                )} */}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -579,10 +603,11 @@ export const Personal = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${errors.personal_place_of_birth
+                   ${errors.personal_place_of_birth
                       ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`}
+                      : "focus:outline-none"
+                    }
+                    `}
                 />
                 {errors.personal_place_of_birth && (
                   <p className="text-red-500 text-sm mt-1">
@@ -593,29 +618,54 @@ export const Personal = () => {
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Time of Birth:
-                <input
-                  type="text"
-                  name="personal_time_of_birth"
-                  value={formData.personal_time_of_birth || ""}
-                  onChange={(e) => {
-                    handleInputChange(e); // Handle input change
-                    setErrors((prev) => ({
-                      ...prev,
-                      personal_time_of_birth: "",
-                    })); // Clear error on change
-                  }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${errors.personal_time_of_birth
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }`} // Conditional class for error handling
-                />
-                {errors.personal_time_of_birth && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_time_of_birth}{" "}
-                    {/* Display error message */}
-                  </p>
-                )}
+                <div className="flex items-center space-x-2">
+                  <div className="relative w-full">
+                    <select
+                      value={hour}
+                      onChange={(e) => setHour(e.target.value)}
+                      className={`font-normal border  px-3 py-3 text-sm border-ashBorder rounded appearance-none w-full focus:outline-none
+                      
+                        `}
+                    >
+                      <option value="" disabled>Select hour</option>
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                        <option key={h} value={h.toString().padStart(2, "0")}>
+                          {h}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <span>:</span>
+                  <div className="relative w-full">
+                    <select
+                      value={minute}
+                      onChange={(e) => setMinute(e.target.value)}
+                      className={`font-normal border px-3 py-3 text-sm border-ashBorder rounded appearance-none w-full focus:outline-none
+                       
+                        `}
+                    >
+                      <option value="" disabled>Select minute</option>
+                      {Array.from({ length: 60 }, (_, i) => i).map((m) => (
+                        <option key={m} value={m.toString().padStart(2, "0")}>
+                          {m.toString().padStart(2, "0")}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="relative w-full">
+                    <select
+                      value={period}
+                      onChange={(e) => setPeriod(e.target.value as "AM" | "PM")}
+                      className={`font-normal border px-3 py-3 text-sm border-ashBorder rounded appearance-none w-full focus:outline-none 
+                       
+                        `}
+                    >
+                      <option value="AM">AM</option>
+                      <option value="PM">PM</option>
+                    </select>
+                  </div>
+                </div>
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -630,7 +680,7 @@ export const Personal = () => {
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                     ${errors.selectedHeight
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }
                   `}
                 >
@@ -813,17 +863,8 @@ export const Personal = () => {
                     })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${errors.personal_blood_group
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }
                   `}
                 />
-                {errors.personal_blood_group && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_blood_group}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -836,17 +877,8 @@ export const Personal = () => {
                     setErrors((prev) => ({ ...prev, personal_about_self: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${errors.personal_about_self
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }
                   `}
                 />
-                {errors.personal_about_self && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_about_self}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -860,7 +892,7 @@ export const Personal = () => {
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                     ${errors.selectedComplexion
                       ? "border-red-500"
-                      : "focus:border-blue-500"
+                      : "focus:outline-none"
                     }
                   `}
                 >
@@ -892,17 +924,8 @@ export const Personal = () => {
                     setErrors((prev) => ({ ...prev, personal_hobbies: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${errors.personal_hobbies
-                      ? "border-red-500"
-                      : "focus:border-blue-500"
-                    }
                   `}
                 />
-                {errors.personal_hobbies && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_hobbies}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -943,11 +966,6 @@ export const Personal = () => {
                     <span className="ml-2">No</span>
                   </label>
                 </div>
-                {errors.personal_pysically_changed && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_pysically_changed}
-                  </p>
-                )}
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -972,11 +990,6 @@ export const Personal = () => {
                 </select>
               </label>
             </div>
-            {errors.selectedProfileHolder && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.selectedProfileHolder}
-              </p>
-            )}
           </div>
 
           {isEditing && (
@@ -1042,7 +1055,7 @@ export const Personal = () => {
                 Place of Birth :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_place_of_birth}
+                  {personalDetails.personal_place_of_birth|| "N/A"}
                 </span>
               </h5>
 
@@ -1050,7 +1063,7 @@ export const Personal = () => {
                 Time of Birth :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_time_of_birth}
+                  {personalDetails.personal_time_of_birth || "N/A"}
                 </span>
               </h5>
 
@@ -1066,7 +1079,9 @@ export const Personal = () => {
                 Weight :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_weight} kg
+                  {personalDetails.personal_weight
+                    ? `${personalDetails.personal_weight} kg`
+                    : "N/A"}
                 </span>
               </h5>
 
@@ -1074,7 +1089,7 @@ export const Personal = () => {
                 Body Type :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_body_type}{" "}
+                  {personalDetails.personal_body_type || "N/A"}{" "}
                 </span>
               </h5>
             </div>
@@ -1084,14 +1099,14 @@ export const Personal = () => {
                 Eye Wear :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_eye_wear}{" "}
+                  {personalDetails.personal_eye_wear|| "N/A"}{" "}
                 </span>
               </h5>
 
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Marital Status :
                 <span className="font-normal">
-                  {personalDetails.personal_profile_marital_status_name}
+                  {personalDetails.personal_profile_marital_status_name || "N/A"}
                 </span>
               </h5>
 
@@ -1099,7 +1114,7 @@ export const Personal = () => {
                 Blood Group :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_blood_group}
+                  {personalDetails.personal_blood_group || "N/A"}
                 </span>
               </h5>
 
@@ -1107,7 +1122,7 @@ export const Personal = () => {
                 About Myself :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_about_self}
+                  {personalDetails.personal_about_self || "N/A"}
                 </span>
               </h5>
 
@@ -1115,7 +1130,7 @@ export const Personal = () => {
                 Complexion :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_profile_complexion_name}
+                  {personalDetails.personal_profile_complexion_name || "N/A"}
                 </span>
               </h5>
 
@@ -1123,7 +1138,7 @@ export const Personal = () => {
                 Hobbies :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_hobbies}
+                  {personalDetails.personal_hobbies || "N/A"}
                 </span>
               </h5>
 
@@ -1131,7 +1146,7 @@ export const Personal = () => {
                 Physical Status :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_pysically_changed}
+                  {personalDetails.personal_pysically_changed || "N/A"}
                 </span>
               </h5>
 
@@ -1139,7 +1154,7 @@ export const Personal = () => {
                 Profile Created By :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_profile_for_name}
+                  {personalDetails.personal_profile_for_name || "N/A"}
                 </span>
               </h5>
             </div>

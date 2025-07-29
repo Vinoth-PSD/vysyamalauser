@@ -228,9 +228,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
           className="absolute top-4 right-4 text-secondary text-[22px] cursor-pointer"
         />
       )}
-
     </div>
-
   );
 };
 

@@ -86,48 +86,48 @@ export const PersonalView: React.FC = () => {
 
                     {personalDetails?.profile_name && personalDetails.profile_name !== "" && personalDetails.profile_name !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Name:
-                            <span className="font-normal"> {personalDetails?.profile_name}</span></h5>
+                            <span className="font-normal"> {personalDetails?.profile_name || "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.gender && personalDetails.gender !== "" && personalDetails.gender !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Gender:
-                            <span className="font-normal"> {personalDetails?.gender}</span></h5>
+                            <span className="font-normal"> {personalDetails?.gender|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.age && personalDetails.age !== "" && personalDetails.age !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Age:
-                            <span className="font-normal"> {personalDetails?.age}</span></h5>
+                            <span className="font-normal"> {personalDetails?.age|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.dob && personalDetails.dob !== "" && personalDetails.dob !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">DOB:
-                            <span className="font-normal"> {personalDetails?.dob}</span></h5>
+                            <span className="font-normal"> {personalDetails?.dob|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.place_of_birth && personalDetails.place_of_birth !== "" && personalDetails.place_of_birth !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Place of Birth:
-                            <span className="font-normal"> {personalDetails?.place_of_birth}</span></h5>
+                            <span className="font-normal"> {personalDetails?.place_of_birth|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.time_of_birth && personalDetails.time_of_birth !== "" && personalDetails.time_of_birth !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Time of Birth:
-                            <span className="font-normal"> {personalDetails?.time_of_birth}</span></h5>
+                            <span className="font-normal"> {personalDetails?.time_of_birth|| "N/A"}</span></h5>
                     )}
 
 
-                    {personalDetails?.weight && personalDetails.weight !== "" && personalDetails.weight !== null && (
+                    {personalDetails?.weight && personalDetails.weight !== "" && personalDetails.weight !== null && personalDetails.weight !== "0" && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Weight:
-                            <span className="font-normal"> {personalDetails?.weight}</span></h5>
+                            <span className="font-normal"> {personalDetails?.weight|| "N/A"} kg</span></h5>
                     )}
 
                     {personalDetails?.height && personalDetails.height !== "" && personalDetails.height !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Height:
-                            <span className="font-normal"> {personalDetails?.height}</span></h5>
+                            <span className="font-normal"> {personalDetails?.height|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.marital_status && personalDetails.marital_status !== "" && personalDetails.marital_status !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Marital Status:
-                            <span className="font-normal"> {personalDetails?.marital_status}</span></h5>
+                            <span className="font-normal"> {personalDetails?.marital_status|| "N/A"}</span></h5>
                     )}
                 </div>
 
@@ -137,40 +137,40 @@ export const PersonalView: React.FC = () => {
                             <span className="font-normal"> {personalDetails?.blood_group}</span></h5>
                     )}
 
-                    {personalDetails?.body_type && personalDetails.body_type !== "" && personalDetails.body_type !== null && (
+                    {personalDetails?.body_type && personalDetails.body_type !== "" && personalDetails.body_type !== null && personalDetails.body_type !== "0" && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Body Type:
-                            <span className="font-normal"> {personalDetails?.body_type}</span></h5>
+                            <span className="font-normal"> {personalDetails?.body_type|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.about_self && personalDetails.about_self !== "" && personalDetails.about_self !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">About Myself:
-                            <span className="font-normal"> {personalDetails?.about_self}</span></h5>
+                            <span className="font-normal"> {personalDetails?.about_self|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.complexion && personalDetails.complexion !== "" && personalDetails.complexion !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Complexion:
-                            <span className="font-normal"> {personalDetails?.complexion}</span></h5>
+                            <span className="font-normal"> {personalDetails?.complexion|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.hobbies && personalDetails.hobbies !== "" && personalDetails.hobbies !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Hobbies:
-                            <span className="font-normal"> {personalDetails?.hobbies}</span></h5>
+                            <span className="font-normal"> {personalDetails?.hobbies|| "N/A"}</span></h5>
                     )}
 
 
                     {personalDetails?.physical_status && personalDetails.physical_status !== "" && personalDetails.physical_status !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Physical Status:
-                            <span className="font-normal"> {personalDetails?.physical_status}</span></h5>
+                            <span className="font-normal"> {personalDetails?.physical_status|| "N/A"}</span></h5>
                     )}
 
-                    {personalDetails?.eye_wear && personalDetails.eye_wear !== "" && personalDetails.eye_wear !== null && (
+                    {personalDetails?.eye_wear && personalDetails.eye_wear !== "" && personalDetails.eye_wear !== null &&  personalDetails.eye_wear !== "0" && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Eye Wear:
-                            <span className="font-normal"> {personalDetails?.eye_wear}</span></h5>
+                            <span className="font-normal"> {personalDetails?.eye_wear|| "N/A"}</span></h5>
                     )}
 
                     {personalDetails?.profile_created_by && personalDetails.profile_created_by !== "" && personalDetails.profile_created_by !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Profile Created By:
-                            <span className="font-normal"> {personalDetails?.profile_created_by}</span></h5>
+                            <span className="font-normal"> {personalDetails?.profile_created_by|| "N/A"}</span></h5>
                     )}
                 </div>
             </div>

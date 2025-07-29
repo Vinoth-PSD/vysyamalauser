@@ -41,31 +41,31 @@ export const FamilyView: React.FC = () => {
 
     let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-      page_id = "1";
+        page_id = "1";
     }
 
     useEffect(() => {
         const fetchFamilyDetails = async () => {
-          try {
-            const response = await apiClient.post('/auth/Get_profile_det_match/', {
-              profile_id: loginuser_profileId,
-              user_profile_id: id,
-              page_id:page_id
-            });
-            
-            // Extract family_details from the response
-            const data = response.data.family_details;
-            
-            setFamilyDetails(data);
-            setFormData(data);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
+            try {
+                const response = await apiClient.post('/auth/Get_profile_det_match/', {
+                    profile_id: loginuser_profileId,
+                    user_profile_id: id,
+                    page_id: page_id
+                });
+
+                // Extract family_details from the response
+                const data = response.data.family_details;
+
+                setFamilyDetails(data);
+                setFormData(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
-      
+
         fetchFamilyDetails();
-      }, [id]);
-      
+    }, [id]);
+
 
     // const handleEditClick = () => {
     //     setIsEditing(!isEditing);
@@ -98,177 +98,205 @@ export const FamilyView: React.FC = () => {
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-rows-1 grid-cols-2 max-sm:grid-cols-1">
                     <div>
-                    {formData?.about_family && formData.about_family !== "" && formData.about_family !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">About My Family:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="about_family"
-                                    value={formData.about_family}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.about_family || '-'}</span>
-                            )}
-                        </h5>)}
+                        {formData?.about_family && formData.about_family !== "" && formData.about_family !== null && (
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">About My Family:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="about_family"
+                                        value={formData.about_family}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.about_family || "N/A"}</span>
+                                )}
+                            </h5>)}
 
                         {formData?.father_name && formData.father_name !== "" && formData.father_name !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Father Name:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="father_name"
-                                    value={formData.father_name}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.father_name || '-'}</span>
-                            )}
-                        </h5>)}
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Father Name:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="father_name"
+                                        value={formData.father_name}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.father_name || "N/A"}</span>
+                                )}
+                            </h5>)}
 
                         {formData?.father_occupation && formData.father_occupation !== "" && formData.father_occupation !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Father Occupation:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="father_occupation"
-                                    value={formData.father_occupation}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.father_occupation || '-'}</span>
-                            )}
-                        </h5>
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Father Occupation:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="father_occupation"
+                                        value={formData.father_occupation}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.father_occupation || "N/A"}</span>
+                                )}
+                            </h5>
                         )}
 
 
-{formData?.mother_name && formData.mother_name !== "" && formData.mother_name !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Mother Name:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="mother_name"
-                                    value={formData.mother_name}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.mother_name || '-'}</span>
-                            )}
-                        </h5>)}
+                        {formData?.mother_name && formData.mother_name !== "" && formData.mother_name !== null && (
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Mother Name:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="mother_name"
+                                        value={formData.mother_name}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.mother_name || "N/A"}</span>
+                                )}
+                            </h5>)}
 
                         {formData?.mother_occupation && formData.mother_occupation !== "" && formData.mother_occupation !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Mother Occupation:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="mother_occupation"
-                                    value={formData.mother_occupation}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.mother_occupation || '-'}</span>
-                            )}
-                        </h5>)}
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Mother Occupation:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="mother_occupation"
+                                        value={formData.mother_occupation}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.mother_occupation || "N/A"}</span>
+                                )}
+                            </h5>)}
 
                         {formData?.family_status && formData.family_status !== "" && formData.family_status !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Family Status:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="family_status"
-                                    value={formData.family_status}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.family_status || '-'}</span>
-                            )}
-                        </h5>
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Family Status:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="family_status"
+                                        value={formData.family_status}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.family_status || "N/A"}</span>
+                                )}
+                            </h5>
                         )}
 
 
-{formData?.no_of_sisters && formData.no_of_sisters !== "" && formData.no_of_sisters !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sisters:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="no_of_sisters"
-                                    value={formData.no_of_sisters}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.no_of_sisters || '-'}</span>
-                            )}
-                        </h5>)}
+                        {formData?.no_of_sisters && formData.no_of_sisters !== "" && formData.no_of_sisters !== null && (
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sisters:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="no_of_sisters"
+                                        value={formData.no_of_sisters}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal">
+                                        {/* {formData.no_of_sisters|| "N/A"} */}
+                                        {formData.no_of_sisters === "0"
+                                            ? "No"
+                                            : formData.no_of_sisters?.toString().trim()
+                                                ? formData.no_of_sisters
+                                                : "N/A"}
+                                    </span>
+                                )}
+                            </h5>)}
                     </div>
 
                     <div>
-                    {formData?.no_of_sis_married && formData.no_of_sis_married !== "" && formData.no_of_sis_married !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sisters Married:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="no_of_sis_married"
-                                    value={formData.no_of_sis_married}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.no_of_sis_married || '-'}</span>
-                            )}
-                        </h5>)}
+                        {formData?.no_of_sis_married && formData.no_of_sis_married !== "" && formData.no_of_sis_married !== null && (
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sisters Married:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="no_of_sis_married"
+                                        value={formData.no_of_sis_married}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal">
+                                        {/* {formData.no_of_sis_married || "N/A"} */}
+                                        {formData.no_of_sis_married === "0"
+                                            ? "No"
+                                            : formData.no_of_sis_married?.toString().trim()
+                                                ? formData.no_of_sis_married
+                                                : "N/A"}
+                                    </span>
+                                )}
+                            </h5>)}
 
 
                         {formData?.no_of_brothers && formData.no_of_brothers !== "" && formData.no_of_brothers !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Brothers:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="no_of_brothers"
-                                    value={formData.no_of_brothers}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.no_of_brothers || '-'}</span>
-                            )}
-                        </h5>)}
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Brothers:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="no_of_brothers"
+                                        value={formData.no_of_brothers}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal">
+                                        {/* {formData.no_of_brothers || "N/A"} */}
+                                        {formData.no_of_brothers === "0"
+                                            ? "No"
+                                            : formData.no_of_brothers?.toString().trim()
+                                                ? formData.no_of_brothers
+                                                : "N/A"}
+                                    </span>
+                                )}
+                            </h5>)}
 
                         {formData?.no_of_bro_married && formData.no_of_bro_married !== "" && formData.no_of_bro_married !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Brothers Married:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="no_of_bro_married"
-                                    value={formData.no_of_bro_married}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.no_of_bro_married || '-'}</span>
-                            )}
-                        </h5>)}
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Brothers Married:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="no_of_bro_married"
+                                        value={formData.no_of_bro_married}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal">
+                                        {/* {formData.no_of_bro_married || "N/A"} */}
+                                        {formData.no_of_bro_married === "0"
+                                            ? "No"
+                                            : formData.no_of_bro_married?.toString().trim()
+                                                ? formData.no_of_bro_married
+                                                : "N/A"}
+                                    </span>
+                                )}
+                            </h5>)}
 
                         {formData?.property_details && formData.property_details !== "" && formData.property_details !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Property Details:
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="property_details"
-                                    value={formData.property_details}
-                                    onChange={handleChange}
-                                    className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-                                />
-                            ) : (
-                                <span className="font-normal"> {formData.property_details || '-'}</span>
-                            )}
-                        </h5>)}
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Property Details:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="property_details"
+                                        value={formData.property_details}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.property_details || "N/A"}</span>
+                                )}
+                            </h5>)}
                     </div>
                 </div>
 

@@ -874,7 +874,7 @@ import { ProfileSlick } from "../../Components/DashBoard/ProfileDetails/ProfileS
 import { ProfileDetailsSettings } from "../../Components/DashBoard/ProfileDetails/ProfileDetailsSettings";
 //import Spinner from "../../Components/Spinner";
 import { ProfileContext } from "../../ProfileContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { Share } from "../../Components/DashBoard/ProfileDetails/Share";
 import { IoShareSocialSharp } from "react-icons/io5";
 import { MyProfileShare } from "../../Components/DashBoard/ProfileDetails/MyProfileShare"
@@ -1514,7 +1514,6 @@ export const MyProfile = () => {
                       Valid Upto : {get_myprofile_personal.valid_upto}
                     </p>
                   </div>
-
                   <div className="my-3">
                     <button
                       className="flex items-center text-sm text-main font-normal  max-md:text-base"
@@ -1524,7 +1523,14 @@ export const MyProfile = () => {
                       <FaArrowRight className="ml-2" />
                     </button>
                   </div>
-
+                  {get_myprofile_personal.valid_upto &&
+                    new Date(get_myprofile_personal.valid_upto) < new Date() && (
+                      <Link to="/UpgradePlan">
+                        <div className="bg-gradient w-fit rounded-[6px] py-[6px] px-[12px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                          Revenue
+                        </div>
+                      </Link>
+                    )}
                   <div className="w-1/2 mb-8 max-sm:w-full max-sm:mb-8 max-lg:w-full">
                     <div>
                       <div className="flex justify-start  gap-x-10 gap-y-3  items-center mb-3  max-lg:flex-wrap max-sm:gap-3 max-sm:flex-col max-sm:items-start">
@@ -1554,16 +1560,17 @@ export const MyProfile = () => {
                           </span>
                         </h5>
                       </div>
-
-                      <div className="mb-3">
-                        <h5 className="text-[18px] text-ash font-semibold max-sm:text-[16px]">
-                          Weight :
-                          <span className="font-normal">
-                            {" "}
-                            {get_myprofile_personal.personal_weight} kg
-                          </span>
-                        </h5>
-                      </div>
+                      {Number(get_myprofile_personal.personal_weight) !== 0 && (
+                        <div className="mb-3">
+                          <h5 className="text-[18px] text-ash font-semibold max-sm:text-[16px]">
+                            Weight :
+                            <span className="font-normal">
+                              {" "}
+                              {get_myprofile_personal.personal_weight} kg
+                            </span>
+                          </h5>
+                        </div>
+                      )}
 
                       <div className="flex justify-start gap-x-10 gap-y-3 items-center mb-3 max-lg:flex-wrap max-sm:gap-3  max-sm:flex-col max-sm:items-start">
                         <h5 className="text-[18px] text-ash font-semibold max-sm:text-[16px]">

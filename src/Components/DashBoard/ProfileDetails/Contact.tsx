@@ -75,16 +75,16 @@ export const Contact = () => {
   // const [selectedDistrict, setSelectedDistrict] = useState<LocationSelection | null>(null);
   // const [selectedCity, setSelectedCity] = useState<LocationSelection | null>(null);
   const [errors, setErrors] = useState({
-    personal_prof_addr: "",
+    // personal_prof_addr: "",
     selectedCountryId: "",
-    selectedStateId: "",
-    selectedDistrictId: "",
-    selectedCityId: "",
+    // selectedStateId: "",
+    // selectedDistrictId: "",
+    // selectedCityId: "",
 
-    personal_prof_pin: "",
-    personal_prof_phone: "",
-    personal_prof_mob_no: "",
-    personal_prof_whats: "",
+    // personal_prof_pin: "",
+    // personal_prof_phone: "",
+    // personal_prof_mob_no: "",
+    // personal_prof_whats: "",
     personal_email: "",
   });
 
@@ -300,37 +300,37 @@ export const Contact = () => {
 
     // Validate each field and store errors
     const newErrors = {
-      personal_prof_addr: !formData.personal_prof_addr
-        ? "Address is required."
-        : "",
+      // personal_prof_addr: !formData.personal_prof_addr
+      //   ? "Address is required."
+      //   : "",
       selectedCountryId: !selectedCountryId ? "Country is required." : "",
       //selectedStateId: !selectedStateId ? "State is required." : "",
       //selectedDistrictId: !selectedDistrictId ? "District is required" : "",
       //selectedCityId: !selectedCityId ? "City is required." : "",
-      selectedStateId:
-        !selectedStateId && !formData.personal_prof_stat_name
-          ? "State is required."
-          : "",
-      selectedDistrictId:
-        !selectedDistrictId && !formData.personal_prof_district_name
-          ? "District is required"
-          : "",
-      selectedCityId:
-        !selectedCityId && !formData.personal_prof_city_name
-          ? "City is required."
-          : "",
-      personal_prof_pin: !formData.personal_prof_pin
-        ? "Pincode is required."
-        : "",
-      personal_prof_phone: !formData.personal_prof_phone
-        ? "Alternate phone is required."
-        : "",
-      personal_prof_mob_no: !formData.personal_prof_mob_no
-        ? "Mobile number is required."
-        : "",
-      personal_prof_whats: !formData.personal_prof_whats
-        ? "WhatsApp number is required."
-        : "",
+      // selectedStateId:
+      //   !selectedStateId && !formData.personal_prof_stat_name
+      //     ? "State is required."
+      //     : "",
+      // selectedDistrictId:
+      //   !selectedDistrictId && !formData.personal_prof_district_name
+      //     ? "District is required"
+      //     : "",
+      // selectedCityId:
+      //   !selectedCityId && !formData.personal_prof_city_name
+      //     ? "City is required."
+      //     : "",
+      // personal_prof_pin: !formData.personal_prof_pin
+      //   ? "Pincode is required."
+      //   : "",
+      // personal_prof_phone: !formData.personal_prof_phone
+      //   ? "Alternate phone is required."
+      //   : "",
+      // personal_prof_mob_no: !formData.personal_prof_mob_no
+      //   ? "Mobile number is required."
+      //   : "",
+      // personal_prof_whats: !formData.personal_prof_whats
+      //   ? "WhatsApp number is required."
+      //   : "",
       personal_email: !formData.personal_email
         ? "Email is required."
         : emailError
@@ -436,17 +436,9 @@ export const Contact = () => {
                     setErrors((prev) => ({ ...prev, personal_prof_addr: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.personal_prof_addr
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                    }`}
+                   `}
                 />
-                {errors.personal_prof_addr && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_prof_addr}
-                  </p>
-                )}
+               
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Country:
@@ -461,7 +453,7 @@ export const Contact = () => {
                     ${
                       errors.selectedCountryId
                         ? "border-red-500"
-                        : "focus:border-blue-500"
+                        : "focus:outline-none"
                     }`}
                 >
                   <option value="">Select Country</option>
@@ -492,11 +484,7 @@ export const Contact = () => {
                         id="state"
                         // className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                         className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                          ${
-                            errors.selectedStateId
-                              ? "border-red-500"
-                              : "focus:border-blue-500"
-                          }`}
+                          `}
                         // {...register("state")}
                         // onChange={handleStateChange}
                         value={selectedStateId}
@@ -518,11 +506,7 @@ export const Contact = () => {
                         ))}
                       </select>
                     </div>
-                    {errors.selectedStateId && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.selectedStateId}
-                      </p>
-                    )}
+                    
                   </div>
 
                   {["1", "2", "3", "4", "5", "6", "7"].includes(
@@ -540,11 +524,7 @@ export const Contact = () => {
                           id="district"
                           //  className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                           className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                          ${
-                            errors.selectedDistrictId
-                              ? "border-red-500"
-                              : "focus:border-blue-500"
-                          }`}
+                          `}
                           value={selectedDistrictId}
                           onChange={(e) => {
                             handleDistrictChange(e);
@@ -568,11 +548,7 @@ export const Contact = () => {
                           ))}
                         </select>
                       </div>
-                      {errors.selectedDistrictId && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.selectedDistrictId}
-                        </p>
-                      )}
+                      
                     </div>
                   ) : (
                     <div>
@@ -595,11 +571,7 @@ export const Contact = () => {
                           })); // Clear error on change
                         }}
                       />
-                      {errors.selectedDistrictId && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.selectedDistrictId}
-                        </p>
-                      )}
+                    
                     </div>
                   )}
                 </>
@@ -656,11 +628,7 @@ export const Contact = () => {
                             id="city"
                             // className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                             className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                          ${
-                            errors.selectedCityId
-                              ? "border-red-500"
-                              : "focus:border-blue-500"
-                          }`}
+                          `}
                             value={selectedCityId}
                             onChange={handleCityChange}
                           >
@@ -675,11 +643,7 @@ export const Contact = () => {
                             <option value="others">Others</option>
                           </select>
                         </div>
-                        {errors.selectedCityId && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors.selectedCityId}
-                          </p>
-                        )}
+                       
                       </>
                     ) : (
                       <>
@@ -698,11 +662,7 @@ export const Contact = () => {
                             })); // Clear error on change
                           }}
                         />
-                        {errors.selectedCityId && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors.selectedCityId}
-                          </p>
-                        )}
+                      
                       </>
                     )}
                   </>
@@ -724,23 +684,15 @@ export const Contact = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.personal_prof_pin
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                    }`}
+                    `}
                 />
               </label>
-              {errors.personal_prof_pin && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.personal_prof_pin}
-                </p>
-              )}
+              
             </div>
 
             <div>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Phone:
+                Alternate Mobile Number:
                 <input
                   type="text"
                   name="personal_prof_phone"
@@ -765,21 +717,13 @@ export const Contact = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.personal_prof_phone
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                    }`}
+                    `}
                 />
-                {errors.personal_prof_phone && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_prof_phone}
-                  </p>
-                )}
+               
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Mobile:
+                Profile Mobile Number:
                 <input
                   type="text"
                   name="personal_prof_mob_no"
@@ -804,17 +748,9 @@ export const Contact = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.personal_prof_mob_no
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                    }`}
+                   `}
                 />
-                {errors.personal_prof_mob_no && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_prof_mob_no}
-                  </p>
-                )}
+                
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -835,17 +771,9 @@ export const Contact = () => {
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.personal_prof_whats
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
-                    }`}
+                   `}
                 />
-                {errors.personal_prof_whats && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.personal_prof_whats}
-                  </p>
-                )}
+               
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -907,14 +835,14 @@ export const Contact = () => {
                 Address:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_addr}
+                  {contactDetails.personal_prof_addr|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Country:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_count_name}
+                  {contactDetails.personal_prof_count_name|| "N/A"}
                 </span>
               </h5>
               {selectedCountryId === "1" && (
@@ -923,7 +851,7 @@ export const Contact = () => {
                     State:
                     <span className="font-normal">
                       {" "}
-                      {contactDetails.personal_prof_stat_name}
+                      {contactDetails.personal_prof_stat_name|| "N/A"}
                     </span>
                   </h5>
 
@@ -931,7 +859,7 @@ export const Contact = () => {
                     District:
                     <span className="font-normal">
                       {" "}
-                      {contactDetails.personal_prof_district_name}
+                      {contactDetails.personal_prof_district_name|| "N/A"}
                     </span>
                   </h5>
                 </>
@@ -940,45 +868,45 @@ export const Contact = () => {
                 City:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_city_name}
+                  {contactDetails.personal_prof_city_name|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Pincode:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_pin}
+                  {contactDetails.personal_prof_pin|| "N/A"}
                 </span>
               </h5>
             </div>
 
             <div>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Phone:
+                Alternate Mobile:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_phone}
+                  {contactDetails.personal_prof_phone|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Mobile:
+                Profile Mobile:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_mob_no}
+                  {contactDetails.personal_prof_mob_no|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 WhatsApp:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_whats}
+                  {contactDetails.personal_prof_whats|| "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Email:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_email}
+                  {contactDetails.personal_email|| "N/A"}
                 </span>
               </h5>
             </div>
