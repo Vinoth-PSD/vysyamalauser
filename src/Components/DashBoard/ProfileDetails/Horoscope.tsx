@@ -25,6 +25,7 @@ interface HoroscopeDetails {
   personal_rasi_katt: string;
   personal_amsa_katt: string;
   personal_horoscope_hints: string;
+  personal_madhulam:string;
 }
 
 // Define the interface for Lagnam data
@@ -311,6 +312,7 @@ export const Horoscope = () => {
           ragu_dosham: formData.personal_ragu_dos,
           nalikai: formData.personal_nalikai,
           suya_gothram: formData.personal_surya_goth,
+          madulamn:formData.personal_madhulam,
           dasa_name: formData.personal_dasa,
           dasa_balance: formData.personal_dasa_bal,
           rasi_kattam: formData.personal_rasi_katt,
@@ -591,6 +593,18 @@ export const Horoscope = () => {
                   </p>
                 )}
               </label>
+              <label className={`block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium  
+              `}>
+               Madhulam:
+                <input
+                  type="text"
+                  name="personal_madhulam"
+                  value={formData.personal_madhulam || ""}
+                  onChange={handleInputChange}
+                  className={`font-normal border rounded px-3 py-[8px] w-full focus:outline-none  border-ashBorder`}
+                />
+                
+              </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Ragu Dosham:
                 <select
@@ -744,6 +758,14 @@ export const Horoscope = () => {
                   {horoscopeDetails.personal_surya_goth|| "N/A"}
                 </span>
               </h5>
+               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Madhulam:
+                <span className="font-normal">
+                  {" "}
+                  {horoscopeDetails.personal_madhulam|| "N/A"}
+                </span>
+              </h5>
+
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Ragu Dosham:
                 <span className="font-normal">

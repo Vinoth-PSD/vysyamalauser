@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { MdModeEdit } from "react-icons/md";
@@ -699,37 +698,27 @@ export const EducationProfession = () => {
       degree: selectedDegrees.join(','), // Convert array to comma-separated string
       //other_degree: customDegree, // Only include if "Others" is selected
       other_degree: formData.persoanl_edu_other || "",
-
+      // Initialize all optional fields to empty strings
+      company_name: "",
+      designation: "",
+      profession_details: "",
+      business_name: "",
+      business_address: "",
+      nature_of_business: ""
     };
-    // Conditionally add fields based on profession ID
+
+    // Conditionally update fields based on profession
     if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProfessionId === "6") {
-      // For profession ID 1, 6, or 7 - include employment fields
-      payload.company_name = formData.personal_company_name || educationProfessionDetails?.personal_company_name || "";
-      payload.designation = formData.personal_designation || educationProfessionDetails?.personal_designation || "";
-      payload.profession_details = formData.personal_profess_details || educationProfessionDetails?.personal_profess_details || "";
-
-      // Set business-related fields to empty strings
-      payload.business_name = "";
-      payload.business_address = "";
-      payload.nature_of_business = "";
-    } else if (selectedProfessionId === "2" || selectedProfessionId === "6") {
-      // For profession ID 2 or 6 - include business fields
-      payload.business_name = formData.personal_business_name || educationProfessionDetails?.personal_business_name || "";
-      payload.business_address = formData.personal_business_addresss || educationProfessionDetails?.personal_business_addresss || "";
-      payload.nature_of_business = formData.personal_nature_of_business || educationProfessionDetails?.personal_nature_of_business || "";
-
-      // Set employment-related fields to empty strings
-      payload.company_name = "";
-      payload.designation = "";
-      payload.profession_details = "";
-    } else {
-      // For other professions, set all optional fields to empty strings
-      payload.company_name = "";
-      payload.designation = "";
-      payload.profession_details = "";
-      payload.business_name = "";
-      payload.business_address = "";
-      payload.nature_of_business = "";
+      // Employment fields
+      payload.company_name = formData.personal_company_name || "";
+      payload.designation = formData.personal_designation || "";
+      payload.profession_details = formData.personal_profess_details || "";
+    }
+    else if (selectedProfessionId === "2" || selectedProfessionId === "6") {
+      // Business fields
+      payload.business_name = formData.personal_business_name || "";
+      payload.business_address = formData.personal_business_addresss || "";
+      payload.nature_of_business = formData.personal_nature_of_business || "";
     }
     //console.log("Logging payload values before submission:", payload);
 
