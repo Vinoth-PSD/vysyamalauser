@@ -414,7 +414,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   const year = useWatch({ control, name: "year" });
 
   useEffect(() => {
-    const balance = `${day}days, ${month}months, ${year}years`;
+    const balance = `${day} Days, ${month} Months, ${year} Ysears`;
     setDasaBalance(balance);
     console.log(balance); // Optional: Log the balance for debugging
   }, [day, month, year]);

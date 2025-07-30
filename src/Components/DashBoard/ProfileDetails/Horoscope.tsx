@@ -477,7 +477,7 @@ export const Horoscope = () => {
                       value={dasaBalanceDay}
                       onChange={(e) => {
                         setDasaBalanceDay(e.target.value);
-                        const balance = `${e.target.value}days, ${dasaBalanceMonth}months, ${dasaBalanceYear}years`;
+                        const balance = `${e.target.value} Days, ${dasaBalanceMonth} Months, ${dasaBalanceYear} Years`;
                         setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
                       }}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
@@ -500,7 +500,7 @@ export const Horoscope = () => {
                       value={dasaBalanceMonth}
                       onChange={(e) => {
                         setDasaBalanceMonth(e.target.value);
-                        const balance = `${dasaBalanceDay}days, ${e.target.value}months, ${dasaBalanceYear}years`;
+                        const balance = `${dasaBalanceDay} Days, ${e.target.value} Months, ${dasaBalanceYear} Years`;
                         setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
                       }}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
@@ -523,7 +523,7 @@ export const Horoscope = () => {
                       value={dasaBalanceYear}
                       onChange={(e) => {
                         setDasaBalanceYear(e.target.value);
-                        const balance = `${dasaBalanceDay}days, ${dasaBalanceMonth}months, ${e.target.value}years`;
+                        const balance = `${dasaBalanceDay} Days, ${dasaBalanceMonth} Months, ${e.target.value} Years`;
                         setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
                       }}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
