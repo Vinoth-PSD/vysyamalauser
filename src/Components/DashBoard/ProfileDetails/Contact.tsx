@@ -749,7 +749,7 @@ export const Contact = () => {
 
             <div>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Alternate Mobile Number:
+                Alternate Mobile:
                 <input
                   type="text"
                   name="personal_prof_phone"
@@ -779,36 +779,7 @@ export const Contact = () => {
 
               </label>
 
-              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Profile Mobile Number:
-                <input
-                  type="text"
-                  name="personal_prof_mob_no"
-                  value={formData.personal_prof_mob_no || ""}
-                  //   onChange={(e) => {
-                  //     const value = e.target.value;
-                  //     // Allow only numeric values
-                  //     if (/^\d{0,10}$/.test(value)) {
-                  //       handleInputChange(e); // Call your input change handler
-                  //     }
-                  //   }}
-                  //   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    // Allow only numeric values and a max length of 10 digits
-                    if (/^\d{0,10}$/.test(value)) {
-                      handleInputChange(e); // Call your input change handler
-                      setErrors((prev) => ({
-                        ...prev,
-                        personal_prof_mob_no: "",
-                      })); // Clear error on change
-                    }
-                  }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                   `}
-                />
 
-              </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 WhatsApp:
@@ -866,7 +837,7 @@ export const Contact = () => {
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
-                Profile Email:
+                Profile Email ID:
                 <input
                   type="email"
                   name="admin_use_email"
@@ -890,6 +861,36 @@ export const Contact = () => {
                 {errors.admin_use_email && (
                   <p className="text-red-500 text-sm mt-1">{errors.admin_use_email}</p>
                 )}
+              </label>
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Profile Mobile No:
+                <input
+                  type="text"
+                  name="personal_prof_mob_no"
+                  value={formData.personal_prof_mob_no || ""}
+                  //   onChange={(e) => {
+                  //     const value = e.target.value;
+                  //     // Allow only numeric values
+                  //     if (/^\d{0,10}$/.test(value)) {
+                  //       handleInputChange(e); // Call your input change handler
+                  //     }
+                  //   }}
+                  //   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow only numeric values and a max length of 10 digits
+                    if (/^\d{0,10}$/.test(value)) {
+                      handleInputChange(e); // Call your input change handler
+                      setErrors((prev) => ({
+                        ...prev,
+                        personal_prof_mob_no: "",
+                      })); // Clear error on change
+                    }
+                  }}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
+                   `}
+                />
+
               </label>
             </div>
           </div>
@@ -972,13 +973,6 @@ export const Contact = () => {
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Profile Mobile:
-                <span className="font-normal">
-                  {" "}
-                  {contactDetails.personal_prof_mob_no || "N/A"}
-                </span>
-              </h5>
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 WhatsApp:
                 <span className="font-normal">
                   {" "}
@@ -993,10 +987,17 @@ export const Contact = () => {
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
-                Profile Email:
+                Profile Email ID:
                 <span className="font-normal">
                   {" "}
                   {contactDetails.admin_use_email || "N/A"}
+                </span>
+              </h5>
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Profile Mobile No:
+                <span className="font-normal">
+                  {" "}
+                  {contactDetails.personal_prof_mob_no || "N/A"}
                 </span>
               </h5>
             </div>
