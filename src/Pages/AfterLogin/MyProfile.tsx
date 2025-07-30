@@ -1527,7 +1527,7 @@ export const MyProfile = () => {
                     new Date(get_myprofile_personal.valid_upto) < new Date() && (
                       <Link to="/UpgradePlan">
                         <div className="bg-gradient w-fit rounded-[6px] py-[6px] px-[12px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
-                          Revenue
+                          Renew
                         </div>
                       </Link>
                     )}

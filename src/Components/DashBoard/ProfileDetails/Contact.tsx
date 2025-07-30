@@ -24,6 +24,7 @@ interface ContactDetails {
   personal_prof_mob_no: number;
   personal_prof_whats: number;
   personal_email: string;
+  admin_use_email: string;
 }
 
 interface Country {
@@ -86,6 +87,7 @@ export const Contact = () => {
     // personal_prof_mob_no: "",
     // personal_prof_whats: "",
     personal_email: "",
+    admin_use_email: "",
   });
 
 
@@ -96,7 +98,7 @@ export const Contact = () => {
         const response = await apiClient.post(
           "/auth/get_myprofile_contact/",
           {
-            profile_id: loginuser_profileId ,
+            profile_id: loginuser_profileId,
           }
         );
         const data = response.data.data;
@@ -289,6 +291,60 @@ export const Contact = () => {
     }));
   };
 
+  const validateEmailField = (_fieldName: string, value: string): string => {
+    if (!value) return ""; // No error if empty (optional field)
+
+    // Check for @ symbol first
+    if (!value.includes('@')) {
+      return "Please include an '@' in the email address.";
+    }
+
+    // Then check full email format
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(value)) {
+      return "Please enter a valid email address.";
+    }
+    return "";
+  };
+
+  // const handleEmailInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   const { name, value } = e.target;
+
+  //   // Validate email
+  //   if (name === "Profile_emailid") {
+  //     const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  //     if (!emailPattern.test(value)) {
+  //       setEmailError("Invalid email address");
+  //     } else {
+  //       setEmailError("");
+  //     }
+  //   }
+
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
+
+  const handleEmailInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    // Validate the email and set error
+    setErrors((prev) => ({
+      ...prev,
+      [name]: validateEmailField(name, value),
+    }));
+  };
+
   // Helper function to validate email format
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -334,8 +390,9 @@ export const Contact = () => {
       personal_email: !formData.personal_email
         ? "Email is required."
         : emailError
-        ? "Invalid email format."
-        : "",
+          ? "Invalid email format."
+          : "",
+      admin_use_email: validateEmailField("admin_use_email", formData.admin_use_email || ""),
     };
 
     // Check if there are any errors
@@ -381,6 +438,7 @@ export const Contact = () => {
           Profile_mobile_no: formData.personal_prof_mob_no,
           Profile_whatsapp: formData.personal_prof_whats,
           EmailId: formData.personal_email,
+          Profile_emailid: formData.admin_use_email,
         }
       );
 
@@ -391,7 +449,7 @@ export const Contact = () => {
         const getResponse = await apiClient.post(
           "/auth/get_myprofile_contact/",
           {
-            profile_id: loginuser_profileId ,
+            profile_id: loginuser_profileId,
           }
         );
 
@@ -438,7 +496,7 @@ export const Contact = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                    `}
                 />
-               
+
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Country:
@@ -450,10 +508,9 @@ export const Contact = () => {
                     setErrors((prev) => ({ ...prev, selectedCountryId: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.selectedCountryId
-                        ? "border-red-500"
-                        : "focus:outline-none"
+                    ${errors.selectedCountryId
+                      ? "border-red-500"
+                      : "focus:outline-none"
                     }`}
                 >
                   <option value="">Select Country</option>
@@ -506,7 +563,7 @@ export const Contact = () => {
                         ))}
                       </select>
                     </div>
-                    
+
                   </div>
 
                   {["1", "2", "3", "4", "5", "6", "7"].includes(
@@ -533,7 +590,7 @@ export const Contact = () => {
                               selectedDistrictId: "",
                             })); // Clear error on change
                           }}
-                          //value={districtValue} // Controlled value
+                        //value={districtValue} // Controlled value
                         >
                           <option value="" selected disabled>
                             Select District
@@ -548,7 +605,7 @@ export const Contact = () => {
                           ))}
                         </select>
                       </div>
-                      
+
                     </div>
                   ) : (
                     <div>
@@ -571,7 +628,7 @@ export const Contact = () => {
                           })); // Clear error on change
                         }}
                       />
-                    
+
                     </div>
                   )}
                 </>
@@ -643,7 +700,7 @@ export const Contact = () => {
                             <option value="others">Others</option>
                           </select>
                         </div>
-                       
+
                       </>
                     ) : (
                       <>
@@ -662,7 +719,7 @@ export const Contact = () => {
                             })); // Clear error on change
                           }}
                         />
-                      
+
                       </>
                     )}
                   </>
@@ -687,7 +744,7 @@ export const Contact = () => {
                     `}
                 />
               </label>
-              
+
             </div>
 
             <div>
@@ -719,7 +776,7 @@ export const Contact = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                     `}
                 />
-               
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -750,7 +807,7 @@ export const Contact = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                    `}
                 />
-                
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -773,7 +830,7 @@ export const Contact = () => {
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                    `}
                 />
-               
+
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -796,16 +853,42 @@ export const Contact = () => {
                     }));
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                    ${
-                      errors.personal_email
-                        ? "border-red-500"
-                        : "focus:border-blue-500"
+                    ${errors.personal_email
+                      ? "border-red-500"
+                      : "focus:border-blue-500"
                     }`}
                 />
                 {errors.personal_email && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.personal_email}
                   </p>
+                )}
+              </label>
+
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Profile Email:
+                <input
+                  type="email"
+                  name="admin_use_email"
+                  value={formData.admin_use_email || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    handleEmailInputChange(e); // Call your existing input change handler
+
+                    // Validate the email format and update the error state
+                    const errorMessage = validateEmail(value)
+                      ? ""
+                      : "Invalid email format.";
+                    setErrors((prev) => ({
+                      ...prev,
+                      admin_use_email: errorMessage,
+                    }));
+                  }}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none border-ashBorder ${errors.admin_use_email ? "border-red-500" : "focus:outline-none"
+                    }`}
+                />
+                {errors.admin_use_email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.admin_use_email}</p>
                 )}
               </label>
             </div>
@@ -835,14 +918,14 @@ export const Contact = () => {
                 Address:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_addr|| "N/A"}
+                  {contactDetails.personal_prof_addr || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Country:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_count_name|| "N/A"}
+                  {contactDetails.personal_prof_count_name || "N/A"}
                 </span>
               </h5>
               {selectedCountryId === "1" && (
@@ -851,7 +934,7 @@ export const Contact = () => {
                     State:
                     <span className="font-normal">
                       {" "}
-                      {contactDetails.personal_prof_stat_name|| "N/A"}
+                      {contactDetails.personal_prof_stat_name || "N/A"}
                     </span>
                   </h5>
 
@@ -859,7 +942,7 @@ export const Contact = () => {
                     District:
                     <span className="font-normal">
                       {" "}
-                      {contactDetails.personal_prof_district_name|| "N/A"}
+                      {contactDetails.personal_prof_district_name || "N/A"}
                     </span>
                   </h5>
                 </>
@@ -868,14 +951,14 @@ export const Contact = () => {
                 City:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_city_name|| "N/A"}
+                  {contactDetails.personal_prof_city_name || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Pincode:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_pin|| "N/A"}
+                  {contactDetails.personal_prof_pin || "N/A"}
                 </span>
               </h5>
             </div>
@@ -885,28 +968,35 @@ export const Contact = () => {
                 Alternate Mobile:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_phone|| "N/A"}
+                  {contactDetails.personal_prof_phone || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Profile Mobile:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_mob_no|| "N/A"}
+                  {contactDetails.personal_prof_mob_no || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 WhatsApp:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_prof_whats|| "N/A"}
+                  {contactDetails.personal_prof_whats || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Email:
                 <span className="font-normal">
                   {" "}
-                  {contactDetails.personal_email|| "N/A"}
+                  {contactDetails.personal_email || "N/A"}
+                </span>
+              </h5>
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Profile Email:
+                <span className="font-normal">
+                  {" "}
+                  {contactDetails.admin_use_email || "N/A"}
                 </span>
               </h5>
             </div>

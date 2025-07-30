@@ -28,6 +28,7 @@ interface PersonalDetails {
   personal_weight: number;
   personal_body_type: string;
   personal_eye_wear: string;
+  mobile_no: string;
 }
 
 interface MaritalStatus {
@@ -227,7 +228,7 @@ export const Personal = () => {
       ...prevState,
       personal_profile_marital_status_name: selectedValue,
     }));
-     localStorage.setItem("maritalStatus", selectedValue);
+    localStorage.setItem("maritalStatus", selectedValue);
   };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -419,6 +420,7 @@ export const Personal = () => {
           hobbies: formData.personal_hobbies,
           Pysically_changed: formData.personal_pysically_changed,
           Profile_for: selectedProfileHolder,
+          Mobile_no: formData.mobile_no,
         }
       );
 
@@ -455,6 +457,7 @@ export const Personal = () => {
           personal_profile_complexion_name:
             updatedDetails.personal_profile_complexion_name,
           owner_id: updatedDetails.owner_id,
+          mobile_no: updatedDetails.mobile_no,
         }));
 
         setIsEditing(false);
@@ -793,9 +796,6 @@ export const Personal = () => {
                   <option value="Normal">Normal</option>
                 </select>
               </label>
-            </div>
-
-            <div>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Eye Wear:
                 <select
@@ -810,6 +810,9 @@ export const Personal = () => {
 
                 </select>
               </label>
+            </div>
+
+            <div>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Marital Status:
@@ -989,6 +992,25 @@ export const Personal = () => {
                   ))}
                 </select>
               </label>
+
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Registered Mobile:
+                <input
+                  type="text"
+                  name="mobile_no"
+                  value={formData.mobile_no || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow only up to 10 numeric digits
+                    if (/^\d{0,10}$/.test(value)) {
+                      handleInputChange(e);
+                      setErrors((prev) => ({ ...prev, mobile_no: "" }));
+                    }
+                  }}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
+                  `}
+                />
+              </label>
             </div>
           </div>
 
@@ -1055,7 +1077,7 @@ export const Personal = () => {
                 Place of Birth :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_place_of_birth|| "N/A"}
+                  {personalDetails.personal_place_of_birth || "N/A"}
                 </span>
               </h5>
 
@@ -1092,16 +1114,16 @@ export const Personal = () => {
                   {personalDetails.personal_body_type || "N/A"}{" "}
                 </span>
               </h5>
-            </div>
-
-            <div>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Eye Wear :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_eye_wear|| "N/A"}{" "}
+                  {personalDetails.personal_eye_wear || "N/A"}{" "}
                 </span>
               </h5>
+
+            </div>
+            <div>
 
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Marital Status :
@@ -1155,6 +1177,14 @@ export const Personal = () => {
                 <span className="font-normal">
                   {" "}
                   {personalDetails.personal_profile_for_name || "N/A"}
+                </span>
+              </h5>
+
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Registered Mobile :
+                <span className="font-normal">
+                  {" "}
+                  {personalDetails.mobile_no || "N/A"}
                 </span>
               </h5>
             </div>

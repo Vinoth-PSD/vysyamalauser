@@ -156,8 +156,8 @@ const ProfileCompletionForm = () => {
     <div className="bg-grayBg">
       <div className="container mx-auto h-full  flex justify-center items-center py-20 max-md:py-10">
         <div className="w-full max-w-4xl p-10 bg-white rounded-2xl shadow-profileCardShadow max-sm:w-full max-sm:p-5">
-          <h2 className="text-2xl font-semibold text-start mb-6 max-md:text-xl max-md:mb-4">
-            Profile Completion
+          <h2 className="text-2xl font-semibold text-center mb-6 max-md:text-xl max-md:mb-4">
+            Your perfect match is waiting. Complete your profile now!
           </h2>
           <form onSubmit={handleSubmit}>
             {emptyFields.length > 0 ? (
@@ -177,7 +177,7 @@ const ProfileCompletionForm = () => {
                           : field === "property_worth"
                             ? "Property Worth"
                             : field === "about_self"
-                              ? "About Self"
+                              ? "About Myself"
                               : field === "about_family"
                                 ? "About Family"
                                 : field === "career_plans"

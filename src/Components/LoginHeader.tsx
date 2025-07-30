@@ -562,7 +562,7 @@ export const LoginHeader: React.FC = () => {
               // className="active-nav"
               >
                 <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
-                  Revenue
+                  Renew
                 </li>
               </Link>
             </ul>
