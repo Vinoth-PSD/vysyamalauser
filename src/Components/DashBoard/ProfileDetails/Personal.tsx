@@ -11,7 +11,7 @@ interface PersonalDetails {
   personal_age: number;
   personal_profile_dob: string;
   personal_place_of_birth: string;
-  personal_time_of_birth: string;
+  personal_time_of_birth_str: string;
   personal_profile_height: string;
   personal_profile_marital_status_id: number;
   personal_profile_marital_status_name: string;
@@ -100,8 +100,8 @@ export const Personal = () => {
   const [period, setPeriod] = useState<"AM" | "PM">("AM");
 
   useEffect(() => {
-    if (personalDetails?.personal_time_of_birth) {
-      const [time, period] = personalDetails.personal_time_of_birth.split(" ");
+    if (personalDetails?.personal_time_of_birth_str) {
+      const [time, period] = personalDetails.personal_time_of_birth_str.split(" ");
       const [hours, minutes] = time.split(":");
       setHour(hours);
       setMinute(minutes);
@@ -444,7 +444,7 @@ export const Personal = () => {
           personal_age: updatedDetails.personal_age,
           personal_profile_dob: updatedDetails.personal_profile_dob,
           personal_place_of_birth: updatedDetails.personal_place_of_birth,
-          personal_time_of_birth: updatedDetails.personal_time_of_birth,
+          personal_time_of_birth: updatedDetails.personal_time_of_birth_str,
           personal_profile_height: updatedDetails.personal_profile_height,
           personal_weight: updatedDetails.personal_weight,
           personal_body_type: updatedDetails.personal_body_type,
@@ -1085,7 +1085,7 @@ export const Personal = () => {
                 Time of Birth :
                 <span className="font-normal">
                   {" "}
-                  {personalDetails.personal_time_of_birth || "N/A"}
+                  {personalDetails.personal_time_of_birth_str || "N/A"}
                 </span>
               </h5>
 
@@ -1174,13 +1174,13 @@ export const Personal = () => {
                 </span>
               </h5>
 
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+              {/* <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Profile Created By :
                 <span className="font-normal">
                   {" "}
                   {personalDetails.personal_profile_for_name || "N/A"}
                 </span>
-              </h5>
+              </h5> */}
 
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Registered Mobile :

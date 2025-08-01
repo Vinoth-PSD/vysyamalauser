@@ -726,6 +726,7 @@ import {
 import { FaPlus } from "react-icons/fa6";
 import { ProfileContext } from "../../../ProfileContext";
 import apiClient from "../../../API";
+//import { RotatingSquare } from "react-loader-spinner";
 
 export const ProfileSlick = () => {
   const [nav1, setNav1] = useState<Slider | null>(null);
@@ -733,7 +734,9 @@ export const ProfileSlick = () => {
   const sliderRef1 = useRef<Slider | null>(null);
   const sliderRef2 = useRef<Slider | null>(null);
   const context = useContext(ProfileContext);
-
+  // const [isLoading, setIsLoading] = useState(true);
+   const [, setIsLoading] = useState(true);
+  const [, setDisplayImages] = useState<Array<{ imageUrl: string, id: number | null }>>([]);
   if (!context) {
     throw new Error(
       "ProfileContext must be used within a ProfileContextProvider"
@@ -747,6 +750,40 @@ export const ProfileSlick = () => {
   const [removePhotoIndicator, setRemovePhotoIndicator] =
     useState<boolean>(false);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+
+
+
+
+  useEffect(() => {
+    // Initialize with default image immediately
+    setDisplayImages([{ imageUrl: defaultImgUrl, id: null }]);
+
+    const loadImages = async () => {
+      try {
+        await fetchImages();
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error loading images:", error);
+        setIsLoading(false);
+      }
+    };
+
+    loadImages();
+  }, [fetchImages, defaultImgUrl]);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      setDisplayImages(images);
+    } else {
+      setDisplayImages([{ imageUrl: defaultImgUrl, id: null }]);
+    }
+  }, [images, defaultImgUrl]);
 
   const handleMouseEnter = useCallback((image: string) => {
     setTimeout(() => setZoomImage(image), 100);
@@ -955,12 +992,23 @@ export const ProfileSlick = () => {
     ],
   };
 
-  const gender = localStorage.getItem("gender");
+  // const LoadingSpinner: React.FC = () => (
+  //   <div className="w-fit h-96 flex flex-col items-center justify-center mx-auto">
+  //     <RotatingSquare
+  //       visible={true}
+  //       height="100"
+  //       width="100"
+  //       color="#FF6666"
+  //       ariaLabel="rotating-square-loading"
+  //     />
+  //     <p className="text-sm mt-2">Loading images...</p>
+  //   </div>
+  // );
 
-  const defaultImgUrl =
-    gender === "male"
-      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
-      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+
+  // if (isLoading) {
+  //   return <LoadingSpinner />;
+  // }
 
 
   return (

@@ -166,26 +166,88 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
           setNalikai(profileData.nalikai);
           // Parse and set dasa_balance values
           const dasaBalance1 = profileData.dasa_balance; // Assume this is the format you get: "day:3,month:2,year:4"
-          const [dayPart, monthPart, yearPart] = dasaBalance1
-          // .split(",")
-          // .map((item: string) => item.split(":")[1]);
-          const day = dayPart.split(':')[1].padStart(2, '0');
-          const month = monthPart.split(':')[1].padStart(2, '0');
-          const year = yearPart.split(':')[1];
-          setValue("day", day);
-          setValue("month", month);
-          setValue("year", year);
+          // const [dayPart, monthPart, yearPart] = dasaBalance1
+          // // .split(",")
+          // // .map((item: string) => item.split(":")[1]);
+          // const day = dayPart.split(':')[1].padStart(2, '0');
+          // const month = monthPart.split(':')[1].padStart(2, '0');
+          // const year = yearPart.split(':')[1];
+          // setValue("day", day);
+          // setValue("month", month);
+          // setValue("year", year);
+          // Check if dasaBalance1 exists and is a string
+          if (dasaBalance1 && typeof dasaBalance1 === 'string') {
+            try {
+              // Try to parse as JSON first (if it's in JSON format)
+              const parsedBalance = JSON.parse(dasaBalance1);
+              if (parsedBalance && typeof parsedBalance === 'object') {
+                // Handle JSON object format
+                const day = parsedBalance.day?.toString().padStart(2, '0') || '00';
+                const month = parsedBalance.month?.toString().padStart(2, '0') || '00';
+                const year = parsedBalance.year?.toString() || '00';
+                setValue("day", day);
+                setValue("month", month);
+                setValue("year", year);
+              }
+            } catch (e) {
+              // If not JSON, try to parse as "day:x,month:y,year:z" format
+              const balanceParts = dasaBalance1.split(',');
+              if (balanceParts.length === 3) {
+                const dayPart = balanceParts.find(part => part.includes('day:')) || 'day:00';
+                const monthPart = balanceParts.find(part => part.includes('month:')) || 'month:00';
+                const yearPart = balanceParts.find(part => part.includes('year:')) || 'year:00';
 
+                const day = dayPart.split(':')[1]?.padStart(2, '0') || '00';
+                const month = monthPart.split(':')[1]?.padStart(2, '0') || '00';
+                const year = yearPart.split(':')[1] || '00';
+
+                setValue("day", day);
+                setValue("month", month);
+                setValue("year", year);
+              } else {
+                // Fallback to default values if format is unexpected
+                setValue("day", '00');
+                setValue("month", '00');
+                setValue("year", '00');
+              }
+            }
+          } else {
+            // If dasaBalance1 is not available, set default values
+            setValue("day", '00');
+            setValue("month", '00');
+            setValue("year", '00');
+          }
+
+          // const timeOfBirth = profileData.time_of_birth;
+          // const [time, period] = timeOfBirth.split(" ");
+          // const [hours, minutes] = time.split(":");
+          // setValue("hour", hours);
+          // setValue("minute", minutes);
+          // setValue("period", period);
+          // sethour(hours);
+          // setminute(minutes);
+          // setperiod(period);
+
+          // In the fetchProfileData function, replace the timeOfBirth handling with this:
           const timeOfBirth = profileData.time_of_birth;
-          const [time, period] = timeOfBirth.split(" ");
-          const [hours, minutes] = time.split(":");
-          setValue("hour", hours);
-          setValue("minute", minutes);
-          setValue("period", period);
-          sethour(hours);
-          setminute(minutes);
-          setperiod(period);
-
+          if (timeOfBirth) {
+            const [time, period] = timeOfBirth.split(" ");
+            const [hours, minutes] = time.split(":");
+            setValue("hour", hours);
+            setValue("minute", minutes);
+            setValue("period", period);
+            sethour(hours);
+            setminute(minutes);
+            setperiod(period);
+          } else {
+            // Set default values if timeOfBirth is null
+            setValue("hour", "00");
+            setValue("minute", "00");
+            setValue("period", "AM");
+            sethour("00");
+            setminute("00");
+            setperiod("AM");
+          }
           // Update state for brother and sister data
         } catch (error) {
           console.error("Error fetching profile data:", error);
@@ -224,27 +286,57 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   useEffect(() => {
     getDasaName();
   }, []);
+  
   const onSubmit: SubmitHandler<HoroDetailsInputs> = async () => {
     let storedData = "";
     let storedData1 = "";
 
-    // Retrieve 'formattedData' from sessionStorage
+    // // Retrieve 'formattedData' from sessionStorage
+    // const storedDataString = sessionStorage.getItem("formattedData");
+    // if (storedDataString) {
+    //   storedData = JSON.parse(storedDataString); // No need to parse as it's already a string
+    //   //console.log("Retrieved formattedData from sessionStorage:", storedData);
+    // } else {
+    //   //console.log("No formattedData found in sessionStorage");
+    // }
+
+    // // Retrieve 'formattedData1' from sessionStorage
+    // const storedDataString1 = sessionStorage.getItem("formattedData1");
+    // if (storedDataString1) {
+    //   storedData1 = JSON.parse(storedDataString1); // No need to parse as it's already a string
+    //   //console.log("Retrieved formattedData1 from sessionStorage:", storedData1);
+    // } else {
+    //   //console.log("No formattedData1 found in sessionStorage");
+    // }
+    // Retrieve 'formattedData' from sessionStorage with proper error handling
+  try {
     const storedDataString = sessionStorage.getItem("formattedData");
     if (storedDataString) {
-      storedData = JSON.parse(storedDataString); // No need to parse as it's already a string
-      //console.log("Retrieved formattedData from sessionStorage:", storedData);
-    } else {
-      //console.log("No formattedData found in sessionStorage");
+      try {
+        storedData = JSON.parse(storedDataString);
+      } catch (e) {
+        // If parsing fails, use the raw string
+        storedData = storedDataString;
+      }
     }
+  } catch (error) {
+    console.error("Error retrieving formattedData:", error);
+  }
 
-    // Retrieve 'formattedData1' from sessionStorage
+  // Retrieve 'formattedData1' from sessionStorage with proper error handling
+  try {
     const storedDataString1 = sessionStorage.getItem("formattedData1");
     if (storedDataString1) {
-      storedData1 = JSON.parse(storedDataString1); // No need to parse as it's already a string
-      //console.log("Retrieved formattedData1 from sessionStorage:", storedData1);
-    } else {
-      //console.log("No formattedData1 found in sessionStorage");
+      try {
+        storedData1 = JSON.parse(storedDataString1);
+      } catch (e) {
+        // If parsing fails, use the raw string
+        storedData1 = storedDataString1;
+      }
     }
+  } catch (error) {
+    console.error("Error retrieving formattedData1:", error);
+  }
 
     // const hour = watch("hour");
     // const minute = watch("minute");
@@ -414,7 +506,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   const year = useWatch({ control, name: "year" });
 
   useEffect(() => {
-    const balance = `${day} Days, ${month} Months, ${year} Ysears`;
+    const balance = `${year} Years, ${month} Months, ${day} Days`;
     setDasaBalance(balance);
     console.log(balance); // Optional: Log the balance for debugging
   }, [day, month, year]);
@@ -824,36 +916,33 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                   Dasa Balance
                 </label>
                 <div className="flex space-x-2">
-                  <div className=" w-full">
+                  <div className="w-full">
                     <div className="relative">
                       <select
-                        id="day"
+                        id="year"
                         className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                        {...register("day")}
-                        onChange={handleDayChange}
+                        {...register("year")}
+                        onChange={handleYearChange}
                       >
-                        <option value="" disabled>
-                          Day
+                        <option value="">
+                          Years
                         </option>
-                        <option value="00">00</option>
-                        {Array.from({ length: 31 }, (_, i) => {
-                          const day = (i + 1).toString().padStart(2, '0');
-                          return (
-                            <option key={day} value={day}>
-                              {day}
-                            </option>
-                          );
-                        })}
+                        {Array.from({ length: 30 }, (_, i) => i + 1).map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
                       </select>
                       <IoMdArrowDropdown
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
                         size={20}
                       />
                     </div>
-                    {errors.day && (
-                      <span className="text-red-500">{errors.day.message}</span>
+                    {errors.year && (
+                      <span className="text-red-500">{errors.year.message}</span>
                     )}
                   </div>
+                  
                   <div className="w-full ">
                     <div className="relative">
                       <select
@@ -863,7 +952,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                         onChange={handleMonthChange}
                       >
                         <option value="" disabled>
-                          Month
+                          Months
                         </option>
                         <option value="00">00</option>
                         {Array.from({ length: 12 }, (_, i) => {
@@ -884,30 +973,34 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       <span className="text-red-500">{errors.month.message}</span>
                     )}
                   </div>
-                  <div className="w-full">
+                  <div className=" w-full">
                     <div className="relative">
                       <select
-                        id="year"
+                        id="day"
                         className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                        {...register("year")}
-                        onChange={handleYearChange}
+                        {...register("day")}
+                        onChange={handleDayChange}
                       >
                         <option value="" disabled>
-                          Year
+                          Days
                         </option>
-                        {Array.from({ length: 30 }, (_, i) => i + 1).map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
+                        <option value="00">00</option>
+                        {Array.from({ length: 31 }, (_, i) => {
+                          const day = (i + 1).toString().padStart(2, '0');
+                          return (
+                            <option key={day} value={day}>
+                              {day}
+                            </option>
+                          );
+                        })}
                       </select>
                       <IoMdArrowDropdown
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
                         size={20}
                       />
                     </div>
-                    {errors.year && (
-                      <span className="text-red-500">{errors.year.message}</span>
+                    {errors.day && (
+                      <span className="text-red-500">{errors.day.message}</span>
                     )}
                   </div>
                 </div>

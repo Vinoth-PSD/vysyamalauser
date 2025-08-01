@@ -158,7 +158,7 @@ export const PersonalView: React.FC = () => {
                     )}
 
 
-                    {personalDetails?.physical_status && personalDetails.physical_status !== "" && personalDetails.physical_status !== null && (
+                    {personalDetails?.physical_status && personalDetails.physical_status !== "" && personalDetails.physical_status !== null &&   personalDetails.physical_status !== "0" &&(
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Physical Status:
                             <span className="font-normal"> {personalDetails?.physical_status|| "N/A"}</span></h5>
                     )}

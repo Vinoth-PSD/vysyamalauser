@@ -210,6 +210,13 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
     ? JSON.parse(storedProtectedImg)
     : {};
 
+  const gender = localStorage.getItem("gender");
+
+  const defaultImgUrl =
+    gender === "male"
+      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+
   const images = Object.values(storedProtectedImg ? sessionImage : userImages);
 
   const handleMouseEnter = useCallback((image: string) => {
@@ -307,9 +314,13 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
         {images.length === 1 ? (
           <div className="profile-slider-img-container">
             <img
-              src={images[0]}
+              src={images[0] || defaultImgUrl}
               className="w-full h-[450px] rounded-lg profile-slider-img max-lg:w-full max-sm:w-full  max-sm:h-[300px] object-cover object-top"
               alt="Profile"
+              onError={(e) => {
+                e.currentTarget.onerror = null; // Prevent infinite loop
+                e.currentTarget.src = defaultImgUrl; // Set default image
+              }} 
               onMouseEnter={() => handleMouseEnter(images[0])}
               onMouseLeave={handleMouseLeave}
             />
@@ -323,8 +334,12 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
               customPaging={(i: number) => (
                 <a>
                   <img
-                    src={images[i] || ""}
+                    src={images[i] || defaultImgUrl}
                     alt={`Thumbnail ${i + 1}`}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null; // Prevent infinite loop
+                      e.currentTarget.src = defaultImgUrl; // Set default image
+                    }}
                     className="w-full h-[420px] rounded-lg"
                   />
                 </a>
@@ -344,10 +359,10 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
                 <div
                   key={index}
                   className={`profile-slider-img-container ${photoLock === 0 || PhotoPasswordlock === 0
-                      ? ""
-                      : !storedProtectedImg
-                        ? "fade-img-effect"
-                        : ""
+                    ? ""
+                    : !storedProtectedImg
+                      ? "fade-img-effect"
+                      : ""
                     }`}
                   onMouseEnter={() => handleMouseEnter(image)}
                   onMouseLeave={handleMouseLeave}

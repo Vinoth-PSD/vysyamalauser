@@ -25,7 +25,7 @@ interface HoroscopeDetails {
   personal_rasi_katt: string;
   personal_amsa_katt: string;
   personal_horoscope_hints: string;
-  personal_madulamn:string;
+  personal_madulamn: string;
 }
 
 // Define the interface for Lagnam data
@@ -99,18 +99,20 @@ export const Horoscope = () => {
         //   setDasaBalanceMonth(month);
         //   setDasaBalanceYear(year);
         // }
-        if (data.personal_dasa_bal) {
-          const [dayPart, monthPart, yearPart] = data.personal_dasa_bal.split(',');
+        // if (data.personal_dasa_bal) {
+        //   const [dayPart, monthPart, yearPart] = data.personal_dasa_bal.split(',');
 
-          // Extract values and format with leading zeros
-          const day = dayPart.split(':')[1].padStart(2, '0');
-          const month = monthPart.split(':')[1].padStart(2, '0');
-          const year = yearPart.split(':')[1];
+        //   // Extract values and format with leading zeros
+        //   const day = dayPart.split(':')[1].padStart(2, '0');
+        //   const month = monthPart.split(':')[1].padStart(2, '0');
+        //   const year = yearPart.split(':')[1];
 
-          setDasaBalanceDay(day);
-          setDasaBalanceMonth(month);
-          setDasaBalanceYear(year);
-        }
+        //   setDasaBalanceDay(day);
+        //   setDasaBalanceMonth(month);
+        //   setDasaBalanceYear(year);
+        // }
+
+
 
         const matchedLagnam = lagnams.find((lagnam) =>
           lagnam.didi_description.includes(data.personal_lagnam_didi_name)
@@ -184,31 +186,64 @@ export const Horoscope = () => {
     fetchRasis();
   }, [selectedBirthStarId, refreshData]);
 
-  const handleBirthStarChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  // const handleBirthStarChange = (
+  //   event: React.ChangeEvent<HTMLSelectElement>
+  // ) => {
+  //   const selectedId = event.target.value;
+  //   setSelectedBirthStarId(selectedId);
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     personal_bthstar_name:
+  //       event.target.options[event.target.selectedIndex].text,
+  //   }));
+  // };
+  const handleBirthStarChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
+    const selectedStar = birthStars.find(star => star.birth_id.toString() === selectedId);
+
     setSelectedBirthStarId(selectedId);
-    setFormData((prevState) => ({
+    setFormData(prevState => ({
       ...prevState,
-      personal_bthstar_name:
-        event.target.options[event.target.selectedIndex].text,
+      personal_bthstar_id: Number(selectedId),
+      personal_bthstar_name: selectedStar?.birth_star || ""
     }));
   };
 
+  // const handleLagnamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedLagnamId(e.target.value);
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     personal_lagnam_didi_name: e.target.value,
+  //   }));
+  // };
   const handleLagnamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedLagnamId(e.target.value);
-    setFormData((prevState) => ({
+    const selectedId = e.target.value;
+    const selectedLagnam = lagnams.find(lagnam => lagnam.didi_id.toString() === selectedId);
+
+    setSelectedLagnamId(selectedId);
+    setFormData(prevState => ({
       ...prevState,
-      personal_lagnam_didi_name: e.target.value,
+      personal_lagnam_didi_name: selectedLagnam?.didi_description || ""
     }));
   };
+
+  // const handleRasiChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedRasiId(e.target.value);
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     personal_bth_rasi_name: e.target.value,
+  //   }));
+  // };
 
   const handleRasiChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRasiId(e.target.value);
-    setFormData((prevState) => ({
+    const selectedId = e.target.value;
+    const selectedRasi = rasiList.find(rasi => rasi.rasi_id.toString() === selectedId);
+
+    setSelectedRasiId(selectedId);
+    setFormData(prevState => ({
       ...prevState,
-      personal_bth_rasi_name: e.target.value,
+      personal_bth_rasi_id: Number(selectedId),
+      personal_bth_rasi_name: selectedRasi?.rasi_name || ""
     }));
   };
 
@@ -226,16 +261,102 @@ export const Horoscope = () => {
     }));
   };
 
+  // const handleEditClick = () => {
+  //   if (isEditing) {
+  //     setFormData({});
+  //   } else {
+  //     if (horoscopeDetails) {
+  //       setFormData(horoscopeDetails);
+  //     }
+  //   }
+  //   setIsEditing(!isEditing);
+  // };
+
   const handleEditClick = () => {
     if (isEditing) {
       setFormData({});
+      // Reset dasa balance states
+      setDasaBalanceYear("");
+      setDasaBalanceMonth("");
+      setDasaBalanceDay("");
     } else {
       if (horoscopeDetails) {
-        setFormData(horoscopeDetails);
+
+        setFormData({
+          ...horoscopeDetails,
+          // Ensure all select fields have proper values
+          personal_bthstar_id: horoscopeDetails.personal_bthstar_id,
+          personal_bth_rasi_id: horoscopeDetails.personal_bth_rasi_id,
+          // Parse dasa balance if needed
+        });
+
+        // Set all select states
+        setSelectedBirthStarId(horoscopeDetails.personal_bthstar_id?.toString() || "");
+        setSelectedRasiId(horoscopeDetails.personal_bth_rasi_id?.toString() || "");
+
+        // Find and set Lagnam ID
+        const matchedLagnam = lagnams.find(lagnam =>
+          horoscopeDetails.personal_lagnam_didi_name?.includes(lagnam.didi_description)
+        );
+        setSelectedLagnamId(matchedLagnam?.didi_id.toString() || "");
+
+        // Parse and set dasa balance values
+        if (horoscopeDetails.personal_dasa_bal) {
+          try {
+            console.log("Parsing dasa balance:", horoscopeDetails.personal_dasa_bal);
+            // Parse format like "17 Days, 12 Months, 19 Years"
+            const match = horoscopeDetails.personal_dasa_bal.match(/(\d+)\s*Years?,\s*(\d+)\s*Months?,\s*(\d+)\s*Days?/);
+            if (match) {
+              const year = match[1];
+              const month = match[2].padStart(2, '0');
+              const day = match[3].padStart(2, '0');
+
+              setDasaBalanceYear(year);
+              setDasaBalanceMonth(month);
+              setDasaBalanceDay(day);
+            } else {
+              console.log("No match found, trying fallback parsing");
+              // Fallback to old parsing method if format is different
+              const [monthPart, dayPart, yearPart] = horoscopeDetails.personal_dasa_bal.split(',');
+              const year = yearPart.split(':')[1]?.trim() || "";
+              const month = monthPart.split(':')[1]?.trim().padStart(2, '0') || "";
+              const day = dayPart.split(':')[1]?.trim().padStart(2, '0') || "";
+
+
+              console.log("Fallback parsed values:", { day, month, year });
+              setDasaBalanceYear(year);
+              setDasaBalanceMonth(month);
+              setDasaBalanceDay(day);
+            }
+          } catch (error) {
+            console.error("Error parsing dasa balance:", error);
+            setDasaBalanceYear("");
+            setDasaBalanceMonth("");
+            setDasaBalanceDay("");
+          }
+        } else {
+          setDasaBalanceYear("");
+          setDasaBalanceMonth("");
+          setDasaBalanceDay("");
+        }
       }
     }
     setIsEditing(!isEditing);
   };
+
+  useEffect(() => {
+    console.log("Current formData:", formData);
+    console.log("Selected IDs:", {
+      birthStar: selectedBirthStarId,
+      rasi: selectedRasiId,
+      lagnam: selectedLagnamId
+    });
+    console.log("Dasa Balance States:", {
+      day: dasaBalanceDay,
+      month: dasaBalanceMonth,
+      year: dasaBalanceYear
+    });
+  }, [formData, selectedBirthStarId, selectedRasiId, selectedLagnamId, dasaBalanceDay, dasaBalanceMonth, dasaBalanceYear]);
 
   const navigate = useNavigate();
   const handleEditClick1 = () => {
@@ -312,7 +433,7 @@ export const Horoscope = () => {
           ragu_dosham: formData.personal_ragu_dos,
           nalikai: formData.personal_nalikai,
           suya_gothram: formData.personal_surya_goth,
-          madulamn:formData.personal_madulamn,
+          madulamn: formData.personal_madulamn,
           dasa_name: formData.personal_dasa,
           dasa_balance: formData.personal_dasa_bal,
           rasi_kattam: formData.personal_rasi_katt,
@@ -474,39 +595,40 @@ export const Horoscope = () => {
                 <div className="flex space-x-2">
                   <div className="relative w-full">
                     <select
-                      value={dasaBalanceDay}
+                      value={dasaBalanceYear}
                       onChange={(e) => {
-                        setDasaBalanceDay(e.target.value);
-                        const balance = `${e.target.value} Days, ${dasaBalanceMonth} Months, ${dasaBalanceYear} Years`;
+                        const newYear = e.target.value;
+                        setDasaBalanceYear(newYear);
+                        const balance = ` ${newYear} Years, ${dasaBalanceMonth} Months, ${dasaBalanceDay} Days`;
                         setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
                       }}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
                        `}
                     >
-                      <option value="">Day</option>
-                      <option value="00">00</option>
-                      {Array.from({ length: 31 }, (_, i) => {
-                        const day = (i + 1).toString().padStart(2, '0');
-                        return (
-                          <option key={day} value={day}>
-                            {day}
-                          </option>
-                        );
-                      })}
+                      <option value="">Years</option>
+                      {dasaBalanceYear && !Array.from({ length: 50 }, (_, i) => i + 1).includes(Number(dasaBalanceYear)) && (
+                        <option value={dasaBalanceYear}>{dasaBalanceYear}</option>
+                      )}
+                      {Array.from({ length: 50 }, (_, i) => i + 1).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="relative w-full">
                     <select
                       value={dasaBalanceMonth}
                       onChange={(e) => {
-                        setDasaBalanceMonth(e.target.value);
-                        const balance = `${dasaBalanceDay} Days, ${e.target.value} Months, ${dasaBalanceYear} Years`;
+                        const newMonth = e.target.value;
+                        setDasaBalanceMonth(newMonth);
+                        const balance = ` ${dasaBalanceYear} Years, ${newMonth} Months, ${dasaBalanceDay} Days`;
                         setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
                       }}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
                         `}
                     >
-                      <option value="">Month</option>
+                      <option value="">Months</option>
                       <option value="00">00</option>
                       {Array.from({ length: 12 }, (_, i) => {
                         const month = (i + 1).toString().padStart(2, '0');
@@ -518,23 +640,29 @@ export const Horoscope = () => {
                       })}
                     </select>
                   </div>
+
                   <div className="relative w-full">
                     <select
-                      value={dasaBalanceYear}
+                      value={dasaBalanceDay}
                       onChange={(e) => {
-                        setDasaBalanceYear(e.target.value);
-                        const balance = `${dasaBalanceDay} Days, ${dasaBalanceMonth} Months, ${e.target.value} Years`;
+                        const newDay = e.target.value;
+                        setDasaBalanceDay(newDay);
+                        const balance = `${dasaBalanceYear} Years,  ${dasaBalanceMonth} Months, ${newDay} Days,`;
                         setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
                       }}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
                        `}
                     >
-                      <option value="">Year</option>
-                      {Array.from({ length: 30 }, (_, i) => i + 1).map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
+                      <option value="">Days</option>
+                      <option value="00">00</option>
+                      {Array.from({ length: 31 }, (_, i) => {
+                        const day = (i + 1).toString().padStart(2, '0');
+                        return (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
@@ -595,7 +723,7 @@ export const Horoscope = () => {
               </label>
               <label className={`block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium  
               `}>
-               Madhulam:
+                Madhulam:
                 <input
                   type="text"
                   name="personal_madulamn"
@@ -603,7 +731,7 @@ export const Horoscope = () => {
                   onChange={handleInputChange}
                   className={`font-normal border rounded px-3 py-[8px] w-full focus:outline-none  border-ashBorder`}
                 />
-                
+
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Ragu Dosham:
@@ -711,35 +839,35 @@ export const Horoscope = () => {
                 Rasi:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_bth_rasi_name|| "N/A"}
+                  {horoscopeDetails.personal_bth_rasi_name || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Lagnam:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_lagnam_didi_name|| "N/A"}
+                  {horoscopeDetails.personal_lagnam_didi_name || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Dasa Name:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_dasa|| "N/A"}
+                  {horoscopeDetails.personal_dasa || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Dasa Balance:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_dasa_bal|| "N/A"}
+                  {horoscopeDetails.personal_dasa_bal || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Nallikai:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_nalikai|| "N/A"}
+                  {horoscopeDetails.personal_nalikai || "N/A"}
                 </span>
               </h5>
             </div>
@@ -748,21 +876,21 @@ export const Horoscope = () => {
                 Didi:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_didi|| "N/A"}
+                  {horoscopeDetails.personal_didi || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Suya Gothram:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_surya_goth|| "N/A"}
+                  {horoscopeDetails.personal_surya_goth || "N/A"}
                 </span>
               </h5>
-               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Madhulam:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_madulamn|| "N/A"}
+                  {horoscopeDetails.personal_madulamn || "N/A"}
                 </span>
               </h5>
 
@@ -770,21 +898,21 @@ export const Horoscope = () => {
                 Ragu Dosham:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_ragu_dos|| "N/A"}
+                  {horoscopeDetails.personal_ragu_dos || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Chevai Dosham:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_chevvai_dos|| "N/A"}
+                  {horoscopeDetails.personal_chevvai_dos || "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Horoscope Hints:
                 <span className="font-normal">
                   {" "}
-                  {horoscopeDetails.personal_horoscope_hints|| "N/A"}
+                  {horoscopeDetails.personal_horoscope_hints || "N/A"}
                 </span>
               </h5>
             </div>

@@ -1344,7 +1344,7 @@ export const PartnerSettings: React.FC = () => {
                     const newValues = e.target.checked
                       ? [...maritalValues, option.id]
                       : maritalValues.filter((id) => id !== option.id);
-                    setValue("profession", newValues as [string, ...string[]], { shouldValidate: true });
+                    setValue("maritalstatus", newValues as [string, ...string[]], { shouldValidate: true });
 
                   }}
                   className="mr-2"
