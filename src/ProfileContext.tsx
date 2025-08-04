@@ -1,6 +1,3 @@
-
-
-
 import React, {
   createContext,
   useState,
@@ -32,7 +29,7 @@ export interface Profile {
   wish_list?: string;
   user_profile_views?: string;
   star?: string
-  matching_score?:string
+  matching_score?: string
 }
 export interface DashboardDetails {
   matching_profile_count?: number;  // Optional field
@@ -63,13 +60,13 @@ interface ImageDataItem {
 interface ProfileContextType {
   // Existing properties...
   profileImages?: string[];
-   // Add this line
+  // Add this line
   // Remaining properties...
 }
 
-export interface Image{
-  id:number|null;
-  imageUrl:string;
+export interface Image {
+  id: number | null;
+  imageUrl: string;
   url: string;
   alt: string;
 }
@@ -77,8 +74,8 @@ export interface Image{
 
 
 interface ProfileContextType {
-  key:boolean;
- setKey: Dispatch<SetStateAction<boolean>>;
+  key: boolean;
+  setKey: Dispatch<SetStateAction<boolean>>;
   bookmarkedProfiles: Profile[];
   selectedProfiles: Profile[];
   error: string | null;
@@ -109,7 +106,7 @@ interface ProfileContextType {
   setMatchingProfilePerPage: Dispatch<SetStateAction<number>>;
   setMatchingProfilePageNumber: Dispatch<SetStateAction<number>>;
   setMatchingProfileTotalCount: Dispatch<SetStateAction<number>>;
-  sortOrder:any;
+  sortOrder: any;
   toggleSortOrder: () => void;
   setSearchProfileData: Dispatch<SetStateAction<string>>;
   searchProfileData: any;
@@ -125,8 +122,8 @@ interface ProfileContextType {
   setUserProfile: Dispatch<SetStateAction<string>>;
   maritial_Status: number[];
   Set_Maritial_Status: Dispatch<SetStateAction<number[]>>;
-  fieldofstudy:number[];
-  setfieldofstudy:Dispatch<SetStateAction<number[]>>
+  fieldofstudy: number[];
+  setfieldofstudy: Dispatch<SetStateAction<number[]>>
 
   AdvanceselectedProfessions: number[];
   setAdvanceSelectedProfessions: Dispatch<SetStateAction<number[]>>;
@@ -159,7 +156,7 @@ interface ProfileContextType {
   perWhistListPage: number;
   setWhistListPerpage: Dispatch<SetStateAction<number>>;
   images: Image[];
-  setImages:Dispatch<SetStateAction<Image []>>;
+  setImages: Dispatch<SetStateAction<Image[]>>;
   zoomImage: string | null;
   handleMouseEnter: (imageUrl: string | null) => void;
   handleMouseLeave: () => void;
@@ -186,7 +183,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   });
 
 
-//viewedProfile
+  //viewedProfile
 
   const [sortOrder, setSortOrder] = useState<string>("1");
 
@@ -228,8 +225,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [dashboardDetails, setDashboardDetails] =
-    useState<DashboardDetails|any >();
-    const [profileImages, setProfileImages] = useState<string[]>([]);
+    useState<DashboardDetails | any>();
+  const [profileImages, setProfileImages] = useState<string[]>([]);
 
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [AdvanceselectedProfessions, setAdvanceSelectedProfessions] = useState<
@@ -250,99 +247,108 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   const [maritial_Status, Set_Maritial_Status] = useState<number[]>([]);
   const [fieldofstudy, setfieldofstudy] = useState<number[]>([]);
   const [rehuDhosam, setRehuDhosam] = useState<string>("no");
-const [images,setImages]=useState<Image[]>([])
-const [zoomImage,setZoomImage]=useState<string|null>(null)
+  const [images, setImages] = useState<Image[]>([])
+  const [zoomImage, setZoomImage] = useState<string | null>(null)
   const [key, setKey] = useState<boolean>(false);
 
   // const defaultImageUrl =
   // "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
 
-const handleMouseEnter = (imageUrl: string | null) => {
-  if (imageUrl) setZoomImage(imageUrl);
-};
+  const handleMouseEnter = (imageUrl: string | null) => {
+    if (imageUrl) setZoomImage(imageUrl);
+  };
 
-const handleMouseLeave = () => {
-  setZoomImage(null);
-};
+  const handleMouseLeave = () => {
+    setZoomImage(null);
+  };
 
-// const fetchImages = async () => {
-//   try {
-//     const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-//     if (!loginUserProfileId) throw new Error('Profile ID not found');
+  // const fetchImages = async () => {
+  //   try {
+  //     const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+  //     if (!loginUserProfileId) throw new Error('Profile ID not found');
 
-//     const response = await apiClient.post(
-//       '/auth/Get_profile_images/',
-//       { profile_id: loginUserProfileId }
-//     );
+  //     const response = await apiClient.post(
+  //       '/auth/Get_profile_images/',
+  //       { profile_id: loginUserProfileId }
+  //     );
 
-//     console.log('Fetched images response:', response.data.data);
+  //     console.log('Fetched images response:', response.data.data);
 
-//     if (response.data.Status === 1) {
-//       const imageObjects: Image[] = response.data.data.map((img: any) => ({
-//         id: img.id,
-//         imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
-//       }));
+  //     if (response.data.Status === 1) {
+  //       const imageObjects: Image[] = response.data.data.map((img: any) => ({
+  //         id: img.id,
+  //         imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
+  //       }));
 
-//       // Fill up to 10 images with default if fewer than 10
-//       const filledImages = [
-//         ...imageObjects,
-//         ...Array(Math.max(0, 10 - imageObjects.length))
-//         .fill({
-//           id: null,
-//           imageUrl: defaultImageUrl,
-//         }),
-//       ];
+  //       // Fill up to 10 images with default if fewer than 10
+  //       const filledImages = [
+  //         ...imageObjects,
+  //         ...Array(Math.max(0, 10 - imageObjects.length))
+  //         .fill({
+  //           id: null,
+  //           imageUrl: defaultImageUrl,
+  //         }),
+  //       ];
 
-//       console.log('Processed images:', filledImages);
-//       setImages(filledImages);
-//     } else {
-//       console.error('Failed to fetch images:', response.data.message);
-//       setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
-//     }
-//   } catch (error) {
-//     console.error('Error fetching images:', error);
-//     setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
-//   }
-// };
+  //       console.log('Processed images:', filledImages);
+  //       setImages(filledImages);
+  //     } else {
+  //       console.error('Failed to fetch images:', response.data.message);
+  //       setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching images:', error);
+  //     setImages(Array(10).fill({ id: null, imageUrl: defaultImageUrl }));
+  //   }
+  // };
 
 
-const fetchImages = async () => {
-  try {
-    const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-    if (!loginUserProfileId) throw new Error('Profile ID not found');
+  const fetchImages = async () => {
+    try {
+      const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+      if (!loginUserProfileId) throw new Error('Profile ID not found');
 
-    const response = await apiClient.post(
-      '/auth/Get_profile_images/',
-      { profile_id: loginUserProfileId }
-    );
+      const cacheKey = `images_${loginUserProfileId}`;
+      const cached = localStorage.getItem(cacheKey);
 
-    //console.log('Fetched images response:', response.data.data);
+      if (cached) {
+        setImages(JSON.parse(cached));
+        return;
+      }
 
-    if (response.data.Status === 1) {
-      // Process the actual images from the response
-      const imageObjects: Image[] = response.data.data.map((img: any) => ({
-        id: img.id,
-        imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
-        url: img.image, // Assuming this is needed for your Image interface
-        alt: "Profile image" // Add alt text as needed
-      }));
+      const response = await apiClient.post(
+        '/auth/Get_profile_images/',
+        { profile_id: loginUserProfileId }
+      );
 
-      // Only set the actual images, don't fill with defaults
-      setImages(imageObjects);
-    } else {
-      console.error('Failed to fetch images:', response.data.message);
-      setImages([]); // Set empty array if no images are available
+      //console.log('Fetched images response:', response.data.data);
+
+      if (response.data.Status === 1) {
+        // Process the actual images from the response
+        const imageObjects: Image[] = response.data.data.map((img: any) => ({
+          id: img.id,
+          imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
+          url: img.image, // Assuming this is needed for your Image interface
+          alt: "Profile image" // Add alt text as needed
+        }));
+
+        // Only set the actual images, don't fill with defaults
+        localStorage.setItem(cacheKey, JSON.stringify(images));
+        setImages(imageObjects);
+      } else {
+        console.error('Failed to fetch images:', response.data.message);
+        setImages([]); // Set empty array if no images are available
+      }
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      setImages([]); // Set empty array on error
     }
-  } catch (error) {
-    console.error('Error fetching images:', error);
-    setImages([]); // Set empty array on error
-  }
-};
+  };
 
-// Fetch images when the component mounts
-useEffect(() => {
-  fetchImages();
-}, []);
+  // Fetch images when the component mounts
+  useEffect(() => {
+    fetchImages();
+  }, []);
 
   const fetchDashboardDetails = async () => {
     if (!loginuser_profileId) {
@@ -361,12 +367,12 @@ useEffect(() => {
         const data = response.data.data;
         setDashboardDetails(data);
 
-         // Map image_data to an array of image URLs
-      const images = data.image_data.map((item: ImageDataItem)  => {
-        const imageUrl = Object.values(item)[0]; // Extract URL from object
-        return imageUrl;
-      });
-      setProfileImages(images);
+        // Map image_data to an array of image URLs
+        const images = data.image_data.map((item: ImageDataItem) => {
+          const imageUrl = Object.values(item)[0]; // Extract URL from object
+          return imageUrl;
+        });
+        setProfileImages(images);
       } else {
         setError(`Error fetching dashboard details: ${response.data.Message}`);
       }
@@ -376,7 +382,7 @@ useEffect(() => {
     }
   };
 
-  
+
 
   useEffect(() => {
     localStorage.setItem(
@@ -395,7 +401,7 @@ useEffect(() => {
       toast.error("No profile ID found in session.");
       return;
     }
-  
+
     try {
       const response = await apiClient.post(
         "/auth/Mark_profile_wishlist/",
@@ -410,10 +416,10 @@ useEffect(() => {
           },
         }
       );
-  
+
       if (response.data.Status === 1) {
         setBookmarkedProfiles((prev) => [...prev, profile]);
-         toast.success(`Profile ${profile.profile_id} bookmarked successfully!`);
+        toast.success(`Profile ${profile.profile_id} bookmarked successfully!`);
         //console.log(`Profile ${profile.profile_id} bookmarked successfully.`);
       } else {
         setError(`Failed to bookmark profile: ${response.data.Message}`);
@@ -425,14 +431,14 @@ useEffect(() => {
       console.error("Error bookmarking profile:", error);
     }
   };
-  
+
   const removeBookmark = async (profileId: string) => {
     if (!loginuser_profileId) {
       setError("No profile ID found in session.");
       toast.error("No profile ID found in session.");
       return;
     }
-  
+
     try {
       const response = await apiClient.post(
         "/auth/Mark_profile_wishlist/",
@@ -447,7 +453,7 @@ useEffect(() => {
           },
         }
       );
-  
+
       if (response.data.Status === 1) {
         setBookmarkedProfiles((prev) =>
           prev.filter((profile) => profile.profile_id !== profileId)
@@ -455,7 +461,7 @@ useEffect(() => {
         setSelectedProfiles((prev) =>
           prev.filter((profile) => profile.profile_id !== profileId)
         );
-         toast.success(`Profile ${profileId} removed from bookmarks successfully!`);
+        toast.success(`Profile ${profileId} removed from bookmarks successfully!`);
         //console.log(
         //   `Profile ${profileId} removed from bookmarks successfully.`
         // );
@@ -473,7 +479,7 @@ useEffect(() => {
   return (
     <ProfileContext.Provider
       value={{
-        key, 
+        key,
         setKey,
         bookmarkedProfiles,
         selectedProfiles,
@@ -554,12 +560,12 @@ useEffect(() => {
         setTotalPage,
         perWhistListPage,
         setWhistListPerpage,
-        images, 
+        images,
         setImages,
         zoomImage,
-         handleMouseEnter,
-          handleMouseLeave ,
-          fetchImages,
+        handleMouseEnter,
+        handleMouseLeave,
+        fetchImages,
       }}
     >
       {children}

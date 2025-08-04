@@ -50,6 +50,7 @@ export const PayNowRegistration: React.FC = () => {
   const [isGPayClicked, setIsGPayClicked] = useState(false);
   const [isOnlinePaymentClicked, setIsOnlinePaymentClicked] = useState(false);
   const [showGPayPopup, setShowGPayPopup] = useState(false);
+
   useEffect(() => {
     if (id) {
       localStorage.setItem("userplanid", id);
@@ -190,6 +191,8 @@ export const PayNowRegistration: React.FC = () => {
           localStorage.setItem("custom_message", response.custom_message);
           localStorage.setItem("register_token", response.token);
           localStorage.setItem("Save_plan_package_message", response.data_message);
+          localStorage.setItem("plan_id", response.cur_plan_id);
+            localStorage.setItem("valid_till", response.valid_till);
           //console.log("Save_plan_package", response);
 
           // Navigate to the next page

@@ -116,6 +116,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
       // localStorage.setItem("profile_id_new", response.data.profile_id);
       // localStorage.setItem("loginuser_profile_id", response.data.profile_id);
 
+      localStorage.setItem("valid_till", response.data.valid_till);
       localStorage.setItem("plan_id", response.data.cur_plan_id);
       localStorage.setItem("profile_owner", response.data.profile_owner);
       localStorage.setItem("quick_reg", response.data.quick_reg);

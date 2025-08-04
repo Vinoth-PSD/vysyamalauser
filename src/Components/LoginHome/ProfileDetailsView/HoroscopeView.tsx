@@ -14,6 +14,7 @@ interface HoroscopeDetails {
     lagnam: string;
     nallikai: string;
     didi: string;
+    chevvai_dosham: string;
     surya_gothram: string;
     dasa_name: string;
     dasa_balance: string;
@@ -22,7 +23,7 @@ interface HoroscopeDetails {
     // rasiTemp:string;
     rasi_kattam: string;
     amsa_kattam: string;
-    madulamn:string;
+    madulamn: string;
 }
 
 export const HoroscopeView: React.FC = () => {
@@ -39,7 +40,7 @@ export const HoroscopeView: React.FC = () => {
 
     let page_id = "2"; // Default
     if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-      page_id = "1";
+        page_id = "1";
     }
 
     useEffect(() => {
@@ -50,7 +51,7 @@ export const HoroscopeView: React.FC = () => {
                 const response = await apiClient.post("/auth/Get_profile_det_match/", {
                     profile_id: loginuser_profileId,
                     user_profile_id: id,
-                    page_id:page_id
+                    page_id: page_id
                 });
 
                 //console.log("API Response:", response.data);
@@ -120,6 +121,10 @@ export const HoroscopeView: React.FC = () => {
                     {horoscopeDetails?.didi && horoscopeDetails.didi !== "" && horoscopeDetails.didi !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Didi:
                             <span className="font-normal"> {horoscopeDetails?.didi}</span></h5>)}
+
+                    {horoscopeDetails?.chevvai_dosham && horoscopeDetails.chevvai_dosham !== "" && horoscopeDetails.chevvai_dosham !== null && (
+                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Chevvai Dhosham:
+                            <span className="font-normal"> {horoscopeDetails?.chevvai_dosham}</span></h5>)}
                 </div>
 
                 <div>
@@ -144,21 +149,21 @@ export const HoroscopeView: React.FC = () => {
                             <span className="font-normal"> {horoscopeDetails?.chevai_dosham}</span></h5>)}
 
                     {horoscopeDetails?.sarpadosham && horoscopeDetails.sarpadosham !== "" && horoscopeDetails.sarpadosham !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sarpa Dosham:
+                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Ragu/Kethu Dhosham:
                             <span className="font-normal"> {horoscopeDetails?.sarpadosham}</span></h5>)}
                 </div>
             </div>
 
             <div className="space-y-10 my-10">
-            {horoscopeDetails?.rasi_kattam && horoscopeDetails.rasi_kattam.trim() !== "" && (
-                <div>
-                    <RasiGridview centerLabel={"Rasi"} rasiTemp={rasi} data={horoscopeDetails?.rasi_kattam} />
-                </div>
-            )}
-              {horoscopeDetails?.amsa_kattam && horoscopeDetails.amsa_kattam.trim() !== "" && (
-                <div>
-                    <AmsamGridview centerLabel={"Amsam"} rasiTemp={rasi} data={horoscopeDetails?.amsa_kattam} />
-                </div>
+                {horoscopeDetails?.rasi_kattam && horoscopeDetails.rasi_kattam.trim() !== "" && (
+                    <div>
+                        <RasiGridview centerLabel={"Rasi"} rasiTemp={rasi} data={horoscopeDetails?.rasi_kattam} />
+                    </div>
+                )}
+                {horoscopeDetails?.amsa_kattam && horoscopeDetails.amsa_kattam.trim() !== "" && (
+                    <div>
+                        <AmsamGridview centerLabel={"Amsam"} rasiTemp={rasi} data={horoscopeDetails?.amsa_kattam} />
+                    </div>
                 )}
             </div>
         </div>

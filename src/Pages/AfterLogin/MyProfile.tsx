@@ -5,7 +5,7 @@ import {
   MdLocalPrintshop,
   MdArrowDropDown,
 } from "react-icons/md";
-import { FaArrowRight} from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { ProfileSlick } from "../../Components/DashBoard/ProfileDetails/ProfileSlick";
@@ -74,7 +74,9 @@ export const MyProfile = () => {
   //     });
   //   }
   // };
-
+  const plan_id = localStorage.getItem("plan_id") ?? "";
+  const validPlanIds = ["1", "2", "3", "10", "11", "13", "14", "15", "16", "17"];
+  
   const context = useContext(ProfileContext);
 
   if (!context) {
@@ -654,7 +656,7 @@ export const MyProfile = () => {
                     </button>
                   </div>
                   {get_myprofile_personal.valid_upto &&
-                    new Date(get_myprofile_personal.valid_upto) < new Date() && (
+                    new Date(get_myprofile_personal.valid_upto) < new Date() && validPlanIds.includes(plan_id) && (
                       <Link to="/UpgradePlan">
                         <div className="bg-gradient w-fit rounded-[6px] py-[6px] px-[12px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
                           Renew

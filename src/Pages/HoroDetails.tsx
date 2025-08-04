@@ -835,7 +835,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
               </div>
               <div>
                 <label htmlFor="sarpaDhosham" className="block mb-1 text-primary font-medium ">
-                  Sarpa dasa/ragu,kethu dhosam
+                  Ragu/Kethu Dhosham
                 </label>
                 <div className="relative">
                   <select
@@ -845,7 +845,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                     onChange={handleSelectChange}
                   >
                     <option value="" disabled>
-                      Select Sarpa Dhosham
+                      Select Ragu/Kethu Dhosham
                     </option>
                     {["UnKnown", "Yes", "No"].map((option) => (
                       <option key={option} value={option}>
