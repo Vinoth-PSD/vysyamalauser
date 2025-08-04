@@ -9,6 +9,7 @@ interface EducationProfession {
   education_detail: string;
   about_education: string;
   profession: string;
+  designation: string;
   company_name: string;
   business_name: string;
   business_address: string;
@@ -44,7 +45,7 @@ export const EducationProfessionView: React.FC = () => {
           {
             profile_id: loginuser_profileId,
             user_profile_id: id,
-            page_id:page_id
+            page_id: page_id
           }
         );
 
@@ -86,7 +87,7 @@ export const EducationProfessionView: React.FC = () => {
         <div>
           {profileData?.education_level && profileData.education_level !== "" && profileData.education_level !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Education Level :
-              <span className="font-normal"> {profileData.education_level|| "N/A"}</span></h5>
+              <span className="font-normal"> {profileData.education_level || "N/A"}</span></h5>
           )}
 
           {/* {profileData?.education_detail && profileData.education_detail !== "" && profileData.education_detail !== null && (
@@ -99,29 +100,33 @@ export const EducationProfessionView: React.FC = () => {
               <span className="font-normal"> {profileData.about_education || "N/A"}</span></h5>)}
 
           {/* {profileData?.profession && profileData.profession !== "" && profileData.profession !== null && ( */}
-            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Profession :
-              <span className="font-normal"> {profileData.profession|| "N/A"}</span></h5>
-              {/* )} */}
+          <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Profession :
+            <span className="font-normal"> {profileData.profession || "N/A"}</span></h5>
+          {/* )} */}
 
           {profileData?.company_name && profileData.company_name !== "" && profileData.company_name !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Company Name :
-              <span className="font-normal"> {profileData.company_name|| "N/A"}</span></h5>
+              <span className="font-normal"> {profileData.company_name || "N/A"}</span></h5>
           )}
 
-
-          {profileData?.business_name && profileData.business_name !== "" && profileData.business_name !== null && (
-            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Business Name :
-              <span className="font-normal"> {profileData.business_name|| "N/A"}</span></h5>)}
+          {profileData?.designation && profileData.designation !== "" && profileData.designation !== null && (
+            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Designation :
+              <span className="font-normal"> {profileData.designation || "N/A"}</span></h5>
+          )}
         </div>
 
         <div>
+          {profileData?.business_name && profileData.business_name !== "" && profileData.business_name !== null && (
+            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Business Name :
+              <span className="font-normal"> {profileData.business_name || "N/A"}</span></h5>)}
+
           {profileData?.business_address && profileData.business_address !== "" && profileData.business_address !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Business Address :
-              <span className="font-normal"> {profileData.business_address|| "N/A"}</span></h5>)}
+              <span className="font-normal"> {profileData.business_address || "N/A"}</span></h5>)}
 
           {profileData?.annual_income && profileData.annual_income !== "" && profileData.annual_income !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Annual Income :
-              <span className="font-normal"> {profileData.annual_income|| "N/A"}</span></h5>)}
+              <span className="font-normal"> {profileData.annual_income || "N/A"}</span></h5>)}
 
           {profileData?.gross_annual_income && profileData.gross_annual_income !== "" && profileData.gross_annual_income !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Gross Annual Income :
