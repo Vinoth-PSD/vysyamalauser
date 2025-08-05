@@ -1097,7 +1097,7 @@ export const Personal = () => {
                 </span>
               </h5>
 
-              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+              {/* <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Weight :
                 <span className="font-normal">
                   {personalDetails.personal_weight !== null &&
@@ -1106,7 +1106,18 @@ export const Personal = () => {
                     ? `${personalDetails.personal_weight} kg`
                     : "N/A"}
                 </span>
+              </h5> */}
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Weight :
+                <span className="font-normal">
+                  {personalDetails.personal_weight !== null &&
+                    personalDetails.personal_weight !== undefined && personalDetails.personal_weight > 0
+                    ? `${personalDetails.personal_weight} kg`
+                    : "N/A"}
+                </span>
               </h5>
+
+
 
 
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
