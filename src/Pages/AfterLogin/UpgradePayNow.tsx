@@ -249,7 +249,8 @@ export const UpgradePayNow: React.FC = () => {
       const order_id = await createPaymentOrder();
       // Proceed with Razorpay payment flow
       const options = {
-        key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
+        // key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
+         key: "rzp_live_HYCeDsho3jhHRt", // Your Razorpay Key ID
         amount: amountInPaise, // Amount in paise
         currency: "INR",
         name: "Vysyamala", // Your company or name

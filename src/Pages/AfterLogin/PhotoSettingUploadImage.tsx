@@ -59,7 +59,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
-//const [loading,setLoading]=useState<boolean>(true)
+  //const [loading,setLoading]=useState<boolean>(true)
   const [uploadedHoroscopeFile, setUploadedHoroscopeFile] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_uploadedDivorceProof, setUploadedDivorceProof] = useState("");
@@ -240,7 +240,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
       //"http://103.214.132.20:8000/auth/Idproof_upload/",
       "idproof_file"
     );
-// setLoading(false)
+    // setLoading(false)
     // setTimeout(() => {
     //   if (Param === "1") {
     //     navigate("/MembershipPlan");
@@ -352,7 +352,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
                   </div>
                 </div>
                 <button onClick={() => removeFile(index, setSelectedFiles)} className="text-red-700 font-semibold text-xl">
-                 <img src={closebtn} alt="close" className="h-4 w-4" /> 
+                  <img src={closebtn} alt="close" className="h-4 w-4" />
                 </button>
               </div>
             ))}
@@ -398,9 +398,9 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
           </div>
           <button
             onClick={removeFile}
-           // className="text-red-500 hover:underline"
+          // className="text-red-500 hover:underline"
           >
-             <img src={closebtn} alt="close" className="h-4 w-4" />
+            <img src={closebtn} alt="close" className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -412,7 +412,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   };
 
 
-  const handleRemoveIdProof= () => {
+  const handleRemoveIdProof = () => {
     setUploadedIDProof(""); // Replace with the state update logic you're using for file removal
     // Additional logic can go here if necessary
   };
@@ -439,8 +439,8 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
               false
             )}
 
-        
-            {renderSingleFileUpload(uploadedHoroscopeFile, "Horoscope File",handleRemoveHoroscopeFile)}
+
+            {renderSingleFileUpload(uploadedHoroscopeFile, "Horoscope File", handleRemoveHoroscopeFile)}
 
             {renderFileUploadSection(
               `Upload ${profileName} ID Proof `,
@@ -453,15 +453,15 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
               false
             )}
 
-            
-            {renderSingleFileUpload(uploadedIDProof, "ID Proof",handleRemoveIdProof)}
+
+            {renderSingleFileUpload(uploadedIDProof, "ID Proof", handleRemoveIdProof)}
 
             <div className="">
               <h1 className="font-semibold text-primary text-xl mb-4 flex items-center">
                 Upload {profileName} Videos, if any
                 <div className="relative inline-block ml-2 group">
                   <AiOutlineInfoCircle className="text-primary align-middle" />
-                  
+
                   <div className="absolute hidden group-hover:flex flex-col bg-white border border-ashSecondary rounded shadow-md p-2 w-48 z-10">
                     <p className="text-sm text-black mb-1">Portfolio videos</p>
                     <p className="text-sm text-black mb-1">Business videos</p>
@@ -484,7 +484,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
                   onChange={(e) => setUrl(e.target.value)}
                   name="youtubeurl"
                   id="youtubeurl"
-                  
+
                   placeholder="URL"
                   className="outline-none w-full text-sm text-placeHolderColor px-3 py-[13px] border border-ashBorder rounded"
                 />
@@ -503,13 +503,13 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
                   className="flex items-center py-[10px] px-14 bg-gradient text-white shadow-redboxshadow rounded-[6px] mt-2 max-sm:px-8"
                   onClick={handleSubmit}
                 >
-                    {/* {loading ? (
+                  {/* {loading ? (
                     <div className="animate-spin h-5 w-5 border-4 border-t-4 border-white rounded-full mr-2"></div>
                   ) : null}
                   {loading ? "Uploading..." : "Submit"} */}
-submit
+                  submit
                 </button>
-                
+
               </div>
             </div>
           </div>

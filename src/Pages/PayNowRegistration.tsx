@@ -192,7 +192,7 @@ export const PayNowRegistration: React.FC = () => {
           localStorage.setItem("register_token", response.token);
           localStorage.setItem("Save_plan_package_message", response.data_message);
           localStorage.setItem("plan_id", response.cur_plan_id);
-            localStorage.setItem("valid_till", response.valid_till);
+          localStorage.setItem("valid_till", response.valid_till);
           //console.log("Save_plan_package", response);
 
           // Navigate to the next page
@@ -253,7 +253,8 @@ export const PayNowRegistration: React.FC = () => {
       const order_id = await createPaymentOrder();
       // Proceed with Razorpay payment flow
       const options = {
-        key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
+        // key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
+        key: "rzp_live_HYCeDsho3jhHRt", // Your Razorpay Key ID
         amount: amountInPaise, // Amount in paise
         currency: "INR",
         name: "Vysyamala", // Your company or name

@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import { IoMdLock } from "react-icons/io";
 import Slider from "react-slick";
@@ -26,12 +24,12 @@ interface ProfileSlickViewProps {
   photoLock: number;
 }
 
-interface PhotoPasswordResponse {
-  data: {
-    user_images: UserImages;
-  };
-  photo_protection: number;
-}
+// interface PhotoPasswordResponse {
+//   data: {
+//     user_images: UserImages;
+//   };
+//   photo_protection: number;
+// }
 
 const SLIDER_SETTINGS = {
   dots: false,
@@ -115,6 +113,8 @@ const PasswordPopup: React.FC<{
             <div>
               <input
                 required
+                id="password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="Enter The Password"
@@ -196,7 +196,8 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
   const [nav1, setNav1] = useState<Slider | null>(null);
   const [nav2, setNav2] = useState<Slider | null>(null);
   const [popupPassword, setPopPassword] = useState<boolean>(false);
-  const [photoPassword, _setPhotoPassword] = useState<string>("");
+  // const [photoPassword, _setPhotoPassword] = useState<string>("");
+   const [, _setPhotoPassword] = useState<string>("");
   const [PhotoPasswordlock, setPhotoPasswordlock] = useState<number>(1);
   const sliderRef1 = useRef<Slider | null>(null);
   const sliderRef2 = useRef<Slider | null>(null);
@@ -217,7 +218,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
       ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
       : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
 
-  const images = Object.values(storedProtectedImg ? sessionImage : userImages);
+
 
   const handleMouseEnter = useCallback((image: string) => {
     setTimeout(() => setZoomImage(image), 100);
@@ -226,6 +227,23 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
   const handleMouseLeave = useCallback(() => {
     setTimeout(() => setZoomImage(null), 100);
   }, []);
+
+  // Convert single image string to an object with a default key if needed
+  const normalizeImages = (images: UserImages | string): UserImages => {
+    if (typeof images === 'string') {
+      return { 'default': images };
+    }
+    return images;
+  };
+
+  // const images = Object.values(storedProtectedImg ? sessionImage : userImages);
+
+  // In your component, use it like this:
+  const images = Object.values(
+    storedProtectedImg
+      ? sessionImage
+      : normalizeImages(userImages) // Normalize the images here
+  );
 
   const fetchProfileData = useCallback(async () => {
     setLoading(true);
@@ -238,7 +256,11 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
     try {
       if (profileId) {
         const data = await fetchProfilesDetails(profileId, page_id);
-        setUserImages(data.user_images);
+        const normalizedImages = typeof data.user_images === 'string'
+          ? { 'default': data.user_images }
+          : data.user_images;
+        setUserImages(normalizedImages);
+        //setUserImages(data.user_images);
         setError(null);
       }
     } catch (error: any) {
@@ -252,10 +274,42 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
     }
   }, [profileId]);
 
+  useEffect(() => {
+    const storedLockVal = sessionStorage.getItem("photolock");
+    if (storedLockVal !== null) {
+      setPhotoPasswordlock(Number(storedLockVal));
+    } else {
+      // Default to 1 if not in session storage
+      setPhotoPasswordlock(1);
+    }
+
+    const storedImages = sessionStorage.getItem(`userImages_${id}`);
+    if (storedImages) {
+      setUserImages(JSON.parse(storedImages));
+    }
+  }, [id]);
+
   const GetPhotoByPassword = useCallback(
     async (Password: string) => {
       try {
-        const response = await axios.post<PhotoPasswordResponse>(
+        // Front-end validation for empty password
+        if (!Password.trim()) {
+          NotifyError("Please Enter Password");
+          return;
+        }
+
+        const response = await axios.post<{
+          status: string;
+          message?: string;
+          data?: {
+            user_images: UserImages;
+          };
+          photo_protection?: number;
+          errors?: {
+            non_field_errors?: string;
+            photo_password?: string;
+          };
+        }>(
           Get_photo_bypassword,
           {
             profile_id: loginuser_profileId,
@@ -264,33 +318,81 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
           }
         );
 
-        if (response.status === 200) {
-          const { photo_protection } = response.data;
-          sessionStorage.setItem(
-            `userImages_${id}`,
-            JSON.stringify(userImages)
-          );
-          NotifySuccess("Photo fetched successfully");
-          sessionStorage.removeItem("photolock");
-          sessionStorage.setItem(
-            "photolockval",
-            JSON.stringify(photo_protection)
-          );
-          setPhotoPasswordlock(Number(photo_protection));
+        // Handle successful response
+        if (response.data.status === "success") {
+          const { data, photo_protection, message } = response.data;
+
+          // Store the unlocked images in session storage
+          if (data?.user_images) {
+            sessionStorage.setItem(
+              `userImages_${id}`,
+              JSON.stringify(data.user_images)
+            );
+            // Update local state with new images
+            setUserImages(data.user_images);
+          }
+          // if (typeof photo_protection !== 'undefined') {
+          //   // Store consistently as "photolock"
+          //   sessionStorage.setItem(
+          //     "photolock",
+          //     JSON.stringify(photo_protection)
+          //   );
+          //   setPhotoPasswordlock(photo_protection);
+          // }
+          // Show success message from API or default
+          NotifySuccess(message || "Photo fetched successfully");
+
+          // Update photo protection status
+          if (typeof photo_protection !== 'undefined') {
+            sessionStorage.removeItem("photolock");
+            sessionStorage.setItem(
+              "photolockval",
+              JSON.stringify(photo_protection)
+            );
+            setPhotoPasswordlock(Number(photo_protection));
+          }
         }
-      } catch (error) {
-        NotifyError("Please Enter Correct Password");
-        console.error("Please Enter Correct Password");
+        // Handle failed response
+        else if (response.data.status === "Failed") {
+          NotifyError("Please Enter Correct Password");
+        }
+        else {
+          // Handle cases where status isn't "success"
+          NotifyError(response.data.message || "Failed to fetch photos");
+        }
+      } catch (error: any) {
+        // Handle axios error response
+        if (error.response) {
+          const { data } = error.response;
+
+          // Check for specific error messages
+          if (data.errors?.non_field_errors) {
+            // Handle "Invalid photo password" error
+            NotifyError(data.errors.non_field_errors);
+          } else if (data.errors?.photo_password) {
+            // Handle other field-specific errors
+            NotifyError(data.errors.photo_password);
+          } else if (data.message) {
+            // Use server-provided error message
+            NotifyError(data.message);
+          } else {
+            // Generic error message
+            NotifyError("Please enter correct password");
+          }
+        } else {
+          // Network or other errors
+          NotifyError("An error occurred. Please try again.");
+        }
+        console.error("Password error:", error);
       } finally {
         setPopPassword(false);
       }
     },
     [id, loginuser_profileId]
   );
-
-  const handleSubmitPassword = useCallback(async () => {
-    await GetPhotoByPassword(photoPassword);
-  }, [GetPhotoByPassword, photoPassword]);
+  // const handleSubmitPassword = useCallback(async () => {
+  //   await GetPhotoByPassword(photoPassword);
+  // }, [GetPhotoByPassword, photoPassword]);
 
   useEffect(() => {
     if (loginuser_profileId) {
@@ -320,7 +422,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
               onError={(e) => {
                 e.currentTarget.onerror = null; // Prevent infinite loop
                 e.currentTarget.src = defaultImgUrl; // Set default image
-              }} 
+              }}
               onMouseEnter={() => handleMouseEnter(images[0])}
               onMouseLeave={handleMouseLeave}
             />
@@ -407,10 +509,16 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
           </>
         )}
 
-        {popupPassword && (
+        {/* {popupPassword && (
           <PasswordPopup
             onClose={() => setPopPassword(false)}
             onSubmit={handleSubmitPassword}
+          />
+        )} */}
+        {popupPassword && (
+          <PasswordPopup
+            onClose={() => setPopPassword(false)}
+            onSubmit={GetPhotoByPassword}
           />
         )}
       </div>

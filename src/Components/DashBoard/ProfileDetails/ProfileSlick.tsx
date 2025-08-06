@@ -753,7 +753,7 @@ export const ProfileSlick = () => {
   const gender = localStorage.getItem("gender");
 
   const defaultImgUrl =
-    gender === "male"
+    gender === "male" || "Male"
       ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
       : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
 
