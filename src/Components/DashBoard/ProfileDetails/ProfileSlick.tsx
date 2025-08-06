@@ -735,8 +735,8 @@ export const ProfileSlick = () => {
   const sliderRef2 = useRef<Slider | null>(null);
   const context = useContext(ProfileContext);
   // const [isLoading, setIsLoading] = useState(true);
-   const [, setIsLoading] = useState(true);
-  const [, setDisplayImages] = useState<Array<{ imageUrl: string, id: number | null }>>([]);
+  // const [, setIsLoading] = useState(true);
+  // const [, setDisplayImages] = useState<Array<{ imageUrl: string, id: number | null }>>([]);
   if (!context) {
     throw new Error(
       "ProfileContext must be used within a ProfileContextProvider"
@@ -750,40 +750,51 @@ export const ProfileSlick = () => {
   const [removePhotoIndicator, setRemovePhotoIndicator] =
     useState<boolean>(false);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
-  const gender = localStorage.getItem("gender");
+  // const gender = localStorage.getItem("gender");
 
-  const defaultImgUrl =
-    gender === "male" || "Male"
-      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
-      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+  // const defaultImgUrl =
+  //   gender === "male"
+  //     ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
+  //     : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+
+  const defaultImgUrl = "https://vysyamat.blob.core.windows.net/vysyamala/default_img.png"
 
 
+
+
+  // useEffect(() => {
+  //   // Initialize with default image immediately
+  //   setDisplayImages([{ imageUrl: defaultImgUrl, id: null }]);
+
+  //   const loadImages = async () => {
+  //     try {
+  //        fetchImages();
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error("Error loading images:", error);
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   loadImages();
+  // }, [fetchImages, defaultImgUrl]);
+
+  // useEffect(() => {
+  //   if (images.length > 0) {
+  //     setDisplayImages(images);
+  //   } else {
+  //     setDisplayImages([{ imageUrl: defaultImgUrl, id: null }]);
+  //   }
+  // }, [images, defaultImgUrl]);
 
 
   useEffect(() => {
-    // Initialize with default image immediately
-    setDisplayImages([{ imageUrl: defaultImgUrl, id: null }]);
+    fetchImages();
+  }, []); // Empty dependency array ensures this runs only once
 
-    const loadImages = async () => {
-      try {
-        await fetchImages();
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error loading images:", error);
-        setIsLoading(false);
-      }
-    };
-
-    loadImages();
-  }, [fetchImages, defaultImgUrl]);
-
-  useEffect(() => {
-    if (images.length > 0) {
-      setDisplayImages(images);
-    } else {
-      setDisplayImages([{ imageUrl: defaultImgUrl, id: null }]);
-    }
-  }, [images, defaultImgUrl]);
+  // const displayImages = images.length > 0
+  //   ? images
+  //   : [{ id: null, imageUrl: defaultImgUrl, url: defaultImgUrl, alt: "Default" }];
 
   const handleMouseEnter = useCallback((image: string) => {
     setTimeout(() => setZoomImage(image), 100);

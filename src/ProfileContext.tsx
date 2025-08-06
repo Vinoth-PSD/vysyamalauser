@@ -303,47 +303,77 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   // };
 
 
+  // const fetchImages = async () => {
+  //   try {
+  //     const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+  //     if (!loginUserProfileId) throw new Error('Profile ID not found');
+
+  //     const cacheKey = `images_${loginUserProfileId}`;
+  //     const cached = localStorage.getItem(cacheKey);
+
+  //     if (cached) {
+  //       setImages(JSON.parse(cached));
+  //       return;
+  //     }
+
+  //     const response = await apiClient.post(
+  //       '/auth/Get_profile_images/',
+  //       { profile_id: loginUserProfileId }
+  //     );
+
+  //     //console.log('Fetched images response:', response.data.data);
+
+  //     if (response.data.Status === 1) {
+  //       // Process the actual images from the response
+  //       const imageObjects: Image[] = response.data.data.map((img: any) => ({
+  //         id: img.id,
+  //         imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
+  //         url: img.image, // Assuming this is needed for your Image interface
+  //         alt: "Profile image" // Add alt text as needed
+  //       }));
+
+  //       // Only set the actual images, don't fill with defaults
+  //       localStorage.setItem(cacheKey, JSON.stringify(images));
+  //       setImages(imageObjects);
+  //     } else {
+  //       console.error('Failed to fetch images:', response.data.message);
+  //       setImages([]); // Set empty array if no images are available
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching images:', error);
+  //     setImages([]); // Set empty array on error
+  //   }
+  // };
+
   const fetchImages = async () => {
-    try {
-      const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-      if (!loginUserProfileId) throw new Error('Profile ID not found');
+  try {
+    const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+    if (!loginUserProfileId) throw new Error('Profile ID not found');
 
-      const cacheKey = `images_${loginUserProfileId}`;
-      const cached = localStorage.getItem(cacheKey);
+    const response = await apiClient.post(
+      '/auth/Get_profile_images/',
+      { profile_id: loginUserProfileId }
+    );
 
-      if (cached) {
-        setImages(JSON.parse(cached));
-        return;
-      }
+    if (response.data.Status === 1) {
+      // Process the actual images from the response
+      const imageObjects: Image[] = response.data.data.map((img: any) => ({
+        id: img.id,
+        imageUrl: img.image, // Use the direct URL from response
+        url: img.image,
+        alt: "Profile image"
+      }));
 
-      const response = await apiClient.post(
-        '/auth/Get_profile_images/',
-        { profile_id: loginUserProfileId }
-      );
-
-      //console.log('Fetched images response:', response.data.data);
-
-      if (response.data.Status === 1) {
-        // Process the actual images from the response
-        const imageObjects: Image[] = response.data.data.map((img: any) => ({
-          id: img.id,
-          imageUrl: `${img.image}?t=${new Date().getTime()}`, // Add timestamp to avoid caching
-          url: img.image, // Assuming this is needed for your Image interface
-          alt: "Profile image" // Add alt text as needed
-        }));
-
-        // Only set the actual images, don't fill with defaults
-        localStorage.setItem(cacheKey, JSON.stringify(images));
-        setImages(imageObjects);
-      } else {
-        console.error('Failed to fetch images:', response.data.message);
-        setImages([]); // Set empty array if no images are available
-      }
-    } catch (error) {
-      console.error('Error fetching images:', error);
-      setImages([]); // Set empty array on error
+      setImages(imageObjects);
+    } else {
+      console.error('Failed to fetch images:', response.data.message);
+      setImages([]); // Set empty array if no images are available
     }
-  };
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    setImages([]); // Set empty array on error
+  }
+};
 
   // Fetch images when the component mounts
   useEffect(() => {
