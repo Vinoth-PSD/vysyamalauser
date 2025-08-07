@@ -247,7 +247,7 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import Vysyamalalogo from "../assets/icons/VysyamalaLogo.png";
-// import VysyamalaWhiteLogo from "../assets/icons/VysyamalaWhite.png";
+import VysyamalaWhiteLogo from "../assets/icons/VysyamalaWhite.png";
 import { Link, useLocation } from "react-router-dom";
 import { PopupModal } from "./HomePage/PopUpsReg/PopupModal";
 import { LoginPopupModal } from "./HomePage/PopUpsLogin/LoginPopupModal";
@@ -349,7 +349,7 @@ export const Header: React.FC = () => {
           <div>
             <Link to="/" className="">
               <img
-                src={Vysyamalalogo}
+                src={`${isScrolled ? Vysyamalalogo : VysyamalaWhiteLogo}`}
                 alt=""
                 className="w-36 cursor-pointer"
               />
