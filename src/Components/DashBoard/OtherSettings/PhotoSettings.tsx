@@ -191,6 +191,7 @@ export const PhotoSettings = () => {
         setUploadedIDProof(data.Profile_idproof || "");
         setUploadedDivorceProof(data.Profile_divorceproof || "");
         setVideoUrl(data.Video_url || ""); // Set video URL from API response
+        setIsChecked(data.Photo_protection === "1");
       }
     } catch (error) {
       console.error("Error fetching uploaded images:", error);

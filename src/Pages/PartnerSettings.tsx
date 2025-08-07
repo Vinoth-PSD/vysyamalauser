@@ -446,7 +446,7 @@ const PartnerSettings: React.FC = () => {
       try {
         const response = await apiClient.post(`/auth/Get_Edu_Pref/`);
         const options = Object.values(response.data) as EduPref[];
-        console.log(options);
+        //console.log(options);
         setEduPref(options);
       } catch (error) {
         console.error("Error fetching Edu Pref options:", error);
@@ -460,7 +460,7 @@ const PartnerSettings: React.FC = () => {
       try {
         const response = await apiClient.post(`/auth/Get_Field_ofstudy/`);
         const options = Object.values(response.data) as FieldOfStudy[];
-        console.log(options);
+        //console.log(options);
         setFieldOfStudy(options);
       } catch (error) {
         console.error("Error fetching Edu Pref options:", error);
@@ -473,7 +473,7 @@ const PartnerSettings: React.FC = () => {
       try {
         const response = await apiClient.post(`/auth/Get_Profes_Pref/`);
         const options = Object.values(response.data) as Profession[];
-        console.log(options);
+        //console.log(options);
         setProfPref(options);
       } catch (error) {
         console.error("Error fetching Prof Pref options:", error);
@@ -512,9 +512,9 @@ const PartnerSettings: React.FC = () => {
   const storedRasi = sessionStorage.getItem("selectedRasi");
 
   // console.log(storedMartialStatus);
-  console.log(storedBirthStar);
-  console.log(storedGender);
-  console.log(storedRasi, "storedRasi");
+  // console.log(storedBirthStar);
+  // console.log(storedGender);
+  // console.log(storedRasi, "storedRasi");
 
   // const [uncheckDefaultSelectedIds, setUncheckDefaultSelectedIds] = useState([]); // State to store unchecked items
   // const [uncheckDefaultSelectedIds, setUncheckDefaultSelectedIds] = useState<MaritalStatus[]>([]);
@@ -565,7 +565,7 @@ const PartnerSettings: React.FC = () => {
                 )
             ),
           ];
-          console.log(mergedSelections, "mergedSelections");
+         // console.log(mergedSelections, "mergedSelections");
 
           setSelectedStarIds(mergedSelections);
           sessionStorage.setItem(

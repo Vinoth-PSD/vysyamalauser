@@ -24,6 +24,8 @@ interface FamilyDetails {
   personal_prope_det: string;
   personal_property_worth: string;
   personal_no_of_children: string;
+  father_alive: string;
+  mother_alive: string;
 }
 
 interface FamilyStatus {
@@ -276,6 +278,8 @@ export const Family = () => {
           property_details: formData.personal_prope_det,
           property_worth: formData.personal_property_worth,
           no_of_children: formData.personal_no_of_children,
+          father_alive:formData.father_alive,
+          mother_alive:formData.mother_alive,
           about_family: formData.personal_about_fam,
         }
       );
@@ -459,8 +463,6 @@ export const Family = () => {
                                        `}
                 />
               </label>
-            </div>
-            <div>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Sisters Married:
                 <input
@@ -474,12 +476,12 @@ export const Family = () => {
                       personal_sis_married: "",
                     })); // Clear error on change
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                                      `}
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder`}
                 />
 
               </label>
-
+            </div>
+            <div>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Brothers:
                 <input
@@ -572,8 +574,7 @@ export const Family = () => {
                         personal_no_of_children: "",
                       })); // Clear error on change
                     }}
-                    className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
-   `}
+                    className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder`}
                   >
                     <option value="">Select Number of Children</option>
                     {[1, 2, 3, 4, 5].map((num) => (
@@ -582,10 +583,86 @@ export const Family = () => {
                       </option>
                     ))}
                   </select>
-
-
                 </label>
               )}
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Father Alive:
+                <div className="flex space-x-4 mt-2">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="father_alive"
+                      value="yes"
+                      checked={formData.father_alive === "yes"}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        setErrors((prev) => ({
+                          ...prev,
+                          father_alive: "",
+                        })); // Clear error on change
+                      }}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">Yes</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="father_alive"
+                      value="no"
+                      checked={formData.father_alive === "no"}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        setErrors((prev) => ({
+                          ...prev,
+                          father_alive: "",
+                        })); // Clear error on change
+                      }}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">No</span>
+                  </label>
+                </div>
+              </label>
+               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                Mother Alive:
+                <div className="flex space-x-4 mt-2">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="mother_alive"
+                      value="yes"
+                      checked={formData.father_alive === "yes"}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        setErrors((prev) => ({
+                          ...prev,
+                          mother_alive: "",
+                        })); // Clear error on change
+                      }}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">Yes</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="mother_alive"
+                      value="no"
+                      checked={formData.mother_alive === "no"}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        setErrors((prev) => ({
+                          ...prev,
+                          mother_alive: "",
+                        })); // Clear error on change
+                      }}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">No</span>
+                  </label>
+                </div>
+              </label>
             </div>
           </div>
           {isEditing && (
@@ -669,8 +746,6 @@ export const Family = () => {
                       : "N/A"}
                 </span>
               </h5>
-            </div>
-            <div>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Sisters Married:
                 <span className="font-normal">
@@ -683,7 +758,8 @@ export const Family = () => {
                       : "N/A"}
                 </span>
               </h5>
-
+            </div>
+            <div>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Brothers:
                 <span className="font-normal">
@@ -702,7 +778,7 @@ export const Family = () => {
                 <span className="font-normal">
                   {" "}
                   {/* {familyDetails.personal_bro_married || "N/A"} */}
-                   {familyDetails.personal_bro_married === "0"
+                  {familyDetails.personal_bro_married === "0"
                     ? "No"
                     : familyDetails.personal_bro_married?.toString().trim()
                       ? familyDetails.personal_bro_married
@@ -733,6 +809,20 @@ export const Family = () => {
                   </span>
                 </h5>
               )}
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Father Alive:
+                <span className="font-normal">
+                  {" "}
+                  {familyDetails.father_alive || "N/A"}
+                </span>
+              </h5>
+              <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                Mother Alive:
+                <span className="font-normal">
+                  {" "}
+                  {familyDetails.mother_alive || "N/A"}
+                </span>
+              </h5>
             </div>
           </div>
         </div>

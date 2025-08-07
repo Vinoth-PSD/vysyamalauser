@@ -6,6 +6,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import React, { useEffect, useState } from "react";
 //import axios from "axios";
 import apiClient from "../../API";
+import TestimonialAvatar from "../../assets/images/profileimg.jpg"
 
 interface SlickArrowProps {
   onClick: () => void;
@@ -21,7 +22,7 @@ export interface TestimonialType {
 const SlickNextArrow: React.FC<SlickArrowProps> = ({ onClick }) => {
   return (
     <div
-      className="absolute -right-2 top-[85px] z-1 bg-secondary p-4 rounded-full shadow-lg hover:cursor-pointer"
+      className="absolute -right-2 top-[45%] z-1 bg-secondary p-4 rounded-full shadow-lg hover:cursor-pointer"
       onClick={onClick}
     >
       <FaArrowRight className="text-white" />
@@ -97,7 +98,8 @@ const ReviewsTestimonial = () => {
     ],
   };
 
-  const [testMonial, setTestiMonial] = useState<TestimonialType[]>([]);
+  // const [testMonial, setTestiMonial] = useState<TestimonialType[]>([]);
+   const [, setTestiMonial] = useState<TestimonialType[]>([]);
   const happyStories = async () => {
     const response = await apiClient.post(
       "/auth/Testimonials/"
@@ -122,7 +124,7 @@ const ReviewsTestimonial = () => {
 
         <div className="slider-container relative review-slider">
           <Slider {...settings}>
-            {testMonial.map((testimonial, index) => (
+            {/* {testMonial.map((testimonial, index) => (
               <TestimonialSlick
                 key={index}
                 desc={testimonial.review_content}
@@ -131,19 +133,55 @@ const ReviewsTestimonial = () => {
                 datedOn={testimonial.date}
                 rating={testimonial.rating}
               />
-            ))}
-            {/* <TestimonialSlick
-              desc="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint velit officia consequat duis enim velit mollit exercitation veniam."
-              img={TestimonialAvatar}
-              name="Kristin Watson"
-              datedOn="Jun 27, 2020 · 6 min read"
-            />
+            ))} */}
             <TestimonialSlick
-              desc="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint velit officia consequat duis enim velit mollit exercitation veniam."
+              desc="I am fortunate enough in having connection with Vysyamala when I search for prospective bride for my son . Frequently I have been asked about the status. In crisp their dedication needs no words. Thank you and All the best to the team"
               img={TestimonialAvatar}
-              name="Kristin Watson"
-              datedOn="Jun 27, 2020 · 6 min read"
-            /> */}
+              name="Sugavana Srinivasan"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="After joining Vysyamala my job was made easier, the service was very good and the support team contacted us every month and made sure all the process was smooth. Thanks to the entire team."
+              img={TestimonialAvatar}
+              name="Indumathi S"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="Thank you Vysyamala for the service rendered in searching for a bride for my son. Good follow up has been done on a regular basis. Thanks once again."
+              img={TestimonialAvatar}
+              name="Shankar Pc"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="My Sincere Thanks to Vysyamala for having provided Good Profiles of Brides. As there are many profiles available in their platform, we could able to select as per our choice. I wish Vysyamala to continue this good work for many more years to the benefit of Vysya Community. Hatsoff to their Efforts."
+              img={TestimonialAvatar}
+              name="Murali Srinivasan"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="My pranams and Thanks to Vysyamala for giving us this platform for finding a groom for our daughter,I will always be indebted to you.
+              I congratulate you all and God bless you for your divine service
+              Jai vasavi"
+              img={TestimonialAvatar}
+              name="Senthil radha"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="
+              Vysyamala has become SENTIMENTAL website in our community. Earlier days, it use to be Sri Rama Printing Works in Parrys where people use to print the horoscope. Now its Vysyamala. Wish you all the best. Let your service continue for our vysya community. Jai Vasavi!
+              "
+              img={TestimonialAvatar}
+              name="Seshadhri Puvvada"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="
+             I am happy to inform this is a right place to create such a beautiful plateform for newly couples with user friendly and secure our information in good manner. Thanks for help us
+              "
+              img={TestimonialAvatar}
+              name="Ambrash Kanna"
+              datedOn="" rating={5} />
+            <TestimonialSlick
+              desc="
+                It was great sharing my daughter's profile here. The website is user-friendly and easy to communicate   with the interested families. All appropriate details of the groom were shown. Overall satisfied with   your work.
+              "
+              img={TestimonialAvatar}
+              name="Balaji H"
+              datedOn="" rating={5} />
           </Slider>
         </div>
       </div>

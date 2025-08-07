@@ -284,15 +284,27 @@ export const Footer = () => {
                 </li>
               </ul> */}
               {/* <h3 className="text-white mb-4">Downloads</h3> */}
-              <div className="flex flex-wrap gap-4">
-                <img src="https://placehold.co/100x40" alt="App Store" />
-                <img src="https://placehold.co/100x40" alt="Google Play" />
+               <div className="flex flex-row flex-wrap gap-4">
+                <a className="h-fit" href="https://apps.apple.com/" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                    alt="Download on the App Store"
+                    className="w-28 h-10 object-contain"
+                  />
+                </a>
+                <a className="h-fit" href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/512px-Google_Play_Store_badge_EN.svg.png"
+                    alt="Get it on Google Play"
+                    className="w-28 h-10 object-contain"
+                  />
+                </a>
               </div>
             </div>
           </div>
 
           <div className="text-footer-text-gray mt-10 text-center border-t border-footer-line pt-10 max-md:pt-5 max-md:mt-5">
-            <p>Copyright &copy; Vysyamala.com 2024. All rights reserved.</p>
+            <p>Copyright &copy; Vysyamala.com 2025. All rights reserved.</p>
           </div>
         </div>
       </footer>

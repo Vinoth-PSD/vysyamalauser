@@ -62,7 +62,7 @@ export const FeaturedBrideCard: React.FC = () => {
     }, []);
 
     return (
-        <div className="container mx-auto my-28 max-md:my-14">
+        <div className="container mx-auto mt-28 mb-10  max-md:mt-14 max-md:mb-8">
             <h2 className="text-3xl font-bold mb-6">Featured Brides</h2>
             {loading ? (
                 <div className="flex flex-col items-center justify-center min-h-[300px]">

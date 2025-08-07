@@ -18,7 +18,7 @@ const TestimonialSlick: React.FC<TestimonialSlickProps> = ({
   rating
 }) => {
   return (
-    <div className="bg-white flex flex-col justify-between  h-full space-y-8 mx-5 p-6 rounded-xl shadow-reviewBoxShadow mr-5 ml-0 max-md:space-y-3 max-md:mx-2 max-sm:h-[200px] max-sm:m-2">
+    <div className="bg-white flex flex-col justify-between  h-full space-y-8 mx-5 p-6 rounded-xl shadow-reviewBoxShadow mr-5 ml-0 max-md:space-y-3 max-md:mx-2  max-sm:m-2">
       <div className="">
         <p className="text-primary tracking-wide leading-7">{desc}</p>
       </div>

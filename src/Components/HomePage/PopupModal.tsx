@@ -112,14 +112,14 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber, o
           Otp: otp,
           ProfileId: profileId
         };
-        console.log('Payload to be sent:', payload);
+       // console.log('Payload to be sent:', payload);
 
         const response = await apiClient.post(`/auth/Otp_verify/`, payload);
 
-        console.log('OTP Verification Response:', response.data);
+        //console.log('OTP Verification Response:', response.data);
 
         // Check the response for success or failure
-        if (response.data.message !== "OTP verified successfully.") {
+        if (response.data.message === "OTP verified successfully.") {
           // Proceed to the next step upon successful OTP verification
           setOpenNextPopup(true); // Show the next popup for basic details
         } else {
@@ -140,7 +140,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber, o
 
   const handleNext = () => {
     // Handle the action to proceed to the next step
-    console.log('Proceeding to the next step...');
+    //console.log('Proceeding to the next step...');
     setOpenNextPopup(false); // Close the basic details popup
     // You can add more logic here to navigate to the next step
   };

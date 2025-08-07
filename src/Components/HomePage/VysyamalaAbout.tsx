@@ -41,7 +41,7 @@ export const VysyamalaAbout = () => {
         <div className="container mx-auto  space-y-6 max-sm:space-y-3">
           <div>
             <a href="">
-              <img src={VysyamalaLogo} alt="" className="w-[246px] h-[56px]"  />
+              <img src={VysyamalaLogo} alt="" className="w-[246px] h-[56px] object-contain"  />
             </a>
           </div>
 

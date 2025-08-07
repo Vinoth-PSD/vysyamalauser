@@ -240,6 +240,7 @@ import "./Featured/FeaturedSlickStyle.css";
 import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal";
 import apiClient from "../../API";
 import { useNavigate } from "react-router-dom";
+import { Hearts } from "react-loader-spinner";
 // Assuming you have this component
 
 // const settings = {
@@ -333,9 +334,24 @@ export const FeaturedGroom: React.FC = () => {
     //console.log("Closing Login PopupModal popup"); // Debug log
   };
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
   // if (error) return <p>{error}</p>;
-
+ if (loading) {
+    return (
+      <div className='flex flex-col items-center justify-center min-h-[300px]'>
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Loading Featured Grooms ...</p>
+      </div>
+    );
+  };
   return (
     profiles.length > 0 && (
 

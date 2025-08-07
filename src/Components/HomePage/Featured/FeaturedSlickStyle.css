@@ -1,21 +1,33 @@
-
 /*** Featured slick style ***/
 .featuredStyle .slick-list {
-    padding: 3em 0em 1.5rem !important;
+  padding: 3em 0em 1.5rem !important;
+}
+@media screen and (max-width: 639px) and (min-width: 320px) {
+  .featuredStyle .slick-list {
+    padding: 1em 0em 2rem !important;
   }
-  @media screen and (max-width:639px) and (min-width:320px){
-    .featuredStyle .slick-list {
-      padding: 1em 0em 2rem!important;
-    }
-  }
-
-  /* review slider */
-.review-slider .slick-list{
-  padding: 2rem 0 ;
 }
 
-@media screen and (max-width:991px) and (min-width:320px) {
-  .review-slider .slick-list{
-    padding: 2rem 0rem ;
+/* review slider */
+.review-slider .slick-list {
+  padding: 2rem 0;
+}
+
+.review-slider .slick-track {
+  display: flex;
+  align-items: normal;
+}
+
+.review-slider .slick-track .slick-slide {
+  height: inherit;
+}
+.review-slider .slick-track .slick-slide > div {
+  height: 100%;
+}
+
+
+@media screen and (max-width: 991px) and (min-width: 320px) {
+  .review-slider .slick-list {
+    padding: 2rem 0rem;
   }
 }

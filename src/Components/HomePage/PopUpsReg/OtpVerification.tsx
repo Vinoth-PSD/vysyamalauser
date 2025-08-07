@@ -474,7 +474,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
         //console.log("OTP Verification Response:", response.data);
 
         // Check the response for success or failure
-        if (response.data.message !== "OTP verified successfully.") {
+        if (response.data.message === "OTP verified successfully.") {
           onNext(); // Proceed to the next step upon successful OTP verification
         } else {
           setIsSubmitting(false);

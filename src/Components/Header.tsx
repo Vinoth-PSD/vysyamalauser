@@ -363,7 +363,7 @@ export const Header: React.FC = () => {
             {/* <svg className="w-8 h-8" fill="none" stroke="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg> */}
-            <CgDetailsMore className={`text-[28px]   ${isScrolled ? "text-black" : "text-white"}`} />
+            <CgDetailsMore className={`text-[28px]   ${isScrolled ? "text-black" : "text-main"}`} />
           </button>
 
           <nav className="max-lg:hidden">
@@ -402,14 +402,14 @@ export const Header: React.FC = () => {
                   </li>
                 </ul>
               ) : (
-                 !hideLoginButton && ( // Only show login if the flag is not set
-                <li
-                  className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer"
-                  onClick={handleLoginClick}
-                >
-                  Login
-                </li>
-                 )
+                !hideLoginButton && ( // Only show login if the flag is not set
+                  <li
+                    className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer"
+                    onClick={handleLoginClick}
+                  >
+                    Login
+                  </li>
+                )
               )}
 
               {/* {isAccountSetupOpen && (
@@ -454,7 +454,11 @@ export const Header: React.FC = () => {
                     <ul className="flex flex-col justify-center item-start text-black gap-8">
                       {!profile_completion && (
                         <>
-                          <li onClick={() => setKey(true)} className="text-[18px] cursor-pointer font-medium">Search</li>
+                          <li onClick={() => {
+                            setKey(true);
+                            setIsMenuOpen(!isMenuOpen);
+                            ;
+                          }} className="text-[18px] cursor-pointer font-medium">Search</li>
                           <li
                             className="text-[18px] cursor-pointer font-medium"
                             onClick={handleRegisterClick}
@@ -468,7 +472,7 @@ export const Header: React.FC = () => {
                           className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer w-fit"
                           onClick={handleLogout}
                         >
-                          Logout 
+                          Logout
                         </li>
                       ) : (
                         <li

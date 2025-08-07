@@ -31,7 +31,7 @@
     border: 1px solid #ccc;
     background-color: white;
     overflow: hidden;
-    z-index: 100;
+    z-index: 1;
     display: none;
     /* Initially hidden */
 }

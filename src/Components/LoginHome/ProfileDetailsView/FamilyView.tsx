@@ -15,6 +15,8 @@ interface FamilyDetails {
     no_of_sis_married: string;
     no_of_bro_married: string;
     property_details: string;
+    father_alive: string;
+    mother_alive: string;
 }
 
 export const FamilyView: React.FC = () => {
@@ -31,7 +33,9 @@ export const FamilyView: React.FC = () => {
         no_of_brothers: '',
         no_of_sis_married: '',
         no_of_bro_married: '',
-        property_details: ''
+        property_details: '',
+        father_alive: '',
+        mother_alive: ''
     });
 
     // const { user_profile_id } = useParams<{ user_profile_id: string }>();
@@ -295,6 +299,34 @@ export const FamilyView: React.FC = () => {
                                     />
                                 ) : (
                                     <span className="font-normal"> {formData.property_details || "N/A"}</span>
+                                )}
+                            </h5>)}
+                        {formData?.father_alive && formData.father_alive !== "" && formData.father_alive !== null && (
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Property Details:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="father_alive"
+                                        value={formData.father_alive}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.father_alive || "N/A"}</span>
+                                )}
+                            </h5>)}
+                        {formData?.mother_alive && formData.mother_alive !== "" && formData.mother_alive !== null && (
+                            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Property Details:
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="mother_alive"
+                                        value={formData.mother_alive}
+                                        onChange={handleChange}
+                                        className="font-normal border rounded px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+                                    />
+                                ) : (
+                                    <span className="font-normal"> {formData.mother_alive || "N/A"}</span>
                                 )}
                             </h5>)}
                     </div>

@@ -150,6 +150,7 @@ import { BrideSlick } from "./Featured/BrideSlick";
 import { LoginPopupModal } from "./PopUpsLogin/LoginPopupModal"; // Assuming you have this component
 import apiClient from "../../API";
 import { useNavigate } from "react-router-dom";
+import { Hearts } from "react-loader-spinner";
 
 // const settings = {
 //   dots: true,
@@ -238,8 +239,24 @@ export const FeaturedBride: React.FC = () => {
     //console.log("Closing Login PopupModal popup");
   };
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
   // if (error) return <p>{error}</p>;
+    if (loading)  {
+    return (
+       <div className='flex flex-col items-center justify-center min-h-[300px]'>
+              <Hearts
+                height="100"
+                width="100"
+                color="#FF6666"
+                ariaLabel="hearts-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+              <p className="text-sm">Loading Featured Brides ...</p>
+            </div>
+    );
+  };
 
   return (
     // Conditionally render the section only when profiles exist

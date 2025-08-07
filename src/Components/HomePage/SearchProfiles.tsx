@@ -133,7 +133,10 @@ const SearchProfiles = () => {
   }, [controls, inView]);
 
 
-
+  
+  useEffect(() => {
+    getProfessionData(); // Call on component mount
+  }, []);
   
 
   return (

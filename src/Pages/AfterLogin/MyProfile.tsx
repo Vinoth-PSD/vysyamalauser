@@ -321,7 +321,7 @@ export const MyProfile = () => {
 
   // const percentage = getMatchingScorePercentage();
   // const percentage = 85;
-  console.log(get_myprofile_personal, "Get_profile_det_match");
+  //console.log(get_myprofile_personal, "Get_profile_det_match");
 
   // const [isShareVisible, setIsShareVisible] = useState(false);
 

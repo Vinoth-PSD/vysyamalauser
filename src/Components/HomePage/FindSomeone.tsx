@@ -178,7 +178,7 @@ const FindProfessionals = () => {
                   <select
                     id="gender"
                     {...register("gender", { required: "Gender is required" })}
-                    className="outline-none ps-[2px] rounded w-full  max-sm:py-2 appearance-none"
+                    className="outline-none ps-[2px] rounded w-full  max-sm:py-2 max-sm:px-2 appearance-none"
                   >
                     <option value="" selected>
                       Gender
@@ -205,7 +205,7 @@ const FindProfessionals = () => {
                   <select
                     id="profession"
                     {...register("profession", { required: "Profession is required" })}
-                    className="outline-none w-full ps-[2px] rounded   max-sm:py-2 appearance-none"
+                    className="outline-none w-full ps-[2px] rounded   max-sm:py-2 max-sm:px-2 appearance-none"
                   >
                     <option value="" selected>
                       Profession
@@ -239,7 +239,7 @@ const FindProfessionals = () => {
                   <select
                     id="ageRange"
                     {...register("ageRange", { required: "Age range is required" })}
-                    className="outline-none ps-[2px] rounded w-full max-sm:py-2 appearance-none"
+                    className="outline-none ps-[2px] rounded w-full max-sm:py-2 max-sm:px-2 appearance-none"
                   >
                     <option value="" selected>
                       Age
