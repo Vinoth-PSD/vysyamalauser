@@ -569,7 +569,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNext, onEditNumber }
   return (
     <div>
       <section
-        className="h-[95vh] bg-cover bg-center flex items-end justify-center bg-top pb-[70px] max-sm:pb-6 "
+        className="h-[120vh] bg-cover  flex items-end justify-center bg-top pb-[70px] max-sm:pb-6 "
         style={{ backgroundImage: `url(${HeroBanner})` }}
       >
         <motion.div
