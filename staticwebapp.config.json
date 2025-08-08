@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "methods": [
+        "get"
+      ],
+      "redirect": "https://www.vysyamala.com/:splat",
+      "statusCode": 301
+    }
+  ]
+}
