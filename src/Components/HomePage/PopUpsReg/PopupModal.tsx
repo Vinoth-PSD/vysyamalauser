@@ -137,7 +137,7 @@ interface PopupModalProps {
 export const PopupModal: React.FC<PopupModalProps> = ({ onClose }) => {
     const navigate = useNavigate();
 
-    const [showPopup, setShowPopup] = useState<"accountSetup" | "otpVerification" | "basicDetails" | "loginPopup"|"forgetPassword"|"emailSent"|"phoneLoginPopup"|"otpVerify">("accountSetup");
+    const [showPopup, setShowPopup] = useState<"accountSetup" | "otpVerification" | "basicDetails" | "loginPopup" | "forgetPassword" | "emailSent" | "phoneLoginPopup" | "otpVerify">("accountSetup");
     const [mobileNumber, setMobileNumber] = useState<string>("");
 
     const navigateToForgetPassword = () => {
@@ -202,9 +202,13 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose }) => {
         setShowPopup("loginPopup");
     };
 
+
+
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
-            <div className="bg-white p-8 rounded-lg relative sm:w-[422px] max-sm:w-[90%] max-xl:p-8 max-lg:p-6 max-sm:p-4">
+            <div className="bg-white p-8 rounded-lg relative sm:w-[422px] max-sm:w-[90%]  max-xl:p-8 max-lg:p-6 max-sm:p-4">
+           
                 {showPopup === "accountSetup" && (
                     <AccountSetup onNext={accountSetupNext} onClose={onClose} handleLoginClick={regpopup} />
                 )}
@@ -212,7 +216,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose }) => {
                     <OtpVerification onNext={otpVerificationNext} onClose={onClose} handleLoginClick={navigateToRegPopup} mobileNumber={mobileNumber} />
                 )}
                 {showPopup === "basicDetails" && (
-                    <BasicDetails onNext={basicDetailsNext} onClose={onClose}   />
+                    <BasicDetails onNext={basicDetailsNext} onClose={onClose} />
                 )}
 
                 {showPopup === "loginPopup" && (

@@ -754,8 +754,8 @@ export const ProfileSlick = () => {
 
   // const defaultImgUrl =
   //   gender === "male"
-  //     ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
-  //     : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+  //     ? "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png"
+  //     : "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png";
 
   const defaultImgUrl = "https://vysyamat.blob.core.windows.net/vysyamala/default_img.png"
 

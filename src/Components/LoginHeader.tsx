@@ -64,9 +64,9 @@ export const LoginHeader: React.FC = () => {
   const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
   const gender = localStorage.getItem("gender");
   const defaultImgUrl =
-    gender === "male"
-      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png"
-      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png";
+    gender === "male" || "Male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png";
 
 
   const getUnreadMessageCount = async () => {

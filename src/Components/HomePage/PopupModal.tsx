@@ -112,7 +112,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber, o
           Otp: otp,
           ProfileId: profileId
         };
-       // console.log('Payload to be sent:', payload);
+        // console.log('Payload to be sent:', payload);
 
         const response = await apiClient.post(`/auth/Otp_verify/`, payload);
 
@@ -153,14 +153,35 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber, o
   //   return `${visiblePart}${maskedPart}`; // Return the masked number
   // };
 
+  //   const maskMobileNumber = (number: string) => {
+  //   if (number.length < 5) return number;
+
+  //   const firstPart = number.slice(0, 7); // First 5 digits
+  //   const maskedPart = "x".repeat(number.length - 5);
+
+  //   return `+${firstPart}${maskedPart}`;
+  // };
+  const [isIndia, setIsIndia] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+
+ // Update your useEffect in PopupModal:
+useEffect(() => {
+  const storedEmail = sessionStorage.getItem("email");
+  //const storedMobile = sessionStorage.getItem("mobile");
+  const indiaFlag = sessionStorage.getItem("isIndia") === "true";
+
+  setIsIndia(indiaFlag);
+  setEmail(storedEmail || "");
+  // No need to set mobileNumber here as it's passed as a prop
+}, []);
+
   const maskMobileNumber = (number: string) => {
-  if (number.length < 5) return number;
-
-  const firstPart = number.slice(0, 7); // First 5 digits
-  const maskedPart = "x".repeat(number.length - 5);
-
-  return `+${firstPart}${maskedPart}`;
-};
+    if (number.length < 5) return number; // Return the number as-is if it's too short
+    const visiblePartt = number.slice(0, 2);
+    const visiblePart = number.slice(2, 7); // Keep the first 5 digits visible
+    const maskedPart = 'x'.repeat(number.length - 7); // Mask the rest
+    return `${"+"}${visiblePartt}${" "}${visiblePart}${maskedPart}`; // Return the masked number
+  };
 
 
   const resendOtp = async (profileId: string): Promise<ResendOtpResponse> => {
@@ -233,8 +254,13 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber, o
           <form onSubmit={handleSubmit}>
             <h2 className="text-primary text-2xl font-semibold mb-4 text-center max-md:text-[20px]">OTP Verification</h2>
             <p className="text-primary text-lg mb-2 text-center">We have sent a verification code to<br />
-            
-              {mobileNumber ? maskMobileNumber(mobileNumber) : "your registered mobile number"}
+
+              {/* {mobileNumber ? maskMobileNumber(mobileNumber) : "your registered mobile number"} */}
+              {isIndia ? (
+                ` ${maskMobileNumber(mobileNumber)}`
+              ) : (
+                email
+              )}
             </p>
             <p className="text-primary text-sm text-center mb-4">
               <span
@@ -244,7 +270,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onClose, mobileNumber, o
                 Edit Number
               </span>
             </p>
-              
+
             <div className="flex justify-center items-center gap-x-2 mb-8">
               {Array.from({ length: totalInputs }).map((_, index) => (
                 <input

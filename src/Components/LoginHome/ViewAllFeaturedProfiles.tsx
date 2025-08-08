@@ -40,9 +40,9 @@ export const ViewAllFeaturedProfiles: React.FC = () => {
   const gender = localStorage.getItem("gender");
 
   const defaultImgUrl =
-    gender === "male"
-      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
-      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+    gender === "male"|| "Male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
   if (!context) {
     throw new Error("ViewAllFeaturedProfiles must be used within a ProfileProvider");

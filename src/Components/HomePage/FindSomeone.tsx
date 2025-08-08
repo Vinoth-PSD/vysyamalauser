@@ -173,12 +173,12 @@ const FindProfessionals = () => {
                   <label htmlFor="gender" className="block mb-1">
                     <IoPersonCircle className="text-[22px]  text-primary ml-1" />
                   </label>
-                  <div className="relative w-full">
+                  <div className="relative w-full z-[1]">
 
                   <select
                     id="gender"
                     {...register("gender", { required: "Gender is required" })}
-                    className="outline-none ps-[2px] rounded w-full  max-sm:py-2 max-sm:px-2 appearance-none"
+                    className="outline-none ps-[2px] rounded w-full  max-sm:py-2 max-sm:px-2 appearance-none bg-transparent"
                   >
                     <option value="" selected>
                       Gender
@@ -187,7 +187,7 @@ const FindProfessionals = () => {
                     <option value="female">Female</option>
                     <option value="others">Others</option>
                   </select>
-                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack z-[-1]" />
 
                   </div>
                   {errors.gender && (
@@ -201,11 +201,11 @@ const FindProfessionals = () => {
                     {/* <FaSuitcase className="text-[22px] text-primary ml-1" /> */}
                     <img src={Work} alt="" className="text-[22px]  ml-1" />
                   </label>
-                  <div className="relative w-full">
+                  <div className="relative w-full z-[1]">
                   <select
                     id="profession"
                     {...register("profession", { required: "Profession is required" })}
-                    className="outline-none w-full ps-[2px] rounded   max-sm:py-2 max-sm:px-2 appearance-none"
+                    className="outline-none w-full ps-[2px] rounded   max-sm:py-2 max-sm:px-2 appearance-none bg-transparent"
                   >
                     <option value="" selected>
                       Profession
@@ -219,7 +219,7 @@ const FindProfessionals = () => {
                       </option>
                     ))}
                   </select>
-                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack z-[-1]" />
 
                   </div>
                  
@@ -234,12 +234,12 @@ const FindProfessionals = () => {
                     {/* <IoCalendar className="text-[22px]  text-primary ml-1" /> */}
                     <img src={calendar} className="text-[22px]  ml-1" />
                   </label>
-                  <div className="relative w-full">
+                  <div className="relative w-full z-[1]">
 
                   <select
                     id="ageRange"
                     {...register("ageRange", { required: "Age range is required" })}
-                    className="outline-none ps-[2px] rounded w-full max-sm:py-2 max-sm:px-2 appearance-none"
+                    className="outline-none ps-[2px] rounded w-full max-sm:py-2 max-sm:px-2 appearance-none bg-transparent"
                   >
                     <option value="" selected>
                       Age
@@ -248,7 +248,7 @@ const FindProfessionals = () => {
                     <option value="22 - 25">22 - 25</option>
                     <option value="26 - 30">26 - 30</option>
                   </select>
-                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack" />
+                  <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack z-[-1]" />
 
                   </div>
                   {errors.ageRange && (

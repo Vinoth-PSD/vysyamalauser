@@ -258,7 +258,7 @@ export const PayNowRegistration: React.FC = () => {
         amount: amountInPaise, // Amount in paise
         currency: "INR",
         name: "Vysyamala", // Your company or name
-        image: "https://vysyamaladev2025.blob.core.windows.net/vysyamala/VysyamalaLogo-i_e8O9Ou.png",
+        image: "https://vysyamat.blob.core.windows.net/vysyamala/VysyamalaLogo-i_e8O9Ou.png",
         description: "Purchase Credits",
         order_id: order_id, // The order_id from createOrder API
         handler: async function (response: {

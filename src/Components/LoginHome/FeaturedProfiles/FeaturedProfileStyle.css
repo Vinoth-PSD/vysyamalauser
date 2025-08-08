@@ -2,7 +2,7 @@
 .slick-dots li button:before{
   width: 10px;
   height: 10px;
-  color: #D4D5D9;
+  color: #636363;
 }
 .slick-dots li.slick-active button:before {
   width: 12px;
@@ -79,7 +79,7 @@
     padding-bottom: 5rem !important;
   }
   .awardSlider .slick-dots{
-    bottom: 0px;
+    bottom: 25px;
 
   }
  

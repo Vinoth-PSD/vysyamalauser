@@ -27,7 +27,7 @@ interface ApiResponse {
     profiles: Profile[];
 }
 
-const defaultImgUrl = "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+const defaultImgUrl = "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 const API_URL = "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_featured_profiles/";
 //const API_URL = "http://103.214.132.20:8000/auth/Get_featured_profiles/";
@@ -62,8 +62,8 @@ export const FeaturedGroomCard: React.FC = () => {
     }, []);
 
     return (
-        <div className="container mx-auto mt-28 mb-10  max-md:mt-14 max-md:mb-8">
-            <h2 className="text-3xl font-bold mb-6">Featured Groom</h2>
+        <div className="container mx-auto mt-28 mb-10  max-md:mt-20 max-md:mb-8">
+            <h2 className="text-3xl font-bold mb-6 max-lg:text-xl max-lg:mb-3">Featured Groom</h2>
             {loading ? (
                 <div className="flex flex-col items-center justify-center min-h-[300px]">
                     <Hearts
@@ -91,7 +91,7 @@ export const FeaturedGroomCard: React.FC = () => {
                                                     e.currentTarget.onerror = null; // Prevent infinite loop
                                                     e.currentTarget.src = defaultImgUrl; // Set default image
                                                 }}
-                                                className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
+                                                className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full object-cover object-top aspect-square"
                                             />
                                             {isBookmarked ? (
                                                 <MdBookmark

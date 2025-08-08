@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchFooterContent } from "../commonapicall";
+//import { fetchFooterContent } from "../commonapicall";
 //import axios from "axios";
 import apiClient from "../API";
 
@@ -23,7 +23,7 @@ interface FooterData {
 
 export const Footer = () => {
 
-  const [showFooterContent, setShowFooterContent] = useState(false);
+  //const [showFooterContent, setShowFooterContent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -34,28 +34,28 @@ export const Footer = () => {
 
 
 
-  const handleFooterContent = async (pageId?: string) => {
-    try {
-      setLoading(true); // Start loading
-      const data = await fetchFooterContent(pageId); // Call the API to fetch FAQ data
-      if (data) {
-        setLoading(false);
-      }
+  // const handleFooterContent = async (pageId?: string) => {
+  //   try {
+  //     setLoading(true); // Start loading
+  //     const data = await fetchFooterContent(pageId); // Call the API to fetch FAQ data
+  //     if (data) {
+  //       setLoading(false);
+  //     }
 
-      setShowFooterContent(!showFooterContent);
+  //     setShowFooterContent(!showFooterContent);
 
-      //console.log(data);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+  //     //console.log(data);
+  //     window.scrollTo({ top: 0, behavior: "smooth" });
 
 
-      navigate("/FooterPages", { state: { faqData: data } }); // Navigate to the FAQ page and pass the fetched data
+  //     navigate("/FooterPages", { state: { faqData: data } }); // Navigate to the FAQ page and pass the fetched data
 
-    } catch (error: any) {
-      setError(error.message || "Failed to fetch footer content");
-    } finally {
-      setLoading(false); // End loading
-    }
-  };
+  //   } catch (error: any) {
+  //     setError(error.message || "Failed to fetch footer content");
+  //   } finally {
+  //     setLoading(false); // End loading
+  //   }
+  // };
 
 
   // Fetch footer data from API
@@ -63,7 +63,7 @@ export const Footer = () => {
     try {
       setLoading(true); // Start loading
       const response = await apiClient.get("/auth/Get_footer/");
-      
+
       if (response.data.status === "success") {
         setFooterData(response.data.data); // Map API response to state
         setLoading(false);
@@ -81,7 +81,7 @@ export const Footer = () => {
   useEffect(() => {
     fetchFooterData();
   }, []);
-  
+
 
 
   if (loading) {
@@ -105,25 +105,29 @@ export const Footer = () => {
                 Vysyamala
               </h3>
               <ul className="text-footer-text-gray">
-              <li className="mb-2">
-                  <p onClick={() => { handleFooterContent("11") }} className="font-normal hover:underline cursor-pointer">
-                    About us
-                  </p>
-                </li>
                 <li className="mb-2">
-                <Link to="/FoundersDesk" className="text-normal hover:underline">
-                   Founder Desk
+                  <Link
+                    to="/AboutUs"
+                    state={{ pageId: "2" }} // Pass pageId as state
+                    className="text-normal hover:underline cursor-pointer"
+                  >
+                    About us
                   </Link>
                 </li>
                 <li className="mb-2">
-                <a href="#" className="text-normal hover:underline">
-                   Success Stories
+                  <Link to="/FoundersDesk" className="text-normal hover:underline">
+                    Founder Desk
+                  </Link>
+                </li>
+                <li className="mb-2">
+                  <a href="#" className="text-normal hover:underline">
+                    Success Stories
                   </a>
                 </li>
                 <li className="mb-2">
-                <a href="#" className="text-normal hover:underline">
+                  <a href="#" className="text-normal hover:underline">
                     Awards
-                </a>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -159,7 +163,7 @@ export const Footer = () => {
               </ul> */}
 
               <ul className="text-footer-text-gray">
-              <li className="mb-2">
+                <li className="mb-2">
                   <a onClick={() => navigate("/FeaturedGroomCard")} className="text-normal hover:underline cursor-pointer">
                     Arya Vysya Grooms
                   </a>
@@ -170,18 +174,26 @@ export const Footer = () => {
                   </p>
                 </li>
                 <li className="mb-2">
-                  <p onClick={() => { handleFooterContent("4") }} className="text-normal hover:underline cursor-pointer">
+                  <Link
+                    to="/HistoryOfAryaVysya"
+                    state={{ pageId: "2" }} // Pass pageId as state
+                    className="text-normal hover:underline cursor-pointer"
+                  >
                     History of Arya Vysya
-                  </p>
+                  </Link>
                 </li>
                 <li className="mb-2">
-                  <p onClick={() => { handleFooterContent("6") }} className="text-normal hover:underline cursor-pointer">
+                  <Link
+                    to="/AryaVysyaGothras"
+                    state={{ pageId: "2" }} // Pass pageId as state
+                    className="text-normal hover:underline cursor-pointer"
+                  >
                     Arya Vysya Gothras
-                  </p>
+                  </Link>
                 </li>
                 <li className="mb-2">
                   <a href="#" className="text-normal hover:underline">
-                   Vasavi Temples
+                    Vasavi Temples
                   </a>
                 </li>
               </ul>
@@ -217,12 +229,12 @@ export const Footer = () => {
               <ul className="text-footer-text-gray">
                 <li className="mb-2">
                   <a href="#" className="text-normal hover:underline">
-                   Member Login
+                    Member Login
                   </a>
                 </li>
                 <li className="mb-2">
                   <a href="#" className="text-normal hover:underline">
-                   Register Free
+                    Register Free
                   </a>
                 </li>
                 <li className="mb-2">
@@ -242,10 +254,13 @@ export const Footer = () => {
               <h3 className="text-white font-semibold mb-5">Support</h3>
               <ul className="text-footer-text-gray">
                 <li className="mb-2">
-                  {/* {/ Trigger API call and navigation when clicked /} */}
-                  <p onClick={() => { handleFooterContent("1") }} className="text-normal hover:underline cursor-pointer">
+                  <Link
+                    to="/FAQ"
+                    state={{ pageId: "1" }} // Pass pageId as state
+                    className="text-normal hover:underline cursor-pointer"
+                  >
                     FAQs
-                  </p>
+                  </Link>
                 </li>
                 <li className="mb-2">
                   <p className="text-normal hover:underline cursor-pointer">
@@ -258,15 +273,23 @@ export const Footer = () => {
                   </p>
                 </li>
                 <li className="mb-2">
-                  <p onClick={() => { handleFooterContent("3") }} className="text-normal hover:underline cursor-pointer">
+                  <Link
+                    to="/PrivacyPolicy"
+                    state={{ pageId: "2" }} // Pass pageId as state
+                    className="text-normal hover:underline cursor-pointer"
+                  >
                     Privacy Policy
-                  </p>
+                  </Link>
                 </li>
                 <li className="mb-2">
-                  <p onClick={() => { handleFooterContent("2") }} className="text-normal hover:underline cursor-pointer">
+                  <Link
+                    to="/TermsandConditions"
+                    state={{ pageId: "2" }} // Pass pageId as state
+                    className="text-normal hover:underline cursor-pointer"
+                  >
                     Terms & Conditions
-                  </p>
-                </li> 
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -284,7 +307,7 @@ export const Footer = () => {
                 </li>
               </ul> */}
               {/* <h3 className="text-white mb-4">Downloads</h3> */}
-               <div className="flex flex-row flex-wrap gap-4">
+              <div className="flex flex-row flex-wrap gap-4">
                 <a className="h-fit" href="https://apps.apple.com/" target="_blank" rel="noopener noreferrer">
                   <img
                     src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"

@@ -38,7 +38,7 @@ export const GroomSlick: React.FC<GroomSlickProps> = ({ profileId, age ,profileI
 <div>
   <div>
     <div onClick={onClick} className="mx-[10px] mb-5 w-[90%] cursor-grab shadow-reviewBoxShadow rounded-lg  max-sm:mb-5  max-md:mx-auto">
-      <img src={profileImage} alt="Bride image" className="w-full h-[200px] object-cover object-top rounded-lg max-sm:h-auto" />
+      <img src={profileImage} alt="Bride image" className="w-full h-[200px] object-cover object-top aspect-square rounded-lg max-sm:h-auto" />
       <div className="bg-white flex justify-between items-center rounded-b-xl  px-5 py-3 max-sm:flex-col max-sm:items-start max-sm:px-2">
         <h5 className="text-secondary font-bold max-sm:font-normal">
           {profileId}

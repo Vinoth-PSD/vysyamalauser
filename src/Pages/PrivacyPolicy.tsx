@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import apiClient from '../API';
 import { Hearts } from 'react-loader-spinner';
 
-export const TermsandConditions = () => {
+export const PrivacyPolicy = () => {
   const [faq, setFaq] = useState<string | null>(null); // Explicitly typing `faq` as string | null
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ export const TermsandConditions = () => {
     const fetchData = async () => {
       try {
         const response = await apiClient.post("/auth/Get_page_details/", {
-          page_id: "2", // Include the page_id in the request body
+          page_id: "3", // Include the page_id in the request body
         });
 
         if (response.data && response.data.data && response.data.data.content) {

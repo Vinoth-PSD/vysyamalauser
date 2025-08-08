@@ -126,9 +126,9 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
   const gender = localStorage.getItem("gender");
 
   const defaultImgUrl =
-    gender === "male"
-      ? "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_bride.png"
-      : "https://vysyamaladev2025.blob.core.windows.net/vysyamala/default_groom.png";
+    gender === "male"|| "Male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
   return (
     <div className="container mx-auto my-20 max-md:my-8">

@@ -53,12 +53,15 @@ import { TermsandConditions } from "./Pages/TermsandConditions";
 import ProfileCompletionForm from "./Pages/AfterLogin/ProfileCompletion";
 import ImagePage from "./Pages/dynamicWpLink/DynaminkWpLink";
 import { FoundersDesk } from "./Pages/FoundersDesk";
-
 import { BasicInfoPdf } from "./Pages/BasicInfoPdf";
 import { AwardsMobile } from "./Pages/AwardsMobile";
 import { AboutUsMobile } from "./Pages/AboutUsMobile";
 import HappyStoriesMobile from "./Pages/HappyStoriesMobile";
-
+import { FAQ } from "./Pages/FAQ";
+import { PrivacyPolicy } from "./Pages/PrivacyPolicy";
+import { HistoryOfAryaVysya } from "./Pages/HistoryOfAryaVysya";
+import { AryaVysyaGothras } from "./Pages/AryaVysyaGothras";
+import { AboutUs } from "./Pages/AboutUs";
 
 
 // Define prop types for AppContent
@@ -153,6 +156,11 @@ function AppContent({ token }: AppContentProps) {
         <Route path="/FooterPages" element={<FooterPages />} />
         <Route path="/FoundersDesk" element={<FoundersDesk />} />
         <Route path="/TermsandConditions" element={<TermsandConditions />} />
+        <Route path="/FAQ" element={<FAQ />} />
+        <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+        <Route path="/HistoryOfAryaVysya" element={<HistoryOfAryaVysya />} />
+        <Route path="/AryaVysyaGothras" element={<AryaVysyaGothras />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/FeaturedBrideCard" element={<FeaturedBrideCard />} />
         <Route path="/FeaturedGroomCard" element={<FeaturedGroomCard />} />
         <Route path="/FindSomeOneSpecial" element={<FindSomeOneSpecial />} />

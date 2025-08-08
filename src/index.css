@@ -283,8 +283,21 @@ select + svg{
   padding-left: 15px !important;
 }
 
+.banner-phone-input .react-tel-input .selected-flag:hover,.banner-phone-input .react-tel-input .selected-flag:focus {
+    background-color: transparent !important;
+}
+
+.banner-phone-input .react-tel-input .flag-dropdown.open .selected-flag {
+    background: transparent;
+  
+}
+@media screen and (max-width:1280px) and (min-width:1025px) {
+ .banner-phone-input .react-tel-input .form-control{
+    height: 42px !important;
+  }
+}
 @media screen and (max-width:1024px) and (min-width:32px) {
-  .react-tel-input .form-control{
+ .banner-phone-input .react-tel-input .form-control{
     height: 50px !important;
   }
 }

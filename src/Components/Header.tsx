@@ -334,6 +334,11 @@ export const Header: React.FC = () => {
   };
 
 
+  const isHome = location.pathname === "/";
+
+
+
+
   return (
     <div className="relative">
       <header
@@ -349,8 +354,10 @@ export const Header: React.FC = () => {
           <div>
             <Link to="/" className="">
               <img
-                src={`${isScrolled ? Vysyamalalogo : VysyamalaWhiteLogo}`}
-                alt=""
+                src={
+                  isHome ? isScrolled ? Vysyamalalogo : VysyamalaWhiteLogo : Vysyamalalogo
+                }
+                alt="Logo"
                 className="w-36 cursor-pointer"
               />
             </Link>
@@ -367,9 +374,9 @@ export const Header: React.FC = () => {
           </button>
 
           <nav className="max-lg:hidden">
-            <ul className={`flex justify-center items-center  ${isScrolled
+            <ul className={`flex justify-center items-center  ${ isHome ? isScrolled
               ? "text-black "
-              : "text-white"}
+              : "text-white": 'text-black'}
           }`}>
               {!profile_completion && (
                 <>

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import apiClient from "../../API";
+import { PopupModal } from "./PopUpsReg/PopupModal";
 
 export interface HappyStoriesType {
   couple_name: string;
@@ -80,6 +81,16 @@ const HappyStories = () => {
     }
   }, [controls, inView]);
 
+  const [isAccountSetupOpen, setIsAccountSetupOpen] = useState(false); // Modal state
+  const handleRegisterClick = () => {
+    setIsAccountSetupOpen(true); // Open modal when "Register" button is clicked
+  };
+
+  const handleCloseAccountSetup = () => {
+    setIsAccountSetupOpen(false); // Close modal
+  };
+
+
 
 
   return (
@@ -134,7 +145,8 @@ const HappyStories = () => {
               <button className="flex mb-6 items-center gap-3 bg-gradient py-3 px-8 text-white text-lg font-medium shadow-redboxshadow rounded-md group max-lg:px-6"
               // onClick={handleRegisterClick}
               >
-                <span className=" group-hover:-translate-x-[8px] transition-all duration-500">Register Free</span>
+                <span className=" group-hover:-translate-x-[8px] transition-all duration-500" onClick={handleRegisterClick} // Add this onClick event
+                >Register Free</span>
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" className="text-white text-[22px]  group-hover:translate-x-[8px] transition-all duration-500" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l370.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"></path></svg>
               </button>
             </div>
@@ -177,10 +189,17 @@ const HappyStories = () => {
     />
   )} */}
       </div>
-
+{
+  isAccountSetupOpen && (
+    <PopupModal onClose={handleCloseAccountSetup} />
+  )
+}
     </div>
 
   );
+  
 };
+
+
 
 export default HappyStories;
