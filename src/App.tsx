@@ -34,7 +34,7 @@ export default function App() {
       </h1>
 
       <p style={{ maxWidth: "500px", fontSize: "1rem", color: "#555" }}>
-        Our website is currently undergoing scheduled maintenance to serve you
+        Our website is currently undergoing maintenance to serve you
         better. We appreciate your patience and will be back shortly.
       </p>
 
