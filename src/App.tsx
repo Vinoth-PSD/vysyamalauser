@@ -1,5 +1,5 @@
 
-import React from "react";
+// import React from "react";
 import logo from "./assets/images/Vysyamalalogo.png"; // adjust the path as needed
 
 export default function App() {
