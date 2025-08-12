@@ -250,54 +250,83 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // //console.log("valueeee", status);
   // console.log(idparam, "id");
-  useEffect(() => {
-    setLoading(true);
-    const fetchProfileData = async () => {
-      try {
+const [vysAssistData, setVysAssistData] = useState<any>(null);
 
-        const response = await apiClient.post(
-          "/auth/Get_profile_det_match/",
-          {
-            profile_id: loginuser_profileId,
-            user_profile_id: idparam,
-          }
-        );
+  // useEffect(() => {
+  //   setLoading(true);
+  //   const fetchProfileData = async () => {
+  //     try {
 
-        // const response = await apiClient.post(
-        //   "/auth/Get_profile_det_match/",
-        //   {
-        //     profile_id: loginuser_profileId, // Replace with the appropriate value or extract from route params if needed
-        //     user_profile_id: idparam,
-        //   }
-        // );
-        await apiClient.post(
-          "/auth/Create_profile_visit/",
-          {
-            profile_id: loginuser_profileId,
-            viewed_profile: idparam,
-          }
-        );
-        setProfileData(response.data);
-        // setPhotoLock(response.data.photo_protection);
-        sessionStorage.setItem("photolock", JSON.stringify(response.data.photo_protection));
-        //console.log(response.data.photo_protection);
-        const storedPhotoProtectionVal = sessionStorage.getItem("photolock");
-        const parsedPhotoProtectionVal = storedPhotoProtectionVal ? JSON.parse(storedPhotoProtectionVal) : "0";
-        setPhotoPasswordlock(parsedPhotoProtectionVal);
+  //       const response = await apiClient.post(
+  //         "/auth/Get_profile_det_match/",
+  //         {
+  //           profile_id: loginuser_profileId,
+  //           user_profile_id: idparam,
+  //         }
+  //       );
 
-        if (response.data.basic_details.express_int === "1") {
-          setIsHeartMarked(true);
-        }
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  //       await apiClient.post(
+  //         "/auth/Create_profile_visit/",
+  //         {
+  //           profile_id: loginuser_profileId,
+  //           viewed_profile: idparam,
+  //         }
+  //       );
+  //       setProfileData(response.data);
+  //       // setPhotoLock(response.data.photo_protection);
+  //       sessionStorage.setItem("photolock", JSON.stringify(response.data.photo_protection));
+  //       //console.log(response.data.photo_protection);
+  //       const storedPhotoProtectionVal = sessionStorage.getItem("photolock");
+  //       const parsedPhotoProtectionVal = storedPhotoProtectionVal ? JSON.parse(storedPhotoProtectionVal) : "0";
+  //       setPhotoPasswordlock(parsedPhotoProtectionVal);
+
+  //       if (response.data.basic_details.express_int === "1") {
+  //         setIsHeartMarked(true);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching profile data:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProfileData();
+  // }, []);
+useEffect(() => {
+   setLoading(true);
+  const fetchProfileData = async () => {
+  try {
+    const response = await apiClient.post("/auth/Get_profile_det_match/", {
+      profile_id: loginuser_profileId,
+      user_profile_id: idparam,
+    });
+
+    // Store the response data for Vys Assist
+    setVysAssistData(response.data);
+
+    await apiClient.post("/auth/Create_profile_visit/", {
+      profile_id: loginuser_profileId,
+      viewed_profile: idparam,
+    });
+
+    setProfileData(response.data);
+    sessionStorage.setItem("photolock", JSON.stringify(response.data.photo_protection));
+    const storedPhotoProtectionVal = sessionStorage.getItem("photolock");
+    const parsedPhotoProtectionVal = storedPhotoProtectionVal ? JSON.parse(storedPhotoProtectionVal) : "0";
+    setPhotoPasswordlock(parsedPhotoProtectionVal);
+
+    if (response.data.basic_details.express_int === "1") {
+      setIsHeartMarked(true);
+    }
+  } catch (error) {
+    console.error("Error fetching profile data:", error);
+  } finally {
+    setLoading(false);
+  }
+};
     fetchProfileData();
   }, []);
-
 
   // Declaration for Bookmarking Profile
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -372,7 +401,6 @@ export const ProfileDetailsExpressInterest: React.FC<
           },
         }
       );
-
       // Show toast based on API response
       if (response.data.Status === 1) {
         // toast.success(response.data.message || "Profile added to Bookmark Successfully");
@@ -388,7 +416,6 @@ export const ProfileDetailsExpressInterest: React.FC<
       toast.error("Error bookmarking profile");
     }
   };
-
 
   const removeBookmark = async (profile_id: string) => {
     try {
@@ -447,71 +474,10 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // Declaration for Heart State
   const [isHeartMarked, setIsHeartMarked] = useState(false);
-
   const [openCustomMsgShow, setOpenCustomMsgShow] = useState<boolean>(false);
   const [openCustomMsg, setOpenCustomMsg] = useState<string>("");
-
-  // console.log(openCustomMsg, "openCustomMsg");
-  // console.log(openCustomMsg, "setOpenCustomMsg");
-
   const [selectValue, setSelectValue] = useState<string>("");
   const [apimsgExpressInt, setApiMsgExpressInt] = useState("");
-
-  // const handleHeartMark = async () => {
-  //   try {
-
-  //     const response = await apiClient.post(
-  //       "/auth/Send_profile_intrests/",
-  //       {
-  //         profile_id: loginuser_profileId,
-  //         profile_to: idparam,
-  //         status: !isHeartMarked ? "1" : "0",
-  //         to_express_message: openCustomMsg || selectValue, // Use message if provided, otherwise use an empty string
-  //       }
-  //     );
-  //     // Check for limit reached
-  //     if (response.data.Status === 0 && response.data.message)
-  //     //    {
-  //     //   toast.error("Send express interests limit reached");
-  //     //   return; // exit early
-  //     // }
-
-  //     {
-  //       setApiMsgExpressInt(response.data.message); // Store the API message
-  //       setExpressPopup(true)
-  //       return;
-  //     }
-
-  //     //    {
-  //     //   setShowVysassist(true); // Show the popup by setting state
-  //     //   return;
-  //     // }
-  //     if (response.status === 200) {
-  //       setIsHeartMarked(!isHeartMarked);
-
-  //       // Toast Notification
-  //       if (!isHeartMarked) {
-  //         toast.success("Your express interest has been sent successfully!");
-  //       } else {
-  //         toast.success("Your express interest has been removed successfully!");
-  //       }
-  //     } else {
-  //       // Toast Notification
-  //       // alert("Failed to update express interest");
-  //       toast.error("Failed to update express interest");
-
-  //       console.error("Failed to update express interest");
-  //     }
-  //   } catch (error) {
-  //     // Toast Notification
-  //     NotifyError("Error updating express interest");
-
-  //     console.error("Error updating express interest:", error);
-  //   } finally {
-  //     setOpenCustomMsg("");
-  //     setSelectValue("");
-  //   }
-  // };
 
   const handleHeartMark = async () => {
     try {
@@ -918,7 +884,9 @@ export const ProfileDetailsExpressInterest: React.FC<
                         className="text-[22px] text-vysyamalaBlack cursor-pointer"
                       />
                       {showVysassist && (
-                        <VysAssistPopup closePopup={closeVysassistpopup} />
+                        <VysAssistPopup 
+                        profileData={vysAssistData} 
+                        closePopup={closeVysassistpopup} />
                       )}
                     </div>
                   </div>
@@ -1304,14 +1272,11 @@ export const ProfileDetailsExpressInterest: React.FC<
           <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={apimsgExpressInt} />
         )
       }
-
       {
         bookMarkPopup && (
           <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={apimsgPhotoReq} />
         )
       }
-
-
       {
         matchingScorePopup && (
           <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={apimsgMatchingScore} />

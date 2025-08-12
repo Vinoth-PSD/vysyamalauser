@@ -165,7 +165,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
           />
         ))
       ) : (
-        <div className="py-20">
+        <div className="pt-10 pb-[122px] max-md:pt-10 max-md:pb-16">
           <ProfileNotFound />
         </div>
       )}

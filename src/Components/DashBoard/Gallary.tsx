@@ -89,7 +89,10 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
             <p className="text-sm">Please wait...</p>
           </div>
         ) : noProfiles ? (
+                    <div className="pt-10 pb-[122px] max-md:pt-10 max-md:pb-16">
+
           <ProfileNotFound />
+          </div>
         ) : (
           <>
             {error && <p className="text-red-500">{error}</p>}

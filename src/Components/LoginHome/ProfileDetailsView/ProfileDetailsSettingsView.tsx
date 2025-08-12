@@ -12,6 +12,8 @@ import { HoroscopeView } from './HoroscopeView';
 import { ContactView } from './ContactView';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaRegListAlt } from 'react-icons/fa';
+import { ProfileDataProvider } from './ViewApicall/ProfileDataProvider';
+
 
 interface ProfileDetailsSettingsViewProps { }
 
@@ -30,7 +32,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     const queryParams = new URLSearchParams(location.search);
     const pageid = queryParams.get("page") || "";
     const currentProfileId = queryParams.get("id") || "";
-    
+
 
     const renderSection = () => {
         switch (activeSection) {
@@ -135,13 +137,15 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     }, [currentProfileId, profileIds]);
 
     const handlePrevious = () => {
+        console.log("outside")
         if (currentIndex > 0) {
+            console.log("within")
             const newIndex = currentIndex - 1;
             setCurrentIndex(newIndex);
             navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
             setTimeout(() => {
                 window.scrollTo(0, 0);  // Move scroll to the top after navigation
-            }, 3000);
+            }, 2000);
         }
     };
 
@@ -153,63 +157,66 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
             navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
             setTimeout(() => {
                 window.scrollTo(0, 0);  // Move scroll to the top after navigation
-            }, 3000);
+            }, 2000);
         }
     };
 
     return (
         <div className="bg-ash">
+
             <div className="container mx-auto py-20 max-sm:py-8">
-                <div className="w-full flex justify-between items-start space-x-5 max-lg:flex-col max-lg:space-x-0 ">
-                    <div className="sidebar  max-sm:w-full">
-                        <ul className="w-full space-y-10 max-lg:flex max-lg:flex-row  max-lg:flex-wrap max-lg:gap-x-10 max-lg:justify-between max-lg:space-y-0 max-lg:mb-8 max-md:gap-x-0 max-sm:flex-col max-sm:gap-0 max-sm:divide-y-[1px] max-sm:divide-ashBorder max-sm:w-full ">
-                            <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
+                <ProfileDataProvider>
+                    <div className="w-full flex justify-between items-start space-x-5 max-lg:flex-col max-lg:space-x-0 ">
+                        <div className="sidebar  max-sm:w-full">
+                            <ul className="w-full space-y-10 max-lg:flex max-lg:flex-row  max-lg:flex-wrap max-lg:gap-x-10 max-lg:justify-between max-lg:space-y-0 max-lg:mb-8 max-md:gap-x-0 max-sm:flex-col max-sm:gap-0 max-sm:divide-y-[1px] max-sm:divide-ashBorder max-sm:w-full ">
+                                <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
                 ${activeSection === 'PersonalView' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('PersonalView')}>
-                                <BiSolidUserCircle className="text-[22px] mr-2" />
-                                Personal
-                            </li>
-                            <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px]  
+                                    onClick={() => setActiveSection('PersonalView')}>
+                                    <BiSolidUserCircle className="text-[22px] mr-2" />
+                                    Personal
+                                </li>
+                                <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px]  
                 ${activeSection === 'EducationProfessionView' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('EducationProfessionView')}>
-                                <FaSuitcase className="text-[22px] mr-2" />
-                                Education & Profession
-                            </li>
-                            <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
+                                    onClick={() => setActiveSection('EducationProfessionView')}>
+                                    <FaSuitcase className="text-[22px] mr-2" />
+                                    Education & Profession
+                                </li>
+                                <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
                 ${activeSection === 'FamilyView' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('FamilyView')}>
-                                <MdFamilyRestroom className="text-[22px] mr-2" />
-                                Family
-                            </li>
-                            <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
+                                    onClick={() => setActiveSection('FamilyView')}>
+                                    <MdFamilyRestroom className="text-[22px] mr-2" />
+                                    Family
+                                </li>
+                                <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
                 ${activeSection === 'HoroscopeView' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('HoroscopeView')}>
-                                <FaRegListAlt className="text-[22px] mr-2" />
-                                Horoscope
-                            </li>
-                            <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
+                                    onClick={() => setActiveSection('HoroscopeView')}>
+                                    <FaRegListAlt className="text-[22px] mr-2" />
+                                    Horoscope
+                                </li>
+                                <li className={`flex items-center text-[20px] text-[#ffffff] font-normal opacity-[0.5] cursor-pointer max-xl:text-[18px] max-lg:w-2/5 max-md:w-2/4 max-sm:w-full max-sm:text-[16px] 
                 ${activeSection === 'ContactView' ? 'active' : ''}`}
-                                onClick={() => setActiveSection('ContactView')}>
-                                <MdContacts className="text-[22px] mr-2" />
-                                Contact
-                            </li>
-                        </ul>
-                    </div>
+                                    onClick={() => setActiveSection('ContactView')}>
+                                    <MdContacts className="text-[22px] mr-2" />
+                                    Contact
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div className="w-3/4 bg-white rounded-lg max-lg:w-full">
-                        <div className="p-10 max-md:p-8 max-sm:p-4">{renderSection()}</div>
+                        <div className="w-3/4 bg-white rounded-lg max-lg:w-full">
+                            <div className="p-10 max-md:p-8 max-sm:p-4">{renderSection()}</div>
+                        </div>
                     </div>
-                </div>
+                    <div className="flex justify-between items-center mt-20 max-sm:mt-8">
+                        <button onClick={handlePrevious} disabled={currentIndex <= 0} className='bg-ash text-white flex items-center rounded-md border-2 px-5 py-3'>
+                            <FaArrowLeft /> Previous
+                        </button>
+                        <button onClick={handleNext} disabled={currentIndex >= profileIds.length - 1} className='bg-ash text-white flex items-center rounded-md border-2 px-5 py-3'>
+                            Next <FaArrowRight />
+                        </button>
+                    </div>
+                </ProfileDataProvider>
 
-                <div className="flex justify-between items-center mt-20 max-sm:mt-8">
-                    <button onClick={handlePrevious} disabled={currentIndex <= 0} className='bg-ash text-white flex items-center rounded-md border-2 px-5 py-3'>
-                        <FaArrowLeft /> Previous
-                    </button>
-                    <button onClick={handleNext} disabled={currentIndex >= profileIds.length - 1} className='bg-ash text-white flex items-center rounded-md border-2 px-5 py-3'>
-                        Next <FaArrowRight />
-                    </button>
-                </div>
             </div>
-        </div>
+        </div >
     );
 };

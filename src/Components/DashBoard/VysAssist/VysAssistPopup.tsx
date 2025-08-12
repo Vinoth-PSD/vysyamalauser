@@ -5,27 +5,33 @@ import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../../API';
-import { Hearts } from 'react-loader-spinner';
+// import { Hearts } from 'react-loader-spinner';
 
 interface VysAssistPopupProps {
+    profileData: any; // Replace 'any' with the appropriate type
     closePopup: () => void;
 }
 
-export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) => {
+export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup, profileData }) => {
     const [notes, setNotes] = useState<string>('');
-    const [VysassistEnable, setVysassistEnable] = useState(0)
-    console.log(VysassistEnable)
-    const [vysassits, setVysassits] = useState()
-    console.log(vysassits)
+    const [, setVysassistEnable] = useState(0)
+    // console.log(VysassistEnable)
+    const [, setVysassits] = useState()
+    // console.log(vysassits)
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-    const [data, setData] = useState<any>()
-    console.log(data)
+    const [, setData] = useState<any>()
+    // console.log(data)
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
     const navigate = useNavigate()
     const formattedMessage = `We have shared the horoscope to ${loginuser_profileId}`;
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
+
+    const VysassistEnable = profileData?.basic_details?.vysy_assist_enable || 0;
+    const vysassits = profileData?.basic_details?.vys_assits || false;
+    const data = profileData?.basic_details?.vys_list || null;
+
 
     const options = [
         formattedMessage,
@@ -115,23 +121,7 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
 
     return (
 
-        < >
-            {loading ? (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="flex flex-col items-center">
-                        <Hearts
-                            height="100"
-                            width="100"
-                            color="#FF6666"
-                            ariaLabel="hearts-loading"
-                            wrapperStyle={{}}
-                            wrapperClass=""
-                            visible={true}
-                        />
-                        <p className="text-sm text-white">Please wait...</p>
-                    </div>
-                </div>
-            ) : (
+    
                 < >
                     {VysassistEnable === 1 && vysassits === false && data === null && (
                         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -373,14 +363,8 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup }) =>
                                     </div>
                                 </div>
                             </div>
-
-
-
                         )
                     }
                 </>
             )}
-        </>
-
-    );
-};
+     

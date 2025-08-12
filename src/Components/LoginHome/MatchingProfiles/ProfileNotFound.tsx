@@ -1,10 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import noResultFound from "../../../assets/images/noResultFound.png";
 
 export const ProfileNotFound = () => {
     const navigate = useNavigate();
 
+      const location = useLocation();
+  
+  const isProfileNotFound = location.pathname === "/ProfileNotFound";
+
+
     return (
+         <div
+      className={`${
+        isProfileNotFound
+          ? "py-[120px]  max-md:pb-18" // extra space only here
+          : ""
+      }`}
+    >
         <div className="mx-auto w-[450px] max-sm:w-full">
             <div className="flex flex-col items-center">
                 <img src={noResultFound} className="" alt="No Results Found" />
@@ -22,6 +34,7 @@ export const ProfileNotFound = () => {
                 </div>
 
             </div>
+        </div>
         </div>
     );
 };

@@ -6,6 +6,7 @@ import { FaPersonArrowUpFromLine, FaSuitcase, FaLocationDot, FaUser } from "reac
 import { MdBookmark, MdBookmarkBorder, MdOutlineGrid3X3 } from "react-icons/md";
 import { IoSchool } from "react-icons/io5";
 import { Hearts } from "react-loader-spinner";
+import { LoginPopupModal } from "../HomePage/PopUpsLogin/LoginPopupModal";
 
 // Define the interface for a profile
 interface Profile {
@@ -61,6 +62,21 @@ export const FeaturedBrideCard: React.FC = () => {
         fetchProfiles();
     }, []);
 
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+
+    const handleLoginClick = () => {
+        setIsLoginPopupOpen(true);
+
+
+
+    };
+
+    const handleCloseLoginPopup = () => {
+        setIsLoginPopupOpen(false);
+        ////console.log("Closing Login PopupModal popup"); // Debug log
+    };
+
+
     return (
         <div className="container mx-auto mt-28  mb-10  max-md:mt-20 max-md:mb-8">
             <h2 className="text-3xl font-bold mb-6 max-lg:text-xl max-lg:mb-3">Featured Brides</h2>
@@ -78,7 +94,7 @@ export const FeaturedBrideCard: React.FC = () => {
             ) : (
                 <div className="grid grid-cols-2 gap-5 2xl:grid-cols-3 max-lg:grid-cols-1 max-md:grid-cols-1">
                     {profiles.map((profile) => (
-                        <div key={profile.profile_id} className="space-y-5 rounded-xl shadow-md p-5 mb-5">
+                        <div key={profile.profile_id} onClick={handleLoginClick} className="space-y-5 rounded-xl shadow-md p-5 mb-5 cursor-pointer">
                             <div className="flex justify-start items-center space-x-5 relative">
                                 <div className="w-full flex justify-between items-center">
                                     <div className="flex justify-between items-center space-x-5 max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
@@ -186,6 +202,13 @@ export const FeaturedBrideCard: React.FC = () => {
                         </div>
                     ))}
                 </div>
+            )}
+            {isLoginPopupOpen && (
+                <LoginPopupModal
+                    onClose={handleCloseLoginPopup}
+                    onForgetPassword={function (): void {
+                        throw new Error("Function not implemented.");
+                    }} isopen={false} />
             )}
         </div>
     );

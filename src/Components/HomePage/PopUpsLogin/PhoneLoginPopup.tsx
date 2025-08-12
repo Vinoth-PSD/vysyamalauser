@@ -49,6 +49,7 @@ export const PhoneLoginPopup: React.FC<LoginPopUpProps> = ({
     resolver: zodResolver(schema),
   });
   const [apiError, setApiError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // new state
 
   const clearApiError = () => {
     setApiError(null);
@@ -56,6 +57,8 @@ export const PhoneLoginPopup: React.FC<LoginPopUpProps> = ({
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     setApiError(null);
+
+     setLoading(true); // disable button immediately
 
     try {
       const response = await apiClient.post<SendOtpResponse>(
@@ -79,6 +82,9 @@ export const PhoneLoginPopup: React.FC<LoginPopUpProps> = ({
         console.error("Error sending OTP:", error);
         setApiError("An unexpected error occurred. Please try again.");
       }
+    }
+     finally {
+      setLoading(false); // re-enable button after request finishes
     }
   };
 
@@ -122,10 +128,15 @@ export const PhoneLoginPopup: React.FC<LoginPopUpProps> = ({
 
       <button
         type="submit"
-        className="w-full bg-gradient flex justify-center items-center py-[10px] px-[24px]  rounded-[6px] shadow-redboxshadow space-x-2 cursor-pointer"
+        disabled={loading} // disable while loading
+        className={`w-full bg-gradient flex justify-center items-center py-[10px] px-[24px] rounded-[6px] shadow-redboxshadow space-x-2 cursor-pointer ${
+          loading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
       >
-        <div className="text-[16px] text-white font-semibold">Send OTP</div>
-        <FaArrowRightLong className="text-white text-[22px]" />
+        <div className="text-[16px] text-white font-semibold">
+          {loading ? "Sending..." : "Send OTP"}
+        </div>
+        {!loading && <FaArrowRightLong className="text-white text-[22px]" />}
       </button>
 
       <p className="text-ash font-semibold text-center my-5 max-md:my-2">or</p>

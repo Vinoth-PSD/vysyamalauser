@@ -1,80 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import apiClient from '../../../API';
+import React  from 'react';
+// import axios from 'axios';
+// import apiClient from '../../../API';
+import { useProfileData  } from './ViewApicall/ProfileDataProvider';
 // import { useParams } from 'react-router-dom';
 
 // Define the correct interface for your API response
-interface EducationProfession {
-  education_level: string;
-  education_detail: string;
-  about_education: string;
-  profession: string;
-  designation: string;
-  company_name: string;
-  business_name: string;
-  business_address: string;
-  annual_income: string;
-  gross_annual_income: string;
-  place_of_stay: string;
-}
+// interface EducationProfession {
+//   education_level: string;
+//   education_detail: string;
+//   about_education: string;
+//   profession: string;
+//   designation: string;
+//   company_name: string;
+//   business_name: string;
+//   business_address: string;
+//   annual_income: string;
+//   gross_annual_income: string;
+//   place_of_stay: string;
+// }
 
-interface ApiResponse {
-  education_details: EducationProfession;
-  // Include other fields if needed
-}
+// interface ApiResponse {
+//   education_details: EducationProfession;
+//   // Include other fields if needed
+// }
 
 export const EducationProfessionView: React.FC = () => {
-  const [profileData, setProfileData] = useState<EducationProfession | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  // const { user_profile_id } = useParams<{ user_profile_id: string }>();
-  const queryParams = new URLSearchParams(location.search);
-  const id = queryParams.get('id');
-  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+  // const [profileData, setProfileData] = useState<EducationProfession | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
+  // // const { user_profile_id } = useParams<{ user_profile_id: string }>();
+  // const queryParams = new URLSearchParams(location.search);
+  // const id = queryParams.get('id');
+  // const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+  const { education_details } = useProfileData ();
 
-  let page_id = "2"; // Default
-  if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-    page_id = "1";
-  }
 
-  useEffect(() => {
-    const fetchEducationProfessions = async () => {
-      try {
-        const response = await apiClient.post<ApiResponse>(
-          "/auth/Get_profile_det_match/",
-          {
-            profile_id: loginuser_profileId,
-            user_profile_id: id,
-            page_id: page_id
-          }
-        );
+  // let page_id = "2"; // Default
+  // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
+  //   page_id = "1";
+  // }
 
-        //console.log("API Response:", response.data);
+  // useEffect(() => {
+  //   const fetchEducationProfessions = async () => {
+  //     try {
+  //       const response = await apiClient.post<ApiResponse>(
+  //         "/auth/Get_profile_det_match/",
+  //         {
+  //           profile_id: loginuser_profileId,
+  //           user_profile_id: id,
+  //           page_id: page_id
+  //         }
+  //       );
 
-        // Extract education_details from the response
-        const data = response.data.education_details;
+  //       //console.log("API Response:", response.data);
 
-        setProfileData(data);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data || error.message);
-          setError(`Axios error: ${error.response?.data || error.message}`);
-        } else {
-          console.error("Unexpected error:", error);
-          setError("Unexpected error occurred");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       // Extract education_details from the response
+  //       const data = response.data.education_details;
 
-    fetchEducationProfessions();
-  }, [id]);
+  //       setProfileData(data);
+  //     } catch (error) {
+  //       if (axios.isAxiosError(error)) {
+  //         console.error("Axios error:", error.response?.data || error.message);
+  //         setError(`Axios error: ${error.response?.data || error.message}`);
+  //       } else {
+  //         console.error("Unexpected error:", error);
+  //         setError("Unexpected error occurred");
+  //       }
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>No Data Available</p>;
+  //   fetchEducationProfessions();
+  // }, [id]);
 
-  if (!profileData) return <p>No data available</p>;
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>No Data Available</p>;
+
+  if (!education_details ) return <p>No data available</p>;
 
   return (
     <div>
@@ -85,9 +88,9 @@ export const EducationProfessionView: React.FC = () => {
 
       <div className="grid grid-rows-1 grid-cols-2 max-sm:grid-cols-1">
         <div>
-          {profileData?.education_level && profileData.education_level !== "" && profileData.education_level !== null && (
+          {education_details ?.education_level && education_details .education_level !== "" && education_details .education_level !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Education Level :
-              <span className="font-normal"> {profileData.education_level || "N/A"}</span></h5>
+              <span className="font-normal"> {education_details .education_level || "N/A"}</span></h5>
           )}
 
           {/* {profileData?.education_detail && profileData.education_detail !== "" && profileData.education_detail !== null && (
@@ -95,47 +98,47 @@ export const EducationProfessionView: React.FC = () => {
               <span className="font-normal"> {profileData.education_detail}</span></h5>
           )} */}
 
-          {profileData?.about_education && profileData.about_education !== "" && profileData.about_education !== null && (
+          {education_details ?.about_education && education_details .about_education !== "" && education_details .about_education !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">About Education :
-              <span className="font-normal"> {profileData.about_education || "N/A"}</span></h5>)}
+              <span className="font-normal"> {education_details .about_education || "N/A"}</span></h5>)}
 
           {/* {profileData?.profession && profileData.profession !== "" && profileData.profession !== null && ( */}
           <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Profession :
-            <span className="font-normal"> {profileData.profession || "N/A"}</span></h5>
+            <span className="font-normal"> {education_details .profession || "N/A"}</span></h5>
           {/* )} */}
 
-          {profileData?.company_name && profileData.company_name !== "" && profileData.company_name !== null && (
+          {education_details ?.company_name && education_details .company_name !== "" && education_details .company_name !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Company Name :
-              <span className="font-normal"> {profileData.company_name || "N/A"}</span></h5>
+              <span className="font-normal"> {education_details .company_name || "N/A"}</span></h5>
           )}
 
-          {profileData?.designation && profileData.designation !== "" && profileData.designation !== null && (
+          {education_details ?.designation && education_details .designation !== "" && education_details .designation !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Designation :
-              <span className="font-normal"> {profileData.designation || "N/A"}</span></h5>
+              <span className="font-normal"> {education_details .designation || "N/A"}</span></h5>
           )}
         </div>
 
         <div>
-          {profileData?.business_name && profileData.business_name !== "" && profileData.business_name !== null && (
+          {education_details ?.business_name && education_details .business_name !== "" && education_details .business_name !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Business Name :
-              <span className="font-normal"> {profileData.business_name || "N/A"}</span></h5>)}
+              <span className="font-normal"> {education_details .business_name || "N/A"}</span></h5>)}
 
-          {profileData?.business_address && profileData.business_address !== "" && profileData.business_address !== null && (
+          {education_details ?.business_address && education_details .business_address !== "" && education_details .business_address !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Business Address :
-              <span className="font-normal"> {profileData.business_address || "N/A"}</span></h5>)}
+              <span className="font-normal"> {education_details .business_address || "N/A"}</span></h5>)}
 
-          {profileData?.annual_income && profileData.annual_income !== "" && profileData.annual_income !== null && (
+          {education_details ?.annual_income && education_details .annual_income !== "" && education_details .annual_income !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Annual Income :
-              <span className="font-normal"> {profileData.annual_income || "N/A"}</span></h5>)}
+              <span className="font-normal"> {education_details .annual_income || "N/A"}</span></h5>)}
 
-          {profileData?.gross_annual_income && profileData.gross_annual_income !== "" && profileData.gross_annual_income !== null && (
+          {education_details ?.gross_annual_income && education_details .gross_annual_income !== "" && education_details .gross_annual_income !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Gross Annual Income :
-              <span className="font-normal"> {profileData.gross_annual_income || "N/A"}</span></h5>
+              <span className="font-normal"> {education_details .gross_annual_income || "N/A"}</span></h5>
           )}
 
-          {profileData?.place_of_stay && profileData.place_of_stay !== "" && profileData.place_of_stay !== null && (
+          {education_details ?.place_of_stay && education_details .place_of_stay !== "" && education_details .place_of_stay !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Place of Stay :
-              <span className="font-normal"> {profileData.place_of_stay || "N/A"}</span></h5>)}
+              <span className="font-normal"> {education_details .place_of_stay || "N/A"}</span></h5>)}
         </div>
       </div>
     </div>

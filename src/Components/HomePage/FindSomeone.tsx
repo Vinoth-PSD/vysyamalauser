@@ -185,7 +185,7 @@ const FindProfessionals = () => {
                     </option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                    <option value="others">Others</option>
+                    {/* <option value="others">Others</option> */}
                   </select>
                   <IoMdArrowDropdown className="absolute right-2 top-[38%] text-lg text-vysyamalaBlack z-[-1]" />
 
