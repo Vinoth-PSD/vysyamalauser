@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import axios from 'axios';
 // import apiClient from '../../../API';
 // import { useNavigate } from 'react-router-dom';
 import { useProfileData  } from './ViewApicall/ProfileDataProvider';
+import { useNavigate } from 'react-router-dom';
 // import { useParams } from 'react-router-dom';
 
 // interface ContactDetails {
@@ -18,6 +19,23 @@ import { useProfileData  } from './ViewApicall/ProfileDataProvider';
 
 export const ContactView: React.FC = () => {
   const { contact_details } = useProfileData ();
+   const navigate = useNavigate();
+
+     useEffect(() => {
+    // The sample API response shows the `contact_details` key is absent when
+    // the user doesn't have access. This results in `contact_details` being undefined.
+    if (contact_details === undefined || contact_details === null) {
+      // If the data is missing, redirect to the upgrade page.
+      navigate('/UpgradePlan');
+    }
+  }, [contact_details, navigate]); // This effect runs when the component mounts
+
+  // IMPORTANT: Prevent rendering the component if data is missing.
+  // This avoids errors and waits for the navigation to complete.
+  if (!contact_details) {
+    return null; // or you can return a <p>Redirecting...</p> message
+  }
+
   // const [contact_details, setContactDetails] = useState<ContactDetails | null>(null);
   // const [loading, setLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);

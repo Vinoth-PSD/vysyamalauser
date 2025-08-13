@@ -9,7 +9,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaCircleUser } from "react-icons/fa6";
 import { MdManageAccounts } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
-import OfferHeaderBg from "../assets/images/OfferHeader.png"
+//import OfferHeaderBg from "../assets/images/OfferHeader.png"
 //import axios from "axios";
 import apiClient from "../API";
 
@@ -285,13 +285,13 @@ export const LoginHeader: React.FC = () => {
         {/* <button>Logout</button> */}
       </div>
       {/* new offer top bar */}
-      <div className="py-3" style={{
+      {/* <div className="py-3" style={{
         backgroundImage: `url(${OfferHeaderBg}), linear-gradient(92.08deg, #BD1225 0.6%, #FF4050 103.08%)`,
         backgroundPosition: "left right",
         backgroundRepeat: "2",
       }}>
         <p className="text-white text-base font-normal text-center max-sm:text-[14px]"> 🎁 We’ve launched a new offer. <span className=" border-b-[1px]"> Check now</span></p>
-      </div>
+      </div> */}
 
 
       <header className="transition-all duration-300 z-[1] sticky top-0">

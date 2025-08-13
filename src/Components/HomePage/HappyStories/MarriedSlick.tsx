@@ -64,9 +64,9 @@ const MarriedSlick: React.FC<MarriedSlickProps> = ({ data }) => {
       <h1 className="font-segoesc text-2xl font-normal mb-5 max-xl:text-xl max-lg:text-lg max-lg:mb-4 max-md:mb-5 max-sm:mb-0 ">
         {data.couple_name}
       </h1>
-      <p className="text-md text-white font-medium max-lg:font-medium max-md:font-normal">
+      {/* <p className="text-md text-white font-medium max-lg:font-medium max-md:font-normal">
         We connected over Vysyamala chat and then soon exchanged mobile numbers, and rest was a roller coaster ride till we finally got married after 5 months since our first meet. Today I am happy and feeling life at it's best. Thanks to Vysyamala.
-      </p>
+      </p> */}
     </div>
   </div>
 </div>
