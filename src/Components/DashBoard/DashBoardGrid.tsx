@@ -23,6 +23,7 @@ import Gallery from "../../assets/icons/Gallery.png";
 import PersonalNote from "../../assets/icons/PersonalNote.png";
 import PhotoReq from "../../assets/icons/PhotoReq.png";
 import { Puff } from 'react-loader-spinner';
+import { useNavigate } from "react-router-dom";
 
 
 interface DashBoardGridProps {
@@ -50,7 +51,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
   onDashBoardMatchingProfiles,
   onDashBoardMutualInterest,
   onDashBoardWishlist,
-  onProfileDetails,
+  //onProfileDetails,
   onInterestSent,
   onViewedProfiles,
   onMyVisitors,
@@ -72,6 +73,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
 
   const { dashboardDetails, fetchDashboardDetails } = context;
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   //console.log(dashboardDetails, "dashbordDetails");
 
   useEffect(() => {
@@ -94,17 +96,17 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
   if (loading) {
     return (
       <div className="w-fit mx-auto py-40">
-          <Puff  
-            height="100"
-            width="100"
-            color="#FF6666"
-            ariaLabel="hearts-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-          <p className="text-sm">Please wait...</p>
-        </div>
+        <Puff
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
+      </div>
     );
   }
   return (
@@ -236,28 +238,28 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
                       {`${dashboardDetails?.profile_details.completion_per}%`}{" "}
                       complete
                     </h5>
-                    {typeof dashboardDetails?.profile_details.completion_per === "number" && 
-                    dashboardDetails?.profile_details.completion_per < 100 && (
-                    <>
-                    <p className="text-sm text-primary">
-                      Complete your profile we will suggest profiles based on
-                      your preference
-                    </p>
+                    {typeof dashboardDetails?.profile_details.completion_per === "number" &&
+                      dashboardDetails?.profile_details.completion_per < 100 && (
+                        <>
+                          <p className="text-sm text-primary">
+                            Complete your profile we will suggest profiles based on
+                            your preference
+                          </p>
 
-                    <button
-                      onClick={onProfileDetails}
-                      className="flex items-center text-sm text-main font-medium leading-6 my-3 max-sm:text-base"
-                    >
-                      Complete Your Profile <FaArrowRight className="ml-2" />
-                    </button>
-                    </>
-                  )}
+                          <button
+                            onClick={() => navigate("/MyProfile")}
+                            className="flex items-center text-sm text-main font-medium leading-6 my-3 max-sm:text-base"
+                          >
+                            Complete Your Profile <FaArrowRight className="ml-2" />
+                          </button>
+                        </>
+                      )}
                   </div>
-                  {typeof dashboardDetails?.profile_details.completion_per === "number" && 
+                  {typeof dashboardDetails?.profile_details.completion_per === "number" &&
                     dashboardDetails?.profile_details.completion_per < 100 && (
 
-                  <div className="w-[86px] h-[86px] text-primary font-semibold max-sm:w-16 max-sm:h-16">
-                    {/* <CircularProgressbar
+                      <div className="w-[86px] h-[86px] text-primary font-semibold max-sm:w-16 max-sm:h-16">
+                        {/* <CircularProgressbar
                       value={percentage}
                       text={`${percentage}%`}
                       styles={buildStyles({
@@ -268,18 +270,18 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
                       })}
                     /> */}
 
-                    <CircularProgressbar
-                      value={completionPer}
-                      text={`${dashboardDetails?.profile_details.completion_per || 0}%`}
-                      styles={buildStyles({
-                        pathColor: `rgba(47, 189, 18, ${(dashboardDetails?.profile_details.completion_per || 0)})`,
-                        textColor: "#535665",
-                        trailColor: "#d6d6d6",
-                        backgroundColor: "#3e98c7",
-                        
-                      })}
-                    />
-                  </div>
+                        <CircularProgressbar
+                          value={completionPer}
+                          text={`${dashboardDetails?.profile_details.completion_per || 0}%`}
+                          styles={buildStyles({
+                            pathColor: `rgba(47, 189, 18, ${(dashboardDetails?.profile_details.completion_per || 0)})`,
+                            textColor: "#535665",
+                            trailColor: "#d6d6d6",
+                            backgroundColor: "#3e98c7",
+
+                          })}
+                        />
+                      </div>
                     )}
                 </div>
               </div>
@@ -298,9 +300,9 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
               </span>
             </h4>
             <div className="message-box h-[22rem]  overflow-scroll overflow-x-hidden overscroll-y-auto max-md:h-auto">
-            <p className="text-sm text-ashSecondary font-semibold mb-3">
-              Today
-            </p>
+              <p className="text-sm text-ashSecondary font-semibold mb-3">
+                Today
+              </p>
               <InterestCard />
             </div>
           </div>
@@ -326,7 +328,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
                 cardCount={String(dashboardDetails?.myvisitor_count || 0)}
                 cardIcon={MyVisitors}
               />
-            
+
 
               <IndicatorCard
                 onClick={onGallery}
@@ -341,7 +343,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
                 cardCount={String(dashboardDetails?.photo_int_count || 0)}
                 cardIcon={PhotoReq}
               />
-              
+
             </div>
 
             {/* {/ Other options /} */}
