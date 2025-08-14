@@ -362,6 +362,34 @@ export const Header: React.FC = () => {
               />
             </Link>
           </div>
+
+          <ul className="block lg:hidden text-gray-800 ml-auto mr-4">
+            {profile_completion != null ? (
+              <li
+                className={`bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer w-fit  ${isHome ? isScrolled
+                  ? "text-black "
+                  : "text-white" : 'text-black'}
+          }`}
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+
+              >
+                Logout
+              </li>
+            ) : (
+              <li
+                className={`bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer w-fit  ${isHome ? isScrolled
+                  ? "text-black "
+                  : "text-main" : 'text-black'}
+          }`}
+                onClick={() => { handleLoginClick(); setIsMenuOpen(false); }}
+              >
+                Login
+              </li>
+            )}
+          </ul>
           {/* Hamburger Menu Button (Visible on small screens) */}
           <button
             className="block lg:hidden text-gray-800"
@@ -370,13 +398,17 @@ export const Header: React.FC = () => {
             {/* <svg className="w-8 h-8" fill="none" stroke="#000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg> */}
-            <CgDetailsMore className={`text-[28px]   ${isScrolled ? "text-black" : "text-main"}`} />
+            <CgDetailsMore className={`text-[28px]    ${isHome ? isScrolled
+              ? "text-main "
+              : "text-white" : 'text-black'}
+          }`} />
           </button>
 
+
           <nav className="max-lg:hidden">
-            <ul className={`flex justify-center items-center  ${ isHome ? isScrolled
+            <ul className={`flex justify-center items-center  ${isHome ? isScrolled
               ? "text-black "
-              : "text-white": 'text-black'}
+              : "text-white" : 'text-black'}
           }`}>
               {!profile_completion && (
                 <>
@@ -474,21 +506,7 @@ export const Header: React.FC = () => {
                           </li>
                         </>
                       )}
-                      {profile_completion != null ? (
-                        <li
-                          className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer w-fit"
-                          onClick={handleLogout}
-                        >
-                          Logout
-                        </li>
-                      ) : (
-                        <li
-                          className="bg-light-pink rounded-[6px] py-[8px] px-[24px] text-main text-[16px] font-semibold cursor-pointer w-fit"
-                          onClick={handleLoginClick}
-                        >
-                          Login
-                        </li>
-                      )}
+
 
 
                     </ul>
