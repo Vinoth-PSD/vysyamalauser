@@ -79,12 +79,12 @@ export const DashBoardMyProfile: React.FC<DashBoardMyProfileProps> = ({ dashBoar
                                                 onMouseLeave={() => setIsOpen(false)}
                                             >
                                                 <ul>
-                                                    <li
+                                                    {/* <li
                                                         className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                                                         onClick={() => handleSelectLanguage('Tamil')}
                                                     >
                                                         Tamil
-                                                    </li>
+                                                    </li> */}
                                                     <li
                                                         className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                                                         onClick={() => handleSelectLanguage('English')}

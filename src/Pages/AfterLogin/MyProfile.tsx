@@ -574,7 +574,7 @@ export const MyProfile = () => {
                               onMouseLeave={() => setIsOpen(false)}
                             >
                               <ul className="relative">
-                                <li
+                                {/* <li
                                   className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                                   onClick={() => {
                                     handleSelectLanguage("Tamil")
@@ -584,7 +584,7 @@ export const MyProfile = () => {
                                   onMouseLeave={() => setIsPdfMenuOpen(false)}
                                 >
                                   Tamil
-                                </li>
+                                </li> */}
                                 <li
                                   className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                                   onClick={() => {
