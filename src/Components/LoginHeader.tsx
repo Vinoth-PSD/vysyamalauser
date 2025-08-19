@@ -556,13 +556,18 @@ export const LoginHeader: React.FC = () => {
               </li>
 
               {/* Upgrade Button */}
-              <Link
+              {/* <Link
                 to={"/UpgradePlan"}
-              // aria-current="page"
-              // className="active-nav"
               >
                 <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
                   Upgrade
+                </li>
+              </Link> */}
+              <Link
+                to={"/PayNow"}
+              >
+                <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                  Add-On-Packages
                 </li>
               </Link>
             </ul>

@@ -185,15 +185,30 @@ export const LoginPopupModal: React.FC<LoginPopupModalProps> = ({ onClose }) => 
     const handleLogin = () => {
         console.log('Navigating to LoginHome');
         // window.location.href = '/LoginHome';   // Navigate to LoginHome page after successful login
-
         const selectedProfileId = sessionStorage.getItem("selectedProfileId");
-        if (selectedProfileId) {
-            navigate(`/ProfileDetails?id=${selectedProfileId}&rasi=1`);
+        const loggedInProfileId = sessionStorage.getItem("loggedInProfileId");
+        // if (selectedProfileId) {
+        //     navigate(`/ProfileDetails?id=${selectedProfileId}&rasi=1`);
+        // } else {
+        //     navigate('/LoginHome');  // Navigate to LoginHome page after successful login
+
+        // }
+
+        if (selectedProfileId && loggedInProfileId) {
+            const selectedPrefix = selectedProfileId.substring(0, 2); // VF or VM
+            const loggedInPrefix = loggedInProfileId.substring(0, 2); // VF or VM
+
+            if (selectedPrefix !== loggedInPrefix) {
+                // ✅ Opposite gender → show profile
+                navigate(`/ProfileDetails?id=${selectedProfileId}&rasi=1`);
+            } else {
+                // ❌ Same gender → go to LoginHome
+                navigate("/LoginHome");
+            }
         } else {
-            navigate('/LoginHome');  // Navigate to LoginHome page after successful login
-
+            // If no profile selected, just go to LoginHome
+            navigate("/LoginHome");
         }
-
     };
 
     const handleSendOtp = () => {

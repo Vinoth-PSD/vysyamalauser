@@ -98,6 +98,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
         response.data.profile_completion
       );
       //console.log("Login Response:", response.data);
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user_profile_image", response.data.profile_image);
       localStorage.setItem("selectedstar", response.data.birth_star_id);
@@ -123,6 +124,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
       localStorage.setItem("userheightfromapi", response.data.height);
       localStorage.setItem("userplanid", response.data.plan_limits?.[0]?.plan_id,);
       if (response.data.status === 1) {
+        sessionStorage.setItem("loggedInProfileId", response.data.profile_id);
         localStorage.setItem("custom_message", response.data.custom_message);
         setErrorMessage(null); // Clear error message on success
         if (rememberMe) {

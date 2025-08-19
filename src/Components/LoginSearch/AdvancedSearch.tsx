@@ -106,16 +106,12 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     setNativeState,
     setPeopleOnlyWithPhoto,
     pageNumber,
-
     fromHeight, toHeight,
     selectedIncomes,
     setAdvanceSearchData,
     chevvai_dhosam,
-
     rehuDhosam,
-
     // workLocation,
-
     peopleOnlyWithPhoto,
   } = context;
 
@@ -207,33 +203,73 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   };
 
   console.log(selectedIncomes, " selectedIncomes");
-  const Search_By_profileId = async (searchProfile: string) => {
-    try {
-      const response = await apiClient.post(
-        "/auth/Search_byprofile_id/",
-        {
-          profile_id: loginuser_profile_id,
-          search_profile_id: searchProfile,
-        }
-      );
+  // const Search_By_profileId = async (searchProfile: string) => {
+  //   try {
+  //     const response = await apiClient.post(
+  //       "/auth/Search_byprofile_id/",
+  //       {
+  //         profile_id: loginuser_profile_id,
+  //         search_profile_id: searchProfile,
+  //       }
+  //     );
 
-      if (response.status === 200) {
-        sessionStorage.setItem("searchProfile", searchProfile);
-        console.log(response.data.data, "search profile");
-        // setSearchProfileData(response.data.data);
-        setAdvanceSearchData(response.data.data);
-        setTimeout(() => {
-          onFindMatch();
-        }, 1000);
+  //     if (response.status === 200) {
+  //       sessionStorage.setItem("searchProfile", searchProfile);
+  //       console.log(response.data.data, "search profile");
+  //       // setSearchProfileData(response.data.data);
+  //       setAdvanceSearchData(response.data.data);
+  //       setTimeout(() => {
+  //         onFindMatch();
+  //       }, 1000);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setError("profile_id", {
+  //       type: "manual",
+  //       message: "Profile not found. Please check the profile ID and Profile Name.",
+  //     });
+  //   }
+  // };
+
+
+const Search_By_profileId = async (searchProfile: string) => {
+  try {
+    const response = await apiClient.post(
+      "/auth/Search_byprofile_id/",
+      {
+        profile_id: loginuser_profile_id,
+        search_profile_id: searchProfile,
       }
-    } catch (error) {
-      console.log(error);
+    );
+
+    // --- START: MODIFICATION ---
+    // Check if the API call was logically successful but returned no data
+    if (response.status === 200 && (response.data.status === 'failure' || !response.data.data || response.data.data.length === 0)) {
       setError("profile_id", {
         type: "manual",
-        message: "Profile not found. Please check the profile ID and Profile Name.",
+        message: "No profile found with that ID or name. Please try again.",
       });
+      return; // Stop execution here
     }
-  };
+    // --- END: MODIFICATION ---
+
+
+    if (response.status === 200) {
+      sessionStorage.setItem("searchProfile", searchProfile);
+      console.log(response.data.data, "search profile");
+      setAdvanceSearchData(response.data.data);
+      setTimeout(() => {
+        onFindMatch();
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error);
+    setError("profile_id", {
+      type: "manual",
+      message: "An error occurred. Please check the profile ID and try again.",
+    });
+  }
+};
   useEffect(() => {
     const fetchMaritalStatuses = async () => {
       try {

@@ -368,29 +368,6 @@ export const FeaturedGroom: React.FC = () => {
             </p>
           </div>
 
-          {/* Groom Slick */}
-          {/* <div className="slider-container featuredStyle">
-            <Slider {...settings}>
-              {profiles.map((profile) => (
-                <GroomSlick
-                  key={profile.profile_id}
-                  profileImage={profile.profile_img}
-                  profileId={profile.profile_id}
-                  age={profile.profile_age.toString()}
-                  onClick={() => handleImageClick(profile.profile_id)} // Pass profileId on click
-                />
-              ))}
-            </Slider>
-            <p className="text-vysyamalaBlack text-base font-medium text-end"> <a className="border-b-[1px]"   onClick={handleViewMoreClick}>View More</a></p>
-
-          </div> */}
-
-          {/* view more */}
-          {/* <div className="text-center pt-6 max-md:pt-4">
-            <button className=" bg-main py-2 px-5 text-white text-lg font-medium rounded-md">View More</button>
-          </div> */}
-
-
           <div className="feature-profile grid grid-cols-5 gap-5 max-xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 mt-10">
             {/* Render the first 9 profiles */}
             {profiles.slice(0, 9).map((profile) => (

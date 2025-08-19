@@ -84,26 +84,6 @@ function App() {
 function AppContent({ token }: AppContentProps) {
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   //console.log("Current token:", token);
-  //   sessionStorage.removeItem("searchvalue");
-
-  //   const handlePopState = () => {
-  //     const currentToken = sessionStorage.getItem("token");
-  //     if (currentToken) {
-  //       navigate("/LoginHome");
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   };
-
-  //   window.addEventListener("popstate", handlePopState);
-
-  //   return () => {
-  //     window.removeEventListener("popstate", handlePopState);
-  //   };
-  // }, [token, navigate]);
-
   useEffect(() => {
     ////console.log("Current token:", token);
     sessionStorage.removeItem("searchvalue");
@@ -146,9 +126,7 @@ function AppContent({ token }: AppContentProps) {
           <Route path="/HoroDetails" element={<HoroDetails />} />
           <Route path="/PartnerSettings" element={<PartnerSettings />} />
           <Route path="/MembershipPlan" element={<MembershipPlan />} />
-          <Route path="/PayNow" element={<PayNow />} />
           <Route path="/PayNowRegistration" element={<PayNowRegistration />} />
-
           <Route path="/ThankYou" element={<ThankYou />} />
           <Route path="/ThankYouReg" element={<ThankYouReg />} />
         </Route>
@@ -164,7 +142,7 @@ function AppContent({ token }: AppContentProps) {
         <Route path="/FeaturedBrideCard" element={<FeaturedBrideCard />} />
         <Route path="/FeaturedGroomCard" element={<FeaturedGroomCard />} />
         <Route path="/FindSomeOneSpecial" element={<FindSomeOneSpecial />} />
-       
+
         <Route path="/ProfileNotFound" element={<ProfileNotFound />} />
         <Route path="/ProfileImage" element={<ImagePage />} />
         <Route path="/BasicInfoPdf" element={<BasicInfoPdf />} />
@@ -182,6 +160,7 @@ function AppContent({ token }: AppContentProps) {
           <Route path="/MyProfile" element={<MyProfile />} />
           <Route path="/ProfileDetails" element={<ProfileDetails />} />
           <Route path="/ProfileCompletion" element={<ProfileCompletionForm />} />
+          <Route path="/PayNow" element={<PayNow />} />
           <Route
             path="/ProfileGrid"
             element={

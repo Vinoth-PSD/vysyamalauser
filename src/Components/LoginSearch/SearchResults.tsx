@@ -17,6 +17,7 @@ import { ProfileContext } from "../../ProfileContext";
 import Pagination from "../Pagination";
 //import axios from "axios";
 import apiClient from "../../API";
+import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
 
 interface SearchResultsProps {
   onSearchAgain: () => void; // Call back function to trigger search again when user clicks on search again button
@@ -36,7 +37,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   setPageNo,
   pageNo,
   error,
-  responseMsg,
+  //responseMsg,
 }) => {
   // View state changed
   const [currentView, setCurrentView] = useState("gridlist");
@@ -230,9 +231,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
             />
             <p className="text-sm">Please wait...</p>
           </div>
-        ) : !error &&
-        ((advanceSearchData && advanceSearchData.length >= 1) ||
-          responseMsg !== "At least one search criterion must be provided.") && (
+        // ) : !error &&
+        // ((advanceSearchData && advanceSearchData.length >= 1) ||
+        //   responseMsg !== "At least one search criterion must be provided.") && (
+           ) : !error && advanceSearchData && advanceSearchData.length > 0 ? (
           <div>
             {/* Conditionally render views based on currentView state */}
             {currentView === "gridlist" && (
@@ -268,9 +270,9 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
             )}
           </div>
         ) 
-        // : (
-        //   <p>No Records Found</p>
-        // )
+        : (
+           <ProfileNotFound />
+        )
         }
 
         {/* Pagination */}
