@@ -76,7 +76,7 @@ export const MyProfile = () => {
   // };
   const plan_id = localStorage.getItem("plan_id") ?? "";
   const validPlanIds = ["1", "2", "3", "10", "11", "13", "14", "15", "16", "17"];
-  
+
   const context = useContext(ProfileContext);
 
   if (!context) {
@@ -632,19 +632,38 @@ export const MyProfile = () => {
                   </p>
 
                   <div className="flex items-center space-x-3 mb-3 max-sm:flex-wrap max-sm:space-x-0 max-sm:gap-y-3 max-md:gap-4">
-                    <p className={`w-fit text-sm text-primary font-semibold rounded-md px-3 py-0.5  ${get_myprofile_personal.package_name === "Platinum"
-                      ? "bg-gradientPlatinum"
-                      : get_myprofile_personal.package_name === "Gold"
-                        ? "bg-gradientGold"
-                        : get_myprofile_personal.package_name === "Diamond"
-                          ? "bg-gradient !text-white"
-                          : "bg-gradient !text-white"
-                      }`}>
-                      {get_myprofile_personal.package_name}
-                    </p>
-                    <p className="text-primary">
+                    {get_myprofile_personal.valid_upto &&
+                      new Date(get_myprofile_personal.valid_upto) < new Date() &&
+                      validPlanIds.includes(plan_id) ? (
+                      // ✅ Show Renew button only
+                      <Link to="/UpgradePlan">
+                        <div className="bg-gradient text-center min-w-[100px] rounded-[6px] py-[6px] px-[12px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                          Renew
+                        </div>
+                      </Link>
+                    ) : (
+                      // ✅ Show package name & valid date only
+                      <div className="flex items-center space-x-3 mb-3 max-sm:flex-wrap max-sm:space-x-0 max-sm:gap-y-3 max-md:gap-4">
+                        <p
+                          className={`w-fit text-sm text-primary font-semibold rounded-md px-3 py-0.5
+                           ${get_myprofile_personal.package_name === "Platinum"
+                              ? "bg-gradientPlatinum"
+                              : get_myprofile_personal.package_name === "Gold"
+                                ? "bg-gradientGold"
+                                : get_myprofile_personal.package_name === "Diamond"
+                                  ? "bg-gradient !text-white"
+                                  : "bg-gradient !text-white"
+                            }`}
+                        >
+                          {get_myprofile_personal.package_name}
+                        </p>
+
+                      </div>
+                    )}
+                    <p className="text-primary mb-2">
                       Valid Upto : {get_myprofile_personal.valid_upto}
                     </p>
+
                   </div>
                   <div className="my-3">
                     <button
@@ -655,14 +674,14 @@ export const MyProfile = () => {
                       <FaArrowRight className="ml-2" />
                     </button>
                   </div>
-                  {get_myprofile_personal.valid_upto &&
+                  {/* {get_myprofile_personal.valid_upto &&
                     new Date(get_myprofile_personal.valid_upto) < new Date() && validPlanIds.includes(plan_id) && (
                       <Link to="/UpgradePlan">
                         <div className="bg-gradient w-fit rounded-[6px] py-[6px] px-[12px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
                           Renew
                         </div>
                       </Link>
-                    )}
+                    )} */}
                   <div className="w-1/2 mb-8 max-sm:w-full max-sm:mb-8 max-lg:w-full">
                     <div>
                       <div className="flex justify-start  gap-x-10 gap-y-3  items-center mb-3  max-lg:flex-wrap max-sm:gap-3 max-sm:flex-col max-sm:items-start">

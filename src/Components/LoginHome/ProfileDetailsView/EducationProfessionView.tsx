@@ -97,6 +97,12 @@ export const EducationProfessionView: React.FC = () => {
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Education Details :
               <span className="font-normal"> {profileData.education_detail}</span></h5>
           )} */}
+          
+          {education_details ?.degeree && education_details .degeree !== "" && education_details .degeree !== null && (
+            <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Degree :
+              <span className="font-normal"> {education_details .degeree || "N/A"}</span></h5>
+          )}
+
 
           {education_details ?.about_education && education_details .about_education !== "" && education_details .about_education !== null && (
             <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">About Education :

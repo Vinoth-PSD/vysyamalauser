@@ -43,6 +43,7 @@ interface HoroscopeDetails {
 interface EducationDetails {
   profession: string;
   education_level: string;
+  degeree:string;
 }
 
 interface BasicDetails {
@@ -981,6 +982,15 @@ useEffect(() => {
                         <span className="font-normal">
                           {" "}
                           {profileData?.education_details.education_level}
+                        </span>
+                      </h5>)}
+
+                       {profileData?.education_details.degeree && profileData.education_details.degeree !== "" && profileData.education_details.degeree !== null && (
+                      <h5 className="text-[18px] text-ash font-semibold max-sm:text-[16px] mb-3">
+                        Degree :
+                        <span className="font-normal">
+                          {" "}
+                          {profileData?.education_details.degeree}
                         </span>
                       </h5>)}
 
