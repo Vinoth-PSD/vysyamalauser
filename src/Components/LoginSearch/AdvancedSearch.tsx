@@ -242,8 +242,6 @@ const Search_By_profileId = async (searchProfile: string) => {
       }
     );
 
-    // --- START: MODIFICATION ---
-    // Check if the API call was logically successful but returned no data
     if (response.status === 200 && (response.data.status === 'failure' || !response.data.data || response.data.data.length === 0)) {
       setError("profile_id", {
         type: "manual",
@@ -251,8 +249,6 @@ const Search_By_profileId = async (searchProfile: string) => {
       });
       return; // Stop execution here
     }
-    // --- END: MODIFICATION ---
-
 
     if (response.status === 200) {
       sessionStorage.setItem("searchProfile", searchProfile);

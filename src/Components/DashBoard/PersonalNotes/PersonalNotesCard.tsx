@@ -39,10 +39,10 @@ export const PersonalNotesCard = () => {
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
   const gender = localStorage.getItem("gender");
-  const defaultImgUrl =
-    gender === "male"|| "Male"
-      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+const defaultImgUrl =
+  gender?.toLowerCase() === "male"
+    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   useEffect(() => {

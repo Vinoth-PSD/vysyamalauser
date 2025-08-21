@@ -47,10 +47,9 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
   const gender = localStorage.getItem("gender");
 
   const defaultImgUrl =
-    gender === "male" || "Male"
+    gender?.toLowerCase() === "male"
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
       : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
-
 
   return (
     <>

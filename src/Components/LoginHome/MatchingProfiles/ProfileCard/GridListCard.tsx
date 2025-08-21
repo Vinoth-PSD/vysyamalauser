@@ -33,10 +33,6 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
     throw new Error("MyComponent must be used within a ProfileProvider");
   }
 
-  // const { MatchingProfilepageNumber, MatchingProfileperPage, sortOrder } =
-  //   context;
-
-  // const [profile, setProfile] = useState<Profile | null>(null);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const { addBookmark, removeBookmark, setSelectedProfiles } = useContext(
     ProfileContext
@@ -46,38 +42,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
     setSelectedProfiles: () => { },
   };
   const navigate = useNavigate();
-  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
-
-  // useEffect(() => {
-  //   const loadProfile = async () => {
-  //     if (!loginuser_profileId) {
-  //       console.error("Login user profile ID is not available");
-  //       return;
-  //     }
-
-  //     try {
-  //       const data = await fetchProfiles(
-  //         loginuser_profileId,
-  //         MatchingProfilepageNumber,
-  //         MatchingProfileperPage,
-  //         sortOrder
-  //       );
-  //       //console.log("Fetched profile data:", data);
-  //       if (data && data.profiles) {
-  //         const profileData = data.profiles.find(
-  //           (profile: Profile) => profile.profile_id === profileId
-  //         );
-  //         setProfile(profileData || null);
-  //       } else {
-  //         console.error("No profile data found");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching profile:", error);
-  //     }
-  //   };
-
-  //   loadProfile();
-  // }, [loginuser_profileId, profileId, MatchingProfilepageNumber, sortOrder]);
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id")
 
   useEffect(() => {
     if (profile) {
@@ -127,16 +92,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
     setIsBookmarked(!isBookmarked);
   };
 
-
-
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, []);
-
-
-
   const [isLoading, setIsLoading] = useState(false);
-  //const location = useLocation();
 
   const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (isLoading) return;
@@ -144,9 +100,6 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
     e.stopPropagation();
 
     let page_id = "1"; // Default
-    // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
-    //   page_id = "1";
-    // }
 
     try {
       const checkResponse = await apiClient.post(
@@ -173,22 +126,10 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
       setIsLoading(false);
     }
   };
-  // if (!profile) return <Spinner />;
-  // if (!profile)
-  //   return (
-  //     <div className="flex justify-center items-center h-screen">
-  //       <Spinner />
-  //     </div>
-  //   );
-
-  // useEffect(()=>{
-  //   const count =0
-  //   if(searchProfile){}
-  // },[searchProfile])
   const gender = localStorage.getItem("gender");
 
   const defaultImgUrl =
-    gender === "male"|| "Male"
+    gender?.toLowerCase() === "male"
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
       : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 

@@ -296,10 +296,10 @@ const PhotoRequestCard = ({
 
   const gender = localStorage.getItem("gender");
 
-  const defaultImgUrl =
-    gender === "male"|| "Male"
-      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+const defaultImgUrl =
+  gender?.toLowerCase() === "male"
+    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   return (

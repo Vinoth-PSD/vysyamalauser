@@ -63,11 +63,29 @@ export const LoginHeader: React.FC = () => {
   ////console.log("setSelectedFromProfileId", setSelectedFromProfileId);
   const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
   const gender = localStorage.getItem("gender");
-  const defaultImgUrl =
-    gender === "male" || "Male"
-      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png"
-      : "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png";
+  const PlanID = Number(localStorage.getItem("plan_id"));
+  const ValidTill = localStorage.getItem("valid_till");
+  const currentDate = new Date();
+  const validDate = ValidTill ? new Date(ValidTill) : null;
+  console.log("validDate",validDate)
 
+  const allowedPremiumIds = [1, 2, 3, 14, 15, 17, 10, 11, 12, 13];
+
+  let buttonType: "addon" | "renew" | "upgrade" = "upgrade";
+
+  if (allowedPremiumIds.includes(PlanID) && validDate) {
+    if (validDate.getTime() > currentDate.getTime()) {
+      buttonType = "addon"; // validity still active
+    } else {
+      buttonType = "renew"; // validity expired
+    }
+  }
+
+
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
   const getUnreadMessageCount = async () => {
     try {
@@ -75,12 +93,9 @@ export const LoginHeader: React.FC = () => {
         console.error("User ID is null or undefined.");
         return;
       }
-
       const formData = new FormData();
       // formData.append("profile_id", userId);
-
       formData.append("profile_id", String(userId));
-
       ////console.log("unread_message_count...", formData);
       const response = await apiClient.post(
         "/auth/unread_message_count/",
@@ -125,7 +140,6 @@ export const LoginHeader: React.FC = () => {
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -265,16 +279,12 @@ export const LoginHeader: React.FC = () => {
   }, [isRedirect, roomId, userName]);
 
   const handleUpdatePhoto = () => {
-    // Perform any necessary actions here, such as updating the photo
     navigate("/MyProfile"); // Navigates to the MyProfile page
   };
 
   const handleUpdateSettings = () => {
-    ////console.log("testing bbb");
-    // Perform any necessary actions here, such as updating the photo
     navigate("/DashBoard?key=1");
     setIsMenuOpen(!isMenuOpen);
-
   };
 
   return (
@@ -555,21 +565,32 @@ export const LoginHeader: React.FC = () => {
                 )}
               </li>
 
-              {/* Upgrade Button */}
-              {/* <Link
-                to={"/UpgradePlan"}
-              >
-                <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
-                  Upgrade
-                </li>
-              </Link> */}
-              <Link
-                to={"/PayNow"}
-              >
-                <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
-                  Add-On-Packages
-                </li>
-              </Link>
+
+
+
+              {buttonType === "addon" && (
+                <Link to={"/PayNow"}>
+                  <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                    Add-On-Packages
+                  </li>
+                </Link>
+              )}
+              {buttonType === "renew" && (
+                <Link to={"/UpgradePlan"}>
+                  <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                    Renew
+                  </li>
+                </Link>
+              )}
+              {buttonType === "upgrade" && (
+                <Link to={"/UpgradePlan"}>
+                  <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                    Upgrade
+                  </li>
+                </Link>
+              )}
+
+
             </ul>
 
             {/* Profile Image on hover */}
@@ -654,7 +675,6 @@ export const LoginHeader: React.FC = () => {
                   alt="Profile-image"
                   className="w-11 h-11 rounded-full cursor-pointer object-cover"
                 />
-
               </div>
 
               {/* Navigation Links */}
