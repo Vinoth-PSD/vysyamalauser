@@ -339,21 +339,37 @@ export const ProfileSlick = () => {
                   onMouseEnter={() => handleMouseEnter(image.imageUrl)}
                   onMouseLeave={handleMouseLeave}
                 />
-                <div
-                  className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-                  onClick={() => {
-                    setCurrentEditIndex(null);
-                    fileInputRef.current?.click();
-                  }}
-                >
-                  <FaPlus className="text-2xl text-main" />
-                </div>
-                {images[0]?.id !== null && (
+                {images.length > 0 && images[0]?.id !== null && (
+                  <div
+                    className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                    onClick={() => {
+                      setCurrentEditIndex(null);
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    <FaPlus className="text-2xl text-main" />
+                  </div>
+                )}
+
+                {/* This is the main icon in the corner. */}
+                {images.length > 0 && images[0]?.id !== null ? (
+                  // IF an image exists, show the EDIT icon.
                   <div
                     className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
                     onClick={() => handleEditClick(0)}
                   >
                     <MdModeEdit className="text-2xl text-main" />
+                  </div>
+                ) : (
+                  // ELSE (no image), show the ADD icon in the same spot.
+                  <div
+                    className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                    onClick={() => {
+                      setCurrentEditIndex(null);
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    <FaPlus className="text-2xl text-main" />
                   </div>
                 )}
 
@@ -390,21 +406,39 @@ export const ProfileSlick = () => {
               className="w-full h-[450px] rounded-lg profile-slider-img object-cover object-top"
               alt="Profile"
             />
-            <div
-              className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-              onClick={() => {
-                setCurrentEditIndex(null);
-                fileInputRef.current?.click();
-              }}
-            >
-              <FaPlus className="text-2xl text-main" />
-            </div>
-            <div
-              className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
-              onClick={() => handleEditClick(0)}
-            >
-              <MdModeEdit className="text-2xl text-main" />
-            </div>
+            {images.length > 0 && images[0]?.id !== null && (
+              <div
+                className="absolute bottom-0 right-10 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                onClick={() => {
+                  setCurrentEditIndex(null);
+                  fileInputRef.current?.click();
+                }}
+              >
+                <FaPlus className="text-2xl text-main" />
+              </div>
+            )}
+
+            {/* This is the main icon in the corner. */}
+            {images.length > 0 && images[0]?.id !== null ? (
+              // IF an image exists, show the EDIT icon.
+              <div
+                className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                onClick={() => handleEditClick(0)}
+              >
+                <MdModeEdit className="text-2xl text-main" />
+              </div>
+            ) : (
+              // ELSE (no image), show the ADD icon in the same spot.
+              <div
+                className="absolute bottom-0 right-0 bg-white px-3 py-3 rounded-tl-lg cursor-pointer z-20"
+                onClick={() => {
+                  setCurrentEditIndex(null);
+                  fileInputRef.current?.click();
+                }}
+              >
+                <FaPlus className="text-2xl text-main" />
+              </div>
+            )}
             {showOptions && currentEditIndex === 0 && (
               <div className="absolute bottom-0 left-0 bg-white p-3 rounded-tr-lg z-30">
                 {images[0].id !== null && (

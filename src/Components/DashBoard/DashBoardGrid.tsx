@@ -2,7 +2,6 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import React, { useContext, useEffect, useState } from "react";
 import "react-circular-progressbar/dist/styles.css";
 import { HiUsers } from "react-icons/hi";
-
 import { RiHeartsFill } from "react-icons/ri";
 import { MdBookmark } from "react-icons/md";
 import PinkLayer from "../../assets/images/pinkLayer.png";
