@@ -172,6 +172,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
   useEffect(() => {
     if (height) {
       sessionStorage.setItem("userHeight", height);
+      localStorage.setItem("userHeight", height);
     }
   }, [height]);
 

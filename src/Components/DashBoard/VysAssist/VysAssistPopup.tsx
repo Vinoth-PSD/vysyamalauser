@@ -259,7 +259,8 @@ export const VysAssistPopup: React.FC<VysAssistPopupProps> = ({ closePopup, prof
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    onClick={() => navigate("/UpgradePlan")}
+                                                    //onClick={() => navigate("/UpgradePlan")}
+                                                    onClick={() => navigate("/PayNow")}
                                                     className="bg-gradient text-white flex items-center rounded-lg font-semibold border-2 px-5 py-2 cursor-pointer"
                                                 >
                                                     Pay now

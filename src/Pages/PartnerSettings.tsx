@@ -75,11 +75,6 @@ interface AnnualIncome {
   income_description: string;
 }
 
-// interface BirthStar {
-//   birth_id: number;
-//   birth_star: string;
-// }
-
 interface MatchingStar {
   dest_rasi_id: number;
   dest_star_id: number;
@@ -108,13 +103,6 @@ export interface SelectedStarIdItem {
   label: string;
 }
 
-// // Type for selectedStarIds
-// interface SelectedStarIdItem1 {
-//   id: string;
-//   rasi: string;
-//   star: string;
-//   label: string;
-// }
 const PartnerSettings: React.FC = () => {
   const [eduPref, setEduPref] = useState<EduPref[]>([]);
   const [fieldOfStudy, setFieldOfStudy] = useState<FieldOfStudy[]>([]);
@@ -139,19 +127,9 @@ const PartnerSettings: React.FC = () => {
     []
   );
   const [selectedMaxAnnualIncome, setSelectedMaxAnnualIncome] = useState<string[]>([])
-  const [, setSelectedAnnualIncomesmax] = useState<string[]>(
-    []
-  );
+  const [, setSelectedAnnualIncomesmax] = useState<string[]>([]);
 
   const [selectedProfession, setSelectedProfession] = useState<string[]>([]);
-
-  // const [selectedBusiness, setSelectedBusiness] = useState(false);
-  // const [selectedStudent, setSelectedStudent] = useState(false);
-  // const [selectedNotWorking, setSelectedNotWorking] = useState(false);
-  // const [selectedNotMentioned, setSelectedNotMentioned] = useState(false);
-  // const [selectedStarRasiPairs, setSelectedStarRasiPairs] = useState<string[]>(
-  //   []
-  // );
 
   const {
     register,
@@ -177,32 +155,6 @@ const PartnerSettings: React.FC = () => {
   }, [foreignInterest]);
 
   const navigate = useNavigate();
-
-  // const handleProfessionChange = (value: string, checked: boolean) => {
-  //   setSelectedProfessions((prevProfessions) => {
-  //     if (checked && !prevProfessions.includes(value)) {
-  //       return [...prevProfessions, value];
-  //     } else {
-  //       return prevProfessions.filter((profession) => profession !== value);
-  //     }
-  //   });
-
-  // Handle other checkboxes as needed
-  //   if (value === "business") {
-  //     setSelectedBusiness(checked);
-  //   } else if (value === "student") {
-  //     setSelectedStudent(checked);
-  //   } else if (value === "notWorking") {
-  //     setSelectedNotWorking(checked);
-  //   } else if (value === "notMentioned") {
-  //     setSelectedNotMentioned(checked);
-  //   }
-  // };
-
-  //   // Save selected star IDs to session storage
-  // useEffect(() => {
-  //   sessionStorage.setItem("selectedStarIds", JSON.stringify(selectedStarIds));
-  // }, [selectedStarIds]);
 
   const onSubmit: SubmitHandler<PartnerSettingsInputs> = async (data) => {
     setIsSubmitting(true);
@@ -347,12 +299,9 @@ const PartnerSettings: React.FC = () => {
           setValue("education", educationArray);
           setValue("annualIncome", annualIncomeArray);
           setValue("annualIncome_max", annualIncomeArraymax);
-
-
           setValue("chevvai", profileData.pref_chevvai);
           setValue("rehu", profileData.pref_ragukethu);
           setValue("foreignInterest", profileData.pref_foreign_intrest);
-
           // Set selected values for checkboxes and other states
           setSelectedMaritalStatuses(maritalStatusArray);
           setSelectedEducations(educationArray);
@@ -402,20 +351,6 @@ const PartnerSettings: React.FC = () => {
       isChecked ? [...prev, id] : prev.filter((eduId) => eduId !== id)
     );
   };
-
-  // const handleAnnualIncomeChange = (value: string) => {
-  //   setSelectedAnnualIncomes((prev) =>
-  //     isChecked ? [...prev, id] : prev.filter((incId) => incId !== id)
-  //   );
-  // };
-
-  // const handleAnnualIncomeChange = (value: string) => {
-  //   setSelectedAnnualIncomes((prev) =>
-  //     prev.includes(value)
-  //       ? prev.filter((id) => id !== value)
-  //       : [...prev, value]
-  //   );
-  // };
 
   const handleAnnualIncomeChange = (value: string) => {
     setSelectedAnnualIncomes([value]); // Ensure it's always a single value
@@ -507,7 +442,8 @@ const PartnerSettings: React.FC = () => {
   // const storedGender = sessionStorage.getItem("gender");
   const storedGender = localStorage.getItem("gender");
   // const storedMartialStatus = sessionStorage.getItem("maritalStatus");
-  const storedHeight = sessionStorage.getItem("userHeight") || 0;
+  //const storedHeight = sessionStorage.getItem("userHeight") || 0;
+  const storedHeight = localStorage.getItem("userHeight") || 0;
   // const quickreg = sessionStorage.getItem("quick_reg") || "0";
   const storedRasi = sessionStorage.getItem("selectedRasi");
 
@@ -565,7 +501,7 @@ const PartnerSettings: React.FC = () => {
                 )
             ),
           ];
-         // console.log(mergedSelections, "mergedSelections");
+          // console.log(mergedSelections, "mergedSelections");
 
           setSelectedStarIds(mergedSelections);
           sessionStorage.setItem(
@@ -598,11 +534,12 @@ const PartnerSettings: React.FC = () => {
 
   useEffect(() => {
     if (storedHeight) {
-      if (storedGender === "male") {
+      const gender = storedGender?.toLowerCase()
+      if (gender === "male") {
         // Set heightTo and restrict heightFrom input
         setValue("heightTo", storedHeight);
         setValue("heightFrom", ""); // Reset heightFrom to avoid invalid data
-      } else if (storedGender === "female") {
+      } else if (gender === "female") {
         // Set heightFrom and restrict heightTo input
         setValue("heightFrom", storedHeight);
         setValue("heightTo", ""); // Reset heightTo to avoid invalid data
@@ -707,74 +644,74 @@ const PartnerSettings: React.FC = () => {
 
 
   const handleSelectAllMaritalStatus = () => {
-  // Check if all are already selected
-  const allSelected = maritalStatuses.every(status => 
-    selectedMaritalStatuses.includes(status.marital_sts_id.toString())
-  );
-  
-  if (allSelected) {
-    // Deselect all
-    setSelectedMaritalStatuses([]);
-  } else {
-    // Select all
-    const allIds = maritalStatuses.map(status => status.marital_sts_id.toString());
-    setSelectedMaritalStatuses(allIds);
-  }
-};
+    // Check if all are already selected
+    const allSelected = maritalStatuses.every(status =>
+      selectedMaritalStatuses.includes(status.marital_sts_id.toString())
+    );
 
-const handleSelectAllProfessions = () => {
-  // Check if all are already selected
-  const allSelected = ProfPref.every(prof => 
-    selectedProfession.includes(prof.Profes_Pref_id.toString())
-  );
-  
-  if (allSelected) {
-    // Deselect all
-    setSelectedProfession([]);
-  } else {
-    // Select all
-    const allIds = ProfPref.map(prof => prof.Profes_Pref_id.toString());
-    setSelectedProfession(allIds);
-  }
-};
+    if (allSelected) {
+      // Deselect all
+      setSelectedMaritalStatuses([]);
+    } else {
+      // Select all
+      const allIds = maritalStatuses.map(status => status.marital_sts_id.toString());
+      setSelectedMaritalStatuses(allIds);
+    }
+  };
 
-const handleSelectAllEducation = () => {
-  // Check if all are already selected
-  const allSelected = eduPref.every(edu => 
-    selectedEducations.includes(edu.Edu_Pref_id.toString())
-  );
-  
-  if (allSelected) {
-    // Deselect all
-    setSelectedEducations([]);
-  } else {
-    // Select all
-    const allIds = eduPref.map(edu => edu.Edu_Pref_id.toString());
-    setSelectedEducations(allIds);
-  }
-};
+  const handleSelectAllProfessions = () => {
+    // Check if all are already selected
+    const allSelected = ProfPref.every(prof =>
+      selectedProfession.includes(prof.Profes_Pref_id.toString())
+    );
+
+    if (allSelected) {
+      // Deselect all
+      setSelectedProfession([]);
+    } else {
+      // Select all
+      const allIds = ProfPref.map(prof => prof.Profes_Pref_id.toString());
+      setSelectedProfession(allIds);
+    }
+  };
+
+  const handleSelectAllEducation = () => {
+    // Check if all are already selected
+    const allSelected = eduPref.every(edu =>
+      selectedEducations.includes(edu.Edu_Pref_id.toString())
+    );
+
+    if (allSelected) {
+      // Deselect all
+      setSelectedEducations([]);
+    } else {
+      // Select all
+      const allIds = eduPref.map(edu => edu.Edu_Pref_id.toString());
+      setSelectedEducations(allIds);
+    }
+  };
 
 
-const handleSelectAllFieldOfStudy = () => {
-  // Check if all are already selected
-  const allSelected = fieldOfStudy.every(field => 
-    selectedFieldOfStudy.includes(field.study_id.toString())
-  );
-  
-  if (allSelected) {
-    // Deselect all
-    setSelectedFieldOfStudy([]);
-  } else {
-    // Select all
-    const allIds = fieldOfStudy.map(field => field.study_id.toString());
-    setSelectedFieldOfStudy(allIds);
-  }
-};
+  const handleSelectAllFieldOfStudy = () => {
+    // Check if all are already selected
+    const allSelected = fieldOfStudy.every(field =>
+      selectedFieldOfStudy.includes(field.study_id.toString())
+    );
+
+    if (allSelected) {
+      // Deselect all
+      setSelectedFieldOfStudy([]);
+    } else {
+      // Select all
+      const allIds = fieldOfStudy.map(field => field.study_id.toString());
+      setSelectedFieldOfStudy(allIds);
+    }
+  };
 
   return (
     <div className="mt-24 max-lg:mt-20">
       <ContentBlackCard
-      link="/HoroDetails"
+        link="/HoroDetails"
         heading={"Partner Preference"}
         desc="Please provide your partner Preference to show potential matches."
       />
@@ -828,21 +765,6 @@ const handleSelectAllFieldOfStudy = () => {
                 </div>
               </div>
 
-              {/* 
-            <div>
-              <h5 className="text-[18px] text-primary font-semibold">Age</h5>
-              <div className="flex items-center space-x-5">
-                <div>
-                  <InputField label={""} placeholder="From" {...register("ageFrom")} />
-                  {errors.ageFrom && <span className="text-red-500">{errors.ageFrom.message}</span>}
-                </div>
-                <div>
-                  <InputField label={""} placeholder="To" {...register("ageTo")} />
-                  {errors.ageTo && <span className="text-red-500">{errors.ageTo.message}</span>}
-                </div>
-              </div>
-            </div> */}
-
               <div className="col-span-2">
                 <h5 className="text-[18px] text-primary font-semibold mb-3">
                   Height
@@ -885,7 +807,7 @@ const handleSelectAllFieldOfStudy = () => {
 
             {/* Marital Status */}
             <div>
-              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer"  onClick={handleSelectAllMaritalStatus}>
+              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer" onClick={handleSelectAllMaritalStatus}>
                 Marital Status
               </h5>
               <div className="grid grid-cols-2 gap-4 justify-between items-center max-2xl:grid-cols-2 max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -928,7 +850,7 @@ const handleSelectAllFieldOfStudy = () => {
             {/* Profession */}
             {/* Profession */}
             <div>
-              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer"  onClick={handleSelectAllProfessions}>
+              <h5 className="text-[18px] text-primary font-semibold mb-5 block cursor-pointer" onClick={handleSelectAllProfessions}>
                 Profession
               </h5>
               <div className="grid grid-cols-3 gap-4  max-2xl:grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1">
@@ -969,7 +891,7 @@ const handleSelectAllFieldOfStudy = () => {
 
             {/* Education */}
             <div>
-              <label className="text-[18px] text-primary font-semibold mb-3 block cursor-pointer"  onClick={handleSelectAllEducation}>
+              <label className="text-[18px] text-primary font-semibold mb-3 block cursor-pointer" onClick={handleSelectAllEducation}>
                 Education
               </label>
               <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">

@@ -568,77 +568,65 @@ useEffect(() => {
     }
   };
 
-  const generatePoruthamPDF = async () => {
-    // //console.log("Profile from:", loginuser_profileId);
-    // //console.log("Profile to:", idparam);
+const generatePoruthamPDF = async () => {
+  try {
+    const response = await apiClient.get(
+      `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
+      {
+        responseType: "blob", // Needed for PDF download
+      }
+    );
 
-    try {
-      const response = await apiClient.post(
-        "/auth/generate-porutham-pdf/",
-        {
-          profile_from: loginuser_profileId,
-          profile_to: idparam,
-        },
-        {
-          responseType: "blob", // Needed to download PDF
-        }
-      );
+    const contentType = response.headers["content-type"];
 
-      const contentType = response.headers["content-type"];
-
-      // 📌 Case 1: Server returned JSON (an error)
-      if (contentType && contentType.includes("application/json")) {
-        const text = await response.data.text(); // Convert blob to text
-        const json = JSON.parse(text); // Parse text to JSON
-        if (
-          json.status === "failure" &&
-          json.message
-        ) {
-          setApimsgMatchingScore(json.message); // Store the API message
-          setMatchingScorePopup(true);
-          return;
-        }
-        NotifyError(json.message || "Unexpected error from server.");
+    // 📌 Case 1: Server returned JSON (error)
+    if (contentType && contentType.includes("application/json")) {
+      const text = await response.data.text(); // Convert blob to text
+      const json = JSON.parse(text);
+      if (json.status === "failure" && json.message) {
+        setApimsgMatchingScore(json.message);
+        setMatchingScorePopup(true);
         return;
       }
+      NotifyError(json.message || "Unexpected error from server.");
+      return;
+    }
 
-      // 📌 Case 2: Server returned PDF
-      if (response.status === 200 && contentType.includes("application/pdf")) {
-        const blob = new Blob([response.data], { type: "application/pdf" });
-        const link = document.createElement("a");
-        const url = window.URL.createObjectURL(blob);
+    // 📌 Case 2: Server returned PDF
+    if (response.status === 200 && contentType.includes("application/pdf")) {
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const link = document.createElement("a");
+      const url = window.URL.createObjectURL(blob);
 
-        link.href = url;
-        link.setAttribute("download", "Porutham.pdf");
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        ////console.log("PDF downloaded successfully.");
-      } else {
-        NotifyError("Failed to generate compatibility report.");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // Handle 400 error from the API
-        if (error.response?.status === 400) {
-          const errorData = error.response.data;
-          // //console.log("errorData",errorData)
-          // //console.log("errorData")
-          if (typeof errorData === 'object' && errorData !== null) {
-            setApimsgMatchingScore(errorData.message || "No access to see the compatibility report");
-          } else {
-            setApimsgMatchingScore("No access to see the compatibility report");
-          }
+      link.href = url;
+      link.setAttribute("download", "Porutham.pdf");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } else {
+      NotifyError("Failed to generate compatibility report.");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 400) {
+        const errorData = error.response.data;
+        if (typeof errorData === "object" && errorData !== null) {
+          setApimsgMatchingScore(
+            errorData.message || "No access to see the compatibility report"
+          );
         } else {
-          setApimsgMatchingScore("Failed to generate compatibility report");
+          setApimsgMatchingScore("No access to see the compatibility report");
         }
       } else {
-        setApimsgMatchingScore("An unexpected error occurred");
+        setApimsgMatchingScore("Failed to generate compatibility report");
       }
-      setMatchingScorePopup(true);
+    } else {
+      setApimsgMatchingScore("An unexpected error occurred");
     }
-  };
+    setMatchingScorePopup(true);
+  }
+};
+
 
   useEffect(() => {
     const fetchProfileData = async () => {

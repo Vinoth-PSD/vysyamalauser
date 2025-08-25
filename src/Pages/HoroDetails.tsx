@@ -61,7 +61,7 @@ interface HoroDetailsInputs {
   horoscopeHints: string;
   chevvaiDhosam: string;
   sarpaDhosham: string;
-  period: "AM" | "PM";
+  period: "AM" | "PM" | "";
   hour: string;
   minute: string;
 }
@@ -218,16 +218,6 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
             setValue("year", '00');
           }
 
-          // const timeOfBirth = profileData.time_of_birth;
-          // const [time, period] = timeOfBirth.split(" ");
-          // const [hours, minutes] = time.split(":");
-          // setValue("hour", hours);
-          // setValue("minute", minutes);
-          // setValue("period", period);
-          // sethour(hours);
-          // setminute(minutes);
-          // setperiod(period);
-
           // In the fetchProfileData function, replace the timeOfBirth handling with this:
           const timeOfBirth = profileData.time_of_birth;
           if (timeOfBirth) {
@@ -240,13 +230,13 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
             setminute(minutes);
             setperiod(period);
           } else {
-            // Set default values if timeOfBirth is null
-            setValue("hour", "00");
-            setValue("minute", "00");
-            setValue("period", "AM");
-            sethour("00");
-            setminute("00");
-            setperiod("AM");
+            // Set empty values if timeOfBirth is null
+            setValue("hour", "");
+            setValue("minute", "");
+            setValue("period", "");
+            sethour("");
+            setminute("");
+            setperiod("");
           }
           // Update state for brother and sister data
         } catch (error) {
@@ -286,63 +276,53 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
   useEffect(() => {
     getDasaName();
   }, []);
-  
+
   const onSubmit: SubmitHandler<HoroDetailsInputs> = async () => {
     let storedData = "";
     let storedData1 = "";
 
-    // // Retrieve 'formattedData' from sessionStorage
-    // const storedDataString = sessionStorage.getItem("formattedData");
-    // if (storedDataString) {
-    //   storedData = JSON.parse(storedDataString); // No need to parse as it's already a string
-    //   //console.log("Retrieved formattedData from sessionStorage:", storedData);
-    // } else {
-    //   //console.log("No formattedData found in sessionStorage");
-    // }
-
-    // // Retrieve 'formattedData1' from sessionStorage
-    // const storedDataString1 = sessionStorage.getItem("formattedData1");
-    // if (storedDataString1) {
-    //   storedData1 = JSON.parse(storedDataString1); // No need to parse as it's already a string
-    //   //console.log("Retrieved formattedData1 from sessionStorage:", storedData1);
-    // } else {
-    //   //console.log("No formattedData1 found in sessionStorage");
-    // }
-    // Retrieve 'formattedData' from sessionStorage with proper error handling
-  try {
-    const storedDataString = sessionStorage.getItem("formattedData");
-    if (storedDataString) {
-      try {
-        storedData = JSON.parse(storedDataString);
-      } catch (e) {
-        // If parsing fails, use the raw string
-        storedData = storedDataString;
+    try {
+      const storedDataString = sessionStorage.getItem("formattedData");
+      if (storedDataString) {
+        try {
+          storedData = JSON.parse(storedDataString);
+        } catch (e) {
+          // If parsing fails, use the raw string
+          storedData = storedDataString;
+        }
       }
+    } catch (error) {
+      console.error("Error retrieving formattedData:", error);
     }
-  } catch (error) {
-    console.error("Error retrieving formattedData:", error);
-  }
 
-  // Retrieve 'formattedData1' from sessionStorage with proper error handling
-  try {
-    const storedDataString1 = sessionStorage.getItem("formattedData1");
-    if (storedDataString1) {
-      try {
-        storedData1 = JSON.parse(storedDataString1);
-      } catch (e) {
-        // If parsing fails, use the raw string
-        storedData1 = storedDataString1;
+    // Retrieve 'formattedData1' from sessionStorage with proper error handling
+    try {
+      const storedDataString1 = sessionStorage.getItem("formattedData1");
+      if (storedDataString1) {
+        try {
+          storedData1 = JSON.parse(storedDataString1);
+        } catch (e) {
+          // If parsing fails, use the raw string
+          storedData1 = storedDataString1;
+        }
       }
+    } catch (error) {
+      console.error("Error retrieving formattedData1:", error);
     }
-  } catch (error) {
-    console.error("Error retrieving formattedData1:", error);
-  }
 
     // const hour = watch("hour");
     // const minute = watch("minute");
     // const period = watch("period");
-    const combinedTime = `${hours}:${minutes} ${periods}`;
-    combinedTime;
+    let combinedTime = "";
+    if (hours && minutes && periods) {
+      let formattedHour = parseInt(hours, 10);
+      if (periods === "PM" && formattedHour < 12) {
+        formattedHour += 12;
+      } else if (periods === "AM" && formattedHour === 12) {
+        formattedHour = 0;
+      }
+      combinedTime = `${formattedHour.toString().padStart(2, "0")}:${minutes}`;
+    }
 
     try {
       // Format the data as expected by the backend
@@ -467,12 +447,6 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
       setSarpaDhosham(value);
     }
   };
-  // const buttonClass = (isSelected: boolean) => isSelected ? "bg-secondary text-white" : "border-gray hover:bg-secondary hover:text-white";
-
-  // const handleDoshamChange = (value: string) => {
-  //   setSelectedDosham(value);
-  //   setValue("dosham", value, { shouldValidate: true });
-  // };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -482,8 +456,13 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
     const hour = hours;
     const minute = minutes;
     const period = periods;
-    // const combinedTime = `${hour}:${minute} ${period}`;
-    // setTime(combinedTime);
+
+    // If any time component is missing, return empty string
+    if (!hour || !minute || !period) {
+      setValue("timeOfBirth", "");
+      return;
+    }
+
     let formattedHour = parseInt(hour, 10);
     if (period === "PM" && formattedHour < 12) {
       formattedHour += 12;
@@ -496,11 +475,11 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
       .padStart(2, "0")}:${minute}`;
     setValue("timeOfBirth", formattedTime);
   };
+
   useEffect(() => {
-    if (hours && minutes && periods) {
-      handleTimeChange();
-    }
+    handleTimeChange();
   }, [hours, minutes, periods]);
+
   const day = useWatch({ control, name: "day" });
   const month = useWatch({ control, name: "month" });
   const year = useWatch({ control, name: "year" });
@@ -569,11 +548,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                   <div className="relative w-full">
                     <select
                       value={hours}
-                      // {...register("hour")}
                       onChange={(e) => sethour(e.target.value)}
                       className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                     >
-                      <option value="" disabled>Select hour</option>
+                      <option value=""disabled>Select hour</option>
                       {Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => (
                         <option key={hour} value={hour.toString().padStart(2, "0")}>
                           {hour}
@@ -589,11 +567,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                   <div className="relative w-full">
                     <select
                       value={minutes}
-                      // {...register("minute")}
                       onChange={(e) => setminute(e.target.value)}
                       className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                     >
-                      <option value="" disabled>Select minute</option>
+                      <option value=""disabled>Select minute</option>
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
                           key={minute}
@@ -611,11 +588,10 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                   <div className="relative w-full">
                     <select
                       value={periods}
-                      // {...register("period")}
                       onChange={(e) => setperiod(e.target.value)}
                       className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                     >
-                      <option value="" disabled> AM or PM</option>
+                      <option value="" disabled>AM or PM</option>
                       <option value="AM">AM</option>
                       <option value="PM">PM</option>
                     </select>
@@ -709,13 +685,13 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                     value={rasiId}
                     id="rasi"
                     className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                    {...register("rasi")}
-                    onChange={(e) => setRasiId(e.target.value)}
+                    onChange={(e) => {
+                      setRasiId(e.target.value);
+                      setValue("rasi", e.target.value, { shouldValidate: true });
+                    }}
                     required
                   >
-                    <option value="" selected disabled>
-                      Select your Rasi
-                    </option>
+                    <option value="" disabled>Select your Rasi</option>
                     {rasi.map((option) => (
                       <option key={option.rasi_id} value={option.rasi_id}>
                         {option.rasi_name}
@@ -731,6 +707,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                   <span className="text-red-500">{errors.rasi.message}</span>
                 )}
               </div>
+
 
               <div>
                 <label htmlFor="lagnam" className="block mb-1 text-primary font-medium ">
@@ -779,26 +756,6 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
     <span className="text-red-500">{errors.lagnam.message}</span>
   )} */}
               </div>
-
-              {/* <div className="mt-3">
-            <h1 className="mb-3">Dosham</h1>
-
-            <div className="w-full inline-flex rounded">
-              {["1", "2", "3", "4", "5+"].map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  className={`w-full px-5 py-3 text-sm font-medium border ${buttonClass(selectedDosham === type)}`}
-                  onClick={() => handleDoshamChange(type)}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-            {errors.dosham && (
-              <span className="text-red-500">{errors.dosham.message}</span>
-            )}
-          </div> */}
 
               <div>
                 <label htmlFor="chevvaiDhosam" className="block mb-1 text-primary font-medium ">
@@ -942,7 +899,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
                       <span className="text-red-500">{errors.year.message}</span>
                     )}
                   </div>
-                  
+
                   <div className="w-full ">
                     <div className="relative">
                       <select
