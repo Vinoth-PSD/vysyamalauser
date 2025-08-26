@@ -62,9 +62,9 @@ export const Contact = () => {
   const [states, setStates] = useState<State[]>([]);
   const [selectedStateId, setSelectedStateId] = useState<number | string>("");
   const [districts, setDistricts] = useState<District[]>([]);
-  const [selectedDistrictId, setSelectedDistrictId] = useState<number | string>(
-    ""
-  );
+  const [selectedDistrictId, setSelectedDistrictId] = useState<
+    number | string
+  >("");
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<number | string>("");
   const [refreshData, setRefreshData] = useState(false);
@@ -90,22 +90,19 @@ export const Contact = () => {
     admin_use_email: "",
   });
 
-
-
   useEffect(() => {
     const fetchContactDetails = async () => {
       try {
-        const response = await apiClient.post(
-          "/auth/get_myprofile_contact/",
-          {
-            profile_id: loginuser_profileId,
-          }
-        );
+        const response = await apiClient.post("/auth/get_myprofile_contact/", {
+          profile_id: loginuser_profileId,
+        });
         const data = response.data.data;
         setContactDetails(data);
         setSelectedCountryId(data.personal_prof_count_id);
         setSelectedStateId(data.personal_prof_stat_id);
         // setSelectedCityId(data.personal_prof_city);
+        setSelectedDistrictId(data.personal_prof_district_id);
+        setSelectedCityId(data.personal_prof_city_id);
       } catch (error) {
         console.error("Error fetching contact details:", error);
       }
@@ -117,9 +114,7 @@ export const Contact = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await apiClient.post(
-          "/auth/Get_Country/"
-        );
+        const response = await apiClient.post("/auth/Get_Country/");
         setCountries(Object.values(response.data) as Country[]);
       } catch (error) {
         console.error("Error fetching countries:", error);
@@ -134,12 +129,9 @@ export const Contact = () => {
 
     const fetchStates = async () => {
       try {
-        const response = await apiClient.post(
-          "/auth/Get_State/",
-          {
-            country_id: selectedCountryId.toString(),
-          }
-        );
+        const response = await apiClient.post("/auth/Get_State/", {
+          country_id: selectedCountryId.toString(),
+        });
         setStates(Object.values(response.data) as State[]);
       } catch (error) {
         console.error("Error fetching states:", error);
@@ -154,12 +146,9 @@ export const Contact = () => {
 
     const fetchDistrict = async () => {
       try {
-        const response = await apiClient.post(
-          "/auth/Get_District/",
-          {
-            state_id: selectedStateId.toString(),
-          }
-        );
+        const response = await apiClient.post("/auth/Get_District/", {
+          state_id: selectedStateId.toString(),
+        });
         setDistricts(Object.values(response.data) as District[]);
         // setSelectedStateId(""); // Reset state selection
         // setSelectedCityId(""); // Reset city selection
@@ -176,12 +165,9 @@ export const Contact = () => {
 
     const fetchCities = async () => {
       try {
-        const response = await apiClient.post(
-          "/auth/Get_City/",
-          {
-            district_id: selectedDistrictId.toString(),
-          }
-        );
+        const response = await apiClient.post("/auth/Get_City/", {
+          district_id: selectedDistrictId.toString(),
+        });
         setCities(Object.values(response.data) as City[]);
       } catch (error) {
         console.error("Error fetching cities:", error);
@@ -191,15 +177,35 @@ export const Contact = () => {
     fetchCities();
   }, [selectedDistrictId, refreshData]);
 
+  // /********** MODIFIED CODE START **********/
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
+    const selectedName = event.target.options[event.target.selectedIndex].text;
+
     setSelectedCountryId(selectedId);
-    setFormData((prevState) => ({
-      ...prevState,
-      personal_prof_count_name:
-        event.target.options[event.target.selectedIndex].text,
-    }));
+
+    // If the selected country is NOT India (assuming India's ID is "1")
+    if (selectedId !== "1") {
+      // Clear all dependent dropdowns and their form data
+      setSelectedStateId("");
+      setSelectedDistrictId("");
+      setSelectedCityId("");
+      setFormData((prevState) => ({
+        ...prevState,
+        personal_prof_count_name: selectedName, // Keep the selected country name
+        personal_prof_stat_name: "", // Clear state name
+        personal_prof_district_name: "", // Clear district name
+        personal_prof_city_name: "", // Clear city name
+      }));
+    } else {
+      // If India is selected, just update the country name
+      setFormData((prevState) => ({
+        ...prevState,
+        personal_prof_count_name: selectedName,
+      }));
+    }
   };
+  // /********** MODIFIED CODE END **********/
 
   const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
@@ -253,6 +259,7 @@ export const Contact = () => {
   const handleEditClick = () => {
     if (isEditing) {
       setFormData({});
+      setIsCityDropdown(true);
     } else {
       if (contactDetails) {
         setFormData(contactDetails);
@@ -295,7 +302,7 @@ export const Contact = () => {
     if (!value) return ""; // No error if empty (optional field)
 
     // Check for @ symbol first
-    if (!value.includes('@')) {
+    if (!value.includes("@")) {
       return "Please include an '@' in the email address.";
     }
 
@@ -306,27 +313,6 @@ export const Contact = () => {
     }
     return "";
   };
-
-  // const handleEmailInputChange = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   const { name, value } = e.target;
-
-  //   // Validate email
-  //   if (name === "Profile_emailid") {
-  //     const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-  //     if (!emailPattern.test(value)) {
-  //       setEmailError("Invalid email address");
-  //     } else {
-  //       setEmailError("");
-  //     }
-  //   }
-
-  //   setFormData((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
 
   const handleEmailInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -356,43 +342,17 @@ export const Contact = () => {
 
     // Validate each field and store errors
     const newErrors = {
-      // personal_prof_addr: !formData.personal_prof_addr
-      //   ? "Address is required."
-      //   : "",
       selectedCountryId: !selectedCountryId ? "Country is required." : "",
-      //selectedStateId: !selectedStateId ? "State is required." : "",
-      //selectedDistrictId: !selectedDistrictId ? "District is required" : "",
-      //selectedCityId: !selectedCityId ? "City is required." : "",
-      // selectedStateId:
-      //   !selectedStateId && !formData.personal_prof_stat_name
-      //     ? "State is required."
-      //     : "",
-      // selectedDistrictId:
-      //   !selectedDistrictId && !formData.personal_prof_district_name
-      //     ? "District is required"
-      //     : "",
-      // selectedCityId:
-      //   !selectedCityId && !formData.personal_prof_city_name
-      //     ? "City is required."
-      //     : "",
-      // personal_prof_pin: !formData.personal_prof_pin
-      //   ? "Pincode is required."
-      //   : "",
-      // personal_prof_phone: !formData.personal_prof_phone
-      //   ? "Alternate phone is required."
-      //   : "",
-      // personal_prof_mob_no: !formData.personal_prof_mob_no
-      //   ? "Mobile number is required."
-      //   : "",
-      // personal_prof_whats: !formData.personal_prof_whats
-      //   ? "WhatsApp number is required."
-      //   : "",
+
       personal_email: !formData.personal_email
         ? "Email is required."
         : emailError
           ? "Invalid email format."
           : "",
-      admin_use_email: validateEmailField("admin_use_email", formData.admin_use_email || ""),
+      admin_use_email: validateEmailField(
+        "admin_use_email",
+        formData.admin_use_email || ""
+      ),
     };
 
     // Check if there are any errors
@@ -403,31 +363,12 @@ export const Contact = () => {
       return;
     }
 
-    // Print data to be sent
-    // //console.log("Data being sent:", {
-    //   profile_id: loginuser_profileId,
-    //   Profile_address: formData.personal_prof_addr,
-    //   Profile_city: selectedCityId,
-    //   Profile_state: selectedStateId,
-    //   Profile_country: selectedCountryId,
-    //   Profile_district: selectedDistrictId,
-    //   Profile_pincode: formData.personal_prof_pin,
-    //   Profile_alternate_mobile: formData.personal_prof_phone,
-    //   Profile_mobile_no: formData.personal_prof_mob_no,
-    //   Profile_whatsapp: formData.personal_prof_whats,
-    //   EmailId: formData.personal_email,
-    // });
-
     try {
       const response = await apiClient.post(
         "/auth/update_myprofile_contact/",
         {
           profile_id: loginuser_profileId,
           Profile_address: formData.personal_prof_addr,
-          // Profile_city: selectedCityId,
-          // Profile_district: selectedDistrictId,
-          // Profile_state: selectedStateId,
-
           Profile_city: selectedCityId || formData.personal_prof_city_name,
           Profile_district:
             selectedDistrictId || formData.personal_prof_district_name,
@@ -462,12 +403,31 @@ export const Contact = () => {
       toast.error("Failed to update contact details. Please try again.");
     }
   };
+  useEffect(() => {
+    if (isEditing && cities.length > 0 && contactDetails) {
+      const savedCityId = contactDetails.personal_prof_city_id;
+
+      // Check if the saved city ID exists in the current list of cities.
+      const cityExistsInList = cities.some(city => city.city_id === savedCityId);
+
+      if (cityExistsInList) {
+        // If it exists, show the dropdown and select the correct city.
+        setIsCityDropdown(true);
+        setSelectedCityId(savedCityId);
+      } else {
+        // If it doesn't exist, it was a custom entry. Show the text input field.
+        setIsCityDropdown(false);
+      }
+    }
+  }, [isEditing, cities, contactDetails]);
 
   if (!contactDetails) {
     return <div>Loading...</div>;
   }
 
+
   return (
+    // Your JSX remains unchanged
     <div>
       <h2 className="flex items-center text-[30px] text-vysyamalaBlack font-bold mb-5 max-xl:text-[26px] max-md:text-[24px] max-sm:text-[18px] max-sm:justify-between max-sm:mb-2 ">
         Contact Details
@@ -487,16 +447,13 @@ export const Contact = () => {
                   type="text"
                   name="personal_prof_addr"
                   value={formData.personal_prof_addr || ""}
-                  //   onChange={handleInputChange}
-                  //   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
                   onChange={(e) => {
                     handleInputChange(e);
                     setErrors((prev) => ({ ...prev, personal_prof_addr: "" })); // Clear error on change
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                   `}
+                    `}
                 />
-
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Country:
@@ -539,11 +496,8 @@ export const Contact = () => {
                     <div className="relative">
                       <select
                         id="state"
-                        // className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                         className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                           `}
-                        // {...register("state")}
-                        // onChange={handleStateChange}
                         value={selectedStateId}
                         onChange={(e) => {
                           handleStateChange(e);
@@ -563,7 +517,6 @@ export const Contact = () => {
                         ))}
                       </select>
                     </div>
-
                   </div>
 
                   {["1", "2", "3", "4", "5", "6", "7"].includes(
@@ -579,7 +532,6 @@ export const Contact = () => {
                       <div className="relative">
                         <select
                           id="district"
-                          //  className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                           className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                           `}
                           value={selectedDistrictId}
@@ -590,7 +542,6 @@ export const Contact = () => {
                               selectedDistrictId: "",
                             })); // Clear error on change
                           }}
-                        //value={districtValue} // Controlled value
                         >
                           <option value="" selected disabled>
                             Select District
@@ -605,17 +556,16 @@ export const Contact = () => {
                           ))}
                         </select>
                       </div>
-
                     </div>
                   ) : (
                     <div>
                       <label
                         htmlFor="district"
                         className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium"
-                      ></label>
+                      >District</label>
                       <InputField
                         id="district"
-                        label="District"
+                        label=""
                         value={formData.personal_prof_district_name || ""}
                         onChange={(e) => {
                           setFormData((prev) => ({
@@ -628,7 +578,6 @@ export const Contact = () => {
                           })); // Clear error on change
                         }}
                       />
-
                     </div>
                   )}
                 </>
@@ -636,11 +585,14 @@ export const Contact = () => {
 
               <div>
                 {selectedCountryId !== "1" ? (
-                  // Show city as a textbox if selectedCountryId is 1
                   <>
+                    <label
+                      htmlFor="district"
+                      className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium"
+                    > City</label>
                     <InputField
                       id="city"
-                      label="City"
+                      label=""
                       value={formData.personal_prof_city_name || ""}
                       onChange={(e) => {
                         setFormData((prev) => ({
@@ -653,14 +605,8 @@ export const Contact = () => {
                         })); // Clear error on change
                       }}
                     />
-                    {/* {errors.personal_prof_city_name && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.personal_prof_city_name}
-                      </p>
-                    )} */}
                   </>
                 ) : (
-                  // Retain dropdown behavior for other countries
                   <>
                     {isCityDropdown ? (
                       <>
@@ -671,7 +617,6 @@ export const Contact = () => {
                           City
                           <div className="relative inline-block ml-2 group">
                             <AiOutlineInfoCircle className="text-gray-500 cursor-pointer ml-2" />
-                            {/* Tooltip */}
                             <div className="absolute hidden group-hover:flex flex-col bg-white border border-ashSecondary rounded shadow-md p-2 w-48 z-10">
                               <p className="text-sm text-black">
                                 Select your city from the list. If your city is
@@ -683,7 +628,6 @@ export const Contact = () => {
                         <div className="relative">
                           <select
                             id="city"
-                            // className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                             className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                           `}
                             value={selectedCityId}
@@ -700,13 +644,17 @@ export const Contact = () => {
                             <option value="others">Others</option>
                           </select>
                         </div>
-
                       </>
                     ) : (
                       <>
+                      <label
+                          htmlFor="city"
+                          className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium"
+                        >
+                          City</label>
                         <InputField
                           id="city"
-                          label="City"
+                          label=""
                           value={formData.personal_prof_city_name || ""}
                           onChange={(e) => {
                             setFormData((prev) => ({
@@ -719,7 +667,6 @@ export const Contact = () => {
                             })); // Clear error on change
                           }}
                         />
-
                       </>
                     )}
                   </>
@@ -734,17 +681,15 @@ export const Contact = () => {
                   value={formData.personal_prof_pin || ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Allow only numeric values and a max length of 6 digits
                     if (/^\d{0,6}$/.test(value)) {
-                      handleInputChange(e); // Call your input change handler
-                      setErrors((prev) => ({ ...prev, personal_prof_pin: "" })); // Clear error on change
+                      handleInputChange(e);
+                      setErrors((prev) => ({ ...prev, personal_prof_pin: "" }));
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                     `}
                 />
               </label>
-
             </div>
 
             <div>
@@ -754,32 +699,20 @@ export const Contact = () => {
                   type="text"
                   name="personal_prof_phone"
                   value={formData.personal_prof_phone || ""}
-                  //   onChange={(e) => {
-                  //     const value = e.target.value;
-                  //     // Allow only numeric values
-                  //     if (/^\d{0,10}$/.test(value)) {
-                  //       handleInputChange(e); // Call your input change handler
-                  //     }
-                  //   }}
-                  //   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Allow only numeric values and a max length of 10 digits
                     if (/^\d{0,10}$/.test(value)) {
-                      handleInputChange(e); // Call your input change handler
+                      handleInputChange(e);
                       setErrors((prev) => ({
                         ...prev,
                         personal_prof_phone: "",
-                      })); // Clear error on change
+                      }));
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
                     `}
                 />
-
               </label>
-
-
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 WhatsApp:
@@ -789,19 +722,17 @@ export const Contact = () => {
                   value={formData.personal_prof_whats || ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Allow only numeric values and a max length of 10 digits
                     if (/^\d{0,10}$/.test(value)) {
-                      handleInputChange(e); // Call your input change handler
+                      handleInputChange(e);
                       setErrors((prev) => ({
                         ...prev,
                         personal_prof_whats: "",
-                      })); // Clear error on change
+                      }));
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                   `}
+                    `}
                 />
-
               </label>
 
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -812,9 +743,7 @@ export const Contact = () => {
                   value={formData.personal_email || ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    handleInputChange(e); // Call your existing input change handler
-
-                    // Validate the email format and update the error state
+                    handleInputChange(e);
                     const errorMessage = validateEmail(value)
                       ? ""
                       : "Invalid email format.";
@@ -844,9 +773,7 @@ export const Contact = () => {
                   value={formData.admin_use_email || ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    handleEmailInputChange(e); // Call your existing input change handler
-
-                    // Validate the email format and update the error state
+                    handleEmailInputChange(e);
                     const errorMessage = validateEmail(value)
                       ? ""
                       : "Invalid email format.";
@@ -855,11 +782,15 @@ export const Contact = () => {
                       admin_use_email: errorMessage,
                     }));
                   }}
-                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none border-ashBorder ${errors.admin_use_email ? "border-red-500" : "focus:outline-none"
+                  className={`font-normal border rounded px-3 py-2 w-full focus:outline-none border-ashBorder ${errors.admin_use_email
+                    ? "border-red-500"
+                    : "focus:outline-none"
                     }`}
                 />
                 {errors.admin_use_email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.admin_use_email}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.admin_use_email}
+                  </p>
                 )}
               </label>
               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
@@ -868,29 +799,19 @@ export const Contact = () => {
                   type="text"
                   name="personal_prof_mob_no"
                   value={formData.personal_prof_mob_no || ""}
-                  //   onChange={(e) => {
-                  //     const value = e.target.value;
-                  //     // Allow only numeric values
-                  //     if (/^\d{0,10}$/.test(value)) {
-                  //       handleInputChange(e); // Call your input change handler
-                  //     }
-                  //   }}
-                  //   className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
                   onChange={(e) => {
                     const value = e.target.value;
-                    // Allow only numeric values and a max length of 10 digits
                     if (/^\d{0,10}$/.test(value)) {
-                      handleInputChange(e); // Call your input change handler
+                      handleInputChange(e);
                       setErrors((prev) => ({
                         ...prev,
                         personal_prof_mob_no: "",
-                      })); // Clear error on change
+                      }));
                     }
                   }}
                   className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
-                   `}
+                    `}
                 />
-
               </label>
             </div>
           </div>

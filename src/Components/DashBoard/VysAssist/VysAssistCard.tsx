@@ -259,7 +259,7 @@ export const VysAssistCard: React.FC = () => {
 
                             {/* Matching Score */}
                             {profile.vys_match_score !== undefined &&
-                                profile.vys_match_score > 50 && (
+                                profile.vys_match_score > 50 && profile.vys_match_score !== 100 &&  (
                                     <div className="max-lg:hidden">
                                         <div>
                                             <MatchingScore scorePercentage={profile.vys_match_score} />

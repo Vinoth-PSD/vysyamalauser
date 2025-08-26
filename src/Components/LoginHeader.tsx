@@ -67,7 +67,7 @@ export const LoginHeader: React.FC = () => {
   const ValidTill = localStorage.getItem("valid_till");
   const currentDate = new Date();
   const validDate = ValidTill ? new Date(ValidTill) : null;
-  console.log("validDate",validDate)
+  console.log("validDate", validDate)
 
   const allowedPremiumIds = [1, 2, 3, 14, 15, 17, 10, 11, 12, 13];
 
@@ -357,6 +357,12 @@ export const LoginHeader: React.FC = () => {
                 to="/Dashboard"
                 aria-current="page"
                 className="active-nav"
+                onClick={(e) => {
+                  if (window.location.pathname === "/Dashboard") {
+                    e.preventDefault(); // prevent router from blocking navigation
+                    window.location.reload(); // force refresh
+                  }
+                }}
               >
                 <li className="text-[16px] cursor-pointer font-normal px-2 py-4   max-lg:text-[14px]">
                   Dashboard
@@ -565,9 +571,6 @@ export const LoginHeader: React.FC = () => {
                 )}
               </li>
 
-
-
-
               {buttonType === "addon" && (
                 <Link to={"/PayNow"}>
                   <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
@@ -713,7 +716,13 @@ export const LoginHeader: React.FC = () => {
                     to="/Dashboard"
                     aria-current="page"
                     className="active-nav"
-                    onClick={handleMenuToggle}
+                    onClick={(e) => {
+                      handleMenuToggle(); // keep your toggle logic
+                      if (window.location.pathname === "/Dashboard") {
+                        e.preventDefault(); // prevent router from blocking navigation
+                        window.location.reload(); // force refresh
+                      }
+                    }}
                   >
                     <li className="text-[16px] text-primary cursor-pointer font-normal">
                       Dashboard

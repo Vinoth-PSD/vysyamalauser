@@ -14,7 +14,7 @@ import { ProfileContext, Profile } from "../../../../ProfileContext"; // Adjust 
 import "react-toastify"
 import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 // import { toast } from "react-toastify";
@@ -182,7 +182,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
             )}
           </div> */}
 
-
+        <ToastContainer />
 
         <div className="relative w-[180px] h-full flex-shrink-[0] max-sm:w-full">
           {profile.photo_protection === 1 ? (

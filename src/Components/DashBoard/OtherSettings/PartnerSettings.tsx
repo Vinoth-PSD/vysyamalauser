@@ -103,6 +103,13 @@ export const PartnerSettings: React.FC = () => {
   const educationValues = watch("education") || [];
   const professionValues = watch("profession") || [];
   const maritalValues = watch("maritalstatus") || [];
+  const storedHeight = localStorage.getItem("userHeight") || "";
+  // const storedGender =
+  //   localStorage.getItem("gender") || sessionStorage.getItem("gender");
+
+  const storedBirthStar = localStorage.getItem("selectedstar") || sessionStorage.getItem("selectedstar");
+  const storedGender = localStorage.getItem("gender") || sessionStorage.getItem("gender");
+  const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
 
   // Fetch all options on component mount
   useEffect(() => {
@@ -166,9 +173,21 @@ export const PartnerSettings: React.FC = () => {
         setPrefilledStarRasiArray(prefilledStarRasiArray);
 
         // Prefill form values
-        setValue("fromAge", data.partner_age || "");
-        setValue("fromHeight", data.partner_height_from || "");
-        setValue("toHeight", data.partner_height_to || "");
+        setValue("fromAge", data.partner_age || "5");
+
+        if (data.partner_height_from) {
+          setValue("fromHeight", data.partner_height_from);
+        } else if (storedGender?.toLowerCase() === "female" && storedHeight) {
+          // If no API value, set default for female
+          setValue("fromHeight", storedHeight);
+        }
+
+        if (data.partner_height_to) {
+          setValue("toHeight", data.partner_height_to);
+        } else if (storedGender?.toLowerCase() === "male" && storedHeight) {
+          // If no API value, set default for male
+          setValue("toHeight", storedHeight);
+        }
         setValue("education", data.partner_edu_id?.split(",").map((id: string) => id.trim()) || []);
         setValue("maritalstatus", data.partner_marital_status?.split(",").map((id: string) => id.trim()) || []);
         setValue("profession", data.partner_profe?.split(",").map((id: string) => id.trim()) || []);
@@ -204,33 +223,259 @@ export const PartnerSettings: React.FC = () => {
     fetchProfileData();
   }, [setValue]);
 
-  // Fetch matching stars when birth star is available
-  useEffect(() => {
-    const storedBirthStar = localStorage.getItem("selectedstar") || sessionStorage.getItem("selectedstar");
-    const storedGender = localStorage.getItem("gender") || sessionStorage.getItem("gender");
-    const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
 
-    if (storedBirthStar && storedGender) {
-      const fetchMatchingStars = async () => {
+  // Fetch matching stars when birth star is available
+  // useEffect(() => {
+  //   const storedBirthStar = localStorage.getItem("selectedstar") || sessionStorage.getItem("selectedstar");
+  //   const storedGender = localStorage.getItem("gender") || sessionStorage.getItem("gender");
+  //   const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
+
+  //   if (storedBirthStar && storedGender) {
+  //     const fetchMatchingStars = async () => {
+  //       try {
+  //         const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
+  //           birth_star_id: storedBirthStar,
+  //           birth_rasi_id: storedRasi,
+  //           gender: storedGender,
+  //         });
+
+  //         const matchCountArrays: MatchingStar[][] = Object.values(response.data)
+  //           .map((matchCount: any) => matchCount)
+  //           .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
+
+  //         setMatchStars(matchCountArrays);
+  //       } catch (error) {
+  //         console.error("Error fetching matching star options:", error);
+  //       }
+  //     };
+  //     fetchMatchingStars();
+  //   }
+  // }, []);
+
+  // Modified useEffect for fetching matching stars with default selection
+useEffect(() => {
+  if (storedBirthStar && storedGender && storedRasi) {
+    const fetchMatchingStars = async () => {
+      try {
+        const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
+          birth_star_id: storedBirthStar,
+          gender: storedGender,
+          birth_rasi_id: storedRasi,
+        });
+
+        const matchCountArrays: MatchingStar[][] = Object.values(
+          response.data
+        ).map((matchCount: any) => matchCount);
+        setMatchStars(matchCountArrays);
+
+        // Filter stars: Only select those with match_count !== 0 (exclude porutham 0)
+        const defaultSelectedIds = matchCountArrays
+          .flat()
+          .filter((item) => item.match_count !== 0) // Exclude stars with porutham 0
+          .map((item) => ({
+            id: item.id.toString(),
+            rasi: item.dest_rasi_id.toString(),
+            star: item.dest_star_id.toString(),
+            label: `${item.matching_starname} - ${item.matching_rasiname}`,
+          }));
+
+        // Check if there are saved selections from sessionStorage
+        const savedStarIds = sessionStorage.getItem("selectedStarIds");
+        let finalSelections: SelectedStarIdItem[] = [];
+
+        if (savedStarIds) {
+          // If there are saved selections, use them
+          const savedSelections: SelectedStarIdItem[] = JSON.parse(savedStarIds);
+          finalSelections = savedSelections;
+        } else {
+          // If no saved selections, use the default selections (excluding porutham 0)
+          finalSelections = defaultSelectedIds;
+          // Save the default selections to sessionStorage
+          sessionStorage.setItem("selectedStarIds", JSON.stringify(defaultSelectedIds));
+        }
+
+        setSelectedStarIds(finalSelections);
+
+        console.log("Default selected stars (excluding porutham 0):", defaultSelectedIds);
+        console.log("Final selected stars:", finalSelections);
+
+      } catch (error) {
+        console.error("Error fetching matching star options:", error);
+      }
+    };
+    fetchMatchingStars();
+  }
+}, [storedBirthStar, storedGender, storedRasi]);
+
+// Alternative approach if you want to check for existing profile data first
+useEffect(() => {
+  const fetchProfileAndStars = async () => {
+    const profileId = localStorage.getItem("profile_id_new");
+    let hasExistingData = false;
+
+    // Check if user has existing partner preference data
+    if (profileId) {
+      try {
+        const requestData = {
+          profile_id: profileId,
+          page_id: 6,
+        };
+
+        const response = await apiClient.post(
+          `/auth/Get_save_details/`,
+          requestData
+        );
+
+        const profileData = response.data.data;
+        
+        // Check if user has existing star preferences
+        if (profileData.pref_porutham_star && profileData.pref_porutham_star.trim() !== '') {
+          hasExistingData = true;
+          
+          // Parse existing data and set it
+          const poruthamStarIds = profileData.pref_porutham_star
+            .split(",")
+            .map((id: string) => id.trim());
+
+          setSelectedStarIds(
+            poruthamStarIds.map((id: any) => ({
+              id,
+              rasi: "",
+              star: "",
+              label: "",
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    }
+
+    // Fetch matching stars and set defaults only if no existing data
+    if (storedBirthStar && storedGender && storedRasi && !hasExistingData) {
+      try {
+        const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
+          birth_star_id: storedBirthStar,
+          gender: storedGender,
+          birth_rasi_id: storedRasi,
+        });
+
+        const matchCountArrays: MatchingStar[][] = Object.values(
+          response.data
+        ).map((matchCount: any) => matchCount);
+        setMatchStars(matchCountArrays);
+
+        // Set default selections (exclude porutham 0)
+        const defaultSelectedIds = matchCountArrays
+          .flat()
+          .filter((item) => item.match_count !== 0)
+          .map((item) => ({
+            id: item.id.toString(),
+            rasi: item.dest_rasi_id.toString(),
+            star: item.dest_star_id.toString(),
+            label: `${item.matching_starname} - ${item.matching_rasiname}`,
+          }));
+
+        setSelectedStarIds(defaultSelectedIds);
+        sessionStorage.setItem("selectedStarIds", JSON.stringify(defaultSelectedIds));
+
+      } catch (error) {
+        console.error("Error fetching matching star options:", error);
+      }
+    }
+  };
+
+  fetchProfileAndStars();
+}, [storedBirthStar, storedGender, storedRasi]);
+
+// Enhanced version that combines both approaches
+useEffect(() => {
+  const initializeStarSelection = async () => {
+    if (!storedBirthStar || !storedGender || !storedRasi) return;
+
+    try {
+      // 1. First fetch matching stars data
+      const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
+        birth_star_id: storedBirthStar,
+        gender: storedGender,
+        birth_rasi_id: storedRasi,
+      });
+
+      const matchCountArrays: MatchingStar[][] = Object.values(response.data)
+        .map((matchCount: any) => matchCount)
+        .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
+
+      setMatchStars(matchCountArrays);
+
+      // 2. Create default selections (exclude porutham 0)
+      const defaultSelectedIds = matchCountArrays
+        .flat()
+        .filter((item) => item.match_count !== 0)
+        .map((item) => ({
+          id: item.id.toString(),
+          rasi: item.dest_rasi_id.toString(),
+          star: item.dest_star_id.toString(),
+          label: `${item.matching_starname} - ${item.matching_rasiname}`,
+        }));
+
+      // 3. Check for existing profile data
+      const profileId = localStorage.getItem("profile_id_new");
+      let finalSelections = defaultSelectedIds; // Default to API defaults
+
+      if (profileId) {
         try {
-          const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
-            birth_star_id: storedBirthStar,
-            birth_rasi_id: storedRasi,
-            gender: storedGender,
+          const profileResponse = await apiClient.post(`/auth/Get_save_details/`, {
+            profile_id: profileId,
+            page_id: 6,
           });
 
-          const matchCountArrays: MatchingStar[][] = Object.values(response.data)
-            .map((matchCount: any) => matchCount)
-            .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
+          const profileData = profileResponse.data.data;
+          
+          if (profileData.pref_porutham_star && profileData.pref_porutham_star.trim() !== '') {
+            // User has saved preferences, use them instead
+            const savedStarIds = profileData.pref_porutham_star
+              .split(",")
+              .map((id: string) => id.trim());
 
-          setMatchStars(matchCountArrays);
-        } catch (error) {
-          console.error("Error fetching matching star options:", error);
+            finalSelections = savedStarIds.map((id: string) => ({
+              id,
+              rasi: "",
+              star: "",
+              label: "",
+            }));
+          }
+        } catch (profileError) {
+          console.error("Error fetching profile data:", profileError);
+          // Keep default selections on profile fetch error
         }
-      };
-      fetchMatchingStars();
+      }
+
+      // 4. Check sessionStorage for any temporary selections
+      const sessionStarIds = sessionStorage.getItem("selectedStarIds");
+      if (sessionStarIds) {
+        try {
+          const sessionSelections: SelectedStarIdItem[] = JSON.parse(sessionStarIds);
+          finalSelections = sessionSelections;
+        } catch (sessionError) {
+          console.error("Error parsing session storage:", sessionError);
+        }
+      }
+
+      // 5. Set final selections and save to session
+      setSelectedStarIds(finalSelections);
+      sessionStorage.setItem("selectedStarIds", JSON.stringify(finalSelections));
+
+      console.log("Stars with porutham 0 (excluded):", 
+        matchCountArrays.flat().filter(item => item.match_count === 0).length);
+      console.log("Default selected stars:", finalSelections.length);
+
+    } catch (error) {
+      console.error("Error initializing star selection:", error);
     }
-  }, []);
+  };
+
+  initializeStarSelection();
+}, [storedBirthStar, storedGender, storedRasi]);
 
   // Update income field when selectedAnnualIncomes changes
   useEffect(() => {

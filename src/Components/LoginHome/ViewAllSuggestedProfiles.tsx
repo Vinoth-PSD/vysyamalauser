@@ -271,7 +271,7 @@ const defaultImgUrl =
 
                   {/* Matching Score */}
                   {profile.matching_score !== undefined &&
-                    profile.matching_score > 50 && (
+                    profile.matching_score > 50 && profile.matching_score  !== 100 &&(
                       <div className='max-lg:hidden'>
                         <MatchingScore scorePercentage={profile.matching_score} />
                       </div>

@@ -17,6 +17,7 @@ interface PersonalDetails {
   personal_profile_marital_status_name: string;
   personal_blood_group: string;
   personal_about_self: string;
+  personal_about_self_original:string;
   personal_profile_complexion_name: string;
   personal_hobbies: string;
   personal_pysically_changed: string;
@@ -257,17 +258,20 @@ export const Personal = () => {
     }));
   };
 
-  const handleEditClick = () => {
-    if (isEditing) {
-      // Reset form data to an empty object if exiting edit mode
-      setFormData({});
-    } else {
-      if (personalDetails) {
-        setFormData(personalDetails);
-      }
+ const handleEditClick = () => {
+  if (isEditing) {
+    setFormData({});
+  } else {
+    if (personalDetails) {
+      // 📝 FIX: Use personal_about_self_original here to set the form data.
+      setFormData({
+        ...personalDetails,
+        personal_about_self: personalDetails.personal_about_self_original,
+      });
     }
-    setIsEditing(!isEditing); // Toggle editing state
-  };
+  }
+  setIsEditing(!isEditing);
+};
 
   const navigate = useNavigate(); // Initialize navigate
   const handleEditClick1 = () => {

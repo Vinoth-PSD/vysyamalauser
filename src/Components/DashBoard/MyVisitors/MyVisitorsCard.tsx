@@ -286,7 +286,7 @@ const defaultImgUrl =
 
               {/* Matching Score */}
               {profile.viwed_match_score !== undefined &&
-                profile.viwed_match_score > 50 && (
+                profile.viwed_match_score > 50 && profile.viwed_match_score !== 100 && (
                   <div className="max-lg:hidden">
                     <MatchingScore scorePercentage={profile.viwed_match_score} />
                   </div>

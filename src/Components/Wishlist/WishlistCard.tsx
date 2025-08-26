@@ -162,10 +162,10 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
 
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   return (
@@ -320,7 +320,7 @@ const defaultImgUrl =
 
                   {/* Matching Score */}
                   {profile.wishlist_match_score !== undefined &&
-                    profile.wishlist_match_score > 50 && (
+                    profile.wishlist_match_score > 50 && profile.wishlist_match_score !== 100 && (
                       <div className="max-lg:hidden">
                         <div>
                           {/* <img

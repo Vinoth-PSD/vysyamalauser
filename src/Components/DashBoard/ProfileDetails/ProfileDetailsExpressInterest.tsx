@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect,  } from "react";
 // import { useDispatch } from "react-redux";
 // import { hideInterest } from "../../../redux/slices/interestSlice";
 import axios, { AxiosResponse } from "axios";
@@ -43,7 +43,7 @@ interface HoroscopeDetails {
 interface EducationDetails {
   profession: string;
   education_level: string;
-  degeree:string;
+  degeree: string;
 }
 
 interface BasicDetails {
@@ -251,7 +251,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // //console.log("valueeee", status);
   // console.log(idparam, "id");
-const [vysAssistData, setVysAssistData] = useState<any>(null);
+  const [vysAssistData, setVysAssistData] = useState<any>(null);
 
   // useEffect(() => {
   //   setLoading(true);
@@ -294,38 +294,38 @@ const [vysAssistData, setVysAssistData] = useState<any>(null);
 
   //   fetchProfileData();
   // }, []);
-useEffect(() => {
-   setLoading(true);
-  const fetchProfileData = async () => {
-  try {
-    const response = await apiClient.post("/auth/Get_profile_det_match/", {
-      profile_id: loginuser_profileId,
-      user_profile_id: idparam,
-    });
+  useEffect(() => {
+    setLoading(true);
+    const fetchProfileData = async () => {
+      try {
+        const response = await apiClient.post("/auth/Get_profile_det_match/", {
+          profile_id: loginuser_profileId,
+          user_profile_id: idparam,
+        });
 
-    // Store the response data for Vys Assist
-    setVysAssistData(response.data);
+        // Store the response data for Vys Assist
+        setVysAssistData(response.data);
 
-    await apiClient.post("/auth/Create_profile_visit/", {
-      profile_id: loginuser_profileId,
-      viewed_profile: idparam,
-    });
+        await apiClient.post("/auth/Create_profile_visit/", {
+          profile_id: loginuser_profileId,
+          viewed_profile: idparam,
+        });
 
-    setProfileData(response.data);
-    sessionStorage.setItem("photolock", JSON.stringify(response.data.photo_protection));
-    const storedPhotoProtectionVal = sessionStorage.getItem("photolock");
-    const parsedPhotoProtectionVal = storedPhotoProtectionVal ? JSON.parse(storedPhotoProtectionVal) : "0";
-    setPhotoPasswordlock(parsedPhotoProtectionVal);
+        setProfileData(response.data);
+        sessionStorage.setItem("photolock", JSON.stringify(response.data.photo_protection));
+        const storedPhotoProtectionVal = sessionStorage.getItem("photolock");
+        const parsedPhotoProtectionVal = storedPhotoProtectionVal ? JSON.parse(storedPhotoProtectionVal) : "0";
+        setPhotoPasswordlock(parsedPhotoProtectionVal);
 
-    if (response.data.basic_details.express_int === "1") {
-      setIsHeartMarked(true);
-    }
-  } catch (error) {
-    console.error("Error fetching profile data:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+        if (response.data.basic_details.express_int === "1") {
+          setIsHeartMarked(true);
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProfileData();
   }, []);
 
@@ -532,7 +532,7 @@ useEffect(() => {
 
   // Declaration for Horoscope State
 
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+//  const [, setSelectedLanguage] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [apimsgPhotoReq, setApimsgPhotoReq] = useState("");
   const [apimsgMatchingScore, setApimsgMatchingScore] = useState("");
@@ -568,64 +568,64 @@ useEffect(() => {
     }
   };
 
-const generatePoruthamPDF = async () => {
-  try {
-    const response = await apiClient.get(
-      `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
-      {
-        responseType: "blob", // Needed for PDF download
-      }
-    );
+  const generatePoruthamPDF = async () => {
+    try {
+      const response = await apiClient.get(
+        `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
+        {
+          responseType: "blob", // Needed for PDF download
+        }
+      );
 
-    const contentType = response.headers["content-type"];
+      const contentType = response.headers["content-type"];
 
-    // 📌 Case 1: Server returned JSON (error)
-    if (contentType && contentType.includes("application/json")) {
-      const text = await response.data.text(); // Convert blob to text
-      const json = JSON.parse(text);
-      if (json.status === "failure" && json.message) {
-        setApimsgMatchingScore(json.message);
-        setMatchingScorePopup(true);
+      // 📌 Case 1: Server returned JSON (error)
+      if (contentType && contentType.includes("application/json")) {
+        const text = await response.data.text(); // Convert blob to text
+        const json = JSON.parse(text);
+        if (json.status === "failure" && json.message) {
+          setApimsgMatchingScore(json.message);
+          setMatchingScorePopup(true);
+          return;
+        }
+        NotifyError(json.message || "Unexpected error from server.");
         return;
       }
-      NotifyError(json.message || "Unexpected error from server.");
-      return;
-    }
 
-    // 📌 Case 2: Server returned PDF
-    if (response.status === 200 && contentType.includes("application/pdf")) {
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const link = document.createElement("a");
-      const url = window.URL.createObjectURL(blob);
+      // 📌 Case 2: Server returned PDF
+      if (response.status === 200 && contentType.includes("application/pdf")) {
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        const link = document.createElement("a");
+        const url = window.URL.createObjectURL(blob);
 
-      link.href = url;
-      link.setAttribute("download", "Porutham.pdf");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } else {
-      NotifyError("Failed to generate compatibility report.");
-    }
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 400) {
-        const errorData = error.response.data;
-        if (typeof errorData === "object" && errorData !== null) {
-          setApimsgMatchingScore(
-            errorData.message || "No access to see the compatibility report"
-          );
+        link.href = url;
+        link.setAttribute("download", "Porutham.pdf");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } else {
+        NotifyError("Failed to generate compatibility report.");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          const errorData = error.response.data;
+          if (typeof errorData === "object" && errorData !== null) {
+            setApimsgMatchingScore(
+              errorData.message || "No access to see the compatibility report"
+            );
+          } else {
+            setApimsgMatchingScore("No access to see the compatibility report");
+          }
         } else {
-          setApimsgMatchingScore("No access to see the compatibility report");
+          setApimsgMatchingScore("Failed to generate compatibility report");
         }
       } else {
-        setApimsgMatchingScore("Failed to generate compatibility report");
+        setApimsgMatchingScore("An unexpected error occurred");
       }
-    } else {
-      setApimsgMatchingScore("An unexpected error occurred");
+      setMatchingScorePopup(true);
     }
-    setMatchingScorePopup(true);
-  }
-};
+  };
 
 
   useEffect(() => {
@@ -726,15 +726,15 @@ const generatePoruthamPDF = async () => {
   const horoscopeLink = profileData?.basic_details.horoscope_link
   const [isPdfMenuOpen, setIsPdfMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const handleSelectLanguage = (language: SetStateAction<string | null>) => {
-    setSelectedLanguage(language);
-    setIsOpen(false); // Close the language dropdown
-    if (language === "Tamil" || language === "English") {
-      setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
-    } else {
-      setIsPdfMenuOpen(false); // Close the PDF menu for other languages
-    }
-  };
+  // const handleSelectLanguage = (language: SetStateAction<string | null>) => {
+  //   setSelectedLanguage(language);
+  //   setIsOpen(false); // Close the language dropdown
+  //   if (language === "Tamil" || language === "English") {
+  //     setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
+  //   } else {
+  //     setIsPdfMenuOpen(false); // Close the PDF menu for other languages
+  //   }
+  // };
 
   const handleViewPdf = () => {
     handleDownloadPdf();
@@ -873,9 +873,9 @@ const generatePoruthamPDF = async () => {
                         className="text-[22px] text-vysyamalaBlack cursor-pointer"
                       />
                       {showVysassist && (
-                        <VysAssistPopup 
-                        profileData={vysAssistData} 
-                        closePopup={closeVysassistpopup} />
+                        <VysAssistPopup
+                          profileData={vysAssistData}
+                          closePopup={closeVysassistpopup} />
                       )}
                     </div>
                   </div>
@@ -973,7 +973,7 @@ const generatePoruthamPDF = async () => {
                         </span>
                       </h5>)}
 
-                       {profileData?.education_details.degeree && profileData.education_details.degeree !== "" && profileData.education_details.degeree !== null && (
+                    {profileData?.education_details.degeree && profileData.education_details.degeree !== "" && profileData.education_details.degeree !== null && (
                       <h5 className="text-[18px] text-ash font-semibold max-sm:text-[16px] mb-3">
                         Degree :
                         <span className="font-normal">
@@ -1025,13 +1025,15 @@ const generatePoruthamPDF = async () => {
 
                   {/* {profileData?.basic_details?.matching_score !== undefined &&
                     profileData.basic_details.matching_score > 50 && ( */}
+                  {profileData?.basic_details?.matching_score !== undefined &&
+                    profileData.basic_details?.matching_score !== 100 && (
                       <div onClick={() => generatePoruthamPDF()} title="Matching Score pdf" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
                         {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
                         <MatchingScore
                           scorePercentage={profileData?.basic_details?.matching_score}
                         />
                       </div>
-                    {/* )} */}
+                    )}
                 </div>
                 {openCustomMsgShow ? (
                   <CustomMessagePopUp
@@ -1215,7 +1217,7 @@ const generatePoruthamPDF = async () => {
                             >
                               Tamil
                             </li> */}
-                            <li
+                            {/* <li
                               className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                               onClick={() => {
                                 handleSelectLanguage("English")
@@ -1225,6 +1227,18 @@ const generatePoruthamPDF = async () => {
                               }
                             >
                               English
+                            </li> */}
+                            <li
+                              className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
+                              onClick={handleViewPdf}
+                            >
+                              Download PDF
+                            </li>
+                            <li
+                              className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
+                              onClick={handleColorViewPdf}
+                            >
+                              Print PDF
                             </li>
                           </ul>
                         </div>

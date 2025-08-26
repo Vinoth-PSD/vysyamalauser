@@ -121,7 +121,7 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
       localStorage.setItem("plan_id", response.data.cur_plan_id);
       localStorage.setItem("profile_owner", response.data.profile_owner);
       localStorage.setItem("quick_reg", response.data.quick_reg);
-      localStorage.setItem("userheightfromapi", response.data.height);
+      localStorage.setItem("userHeight", response.data.height);
       localStorage.setItem("userplanid", response.data.plan_limits?.[0]?.plan_id,);
       if (response.data.status === 1) {
         sessionStorage.setItem("loggedInProfileId", response.data.profile_id);

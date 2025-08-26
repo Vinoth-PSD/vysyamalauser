@@ -43,14 +43,14 @@ export const UpgradePayNow: React.FC = () => {
   const price = queryParams.get("price");
   const planName = queryParams.get("planName");
   //console.log("planName", planName);
-  if (id) {
-    localStorage.setItem("plan_id", id);
-  }
-  useEffect(() => {
-    if (id) {
-      localStorage.setItem("userplanid", id);
-    }
-  }, [id]);
+  // if (id) {
+  //   localStorage.setItem("plan_id", id);
+  // }
+  // useEffect(() => {
+  //   if (id) {
+  //     localStorage.setItem("userplanid", id);
+  //   }
+  // }, [id]);
 
 
   const [selectedValues, setSelectedValues] = useState<number[]>([]);
@@ -127,10 +127,16 @@ export const UpgradePayNow: React.FC = () => {
       // Handle the verification response
       if (verificationResponse.status === "success") {
         NotifySuccess("Payment verified successfully!");
+        if (id) {
+          localStorage.setItem("plan_id", id);
+          localStorage.setItem("userplanid", id);
+          sessionStorage.setItem("cur_plan_id", id);
+        }
         // Proceed with further actions after successful verification
         await Save_plan_package(); // After verification, save the plan
       } else {
         NotifyError("Payment verification failed!");
+        localStorage.removeItem("plan_id");
       }
     } catch (error: any) {
       console.error("Error during payment verification:", error.message);

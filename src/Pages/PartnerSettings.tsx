@@ -107,30 +107,20 @@ const PartnerSettings: React.FC = () => {
   const [eduPref, setEduPref] = useState<EduPref[]>([]);
   const [fieldOfStudy, setFieldOfStudy] = useState<FieldOfStudy[]>([]);
   const [ProfPref, setProfPref] = useState<Profession[]>([]);
-
   const [annualIncome, setAnnualIncome] = useState<AnnualIncome[]>([]);
   const [matchStars, setMatchStars] = useState<MatchingStar[][]>([]);
   const [maritalStatuses, setMaritalStatuses] = useState<MaritalStatus[]>([]);
-  const [selectedStarIds, setSelectedStarIds] = React.useState<
-    SelectedStarIdItem[]
-  >([]);
-
+  const [selectedStarIds, setSelectedStarIds] = React.useState<SelectedStarIdItem[]>([]);
   // const [selectedStarId, setSelectedStarId] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedMaritalStatuses, setSelectedMaritalStatuses] = useState<
-    string[]
-  >(["1"]);
+  const [selectedMaritalStatuses, setSelectedMaritalStatuses] = useState<string[]>(["1"]);
   // const [selectedProfessions, setSelectedProfessions] = useState<string[]>([]);
   const [selectedEducations, setSelectedEducations] = useState<string[]>([]);
   const [selectedFieldOfStudy, setSelectedFieldOfStudy] = useState<string[]>([]);
-  const [selectedAnnualIncomes, setSelectedAnnualIncomes] = useState<string[]>(
-    []
-  );
+  const [selectedAnnualIncomes, setSelectedAnnualIncomes] = useState<string[]>([]);
   const [selectedMaxAnnualIncome, setSelectedMaxAnnualIncome] = useState<string[]>([])
   const [, setSelectedAnnualIncomesmax] = useState<string[]>([]);
-
   const [selectedProfession, setSelectedProfession] = useState<string[]>([]);
-
   const {
     register,
     handleSubmit,
@@ -153,7 +143,6 @@ const PartnerSettings: React.FC = () => {
   useEffect(() => {
     setForeignInterestValue(foreignInterest);
   }, [foreignInterest]);
-
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<PartnerSettingsInputs> = async (data) => {
@@ -168,10 +157,8 @@ const PartnerSettings: React.FC = () => {
     // Create a comma-separated string for each array
     const StarString = starArray.join(",");
     const combinedString = starRasiArray.join(",");
-
     console.log(StarString);
     console.log(combinedString);
-
     const MaritalValues = selectedMaritalStatuses.join(",");
     const EducationalValues = selectedEducations.join(",");
     const fieldOfStudyValues = selectedFieldOfStudy.join(",")

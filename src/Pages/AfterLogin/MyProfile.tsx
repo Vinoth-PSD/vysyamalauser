@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, SetStateAction } from "react";
+import { useState, useEffect, useContext, useRef,  } from "react";
 import axios from "axios";
 import {
   MdVerifiedUser,
@@ -128,7 +128,7 @@ export const MyProfile = () => {
   const [get_myprofile_personal, setGetMyProfilePersonal] =
     useState<GetProfileDetMatch | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedLanguage, ] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -417,16 +417,16 @@ export const MyProfile = () => {
 
 
 
-  const handleSelectLanguage = (language: SetStateAction<string | null>) => {
-    setSelectedLanguage(language);
-    setIsOpen(false); // Close the language dropdown
-    if (language === "Tamil" || language === "English") {
-      setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
+  // const handleSelectLanguage = (language: SetStateAction<string | null>) => {
+  //   setSelectedLanguage(language);
+  //   setIsOpen(false); // Close the language dropdown
+  //   if (language === "Tamil" || language === "English") {
+  //     setIsPdfMenuOpen(true); // Open the PDF menu if Tamil is selected
 
-    } else {
-      setIsPdfMenuOpen(false); // Close the PDF menu for other languages
-    }
-  };
+  //   } else {
+  //     setIsPdfMenuOpen(false); // Close the PDF menu for other languages
+  //   }
+  // };
 
   const handleViewPdf = () => {
     handleDownloadPdf();
@@ -585,7 +585,7 @@ export const MyProfile = () => {
                                 >
                                   Tamil
                                 </li> */}
-                                <li
+                                {/* <li
                                   className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
                                   onClick={() => {
                                     handleSelectLanguage("English")
@@ -595,6 +595,18 @@ export const MyProfile = () => {
                                   onMouseLeave={() => setIsPdfMenuOpen(false)}
                                 >
                                   English
+                                </li> */}
+                                <li
+                                  className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
+                                  onClick={handleViewPdf}
+                                >
+                                  Download PDF
+                                </li>
+                                <li
+                                  className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
+                                  onClick={PrintPdf}
+                                >
+                                  Print PDF
                                 </li>
                                 {/* PDF Menu Dropdown */}
                                 {(isPdfMenuOpen) && (
@@ -660,9 +672,11 @@ export const MyProfile = () => {
 
                       </div>
                     )}
-                    <p className="text-primary mb-2">
-                      Valid Upto : {get_myprofile_personal.valid_upto}
-                    </p>
+                    {get_myprofile_personal.valid_upto && (
+                      <p className="text-primary mb-2">
+                        Valid Upto : {get_myprofile_personal.valid_upto}
+                      </p>
+                    )}
 
                   </div>
                   <div className="my-3">

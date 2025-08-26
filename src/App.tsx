@@ -8,8 +8,7 @@ import {
 } from "react-router-dom";
 import MainLayout from "./Layout/MainLayout";
 import LoginLayout from "./Layout/LoginLayout";
-import "./App.css"
-
+import "./App.css";
 
 // Pages Components
 import { HomePage } from "./Pages/HomePage";
@@ -48,7 +47,6 @@ import { FeaturedBrideCard } from "./Components/FeaturedBride/FeaturedBrideCard"
 import { FeaturedGroomCard } from "./Components/FeaturedGroom/FeaturedGroomCard";
 import { FindSomeOneSpecial } from "./Components/SomeOneSpecial/FindSomeOneSpecial";
 import { ProfileNotFound } from "./Components/LoginHome/MatchingProfiles/ProfileNotFound";
-// import {ProfileNotFound} from "./Components/LoginHome/ProfileNotFound";
 import { TermsandConditions } from "./Pages/TermsandConditions";
 import ProfileCompletionForm from "./Pages/AfterLogin/ProfileCompletion";
 import ImagePage from "./Pages/dynamicWpLink/DynaminkWpLink";
@@ -62,7 +60,8 @@ import { PrivacyPolicy } from "./Pages/PrivacyPolicy";
 import { HistoryOfAryaVysya } from "./Pages/HistoryOfAryaVysya";
 import { AryaVysyaGothras } from "./Pages/AryaVysyaGothras";
 import { AboutUs } from "./Pages/AboutUs";
-
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Define prop types for AppContent
 interface AppContentProps {
@@ -85,7 +84,7 @@ function AppContent({ token }: AppContentProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    ////console.log("Current token:", token);
+    //console.log("Current token:", token);
     sessionStorage.removeItem("searchvalue");
 
     const handlePopState = () => {
@@ -105,121 +104,136 @@ function AppContent({ token }: AppContentProps) {
   }, [token, navigate]);
 
   return (
-    <Routes>
-      <Route path="/AwardsMobile" element={<AwardsMobile />} />
-      <Route path="/AboutUsMobile" element={<AboutUsMobile />} />
-      <Route path="/HappyStoriesMobile" element={<HappyStoriesMobile />} />
-
-      <Route element={<MainLayout />}>
-        <Route
-          path="/"
-          element={token ? <Navigate to="/LoginHome" replace /> : <HomePage />}
-        />
-
-
-
-        <Route element={<RegistrationProtectedRoute redirectTo="/" />}>
-          <Route path="/ContactDetails" element={<ContactDetails />} />
-          <Route path="/UploadImages" element={<UploadImages />} />
-          <Route path="/FamilyDetails" element={<FamilyDetails />} />
-          <Route path="/EduDetails" element={<EduDetails />} />
-          <Route path="/HoroDetails" element={<HoroDetails />} />
-          <Route path="/PartnerSettings" element={<PartnerSettings />} />
-          <Route path="/MembershipPlan" element={<MembershipPlan />} />
-          <Route path="/PayNowRegistration" element={<PayNowRegistration />} />
-          <Route path="/ThankYou" element={<ThankYou />} />
-          <Route path="/ThankYouReg" element={<ThankYouReg />} />
-        </Route>
-
-        <Route path="/FooterPages" element={<FooterPages />} />
-        <Route path="/FoundersDesk" element={<FoundersDesk />} />
-        <Route path="/TermsandConditions" element={<TermsandConditions />} />
-        <Route path="/FAQ" element={<FAQ />} />
-        <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-        <Route path="/HistoryOfAryaVysya" element={<HistoryOfAryaVysya />} />
-        <Route path="/AryaVysyaGothras" element={<AryaVysyaGothras />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/FeaturedBrideCard" element={<FeaturedBrideCard />} />
-        <Route path="/FeaturedGroomCard" element={<FeaturedGroomCard />} />
-        <Route path="/FindSomeOneSpecial" element={<FindSomeOneSpecial />} />
-
-        <Route path="/ProfileNotFound" element={<ProfileNotFound />} />
-        <Route path="/ProfileImage" element={<ImagePage />} />
-        <Route path="/BasicInfoPdf" element={<BasicInfoPdf />} />
-      </Route>
-
-
-      <Route element={<ProtectedRoute redirectTo="/" />}>
-        <Route element={<LoginLayout />}>
-          <Route path="/LoginHome" element={<LoginHome />} />
-          <Route path="/Search" element={<Search />} />
-          <Route path="/DashBoard" element={<DashBoard />} />
-          <Route path="/Wishlist" element={<Wishlist />} />
-          <Route path="/Messages" element={<Messages />} />
-          <Route path="/Notifications" element={<Notifications />} />
-          <Route path="/MyProfile" element={<MyProfile />} />
-          <Route path="/ProfileDetails" element={<ProfileDetails />} />
-          <Route path="/ProfileCompletion" element={<ProfileCompletionForm />} />
-          <Route path="/PayNow" element={<PayNow />} />
-          <Route
-            path="/ProfileGrid"
-            element={
-              <ProfileGrid
-                profile_name={""}
-                profile_id={undefined}
-                profile_age={undefined}
-                height={undefined}
-                searchResult={undefined}
-                searchvalues={undefined}
-              />
-            }
-          />
-          <Route
-            path="/ListView"
-            element={
-              <ListView
-                profile_name={""}
-                profile_id={undefined}
-                profile_age={undefined}
-                height={undefined}
-                star={undefined}
-                matching_score={undefined}
-                searchvalues={undefined}
-              />
-            }
-          />
-          <Route
-            path="/GridListView"
-            element={
-              <GridListView
-                profile_name={""}
-                profile_id={undefined}
-                profile_age={undefined}
-                height={undefined}
-                searchResult={undefined}
-                searchvalues={undefined}
-              />
-            }
-          />
-          <Route path="/UpgradePlan" element={<UpgradePlan />} />
-          <Route path="/UpgradePayNow" element={<UpgradePayNow />} />
-          <Route path="/UpgradeThankYouReg" element={<UpgradeThankYouReg />} />
-          <Route
-            path="/ViewAllSuggestedProfiles"
-            element={<ViewAllSuggestedProfiles />}
-          />
-          <Route
-            path="/ViewAllFeaturedProfiles"
-            element={<ViewAllFeaturedProfiles />}
-          />
-        </Route>
-      </Route>
-
-      <Route
-        path="*"
-        element={<Navigate to={token ? "/LoginHome" : "/"} replace />}
+    <>
+    
+      {/* ✅ ADD THE TOAST CONTAINER HERE */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+         style={{ zIndex: 999999 }} 
       />
-    </Routes>
+      <Routes>
+        <Route path="/AwardsMobile" element={<AwardsMobile />} />
+        <Route path="/AboutUsMobile" element={<AboutUsMobile />} />
+        <Route path="/HappyStoriesMobile" element={<HappyStoriesMobile />} />
+
+        <Route element={<MainLayout />}>
+          <Route
+            path="/"
+            element={token ? <Navigate to="/LoginHome" replace /> : <HomePage />}
+          />
+
+          <Route element={<RegistrationProtectedRoute redirectTo="/" />}>
+            <Route path="/ContactDetails" element={<ContactDetails />} />
+            <Route path="/UploadImages" element={<UploadImages />} />
+            <Route path="/FamilyDetails" element={<FamilyDetails />} />
+            <Route path="/EduDetails" element={<EduDetails />} />
+            <Route path="/HoroDetails" element={<HoroDetails />} />
+            <Route path="/PartnerSettings" element={<PartnerSettings />} />
+            <Route path="/MembershipPlan" element={<MembershipPlan />} />
+            <Route path="/PayNowRegistration" element={<PayNowRegistration />} />
+            <Route path="/ThankYou" element={<ThankYou />} />
+            <Route path="/ThankYouReg" element={<ThankYouReg />} />
+          </Route>
+
+          <Route path="/FooterPages" element={<FooterPages />} />
+          <Route path="/FoundersDesk" element={<FoundersDesk />} />
+          <Route path="/TermsandConditions" element={<TermsandConditions />} />
+          <Route path="/FAQ" element={<FAQ />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/HistoryOfAryaVysya" element={<HistoryOfAryaVysya />} />
+          <Route path="/AryaVysyaGothras" element={<AryaVysyaGothras />} />
+          <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/FeaturedBrideCard" element={<FeaturedBrideCard />} />
+          <Route path="/FeaturedGroomCard" element={<FeaturedGroomCard />} />
+          <Route path="/FindSomeOneSpecial" element={<FindSomeOneSpecial />} />
+
+          <Route path="/ProfileNotFound" element={<ProfileNotFound />} />
+          <Route path="/ProfileImage" element={<ImagePage />} />
+          <Route path="/BasicInfoPdf" element={<BasicInfoPdf />} />
+        </Route>
+
+        <Route element={<ProtectedRoute redirectTo="/" />}>
+          <Route element={<LoginLayout />}>
+            <Route path="/LoginHome" element={<LoginHome />} />
+            <Route path="/Search" element={<Search />} />
+            <Route path="/DashBoard" element={<DashBoard />} />
+            <Route path="/Wishlist" element={<Wishlist />} />
+            <Route path="/Messages" element={<Messages />} />
+            <Route path="/Notifications" element={<Notifications />} />
+            <Route path="/MyProfile" element={<MyProfile />} />
+            <Route path="/ProfileDetails" element={<ProfileDetails />} />
+            <Route path="/ProfileCompletion" element={<ProfileCompletionForm />} />
+            <Route path="/PayNow" element={<PayNow />} />
+            <Route
+              path="/ProfileGrid"
+              element={
+                <ProfileGrid
+                  profile_name={""}
+                  profile_id={undefined}
+                  profile_age={undefined}
+                  height={undefined}
+                  searchResult={undefined}
+                  searchvalues={undefined}
+                />
+              }
+            />
+            <Route
+              path="/ListView"
+              element={
+                <ListView
+                  profile_name={""}
+                  profile_id={undefined}
+                  profile_age={undefined}
+                  height={undefined}
+                  star={undefined}
+                  matching_score={undefined}
+                  searchvalues={undefined}
+                />
+              }
+            />
+            <Route
+              path="/GridListView"
+              element={
+                <GridListView
+                  profile_name={""}
+                  profile_id={undefined}
+                  profile_age={undefined}
+                  height={undefined}
+                  searchResult={undefined}
+                  searchvalues={undefined}
+                />
+              }
+            />
+            <Route path="/UpgradePlan" element={<UpgradePlan />} />
+            <Route path="/UpgradePayNow" element={<UpgradePayNow />} />
+            <Route path="/UpgradeThankYouReg" element={<UpgradeThankYouReg />} />
+            <Route
+              path="/ViewAllSuggestedProfiles"
+              element={<ViewAllSuggestedProfiles />}
+            />
+            <Route
+              path="/ViewAllFeaturedProfiles"
+              element={<ViewAllFeaturedProfiles />}
+            />
+          </Route>
+        </Route>
+
+        <Route
+          path="*"
+          element={<Navigate to={token ? "/LoginHome" : "/"} replace />}
+        />
+      </Routes>
+      {/* <ToastContainer/> */}
+  
+    </>
   );
 }
 

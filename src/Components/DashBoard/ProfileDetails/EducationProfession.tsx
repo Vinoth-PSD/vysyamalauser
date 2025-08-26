@@ -124,6 +124,8 @@ export const EducationProfession = () => {
   const [refreshData, setRefreshData] = useState(false);
   const [workStateInput, setWorkStateInput] = useState(""); // For state textbox
   const [workDistrictInput, setWorkDistrictInput] = useState(""); // For state textbox
+  //const [workCityInput, setWorkCityInput] = useState("");
+
   const [customCity, setCustomCity] = useState("");
   const [showStateTextbox, setShowStateTextbox] = useState(false); // For conditionally rendering
   const [customDegree, setCustomDegree] = useState("");
@@ -228,6 +230,11 @@ export const EducationProfession = () => {
           setSelectedWorkDistrictId(matchedDistrict.disctict_id);
         }
 
+        setSelectedWorkDistrictId(data.personal_work_district_id || "");
+        if (!data.personal_work_district_id && data.personal_work_district) {
+          // If there's a name but no ID, it was a custom text entry
+          setWorkDistrictInput(data.personal_work_district);
+        }
         // For city
         const matchedCity = cities.find(
           (city) => city.city_name === data.personal_work_city_name
@@ -238,6 +245,37 @@ export const EducationProfession = () => {
         setSelectedWorkCountryId(data.personal_work_coun_id);
         setSelectedWorkStateId(data.personal_work_sta_id);
         setSelectedProfessionId(data.personal_profession);
+
+
+        setSelectedWorkCityId(data.personal_work_city_id || "");
+        const cityId = data.personal_work_city_id;
+        const cityName = data.personal_work_city_name;
+
+        // Convert cityId to a number for checking, handle potential NaN
+        const numericCityId = parseInt(cityId, 10);
+
+        if (!isNaN(numericCityId) && numericCityId > 0) {
+          // Case 1: A valid numeric city ID is saved. Show the dropdown.
+          setSelectedWorkCityId(numericCityId);
+          setIsCityDropdown(true); // Ensure the dropdown is visible
+
+        } else if (cityName) {
+          // Case 2: The city_id is not a number, but a city_name exists.
+          // This means it's a custom entry like "xzxxxxxxxxx".
+          setSelectedWorkCityId("others"); // Set the select's value to 'others'
+          setIsCityDropdown(false); // **Crucially, switch to the input box view**
+
+          // **The key fix:** Update formData so the input field shows the custom value.
+          setFormData(prev => ({
+            ...prev,
+            personal_work_city_name: cityName
+          }));
+
+        } else {
+          // Case 3: No city data at all. Reset to the default dropdown view.
+          setSelectedWorkCityId("");
+          setIsCityDropdown(true);
+        }
 
       } catch (error) {
         console.error(
@@ -784,6 +822,8 @@ export const EducationProfession = () => {
       persoanl_edu_other: value,
     }));
   };
+
+
 
   if (!educationProfessionDetails) {
     return <div>Loading...</div>;

@@ -319,7 +319,7 @@ const defaultImgUrl =
 
             {/* Matching Score */}
             {profile.visited_match_score !== undefined &&
-              profile.visited_match_score > 50 && (
+              profile.visited_match_score > 50 && profile.visited_match_score !== 100 && (
                 <div>
                   <div className="max-lg:hidden">
                     {/* <img

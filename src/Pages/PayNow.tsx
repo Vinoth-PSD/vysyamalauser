@@ -50,11 +50,11 @@ export const PayNow: React.FC = () => {
   const [isGPayClicked, setIsGPayClicked] = useState(false);
   const [isOnlinePaymentClicked, setIsOnlinePaymentClicked] = useState(false);
   const [showGPayPopup, setShowGPayPopup] = useState(false);
-  useEffect(() => {
-    if (plan_id) {
-      localStorage.setItem("userplanid", plan_id);
-    }
-  }, [plan_id]);
+  // useEffect(() => {
+  //   if (plan_id) {
+  //     localStorage.setItem("userplanid", plan_id);
+  //   }
+  // }, [plan_id]);
 
 
   const handleAddOnChange = (
@@ -118,6 +118,14 @@ export const PayNow: React.FC = () => {
     }
   };
 
+  const storePlanId = () => {
+    if (plan_id) {
+      localStorage.setItem("userplanid", plan_id);
+      sessionStorage.setItem("cur_plan_id", plan_id);
+      console.log("Plan ID stored after payment:", plan_id);
+    }
+  };
+
   const verifyPaymentFunction = async (
     profile_id: string,
     razorpay_order_id: string,
@@ -139,6 +147,7 @@ export const PayNow: React.FC = () => {
       // Handle the verification response
       if (verificationResponse.status === "success") {
         NotifySuccess("Payment verified successfully!");
+        storePlanId();
         // Proceed with further actions after successful verification
         await Save_plan_package(); // After verification, save the plan
       } else {

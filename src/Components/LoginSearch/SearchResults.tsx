@@ -51,6 +51,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 
   const {
     totalCount,
+    setTotalCount, // <--- ADD THIS
     setFromAge,
     setToAge,
     setFromHeight,
@@ -68,7 +69,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     setPeopleOnlyWithPhoto,
     advanceSearchData,
   } = context;
-  
+
 
   useEffect(() => {
     // Set loading to false when data is available
@@ -107,6 +108,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   };
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [searchProfile, setSearchProfile] = useState<string>("");
+
   const HandlesearchProfile = async () => {
     try {
       const response = await apiClient.post(
@@ -119,14 +121,17 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
       if (response.status == 200) {
         console.log(response.data.data);
         setAdvanceSearchData(response.data.data);
+        setTotalCount(response.data.data.length); // <--- ADD THIS LINE
         // setAdvanceSearchData()
       }
     } catch (error) {
       console.log(error);
+      setAdvanceSearchData([]);
+      setTotalCount(0); // <--- ADD THIS LINE
     }
   };
   console.log(advanceSearchData, "advanceSearchData");
-  console.log("totalCount",totalCount)
+  console.log("totalCount", totalCount)
   return (
     <div>
       <div className="container mx-auto py-10">
@@ -173,11 +178,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
             >
               <HiMiniViewColumns
                 className={`text-[22px] 
-                    ${
-                      currentView === "gridlist"
-                        ? "text-secondary"
-                        : "text-ashSecondary"
-                    } hover:text-secondary}`}
+                    ${currentView === "gridlist"
+                    ? "text-secondary"
+                    : "text-ashSecondary"
+                  } hover:text-secondary}`}
               />
             </div>
             <div
@@ -187,11 +191,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               onClick={() => setCurrentView("list")}
             >
               <ImMenu
-                className={`text-[22px] ${
-                  currentView === "list"
-                    ? "text-secondary"
-                    : "text-ashSecondary"
-                } hover:text-secondary}`}
+                className={`text-[22px] ${currentView === "list"
+                  ? "text-secondary"
+                  : "text-ashSecondary"
+                  } hover:text-secondary}`}
               />
             </div>
             <div
@@ -201,11 +204,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               onClick={() => setCurrentView("grid")}
             >
               <BsFillGrid3X3GapFill
-                className={`text-[22px] ${
-                  currentView === "grid"
-                    ? "text-secondary"
-                    : "text-ashSecondary"
-                } hover:text-secondary}`}
+                className={`text-[22px] ${currentView === "grid"
+                  ? "text-secondary"
+                  : "text-ashSecondary"
+                  } hover:text-secondary}`}
               />
             </div>
           </div>
@@ -231,10 +233,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
             />
             <p className="text-sm">Please wait...</p>
           </div>
-        // ) : !error &&
-        // ((advanceSearchData && advanceSearchData.length >= 1) ||
-        //   responseMsg !== "At least one search criterion must be provided.") && (
-           ) : !error && advanceSearchData && advanceSearchData.length > 0 ? (
+          // ) : !error &&
+          // ((advanceSearchData && advanceSearchData.length >= 1) ||
+          //   responseMsg !== "At least one search criterion must be provided.") && (
+        ) : !error && advanceSearchData && advanceSearchData.length > 0 ? (
           <div>
             {/* Conditionally render views based on currentView state */}
             {currentView === "gridlist" && (
@@ -269,10 +271,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               />
             )}
           </div>
-        ) 
-        : (
-           <ProfileNotFound />
         )
+          : (
+            <ProfileNotFound />
+          )
         }
 
         {/* Pagination */}

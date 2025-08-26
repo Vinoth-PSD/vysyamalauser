@@ -28,7 +28,6 @@ export const UpgradePlan: React.FC = () => {
         setAdvanceSelectedProfessions,
         Set_Maritial_Status,
         setAdvanceSelectedEducation,
-
         setSelectedIncomes,
         setChevvai_dhosam,
         setRehuDhosam,
@@ -56,14 +55,9 @@ export const UpgradePlan: React.FC = () => {
         setAdvanceSearchData([]);
     }, []);
 
-
-
-
-
     const navigate = useNavigate(); // Initialize navigate function
     const [plans, setPlans] = useState<any[]>([]); // State to hold plans data
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id") || localStorage.getItem("profile_id_new");
-
 
     useEffect(() => {
         // Define an async function to fetch plans data
