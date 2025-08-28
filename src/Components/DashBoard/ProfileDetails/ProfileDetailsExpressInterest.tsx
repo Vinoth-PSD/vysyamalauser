@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect,  } from "react";
+import { useState, useEffect, } from "react";
 // import { useDispatch } from "react-redux";
 // import { hideInterest } from "../../../redux/slices/interestSlice";
 import axios, { AxiosResponse } from "axios";
@@ -532,7 +532,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // Declaration for Horoscope State
 
-//  const [, setSelectedLanguage] = useState<string | null>(null);
+  //  const [, setSelectedLanguage] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [apimsgPhotoReq, setApimsgPhotoReq] = useState("");
   const [apimsgMatchingScore, setApimsgMatchingScore] = useState("");
@@ -595,14 +595,13 @@ export const ProfileDetailsExpressInterest: React.FC<
       // 📌 Case 2: Server returned PDF
       if (response.status === 200 && contentType.includes("application/pdf")) {
         const blob = new Blob([response.data], { type: "application/pdf" });
-        const link = document.createElement("a");
         const url = window.URL.createObjectURL(blob);
+        window.open(url, "_blank");
 
-        link.href = url;
-        link.setAttribute("download", "Porutham.pdf");
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        // Optional: revoke URL later to free memory
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 1000);
       } else {
         NotifyError("Failed to generate compatibility report.");
       }

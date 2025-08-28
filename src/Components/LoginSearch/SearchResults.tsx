@@ -11,7 +11,6 @@ import { Hearts } from "react-loader-spinner";
 import { GridView } from "../LoginHome/MatchingProfiles/GridView";
 import { ListView } from "../LoginHome/MatchingProfiles/ListView";
 import { GridListView } from "../LoginHome/MatchingProfiles/GridListView";
-
 import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
 import { ProfileContext } from "../../ProfileContext";
 import Pagination from "../Pagination";
