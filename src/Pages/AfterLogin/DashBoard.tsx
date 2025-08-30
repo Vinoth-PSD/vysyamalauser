@@ -15,15 +15,10 @@ import Gallary from "../../Components/DashBoard/Gallary";
 import { ProfileContext } from "../../ProfileContext";
 import { useLocation } from "react-router-dom";
 
-
-
-
 export const DashBoard = () => {
   // State to manage which section to display
-  const [showDashBoardMatchingProfiles, setShowDashBoardMatchingProfiles] =
-    useState(false);
-  const [showDashBoardMutualInterest, setShowDashBoardMutualInterest] =
-    useState(false);
+  const [showDashBoardMatchingProfiles, setShowDashBoardMatchingProfiles] = useState(false);
+  const [showDashBoardMutualInterest, setShowDashBoardMutualInterest] = useState(false);
   const [showDashBoardWishlist, setShowDashBoardWishlist] = useState(false);
   const [showProfileDetails, setShowProfileDetails] = useState(false);
   const [showInterestSent, setShowInterestSent] = useState(false);
@@ -38,7 +33,6 @@ export const DashBoard = () => {
   useEffect(() => {
     sessionStorage.removeItem('searchvalue');
   }, []);
-
 
   const context = useContext(ProfileContext);
 
@@ -55,7 +49,6 @@ export const DashBoard = () => {
     setAdvanceSelectedProfessions,
     Set_Maritial_Status,
     setAdvanceSelectedEducation,
-
     setSelectedIncomes,
     setChevvai_dhosam,
     setRehuDhosam,
@@ -87,11 +80,72 @@ export const DashBoard = () => {
   const queryParams = new URLSearchParams(location.search);
   const interestParam = queryParams.get("key");
 
-useEffect(()=>{
-  if(interestParam){
-    setShowOtherSettings(true)
-  }
-},[interestParam])
+  useEffect(() => {
+    if (interestParam) {
+      setShowOtherSettings(true)
+    }
+  }, [interestParam])
+
+  const keyParam = queryParams.get("key");
+
+  useEffect(() => {
+    // Reset all states first
+    setShowDashBoardMatchingProfiles(false);
+    setShowDashBoardMutualInterest(false);
+    setShowDashBoardWishlist(false);
+    setShowProfileDetails(false);
+    setShowInterestSent(false);
+    setShowViewedProfiles(false);
+    setShowMyVisitors(false);
+    setShowPersonalNotes(false);
+    setShowVysAssist(false);
+    setShowOtherSettings(false);
+    setShowPhotoRequest(false);
+    setShowGallery(false);
+
+    // Set the appropriate state based on the key parameter
+    switch (keyParam) {
+      case 'matchingProfiles':
+        setShowDashBoardMatchingProfiles(true);
+        break;
+      case 'mutualInterest':
+        setShowDashBoardMutualInterest(true);
+        break;
+      case 'wishlist':
+        setShowDashBoardWishlist(true);
+        break;
+      case 'profileDetails':
+        setShowProfileDetails(true);
+        break;
+      case 'interestSent':
+        setShowInterestSent(true);
+        break;
+      case 'viewedProfiles':
+        setShowViewedProfiles(true);
+        break;
+      case 'myVisitors':
+        setShowMyVisitors(true);
+        break;
+      case 'personalNotes':
+        setShowPersonalNotes(true);
+        break;
+      case 'vysAssist':
+        setShowVysAssist(true);
+        break;
+      case 'otherSettings':
+        setShowOtherSettings(true);
+        break;
+      case 'photoRequest':
+        setShowPhotoRequest(true);
+        break;
+      case 'gallery':
+        setShowGallery(true);
+        break;
+      default:
+        // Show default dashboard grid if no valid key or key is null
+        break;
+    }
+  }, [keyParam]);
 
   return (
     <div>

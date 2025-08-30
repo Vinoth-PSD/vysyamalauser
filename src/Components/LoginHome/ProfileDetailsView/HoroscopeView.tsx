@@ -124,9 +124,9 @@ export const HoroscopeView: React.FC = () => {
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Didi:
                             <span className="font-normal"> {horoscope_details?.didi}</span></h5>)}
 
-                    {horoscope_details?.chevvai_dosham && horoscope_details.chevvai_dosham !== "" && horoscope_details.chevvai_dosham !== null && (
+                    {/* {horoscope_details?.chevvai_dosham && horoscope_details.chevvai_dosham !== "" && horoscope_details.chevvai_dosham !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Chevvai Dhosham:
-                            <span className="font-normal"> {horoscope_details?.chevvai_dosham}</span></h5>)}
+                            <span className="font-normal"> {horoscope_details?.chevvai_dosham}</span></h5>)} */}
                 </div>
 
                 <div>
@@ -146,13 +146,13 @@ export const HoroscopeView: React.FC = () => {
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Dasa Balance:
                             <span className="font-normal"> {horoscope_details?.dasa_balance}</span></h5>)}
 
-                    {horoscope_details?.chevai_dosham && horoscope_details.chevai_dosham !== "" && horoscope_details.chevai_dosham !== null && (
+                    {/* {horoscope_details?.chevai_dosham && horoscope_details.chevai_dosham !== "" && horoscope_details.chevai_dosham !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Chevvai Dosham:
                             <span className="font-normal"> {horoscope_details?.chevai_dosham}</span></h5>)}
 
                     {horoscope_details?.sarpadosham && horoscope_details.sarpadosham !== "" && horoscope_details.sarpadosham !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Ragu/Kethu Dhosham:
-                            <span className="font-normal"> {horoscope_details?.sarpadosham}</span></h5>)}
+                            <span className="font-normal"> {horoscope_details?.sarpadosham}</span></h5>)} */}
                 </div>
             </div>
 

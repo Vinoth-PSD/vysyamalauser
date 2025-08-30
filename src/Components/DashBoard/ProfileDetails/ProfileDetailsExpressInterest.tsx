@@ -1,20 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, } from "react";
-// import { useDispatch } from "react-redux";
-// import { hideInterest } from "../../../redux/slices/interestSlice";
 import axios, { AxiosResponse } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdArrowDropDown, MdLocalPrintshop, MdMessage, MdVerifiedUser } from "react-icons/md";
 import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import AgeIcon from "../../../assets/icons/ageIcon.png";
-// import { IoShareSocialSharp } from "react-icons/io5";
 import { MdOutlineGrid3X3 } from "react-icons/md";
-// import { IoCalendar } from "react-icons/io5";
 import { FaUser } from "react-icons/fa6";
-import { IoEye } from "react-icons/io5";
+import {  IoEye } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
 import { FaTableList } from "react-icons/fa6";
-// import { ProfileSlick } from "./ProfileSlick";
 import { ProfileSlickView } from "../../LoginHome/ProfileDetailsView/ProfileSlickView";
 import { TbPhotoHeart } from "react-icons/tb";
 import PersonalNotes from "../../../assets/icons/PersonalNotes.png";
@@ -26,13 +21,10 @@ import CustomMessagePopUp from "./CustomMessagePopup";
 import { NotifySuccess, NotifyError } from "../../Toast/ToastNotification";
 import { toast } from "react-toastify";
 import { PersonalNotesPopup } from "../PersonalNotes/PersonalNotesPopup";
-// import { Share } from "./Share";
-// import { Get_profile_det_match } from "../../../commonapicall";
 import { VysAssistPopup } from "../VysAssist/VysAssistPopup";
 import apiClient from "../../../API";
 import { Hearts } from 'react-loader-spinner'
 import { ReUseUpGradePopup } from "../ReUsePopup/ReUseUpGradePopup";
-// import { boolean } from "zod";
 
 // Define the interfaces for profile data
 interface HoroscopeDetails {
@@ -82,19 +74,14 @@ interface ApiResponse {
   // Add other fields based on the API response
 }
 
-
 // Define your ChatResponseData type, including all required properties
 interface ChatResponseData {
   statue: number;
   room_id_name: string;
-
   Message?: string;           // Optional if it might not exist
 }
 
-
-
 interface ProfileDetailsExpressInterestProps { }
-
 
 export const ProfileDetailsExpressInterest: React.FC<
   ProfileDetailsExpressInterestProps
@@ -102,7 +89,6 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [roomId, setRoomId] = useState("");
   const [userName,] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
-
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [PhotoPasswordlock, setPhotoPasswordlock] = useState<number>(0);
   //console.log(typeof PhotoPasswordlock, "PhotoPasswordlock");
@@ -112,9 +98,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [bookMarkPopup, setBookMarkPopup] = useState<boolean>(false);
   const [matchingScorePopup, setMatchingScorePopup] = useState<boolean>(false);
   //console.log('matchingScorePopup', matchingScorePopup)
-
   const [loading, setLoading] = useState(false);
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const interestParam = queryParams.get("interest");
@@ -751,7 +735,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   //   return <div>Loading Divya...</div>;
   // }
 
-
+  // Get the 'from' parameter from the URL
+  //const fromView = queryParams.get("from");
 
   return (
     <div>
@@ -764,6 +749,20 @@ export const ProfileDetailsExpressInterest: React.FC<
               Profile Details
               <span className="text-sm text-primary"> (234)</span>
             </h4> 
+          </div> */}
+          {/* <div className="flex items-start mb-5">
+            <IoArrowBackOutline
+              onClick={() => {
+                if (fromView) {
+                  navigate(`/Dashboard?key=${fromView}`);
+                } else {
+                  navigate(-1);
+                }
+              }}
+              className="text-[24px] mr-2 cursor-pointer text-vysyamalaBlackSecondary"
+              title="Go back"
+            />
+            
           </div> */}
 
           {loading ? (

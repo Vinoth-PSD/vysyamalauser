@@ -221,7 +221,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      // navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      // navigate(`/ProfileDetails?id=${profileId}&page=1&from=mutualInterest`);
+       navigate(`/ProfileDetails?id=${profileId}&page=1`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

@@ -53,6 +53,10 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
     fetchData();
   }, [pageNumber]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageNumber]);
+
   return (
     <div className="bg-grayBg pt-10">
       <div className="container mx-auto pb-10">

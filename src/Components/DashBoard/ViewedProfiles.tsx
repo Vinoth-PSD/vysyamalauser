@@ -7,6 +7,7 @@ import Pagination from '../Pagination';
 // import { IoMdArrowDropdown } from 'react-icons/io';
 import apiClient from '../../API';
 import { Hearts } from 'react-loader-spinner';
+//import { useNavigate } from 'react-router-dom';
 
 interface ViewedProfilesProps {
     dashBoardAgain: () => void;
@@ -36,18 +37,21 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                 }
             );
             setTotalRecords(response.data.viewed_profile_count);
-            
+
         } catch (err) {
             setError("Failed to load viewed profiles");
             console.error("Failed to load viewed profiles", err);
-           
-        }finally {
+
+        } finally {
             setLoading(false);
         }
     };
     useEffect(() => {
         fetchData();
     }, []);
+
+    //const navigate = useNavigate();
+
     return (
         <div className="bg-grayBg pt-10">
             <div className="container mx-auto pb-10">
@@ -55,7 +59,10 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                 <div className="flex justify-between items-center mb-5 max-md:flex-wrap max-md:gap-y-5">
 
                     <div className="w-full flex justify-start items-center">
-                        <IoArrowBackOutline onClick={dashBoardAgain} className="text-[24px] mr-2 cursor-pointer" />
+                        <IoArrowBackOutline 
+                        // onClick={() => navigate("/Dashboard")} 
+                        onClick={dashBoardAgain}
+                        className="text-[24px] mr-2 cursor-pointer" />
                         <h4 className=" text-[24px] text-vysyamalaBlackSecondary font-bold max-md:text-[18px]"> Viewed Profiles {" "}
                             <span className="text-sm text-primary">({totalRecords})</span>
                         </h4>

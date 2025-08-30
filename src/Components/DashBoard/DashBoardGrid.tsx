@@ -24,22 +24,18 @@ import PhotoReq from "../../assets/icons/PhotoReq.png";
 import { Puff } from 'react-loader-spinner';
 import { useNavigate } from "react-router-dom";
 
-
 interface DashBoardGridProps {
   onDashBoardMatchingProfiles: () => void;
   onDashBoardMutualInterest: () => void;
   onDashBoardWishlist: () => void;
-
   // Profile Card
   onProfileDetails: () => void;
-
   // Indicator Cards
   onInterestSent: () => void;
   onViewedProfiles: () => void;
   onMyVisitors: () => void;
   onPhotoRequest: () => void;
   onGallery: () => void;
-
   // Optional Cards
   onPersonalNotes: () => void;
   onVysAssist: () => void;
@@ -62,14 +58,12 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
 }) => {
   // Circular Progress bar value
 
-
   // Use context safely
   const context = useContext(ProfileContext);
 
   if (!context) {
     throw new Error("DashBoardGrid must be used within a ProfileProvider");
   }
-
   const { dashboardDetails, fetchDashboardDetails } = context;
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

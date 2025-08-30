@@ -32,11 +32,16 @@ export const InterestSent: React.FC<InterestSentProps> = ({
     );
     setTotalRecords(response.data.data.total_records);
     setDataPerPage(response.data.data.per_page);
-
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageNumber]);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [pageNumber]);
+
   return (
     <div className="bg-grayBg py-10">
       <div className="container mx-auto">
@@ -53,7 +58,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
             </h4>
           </div>
 
-          <div  className="relative max-md:w-full max-md:text-end">
+          <div className="relative max-md:w-full max-md:text-end">
             <select
               name="month"
               id="month"
@@ -73,7 +78,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
               <option value="dec">December</option>
             </select>
             <div className="absolute right-2 top-3.5 ">
-            <IoMdArrowDropdown className="text-lg text-primary-400" /> 
+              <IoMdArrowDropdown className="text-lg text-primary-400" />
             </div>
 
           </div>
@@ -85,15 +90,15 @@ export const InterestSent: React.FC<InterestSentProps> = ({
 
           <InterestSentCard pageNumber={pageNumber} dataPerPage={dataPerPage} />
           {/* <InterestSentCard /> */}
-         
+
         </div>
         <Pagination
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            totalRecords={totalRecords}
-            dataPerPage={dataPerPage}
-            toptalPages={toptalPages}
-          />
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          totalRecords={totalRecords}
+          dataPerPage={dataPerPage}
+          toptalPages={toptalPages}
+        />
       </div>
     </div>
   );

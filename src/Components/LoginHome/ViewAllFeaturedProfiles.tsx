@@ -39,17 +39,17 @@ export const ViewAllFeaturedProfiles: React.FC = () => {
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
   if (!context) {
     throw new Error("ViewAllFeaturedProfiles must be used within a ProfileProvider");
   }
 
   const { setTotalPage, setTotalRecords, totalPage, TotalRecords } = context;
-  console.log("TotalRecords",TotalRecords)
+  console.log("TotalRecords", TotalRecords)
 
   // State to hold the profiles data
   const [profiles, setProfiles] = useState<Profile[]>([]);
@@ -133,6 +133,10 @@ const defaultImgUrl =
       setActiveProfileId(null); // reset loading
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   return (
     <div className="container mx-auto my-20 max-md:my-8">
@@ -250,31 +254,31 @@ const defaultImgUrl =
                       </div>
 
                       {/* <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden"> */}
-                        {/* Horoscope Available */}
-                        {/* <div>
+                      {/* Horoscope Available */}
+                      {/* <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                             <MdOutlineGrid3X3 className="mr-2" /> Horoscope
                             Available
                           </p>
                         </div> */}
 
-                        {/* Active User */}
-                        {/* <div>
+                      {/* Active User */}
+                      {/* <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                             <FaUser className="mr-2" /> Active user
                           </p>
                         </div> */}
 
-                        {/* Last Visit */}
-                        {/* <div>
+                      {/* Last Visit */}
+                      {/* <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                             <IoCalendar className="mr-2" /> Last visit on June
                             30, 2024
                           </p>
                         </div> */}
 
-                        {/* Views */}
-                        {/* <div>
+                      {/* Views */}
+                      {/* <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                             <IoEye className="mr-2" /> 31 views
                           </p>
@@ -285,7 +289,7 @@ const defaultImgUrl =
 
                   {/* Matching Score */}
                   {profile.matching_score !== undefined &&
-                    profile.matching_score > 50 &&  profile.matching_score  !== 100 &&  (
+                    profile.matching_score > 50 && profile.matching_score !== 100 && (
                       <div className="max-lg:hidden">
                         <MatchingScore scorePercentage={profile.matching_score} />
                       </div>

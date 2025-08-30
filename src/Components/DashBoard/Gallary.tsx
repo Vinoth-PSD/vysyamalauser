@@ -47,6 +47,7 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
         setPerPage(response?.data?.data.per_page);
         setError(null);
         setNoProfiles(false); // Reset flag if data exists
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (err) {
         setError("Failed to load gallery items.");
         ////console.log("Failed to load gallery items.", err);
@@ -89,9 +90,8 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
             <p className="text-sm">Please wait...</p>
           </div>
         ) : noProfiles ? (
-                    <div className="pt-10 pb-[122px] max-md:pt-10 max-md:pb-16">
-
-          <ProfileNotFound />
+          <div className="pt-10 pb-[122px] max-md:pt-10 max-md:pb-16">
+            <ProfileNotFound />
           </div>
         ) : (
           <>

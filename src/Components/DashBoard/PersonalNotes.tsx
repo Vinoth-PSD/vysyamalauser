@@ -34,7 +34,11 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ dashBoardAgain }) 
     };
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [pageNumber]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [pageNumber]);
 
     return (
         <div className="bg-grayBg pt-10">

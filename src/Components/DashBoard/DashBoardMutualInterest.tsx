@@ -1,6 +1,6 @@
 // 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { MutualInterestCard } from './DashBoardMutualInterest/MutualInterestCard';
 import { SuggestedProfiles } from '../../Components/LoginHome/SuggestedProfiles';
@@ -8,20 +8,22 @@ import Pagination from '../Pagination';
 
 interface DashBoardMutualInterestProps {
   dashBoardAgain: () => void;
-  
+
 }
 
 export const DashBoardMutualInterest: React.FC<DashBoardMutualInterestProps> = ({ dashBoardAgain }) => {
-  const [count,setCount]=useState<number>(0)
+  const [count, setCount] = useState<number>(0)
   const [dataPerPage, setDataPerPage] = useState(0);
   const [ViewCount, setViewCount] = useState<number>(0)
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const toptalPages = dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
-   console.log(ViewCount, "ViewCount");
-  // console.log('count',count);
-  // console.log('count',dataPerPage);
-  // console.log('count',totalRecords);
+  console.log(ViewCount, "ViewCount");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageNumber]);
+
   return (
     <div className="bg-grayBg">
       <div className="container mx-auto py-10">
@@ -34,18 +36,18 @@ export const DashBoardMutualInterest: React.FC<DashBoardMutualInterestProps> = (
         </div>
 
         <div>
-          <MutualInterestCard setCount={setCount} setTotalRecords={setTotalRecords} setDataPerPage={setDataPerPage} setViewCount={setViewCount}/>
+          <MutualInterestCard setCount={setCount} setTotalRecords={setTotalRecords} setDataPerPage={setDataPerPage} setViewCount={setViewCount} />
         </div>
         <Pagination
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            totalRecords={totalRecords}
-            dataPerPage={dataPerPage}
-            toptalPages={toptalPages}
-          />
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          totalRecords={totalRecords}
+          dataPerPage={dataPerPage}
+          toptalPages={toptalPages}
+        />
       </div>
       <SuggestedProfiles />
-      
+
     </div>
   );
 };

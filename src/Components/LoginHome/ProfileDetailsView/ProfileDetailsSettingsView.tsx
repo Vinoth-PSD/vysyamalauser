@@ -33,7 +33,6 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     const pageid = queryParams.get("page") || "";
     const currentProfileId = queryParams.get("id") || "";
 
-
     const renderSection = () => {
         switch (activeSection) {
             case 'PersonalView':
@@ -69,6 +68,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                     "4": 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/My_viewed_profiles/',
                     "5": 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/My_profile_visit/',
                     "6": 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_photo_request_list/',
+                    // "7": 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_Gallery_lists/',
                     // "1": 'http://103.214.132.20:8000/auth/Get_mutual_intrests/',
                     // "2": 'http://103.214.132.20:8000/auth/Get_profile_wishlist/',
                     // "3": 'http://103.214.132.20:8000/auth/My_intrests_list/',
@@ -125,11 +125,9 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
         // Debugging: Log the current profile IDs and index
         //console.log("Profile IDs:", profileIds);
         //console.log("Current Profile ID:", currentProfileId);
-
         if (profileIds.length > 0) {
             const index = profileIds.indexOf(currentProfileId.toString()); // Ensure comparison is done with string
             //console.log("Current Index:", index); // Log the index
-
             if (index !== -1) {
                 setCurrentIndex(index);
             }

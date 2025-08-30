@@ -290,7 +290,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      navigate(`/ProfileDetails?id=${profileId}&page=3`);
 
       // await apiClient.post("/auth/Create_profile_visit/", {
       //   profile_id: loginuser_profileId,

@@ -89,6 +89,7 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
         if (response.data.Status === 1 && response.data.data.profiles.length > 0) {
           setProfiles(response.data.data.profiles); // Store all profiles
         }
+        
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
@@ -129,7 +130,7 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      navigate(`/ProfileDetails?id=${profileId}&page=5`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

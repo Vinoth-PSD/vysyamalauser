@@ -50,23 +50,15 @@ interface WishlistCardProps {
 
 export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
   const navigate = useNavigate();
-
   const context = useContext(ProfileContext);
-
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");
   }
-
   const { setTotalPage, setTotalRecords, setWhistListPerpage } = context;
-
-
-  // State to hold the profiles data
-  const [wishlistProfiles, setWishlistProfiles] = useState<WishlistProfile[]>(
-    []
-  );
+  const [wishlistProfiles, setWishlistProfiles] = useState<WishlistProfile[]>([]);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // Fetch data from API
+
   const fetchWishlistProfiles = async (profileId: string) => {
     setIsLoading(true); // Start loading
     try {
@@ -105,6 +97,10 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
       setIsLoading(false); // End loading
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   useEffect(() => {
     // Retrieve profile_id from sessionStorage
@@ -151,7 +147,9 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      // navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      // navigate(`/ProfileDetails?id=${profileId}&page=2&from=wishlist`);
+            navigate(`/ProfileDetails?id=${profileId}&page=2`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

@@ -184,12 +184,7 @@ export const MatchingProfiles = () => {
 
   useEffect(() => {
     handleFindMatch()
-
   }, [sortOrder]);
-
-
-
-
 
   const handleFindMatch = async () => {
 

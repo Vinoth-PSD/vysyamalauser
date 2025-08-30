@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-//import axios from "axios";
 import PhotoRequestCard from "./PhotoRequest/PhotoRequestCard";
-
 import { IoArrowBackOutline } from "react-icons/io5";
 import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
 import Pagination from "../Pagination";
@@ -51,27 +49,11 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
     getPhotoRequest();
   }, [NewUpdatedData, pageNumber]);
 
-
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageNumber]);
 
   return (
-    // <div className="ml-10">
-    //   <div className="flex gap-4">
-    //     <button onClick={dashBoardAgain}>
-    //       <FaArrowLeft className=" h-6  w-6 " />
-    //     </button>
-    //     <h2 className="font-inter font-bold text-2xl leading-9">
-    //       Photo Requests
-    //     </h2>
-    //   </div>
-    //   {photoRequestData.map((requests) => (
-    //     <PhotoRequestCard
-    //       NewUpdatedData={NewUpdatedData}
-    //       setNewUPDatedData={setNewUPDatedData}
-    //       data={requests}
-    //     />
-    //   ))}
-    // </div>
-
     <div className="bg-grayBg pt-10">
       <div className="container mx-auto">
         <div className="flex items-center mb-5">
@@ -86,17 +68,6 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
         </div>
 
         {/* Personal Notes Card */}
-        {/* <div>
-          {photoRequestData.map((requests) => (
-            <PhotoRequestCard
-              toptalPages={toptalPages}
-              totalRecords={totalRecords}
-              NewUpdatedData={NewUpdatedData}
-              setNewUPDatedData={setNewUPDatedData}
-              data={requests}
-            />
-          ))}
-        </div> */}
         <div>
           {photoRequestData.length === 0 ? (
             <div className="text-center text-gray-500 py-10 text-lg font-semibold">

@@ -283,9 +283,8 @@ const PhotoRequestCard = ({
         setActiveProfileId(null);
         return;
       }
-
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      navigate(`/ProfileDetails?id=${profileId}&page=6`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
