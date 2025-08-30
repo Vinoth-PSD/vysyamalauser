@@ -105,7 +105,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     setAdvanceSelectedBirthStar,
     setNativeState,
     setPeopleOnlyWithPhoto,
-    pageNumber,
+    //pageNumber,
     fromHeight, toHeight,
     selectedIncomes,
     setAdvanceSearchData,
@@ -115,9 +115,9 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     peopleOnlyWithPhoto,
   } = context;
 
-  useEffect(() => {
-    handle_Get_advance_search();
-  }, [pageNumber]); // Add pageNumber as a dependency
+  // useEffect(() => {
+  //   handle_Get_advance_search();
+  // }, [pageNumber]); // Add pageNumber as a dependency
 
   const handleEducationChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -129,7 +129,6 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
     handle_Get_advance_search();
     onFindMatch();
-
   };
 
   const handlePeopleWithPhotoChange = (

@@ -349,7 +349,8 @@ export const LoginHeader: React.FC = () => {
                 </li>
               </NavLink>
               <NavLink to="/Search" aria-current="page" className="active-nav">
-                <li className="text-[16px] cursor-pointer font-normal  px-2 py-4  max-lg:text-[14px]">
+                <li 
+                className="text-[16px] cursor-pointer font-normal  px-2 py-4  max-lg:text-[14px]">
                   Search
                 </li>
               </NavLink>

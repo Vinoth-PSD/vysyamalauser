@@ -6,6 +6,7 @@ import { ProfileContext } from "../../ProfileContext";
 import axios from "axios";
 // import { Console } from "console";
 // import React from "react";
+
 const Search = () => {
   // Toggle the showResults state when the user finds a match
   const [showResults, setShowResults] = useState(false);
@@ -50,6 +51,8 @@ const Search = () => {
     fieldofstudy,
     setAdvanceSearchData,
     advanceSearchData,
+    chevvai_dhosam,
+    rehuDhosam,
   } = context;
 
   useEffect(() => {
@@ -67,7 +70,7 @@ const Search = () => {
   const handle_Get_advance_search = async () => {
     try {
       const response = await axios.post(Get_advance_search, {
-        profile_id: loginuser_profileId ,
+        profile_id: loginuser_profileId,
         from_age: fromAge,
         to_age: ToAge,
         from_height: fromHeight,
@@ -75,13 +78,13 @@ const Search = () => {
         per_page: perPage,
         page_number: pageNo,
         search_marital_status: maritial_Status.join(","),
-        field_ofstudy:fieldofstudy.join(","),
+        field_ofstudy: fieldofstudy.join(","),
         search_profession: AdvanceselectedProfessions.join(","),
         search_education: selectedAdvanceEducation,
         min_income: selectedIncomes,
-        max_income:selectedMaxIncomes,
-        // chevvai_dhosam: chevvai_dhosam,
-        // ragukethu_dhosam: rehuDhosam,
+        max_income: selectedMaxIncomes,
+        chevvai_dhosam: chevvai_dhosam,
+        ragukethu_dhosam: rehuDhosam,
         search_star: advanceSelectedBirthStar,
         search_nativestate: nativeState.join(","),
         search_worklocation: workLocation,
@@ -109,11 +112,26 @@ const Search = () => {
       }
     }
   };
+  // useEffect(() => {
+  //   if (pageNo) {
+  //     handle_Get_advance_search();
+  //   }
+  // }, [pageNo]);
+
   useEffect(() => {
-    if (pageNo) {
+    // Only call the API if we are on the results page (for pagination)
+    if (showResults) {
       handle_Get_advance_search();
     }
   }, [pageNo]);
+
+  useEffect(() => {
+    // This runs only once when the component mounts
+    if (context) {
+      context.setAdvanceSearchData([]); // Clear any old search data from context
+    }
+    setShowResults(false); // Ensure the search form is always shown first
+  }, []);
 
   useEffect(() => {
     setSearchProfileData("");

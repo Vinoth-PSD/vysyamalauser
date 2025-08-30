@@ -327,12 +327,15 @@ export const PartnerSettings: React.FC = () => {
           //   response.data
           // ).map((matchCount: any) => matchCount);
           // setMatchStars(matchCountArrays);
+          // 2. This is the crucial line for sorting
           const matchCountArrays: MatchingStar[][] = Object.values(response.data)
             .map((matchCount: any) => matchCount)
-            // This is the sorting line
+            // 👇 This sort logic automatically moves the "Unmatching" (count: 0) group to the end
             .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
 
+          // 3. Set the correctly sorted array to the state
           setMatchStars(matchCountArrays);
+
 
           // Filter stars: Only select those with match_count !== 0 (exclude porutham 0)
           const defaultSelectedIds = matchCountArrays
@@ -425,11 +428,15 @@ export const PartnerSettings: React.FC = () => {
             gender: storedGender,
             birth_rasi_id: storedRasi,
           });
+          // 2. This is the crucial line for sorting
+          const matchCountArrays: MatchingStar[][] = Object.values(response.data)
+            .map((matchCount: any) => matchCount)
+            // 👇 This sort logic automatically moves the "Unmatching" (count: 0) group to the end
+            .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
 
-          const matchCountArrays: MatchingStar[][] = Object.values(
-            response.data
-          ).map((matchCount: any) => matchCount);
+          // 3. Set the correctly sorted array to the state
           setMatchStars(matchCountArrays);
+
 
           // Set default selections (exclude porutham 0)
           const defaultSelectedIds = matchCountArrays
@@ -467,11 +474,15 @@ export const PartnerSettings: React.FC = () => {
           birth_rasi_id: storedRasi,
         });
 
+        // 2. This is the crucial line for sorting
         const matchCountArrays: MatchingStar[][] = Object.values(response.data)
           .map((matchCount: any) => matchCount)
+          // 👇 This sort logic automatically moves the "Unmatching" (count: 0) group to the end
           .sort((a: MatchingStar[], b: MatchingStar[]) => b[0].match_count - a[0].match_count);
 
+        // 3. Set the correctly sorted array to the state
         setMatchStars(matchCountArrays);
+
 
         // 2. Create default selections (exclude porutham 0)
         const defaultSelectedIds = matchCountArrays
