@@ -60,26 +60,6 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                             <span className="text-sm text-primary">({totalRecords})</span>
                         </h4>
                     </div>
-
-                    {/* <div className="relative max-md:w-full max-md:text-end">
-                        <select name="month" id="month" className="w-[160px] rounded-md px-4 py-[10px] text-sm text-primary-400  shadow border border-ashSecondary focus-visible:outline-none appearance-none">
-                            <option value="jan">January</option>
-                            <option value="feb">February</option>
-                            <option value="mar">March</option>
-                            <option value="Apr">April</option>
-                            <option value="may">May</option>
-                            <option value="jun">June</option>
-                            <option value="jul">July</option>
-                            <option value="aug">August</option>
-                            <option value="sep">September</option>
-                            <option value="oct">October</option>
-                            <option value="nov">November</option>
-                            <option value="dec">December</option>
-                        </select>
-                        <div className="absolute right-2 top-3.5 ">
-                            <IoMdArrowDropdown className="text-lg text-primary-400" />
-                        </div>
-                    </div> */}
                 </div>
 
                 {/* viewed profiles Card */}

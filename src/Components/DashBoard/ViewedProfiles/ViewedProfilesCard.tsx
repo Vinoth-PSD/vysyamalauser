@@ -45,10 +45,12 @@ interface ApiResponse {
     profiles: Profile[];
   };
 }
+
 type ViewedProfilesCardProps = {
   pageNumber: number;
   dataPerPage: number;
 };
+
 export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumber }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>(() => {

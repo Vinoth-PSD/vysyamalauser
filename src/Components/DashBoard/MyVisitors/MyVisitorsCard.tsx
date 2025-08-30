@@ -52,7 +52,12 @@ interface ApiResponse {
   };
 }
 
-export const MyVisitorsCard = () => {
+type VisitorsProfilesCardProps = {
+  pageNumber: number;
+  dataPerPage: number;
+};
+
+export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]); // Store multiple profiles
   const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({});
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -76,6 +81,7 @@ export const MyVisitorsCard = () => {
           "/auth/My_profile_visit/",
           {
             profile_id: loginuser_profileId,
+              page_number: pageNumber,
           }
         );
 
