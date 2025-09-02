@@ -147,36 +147,36 @@ const PartnerSettings: React.FC = () => {
 
   const onSubmit: SubmitHandler<PartnerSettingsInputs> = async (data) => {
     setIsSubmitting(true);
-    //console.log("Form data:", data);
 
-    const starArray = selectedStarIds.map((item) => item.id);
-    const starRasiArray = selectedStarIds.map(
+    // Filter selectedStarIds to only include matching poruthams (match_count > 0)
+    const matchingStarsOnly = selectedStarIds.filter((selectedStar) => {
+      // Find the corresponding star in matchStars array
+      const matchingStar = matchStars
+        .flat()
+        .find((star) => star.id.toString() === selectedStar.id);
+
+      // Only include stars with match_count > 0
+      return matchingStar && matchingStar.match_count > 0;
+    });
+
+    // Create arrays from the filtered matching stars only
+    const starArray = matchingStarsOnly.map((item) => item.id);
+    const starRasiArray = matchingStarsOnly.map(
       (item) => `${item.star}-${item.rasi}`
     );
 
-    // Create a comma-separated string for each array
+    // Create comma-separated strings
     const StarString = starArray.join(",");
     const combinedString = starRasiArray.join(",");
-    console.log(StarString);
-    console.log(combinedString);
+
+    console.log("Filtered Matching Stars Only:", StarString);
+    console.log("Filtered Star-Rasi Combinations:", combinedString);
+
     const MaritalValues = selectedMaritalStatuses.join(",");
     const EducationalValues = selectedEducations.join(",");
-    const fieldOfStudyValues = selectedFieldOfStudy.join(",")
-    console.log(EducationalValues);
-    // const IncomeValues = selectedAnnualIncomes.join(",");
-    // console.log(IncomeValues);
-    const IncomeValue = selectedAnnualIncomes[0]; // Extract the selected value
-    //console.log("Selected Annual Income:", IncomeValue);
-
-    const IncomeValuemax = selectedMaxAnnualIncome[0]; // Extract the selected value
-    //console.log("Selected Annual Income:", IncomeValuemax);
-    // const prefProfessionString = [
-    //   ...(selectedProfessions.includes("employed") ? ["employed"] : []),
-    //   ...(selectedBusiness ? ["business"] : []),
-    //   ...(selectedStudent ? ["student"] : []),
-    //   ...(selectedNotWorking ? ["notWorking"] : []),
-    //   ...(selectedNotMentioned ? ["notMentioned"] : []),
-    // ].join(",");
+    const fieldOfStudyValues = selectedFieldOfStudy.join(",");
+    const IncomeValue = selectedAnnualIncomes[0];
+    const IncomeValuemax = selectedMaxAnnualIncome[0];
     const ProfessionValues = selectedProfession.join(",");
 
     try {
@@ -201,37 +201,35 @@ const PartnerSettings: React.FC = () => {
         pref_chevvai: data.chevvai,
         pref_ragukethu: data.rehu,
         pref_foreign_intrest: foreignInterestValue,
-        pref_porutham_star: StarString,
-        pref_porutham_star_rasi: combinedString,
+        pref_porutham_star: StarString, // Only matching porutham stars
+        pref_porutham_star_rasi: combinedString, // Only matching star-rasi combinations
         status: "1",
       };
 
-      //console.log("PartnerSettings:", postData);
+      console.log("PartnerSettings:", postData);
 
       const response = await apiClient.post(
         `/auth/Partner_pref_registration/`,
         postData
       );
-      //console.log("Registration response:", response.data);
 
       if (response.data.Status === 1) {
         NotifySuccess("Partner details updated successfully");
 
-        // Get quick_reg value from sessionStorage
-        const quickreg = sessionStorage.getItem("quick_reg") || "0"; // Default to "0" if not found
-        const userplanid = sessionStorage.getItem("userplanid") || "0"; // Default to "0" if not found
+        const quickreg = sessionStorage.getItem("quick_reg") || "0";
+        const userplanid = sessionStorage.getItem("userplanid") || "0";
 
         setTimeout(() => {
           if (quickreg === "1" || userplanid !== "0") {
-            navigate("/ThankYouReg"); // Redirect to ThankYouReg page
+            navigate("/ThankYouReg");
           } else {
-            navigate("/MembershipPlan"); // Redirect to MembershipPlan page
+            navigate("/MembershipPlan");
           }
         }, 2000);
       } else {
         setIsSubmitting(false);
         NotifyError("Registration unsuccessful");
-        //console.log("Registration unsuccessful:", response.data);
+        console.log("Registration unsuccessful:", response.data);
       }
     } catch (error) {
       setIsSubmitting(false);
@@ -239,82 +237,158 @@ const PartnerSettings: React.FC = () => {
     }
   };
 
-  // const profileId = sessionStorage.getItem('profile_id_new');
+  // const profileId = sessionStorage.getItem('profile_id_new');7
+  const storedBirthStar = localStorage.getItem("selectedstar") || sessionStorage.getItem("selectedstar");
+  const storedGender = localStorage.getItem("gender") || sessionStorage.getItem("gender");
+  const storedRasi = localStorage.getItem("selectedRasi") || sessionStorage.getItem("selectedRasi");
 
+  // Replace your useEffect for fetching matching stars with this consolidated version
   useEffect(() => {
-    const fetchProfileData = async () => {
-      const profileId = localStorage.getItem("profile_id_new");
+    const initializeStarSelection = async () => {
+      // Return early if essential data for fetching is missing
+      if (!storedBirthStar || !storedGender || !storedRasi) return;
 
-      if (profileId) {
-        try {
-          const requestData = {
-            profile_id: profileId,
-            page_id: 6,
-          };
+      try {
+        // 1. Fetch the master list of all possible matching stars
+        const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
+          birth_star_id: storedBirthStar,
+          gender: storedGender,
+          birth_rasi_id: storedRasi,
+        });
 
-          const response = await apiClient.post(
-            `/auth/Get_save_details/`,
-            requestData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
+        // The response is an object with keys like "8 Poruthas". We just need the arrays of stars.
+        const matchCountArrays: MatchingStar[][] = Object.values(response.data);
+
+        // Flatten the groups of stars into a single "master list" for easy lookup
+        const allAvailableStars: MatchingStar[] = matchCountArrays.flat();
+
+        // Sort the grouped array for display purposes
+        const sortedMatchGroups = [...matchCountArrays].sort(
+          (a: MatchingStar[], b: MatchingStar[]) => (b[0]?.match_count ?? 0) - (a[0]?.match_count ?? 0)
+        );
+        setMatchStars(sortedMatchGroups);
+
+        // 2. Check if user has existing saved preferences
+        const profileId = localStorage.getItem("profile_id_new") ||
+          localStorage.getItem("loginuser_profile_id");
+
+        let finalSelections: SelectedStarIdItem[] = [];
+
+        if (profileId) {
+          try {
+            const requestData = {
+              profile_id: profileId,
+              page_id: 6,
+            };
+
+            const profileResponse = await apiClient.post(
+              `/auth/Get_save_details/`,
+              requestData
+            );
+
+            const profileData = profileResponse.data.data;
+            const maritalStatusArray = profileData.pref_marital_status ?
+              profileData.pref_marital_status.split(",") : [];
+            const educationArray = profileData.pref_education ?
+              profileData.pref_education.split(",") : [];
+            const fieldOfStudy = profileData.pref_fieldof_study ?
+              profileData.pref_fieldof_study.split(",") : [];
+            const annualIncomeArray = profileData.pref_anual_income ?
+              profileData.pref_anual_income.split(",") : [];
+            const annualIncomeArraymax = profileData.annualIncome_max ?
+              profileData.annualIncome_max.split(",") : [];
+
+            // Set form values
+            setValue("age", profileData.pref_age_differences || "5");
+            setValue("heightFrom", profileData.pref_height_from || "");
+            setValue("heightTo", profileData.pref_height_to || "");
+            setValue("chevvai", profileData.pref_chevvai || "");
+            setValue("rehu", profileData.pref_ragukethu || "");
+            setValue("foreignInterest", profileData.pref_foreign_intrest || "both");
+
+            // Set selected values for checkboxes and other states
+            setSelectedMaritalStatuses(maritalStatusArray);
+            setSelectedEducations(educationArray);
+            setSelectedFieldOfStudy(fieldOfStudy);
+            setSelectedAnnualIncomes(annualIncomeArray);
+            setSelectedAnnualIncomesmax(annualIncomeArraymax);
+            setSelectedProfession(profileData.pref_profession ?
+              profileData.pref_profession.split(",") : []);
+            // Check if user has existing star preferences that are not empty/null
+            if (profileData.pref_porutham_star && profileData.pref_porutham_star.trim() !== null || '') {
+              console.log("Found saved star preferences:", profileData.pref_porutham_star);
+
+              // Use the saved preferences
+              const savedStarIds = profileData.pref_porutham_star
+                .split(",")
+                .map((id: string) => id.trim());
+
+              finalSelections = savedStarIds.map((id: string) => {
+                // Try to find the complete star info from our master list
+                const matchingStar = allAvailableStars.find(
+                  (star) => star.id.toString() === id
+                );
+
+                return {
+                  id,
+                  rasi: matchingStar ? matchingStar.dest_rasi_id.toString() : "",
+                  star: matchingStar ? matchingStar.dest_star_id.toString() : "",
+                  label: matchingStar ?
+                    `${matchingStar.matching_starname} - ${matchingStar.matching_rasiname}` :
+                    `Star ID: ${id}`,
+                };
+              });
+            } else {
+              // No saved preferences found - use default selection (all except porutham 0)
+              console.log("No saved preferences found. Setting default star selections.");
+              finalSelections = allAvailableStars
+                .filter((item) => item.match_count > 0) // Exclude stars with 0 poruthams
+                .map((item) => ({
+                  id: item.id.toString(),
+                  rasi: item.dest_rasi_id.toString(),
+                  star: item.dest_star_id.toString(),
+                  label: `${item.matching_starname} - ${item.matching_rasiname}`,
+                }));
             }
-          );
-
-          //console.log("API Response:", response.data);
-
-          const profileData = response.data.data;
-
-          // Parse and set form values
-          const maritalStatusArray = profileData.pref_marital_status.split(",");
-          const educationArray = profileData.pref_education.split(",");
-          const fieldOfStudy = profileData.pref_fieldof_study.split(",");
-          const annualIncomeArray = profileData.pref_anual_income.split(",");
-          const annualIncomeArraymax = profileData.annualIncome_max.split(",");
-
-          const poruthamStarIds = profileData.pref_porutham_star
-            .split(",")
-            .map((id: string) => id.trim());
-
-          // Set form values
-          setValue("age", profileData.pref_age_differences || "5");
-          setValue("heightFrom", profileData.pref_height_from);
-          setValue("heightTo", profileData.pref_height_to);
-          setValue("maritalStatus", maritalStatusArray);
-          setValue("profession", profileData.pref_profession.split(","));
-          setValue("education", educationArray);
-          setValue("annualIncome", annualIncomeArray);
-          setValue("annualIncome_max", annualIncomeArraymax);
-          setValue("chevvai", profileData.pref_chevvai);
-          setValue("rehu", profileData.pref_ragukethu);
-          setValue("foreignInterest", profileData.pref_foreign_intrest);
-          // Set selected values for checkboxes and other states
-          setSelectedMaritalStatuses(maritalStatusArray);
-          setSelectedEducations(educationArray);
-          setSelectedFieldOfStudy(fieldOfStudy)
-          setSelectedAnnualIncomes(annualIncomeArray);
-          // setSelectedStarIds(poruthamStarIds); // Set selected stars for checkbox selection
-          setSelectedAnnualIncomesmax(annualIncomeArraymax);
-
-          setSelectedStarIds(
-            poruthamStarIds.map((id: any) => ({
-              id,
-              rasi: "",
-              star: "",
-              label: "",
-            }))
-          );
-        } catch (error) {
-          console.error("Error fetching profile data:", error);
+          } catch (profileError) {
+            console.error("Error fetching profile data:", profileError);
+            // Fallback to default selection on error
+            finalSelections = allAvailableStars
+              .filter((item) => item.match_count > 0)
+              .map((item) => ({
+                id: item.id.toString(),
+                rasi: item.dest_rasi_id.toString(),
+                star: item.dest_star_id.toString(),
+                label: `${item.matching_starname} - ${item.matching_rasiname}`,
+              }));
+          }
+        } else {
+          // No profile ID - use default selection
+          finalSelections = allAvailableStars
+            .filter((item) => item.match_count > 0)
+            .map((item) => ({
+              id: item.id.toString(),
+              rasi: item.dest_rasi_id.toString(),
+              star: item.dest_star_id.toString(),
+              label: `${item.matching_starname} - ${item.matching_rasiname}`,
+            }));
         }
-      } else {
-        console.warn("Profile ID not found in sessionStorage");
+
+        // 3. Set final selections and save to session
+        setSelectedStarIds(finalSelections);
+        sessionStorage.setItem("selectedStarIds", JSON.stringify(finalSelections));
+
+        console.log("Final selected stars count:", finalSelections.length);
+        console.log("Stars with porutham 0 (excluded):",
+          allAvailableStars.filter(item => item.match_count === 0).length);
+
+      } catch (error) {
+        console.error("Error initializing star selection:", error);
       }
     };
 
-    fetchProfileData();
-  }, [setValue]);
+    initializeStarSelection();
+  }, [storedBirthStar, storedGender, storedRasi]);
 
   const handleMaritalStatusChange = (id: string, isChecked: boolean) => {
     setSelectedMaritalStatuses((prev) =>
@@ -425,14 +499,15 @@ const PartnerSettings: React.FC = () => {
     }
   }, []);
 
-  const storedBirthStar = sessionStorage.getItem("selectedstar");
+  //const storedBirthStar = sessionStorage.getItem("selectedstar");
   // const storedGender = sessionStorage.getItem("gender");
-  const storedGender = localStorage.getItem("gender");
+  //const storedGender = localStorage.getItem("gender");
   // const storedMartialStatus = sessionStorage.getItem("maritalStatus");
   //const storedHeight = sessionStorage.getItem("userHeight") || 0;
   const storedHeight = localStorage.getItem("userHeight") || 0;
   // const quickreg = sessionStorage.getItem("quick_reg") || "0";
-  const storedRasi = sessionStorage.getItem("selectedRasi");
+  //const storedRasi = sessionStorage.getItem("selectedRasi");
+
 
   // console.log(storedMartialStatus);
   // console.log(storedBirthStar);

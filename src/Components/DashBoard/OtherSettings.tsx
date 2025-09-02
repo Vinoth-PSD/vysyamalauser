@@ -10,6 +10,7 @@ import { PhotoSettings } from "./OtherSettings/PhotoSettings";
 import { PartnerSettings } from "./OtherSettings/PartnerSettings";
 import { BiSolidUserCircle } from "react-icons/bi";
 import { ProfileVisibility } from "./OtherSettings/ProfileVisibility";
+import { useNavigate } from "react-router-dom";
 // import { ChangePassword } from "./OtherSettings/ChangePassword";
 // import { ProfileVisibility } from "./OtherSettings/ProfileVisibility";
 
@@ -18,7 +19,7 @@ interface OtherSettingsProps {
 }
 
 export const OtherSettings: React.FC<OtherSettingsProps> = ({
-  dashBoardAgain,
+ // dashBoardAgain,
 }) => {
   // Corresponding Component State Declaration
   const [activeSection, setActiveSection] = useState<string>("AlertSettings");
@@ -40,12 +41,18 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
         return <AlertSettings />;
     }
   };
+  const navigate = useNavigate();
+
+  const handleBackToDashboard = () => {
+    navigate("/Dashboard");
+  };
+
   return (
     <div>
       <div className="container mx-auto">
         <div className="flex items-center mb-5">
           <IoArrowBackOutline
-            onClick={dashBoardAgain}
+            onClick={handleBackToDashboard}
             className="text-[24px] mr-2 cursor-pointer"
           />
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-sm:text-[20px]">

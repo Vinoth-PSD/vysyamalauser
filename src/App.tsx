@@ -62,6 +62,7 @@ import { AryaVysyaGothras } from "./Pages/AryaVysyaGothras";
 import { AboutUs } from "./Pages/AboutUs";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { OtherSettings } from "./Components/DashBoard/OtherSettings";
 
 // Define prop types for AppContent
 interface AppContentProps {
@@ -105,7 +106,7 @@ function AppContent({ token }: AppContentProps) {
 
   return (
     <>
-    
+
       {/* ✅ ADD THE TOAST CONTAINER HERE */}
       <ToastContainer
         position="top-right"
@@ -117,7 +118,7 @@ function AppContent({ token }: AppContentProps) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-         style={{ zIndex: 999999 }} 
+        style={{ zIndex: 999999 }}
       />
       <Routes>
         <Route path="/AwardsMobile" element={<AwardsMobile />} />
@@ -164,7 +165,10 @@ function AppContent({ token }: AppContentProps) {
           <Route element={<LoginLayout />}>
             <Route path="/LoginHome" element={<LoginHome />} />
             <Route path="/Search" element={<Search />} />
-            <Route path="/DashBoard" element={<DashBoard />} />
+            <Route path="/Dashboard" element={<DashBoard />} />
+            <Route path="/Dashboard/Settings" element={<OtherSettings dashBoardAgain={function (): void {
+              throw new Error("Function not implemented.");
+            } } />} />
             <Route path="/Wishlist" element={<Wishlist />} />
             <Route path="/Messages" element={<Messages />} />
             <Route path="/Notifications" element={<Notifications />} />
@@ -232,7 +236,7 @@ function AppContent({ token }: AppContentProps) {
         />
       </Routes>
       {/* <ToastContainer/> */}
-  
+
     </>
   );
 }

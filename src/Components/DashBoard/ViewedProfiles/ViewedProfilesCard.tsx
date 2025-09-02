@@ -75,9 +75,9 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       .then((response) => {
         if (response.data.Status === 1) {
           setProfiles(response.data.data.profiles);
-           window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
-        
+
       })
       .catch((error) => {
         console.error("Error fetching profiles:", error);
@@ -175,8 +175,8 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
 
       // Navigate after validation
       //navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-      //  navigate(`/ProfileDetails?id=${profileId}&page=4&from=viewedProfiles`);
-       navigate(`/ProfileDetails?id=${profileId}&page=4`);
+      //navigate(`/ProfileDetails?id=${profileId}&page=4&from=viewedProfiles`);
+      navigate(`/ProfileDetails?id=${profileId}&page=4`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
@@ -187,10 +187,10 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
 
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
   //console.log(profiles, "profilesssssss");
   return (

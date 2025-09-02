@@ -282,9 +282,20 @@ export const LoginHeader: React.FC = () => {
     navigate("/MyProfile"); // Navigates to the MyProfile page
   };
 
-  const handleUpdateSettings = () => {
-    navigate("/DashBoard?key=1");
-    setIsMenuOpen(!isMenuOpen);
+  // const handleUpdateSettings = () => {
+  //   navigate("/DashBoard?key=1");
+  //   setIsMenuOpen(isMenuOpen);
+  // };
+
+    const handleUpdateSettings = () => {
+    // CHANGE THIS LINE:
+    // navigate("/DashBoard?key=1"); 
+    
+    // TO THIS:
+    navigate("/Dashboard/Settings"); 
+    
+    // This is a good place to ensure the mobile menu closes after navigation
+    setIsMenuOpen(false); 
   };
 
   return (

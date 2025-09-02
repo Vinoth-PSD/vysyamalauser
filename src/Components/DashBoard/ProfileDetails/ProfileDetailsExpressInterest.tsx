@@ -7,7 +7,7 @@ import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import AgeIcon from "../../../assets/icons/ageIcon.png";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
-import {  IoEye } from "react-icons/io5";
+import { IoEye } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
 import { FaTableList } from "react-icons/fa6";
 import { ProfileSlickView } from "../../LoginHome/ProfileDetailsView/ProfileSlickView";
