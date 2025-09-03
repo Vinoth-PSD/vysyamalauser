@@ -131,6 +131,8 @@ export const PayNowRegistration: React.FC = () => {
         }
         // Proceed with further actions after successful verification
         await Save_plan_package(); // After verification, save the plan
+        setIsOnlinePaymentClicked(true);
+        setIsPaymentSuccessful(true);
       } else {
         NotifyError("Payment verification failed!");
       }
@@ -168,17 +170,38 @@ export const PayNowRegistration: React.FC = () => {
     }
   };
 
-  const Save_plan_package = async () => {
+  const Save_plan_package = async (isGPay?: boolean) => {
     try {
       const addonPackageIdsString = selectedPackageIds.join(",");
 
       // Call the savePlanPackage function from the common API file
-      const response = await savePlanPackage(
-        String(profile_id),
-        String(id),
-        addonPackageIdsString,
-        totalAmount
-      );
+      // const response = await savePlanPackage(
+      //   String(profile_id),
+      //   String(id),
+      //   addonPackageIdsString,
+      //   totalAmount
+      // );
+      let response;
+
+      if (isGPay) {
+        // For GPay: pass gpay_online=1
+        response = await savePlanPackage(
+          String(profile_id),
+          String(id),
+          addonPackageIdsString,
+          totalAmount,
+          1
+        );
+      } else {
+        // For other payments: don't pass gpay_online parameter
+        response = await savePlanPackage(
+          String(profile_id),
+          String(id),
+          addonPackageIdsString,
+          totalAmount
+        );
+      }
+
 
       // Check if the response and status exist before accessing them
       if (response && response.status === "success") {
@@ -420,7 +443,7 @@ export const PayNowRegistration: React.FC = () => {
         }}
         onConfirm={async () => {
           try {
-            await Save_plan_package();
+            await Save_plan_package(true);
             setgpayPaymentSuccessful(true); // Mark GPay payment as successful
           } catch (error) {
             console.error("Error saving package:", error);

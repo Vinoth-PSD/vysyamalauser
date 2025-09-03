@@ -12,12 +12,20 @@ import apiClient from "./../../../API";
 import { ProfileContext } from "../../../ProfileContext";
 
 // ZOD Schema with updated regex validations
-const schema = zod
-  .object({
-    profileID: zod.string().min(1, "Profile ID is required"),
-    password: zod.string().min(1, "Password is required"),
-  })
-  .required();
+// const schema = zod
+//   .object({
+//     profileID: zod.string().min(1, "Profile ID is required"),
+//     password: zod.string().min(1, "Password is required"),
+//   })
+//   .required();
+
+const schema = zod.object({
+  profileID: zod
+    .string()
+    .min(1, "Profile ID is required")
+    .regex(/^[A-Z0-9]+$/, "This Profile ID is not allowed"), // ✅ only uppercase + numbers
+  password: zod.string().min(1, "Password is required"),
+});
 
 interface LoginPopUpProps {
   onNext: () => void;

@@ -342,23 +342,55 @@ export const cancelPayment = async (profileID:string, orderId: string, Status:nu
 };
 
 
+// export const savePlanPackage = async (
+//   profile_id: string,
+//   plan_id: string,
+//   addon_package_ids: string,
+//   total_amount: number
+// ) => {
+//   try {
+//     const response = await apiClient.post(
+//       "/auth/Save_plan_package/",
+//       {
+//         profile_id: profile_id,
+//         plan_id: plan_id,
+//         addon_package_id: addon_package_ids,
+//         total_amount: total_amount,
+//       }
+      
+//     );
+// ////console.log("response",response)
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error saving the package:", error);
+//     throw new Error("Error saving the package");
+//   }
+// };
 export const savePlanPackage = async (
   profile_id: string,
   plan_id: string,
   addon_package_ids: string,
-  total_amount: number
+  total_amount: number,
+  gpay_online?: number // Make it optional
 ) => {
   try {
+    const requestBody: any = {
+      profile_id: profile_id,
+      plan_id: plan_id,
+      addon_package_id: addon_package_ids,
+      total_amount: total_amount
+    };
+    
+    // Only add gpay_online to request if it's provided
+    if (gpay_online !== undefined) {
+      requestBody.gpay_online = gpay_online;
+    }
+
     const response = await apiClient.post(
       "/auth/Save_plan_package/",
-      {
-        profile_id: profile_id,
-        plan_id: plan_id,
-        addon_package_id: addon_package_ids,
-        total_amount: total_amount,
-      }
+      requestBody
     );
-////console.log("response",response)
+    
     return response.data;
   } catch (error) {
     console.error("Error saving the package:", error);

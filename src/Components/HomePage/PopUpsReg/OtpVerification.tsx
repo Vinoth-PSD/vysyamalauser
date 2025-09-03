@@ -373,9 +373,6 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
   const [isIndia, setIsIndia] = useState<boolean>(false); // Flag for displaying mobile or email
   const [contactInfo, setContactInfo] = useState<string>("");
 
-
-
-
   useEffect(() => {
     // Retrieve mobile, email, and isIndia flag from session storage
     const mobile = sessionStorage.getItem("mobile") || "";
@@ -436,8 +433,6 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
       }
     }
   };
-
-
 
   const handleBackspace = (
     index: number,

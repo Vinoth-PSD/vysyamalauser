@@ -195,8 +195,10 @@ export const LoginPopupModal: React.FC<LoginPopupModalProps> = ({ onClose }) => 
         // }
 
         if (selectedProfileId && loggedInProfileId) {
-            const selectedPrefix = selectedProfileId.substring(0, 2); // VF or VM
-            const loggedInPrefix = loggedInProfileId.substring(0, 2); // VF or VM
+            const selectedPrefix = selectedProfileId.substring(0, 2).toUpperCase(); // VF or VM
+            console.log("selectedPrefix selected select profiles",selectedPrefix)
+            const loggedInPrefix = loggedInProfileId.substring(0, 2).toUpperCase(); // VF or VM
+            console.log("loggedInPrefix login profiles",loggedInPrefix)
 
             if (selectedPrefix !== loggedInPrefix) {
                 // ✅ Opposite gender → show profile

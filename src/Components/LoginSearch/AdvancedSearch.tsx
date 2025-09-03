@@ -20,7 +20,7 @@ const profileIdSchema = z.object({
   //     "Search input must be a Profile ID (e.g., VY123456) or a Profile Name"
   //   ),
   profile_id: z.string().min(1, "Profile ID or Profile Name is required"),
-  
+
 });
 
 // Define the type for the form inputs based on the schema
@@ -184,15 +184,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       setNativeState((prevState) => prevState.filter((item) => item !== value));
     }
   };
-  const handleCheckDhosam = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, checked } = event.target;
-
-    if (id === "chevvai") {
-      setChevvai_dhosam(checked ? "yes" : "no");
-    } else if (id === "rehu") {
-      setRehuDhosam(checked ? "yes" : "no")
-    }
-  };
+  
   const handleIncomeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedIncomes(event.target.value);
   };
@@ -231,40 +223,40 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   // };
 
 
-const Search_By_profileId = async (searchProfile: string) => {
-  try {
-    const response = await apiClient.post(
-      "/auth/Search_byprofile_id/",
-      {
-        profile_id: loginuser_profile_id,
-        search_profile_id: searchProfile,
-      }
-    );
+  const Search_By_profileId = async (searchProfile: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Search_byprofile_id/",
+        {
+          profile_id: loginuser_profile_id,
+          search_profile_id: searchProfile,
+        }
+      );
 
-    if (response.status === 200 && (response.data.status === 'failure' || !response.data.data || response.data.data.length === 0)) {
+      if (response.status === 200 && (response.data.status === 'failure' || !response.data.data || response.data.data.length === 0)) {
+        setError("profile_id", {
+          type: "manual",
+          message: "No profile found with that ID or name. Please try again.",
+        });
+        return; // Stop execution here
+      }
+
+      if (response.status === 200) {
+        sessionStorage.setItem("searchProfile", searchProfile);
+        console.log(response.data.data, "search profile");
+        setAdvanceSearchData(response.data.data);
+        setTimeout(() => {
+          onFindMatch();
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
       setError("profile_id", {
         type: "manual",
-        message: "No profile found with that ID or name. Please try again.",
+        message: "An error occurred. Please check the profile ID and try again.",
       });
-      return; // Stop execution here
     }
-
-    if (response.status === 200) {
-      sessionStorage.setItem("searchProfile", searchProfile);
-      console.log(response.data.data, "search profile");
-      setAdvanceSearchData(response.data.data);
-      setTimeout(() => {
-        onFindMatch();
-      }, 1000);
-    }
-  } catch (error) {
-    console.log(error);
-    setError("profile_id", {
-      type: "manual",
-      message: "An error occurred. Please check the profile ID and try again.",
-    });
-  }
-};
+  };
   useEffect(() => {
     const fetchMaritalStatuses = async () => {
       try {
@@ -782,36 +774,89 @@ const Search_By_profileId = async (searchProfile: string) => {
             {/* {/ Dhosam /} */}
             <div>
               <h5 className="text-secondary text-lg font-semibold mb-2">
-                Dhosam
+                Chevvai Dhosam
               </h5>
               <div className="w-full flex justify-start gap-4 items-center max-sm:flex-wrap">
-                <div>
-                  <input
-                    type="checkbox"
-                    id="chevvai"
-                    value="chevvai"
-                    checked={chevvai_dhosam === "yes"}
-                    onChange={handleCheckDhosam}
-                  />
-                  <label htmlFor="chevvai" className="pl-1">
-                    Chevvai
+                <div className="flex items-center space-x-4">
+                  <label>
+                    <input
+                      type="radio"
+                      name="chevvai_dhosam"
+                      value="yes"
+                      checked={chevvai_dhosam === "yes"}
+                      onChange={(e) => setChevvai_dhosam(e.target.value)}
+                    />
+                    Yes
                   </label>
-                </div>
 
-                <div>
-                  <input
-                    type="checkbox"
-                    id="rehu"
-                    value="rehu"
-                    checked={rehuDhosam === "yes"}
-                    onChange={handleCheckDhosam}
-                  />
-                  <label htmlFor="rehu" className="pl-1">
-                    Rehu / Ketu
+                  <label>
+                    <input
+                      type="radio"
+                      name="chevvai_dhosam"
+                      value="no"
+                      checked={chevvai_dhosam === "no"}
+                      onChange={(e) => setChevvai_dhosam(e.target.value)}
+                    />
+                    No
+                  </label>
+
+                  <label>
+                    <input
+                      type="radio"
+                      name="chevvai_dhosam"
+                      value="both"
+                      checked={chevvai_dhosam === "both"}
+                      onChange={(e) => setChevvai_dhosam(e.target.value)}
+                    />
+                    Both
                   </label>
                 </div>
               </div>
             </div>
+
+            <div>
+              <h5 className="text-secondary text-lg font-semibold mb-2">
+                Rahu / Ketu Dhosam
+              </h5>
+              <div className="w-full flex justify-start gap-4 items-center max-sm:flex-wrap">
+                <div className="flex items-center space-x-4">
+                  <label>
+                    <input
+                      type="radio"
+                      name="rehu_dhosam"
+                      value="yes"
+                      checked={rehuDhosam === "yes"}
+                      onChange={(e) => setRehuDhosam(e.target.value)}
+                    />
+                    Yes
+                  </label>
+
+                  <label>
+                    <input
+                      type="radio"
+                      name="rehu_dhosam"
+                      value="no"
+                      checked={rehuDhosam === "no"}
+                      onChange={(e) => setRehuDhosam(e.target.value)}
+                    />
+                    No
+                  </label>
+
+                  <label>
+                    <input
+                      type="radio"
+                      name="rehu_dhosam"
+                      value="both"
+                      checked={rehuDhosam === "both"}
+                      onChange={(e) => setRehuDhosam(e.target.value)}
+                    />
+                    Both
+                  </label>
+                </div>
+              </div>
+            </div>
+
+
 
             {/* {/ Birth Star /} */}
             <div>

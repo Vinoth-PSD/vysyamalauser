@@ -150,6 +150,8 @@ export const PayNow: React.FC = () => {
         storePlanId();
         // Proceed with further actions after successful verification
         await Save_plan_package(); // After verification, save the plan
+        setIsOnlinePaymentClicked(true);
+        setIsPaymentSuccessful(true);
       } else {
         NotifyError("Payment verification failed!");
       }
@@ -187,7 +189,7 @@ export const PayNow: React.FC = () => {
     }
   };
 
-  const Save_plan_package = async () => {
+  const Save_plan_package = async (isGPay?: boolean) => {
     try {
       const addonPackageIdsString = selectedPackageIds.join(",");
       const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
@@ -196,12 +198,32 @@ export const PayNow: React.FC = () => {
       //console.log("totalAmount", totalAmount);
 
       // Call the savePlanPackage function from the common API file
-      const response = await savePlanPackage(
-        String(profile_id),
-        String(plan_id),
-        addonPackageIdsString,
-        totalAmount
-      );
+      // const response = await savePlanPackage(
+      //   String(profile_id),
+      //   String(plan_id),
+      //   addonPackageIdsString,
+      //   totalAmount
+      // );
+      let response;
+
+      if (isGPay) {
+        // For GPay: pass gpay_online=1
+        response = await savePlanPackage(
+          String(profile_id),
+          String(plan_id),
+          addonPackageIdsString,
+          totalAmount,
+          1
+        );
+      } else {
+        // For other payments: don't pass gpay_online parameter
+        response = await savePlanPackage(
+          String(profile_id),
+          String(plan_id),
+          addonPackageIdsString,
+          totalAmount
+        );
+      }
 
 
       // Log the full response to check its structure
@@ -436,7 +458,7 @@ export const PayNow: React.FC = () => {
         }}
         onConfirm={async () => {
           try {
-            await Save_plan_package();
+            await Save_plan_package(true);
             setgpayPaymentSuccessful(true); // Mark GPay payment as successful
           } catch (error) {
             console.error("Error saving package:", error);
