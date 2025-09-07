@@ -10,11 +10,6 @@ import { ProfileContext } from "../../ProfileContext";
 
 export const LoginHome: React.FC = () => {
 
-
-
-
-
-
   const context = useContext(ProfileContext);
 
   if (!context) {

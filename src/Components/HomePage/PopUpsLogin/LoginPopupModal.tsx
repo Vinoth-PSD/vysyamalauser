@@ -185,20 +185,27 @@ export const LoginPopupModal: React.FC<LoginPopupModalProps> = ({ onClose }) => 
     const handleLogin = () => {
         console.log('Navigating to LoginHome');
         // window.location.href = '/LoginHome';   // Navigate to LoginHome page after successful login
+        // const selectedProfileId = "VF32211"
+        // const loggedInProfileId = "Vm54038";
         const selectedProfileId = sessionStorage.getItem("selectedProfileId");
         const loggedInProfileId = sessionStorage.getItem("loggedInProfileId");
         // if (selectedProfileId) {
         //     navigate(`/ProfileDetails?id=${selectedProfileId}&rasi=1`);
         // } else {
         //     navigate('/LoginHome');  // Navigate to LoginHome page after successful login
-
         // }
 
         if (selectedProfileId && loggedInProfileId) {
-            const selectedPrefix = selectedProfileId.substring(0, 2).toUpperCase(); // VF or VM
-            console.log("selectedPrefix selected select profiles",selectedPrefix)
-            const loggedInPrefix = loggedInProfileId.substring(0, 2).toUpperCase(); // VF or VM
-            console.log("loggedInPrefix login profiles",loggedInPrefix)
+            const selectedPrefix = selectedProfileId.substring(0, 2); // VF or VM
+            console.log("selectedPrefix selected select profiles", selectedPrefix)
+            const loggedInPrefix = loggedInProfileId.substring(0, 2); // VF or VM
+            console.log("loggedInPrefix login profiles", loggedInPrefix)
+
+            const idPattern = /^[A-Z0-9]+$/; // only uppercase letters + numbers
+            if (!idPattern.test(selectedProfileId) || !idPattern.test(loggedInProfileId)) {
+                navigate("/LoginHome");
+                return;
+            }
 
             if (selectedPrefix !== loggedInPrefix) {
                 // ✅ Opposite gender → show profile

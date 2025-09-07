@@ -130,7 +130,12 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&page=5`);
+      navigate(`/ProfileDetails?id=${profileId}&page=5`,{
+        state: {
+          from: 'myVisitors',
+          pageNumber: pageNumber // Pass the current page number
+        }
+      });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

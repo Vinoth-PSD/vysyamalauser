@@ -9,10 +9,10 @@ import { Hearts } from "react-loader-spinner";
 
 interface GalleryCardProps {
   profiles: GalleryItem[];
+  pageNumber: number; // Add this prop
 }
 
-
-const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
+const GalleryCard: React.FC<GalleryCardProps> = ({ profiles,pageNumber }) => {
   const navigate = useNavigate()
   const [loadingProfileId, setLoadingProfileId] = useState<string | null>(null);
   //const location = useLocation();
@@ -35,7 +35,12 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ profiles }) => {
         return;
       }
 
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`,{
+        state: {
+          from: 'Gallery',
+          pageNumber: pageNumber // Pass the current page number
+        }
+      });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

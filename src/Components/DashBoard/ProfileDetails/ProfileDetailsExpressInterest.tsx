@@ -7,7 +7,7 @@ import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import AgeIcon from "../../../assets/icons/ageIcon.png";
 import { MdOutlineGrid3X3 } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
-import { IoEye } from "react-icons/io5";
+import { IoArrowBackOutline, IoEye } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
 import { FaTableList } from "react-icons/fa6";
 import { ProfileSlickView } from "../../LoginHome/ProfileDetailsView/ProfileSlickView";
@@ -735,8 +735,71 @@ export const ProfileDetailsExpressInterest: React.FC<
   //   return <div>Loading Divya...</div>;
   // }
 
-  // Get the 'from' parameter from the URL
-  //const fromView = queryParams.get("from");
+  // // Get the 'from' parameter from the URL
+  // const fromView = queryParams.get("from");
+  //  const location = useLocation();
+  // const navigate = useNavigate();
+
+  // Get the navigation state with default values
+  const navigationState = location.state || {};
+  const { from = '', pageNumber = 1 } = navigationState;
+
+  const handleBackClick = () => {
+    // Handle navigation based on where we came from
+    switch (from) {
+      case 'dashboard':
+        navigate('/Dashboard');
+        break;
+      case 'viewedProfiles':
+        navigate(`/Dashboard/viewedprofiles?page=${pageNumber}`);
+        break;
+      case 'LoginHome':
+        navigate(`/LoginHome/MatchingProfiles?page=${pageNumber}`);
+        break;
+     
+      case 'MutualInterest':
+        navigate(`/Dashboard/MutualInterest?page=${pageNumber}`);
+        break;
+      case 'Wishlisting':
+        navigate(`/Dashboard/Wishlisting?page=${pageNumber}`);
+        break;
+      case 'interestSent':
+        navigate(`/Dashboard/interestsent?page=${pageNumber}`);
+        break;
+      case 'myVisitors':
+        navigate(`/Dashboard/myvisitors?page=${pageNumber}`);
+        break;
+      case 'ViewAllFeaturedProfiles':
+        navigate(`/Dashboard/ViewAllFeaturedProfiles?page=${pageNumber}`);
+        break;
+      // case 'Search':
+      //   navigate('/Search');
+      //   break;
+      // case 'LoginHome':
+      //   navigate(`/LoginHome?page=${pageNumber}`);
+      //   break;
+      case 'suggestedProfiles':
+        navigate('/suggestedprofiles');
+        break;
+      case 'Gallery':
+        navigate(`/Dashboard/Gallery?page=${pageNumber}`);
+        break;
+      case 'PhotoRequest':
+        navigate(`/Dashboard/PhotoRequest?page=${pageNumber}`);
+        break;
+      case 'PersonalNotes':
+        navigate(`/Dashboard/PersonalNotes?page=${pageNumber}`);
+        break;
+      case 'VysAssit':
+        navigate(`/Dashboard/VysAssit?page=${pageNumber}`);
+        break;
+      case 'OtherSettings':
+        navigate(`/Dashboard/OtherSettings?page=${pageNumber}`);
+        break;
+      default:
+        navigate(-1); // Fallback: go back in history
+    }
+  };
 
   return (
     <div>
@@ -750,20 +813,20 @@ export const ProfileDetailsExpressInterest: React.FC<
               <span className="text-sm text-primary"> (234)</span>
             </h4> 
           </div> */}
-          {/* <div className="flex items-start mb-5">
+          <div className="flex items-start mb-5">
             <IoArrowBackOutline
-              onClick={() => {
-                if (fromView) {
-                  navigate(`/Dashboard?key=${fromView}`);
-                } else {
-                  navigate(-1);
-                }
-              }}
+              // onClick={() => {
+              //   if (fromView) {
+              //     navigate(`/Dashboard?key=${fromView}`);
+              //   } else {
+              //     navigate(-1);
+              //   }
+              // }}
+              onClick={handleBackClick}
               className="text-[24px] mr-2 cursor-pointer text-vysyamalaBlackSecondary"
               title="Go back"
             />
-            
-          </div> */}
+          </div>
 
           {loading ? (
             <div className="w-fit mx-auto py-40">

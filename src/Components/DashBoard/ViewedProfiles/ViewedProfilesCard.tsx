@@ -175,8 +175,14 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
 
       // Navigate after validation
       //navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-      //navigate(`/ProfileDetails?id=${profileId}&page=4&from=viewedProfiles`);
-      navigate(`/ProfileDetails?id=${profileId}&page=4`);
+      // navigate(`/ProfileDetails?id=${profileId}&page=4&from=viewedProfiles`);
+      navigate(`/Profiledetails?id=${profileId}&page=4`, {
+        state: {
+          from: 'viewedProfiles',
+          pageNumber: pageNumber // Pass the current page number
+        }
+      });
+      // navigate(`/ProfileDetails?id=${profileId}&page=4`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

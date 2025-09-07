@@ -7,6 +7,7 @@ import { getGallerylists } from "../../commonapicall";
 import Pagination from "../Pagination";
 import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
 import { Hearts } from "react-loader-spinner";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface GalleryProps {
   dashBoardAgain: () => void;
@@ -17,15 +18,30 @@ export type GalleryItem = {
   img_url: string;
 };
 
-const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
+export const Gallery: React.FC<GalleryProps> = ({ }) => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totlaRecords, setTotalRecords] = useState<number>(0);
   const [perPage, setPerPage] = useState<number>(5);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  // const [pageNumber, setPageNumber] = useState<number>(1);
   const [noProfiles, setNoProfiles] = useState<boolean>(false); // for empty profiles
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get page number from URL query parameter or default to 1
+  const getInitialPageNumber = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get('page');
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+  const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+
+  const handleBackToDashboard = () => {
+    navigate('/Dashboard');
+  };
 
   useEffect(() => {
     const fetchGalleryItems = async () => {
@@ -59,13 +75,22 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
   }, [pageNumber]);
 
   const totalPages = Number(Math.ceil(totlaRecords / perPage));
+
+  useEffect(() => {
+    // Update URL when page changes
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', pageNumber.toString());
+
+    // Replace current URL without causing navigation
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [pageNumber, location.search, navigate]);
   //console.log(perPage, ",,");
   return (
     <div className="bg-grayBg pt-10">
       <div className="container mx-auto">
         <div className="flex items-center mb-5">
           <IoArrowBackOutline
-            onClick={dashBoardAgain}
+            onClick={handleBackToDashboard}
             className="text-[24px] mr-2 cursor-pointer"
           />
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-md:text-[18px]">
@@ -97,7 +122,8 @@ const Gallery: React.FC<GalleryProps> = ({ dashBoardAgain }) => {
           <>
             {error && <p className="text-red-500">{error}</p>}
             <GalleryCard
-              profiles={galleryItems} // Pass the entire profile object
+              profiles={galleryItems}
+              pageNumber={pageNumber} // Add this line
             />
             <div className="pb-10">
               <Pagination

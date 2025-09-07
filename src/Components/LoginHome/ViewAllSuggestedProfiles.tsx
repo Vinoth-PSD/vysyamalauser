@@ -46,9 +46,18 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
 
   // State to hold the profiles data
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const perPage = 10;
+  // const [page, setPage] = useState<number>(1);
+  // const perPage = 10;
   const [loading, setLoading] = useState<boolean>(false);
+
+  const getInitialPage = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get("page");
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+  const [page, setPage] = useState<number>(getInitialPage());
+  const perPage = 10;
 
   // Fetch data from API
   const fetchProfiles = async (profileId: string) => {
@@ -74,7 +83,14 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("page", page.toString());
+
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [page, location.search, navigate]);
+
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 

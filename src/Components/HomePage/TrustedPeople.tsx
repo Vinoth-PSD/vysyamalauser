@@ -249,17 +249,18 @@ import "slick-carousel/slick/slick-theme.css";
 
 
 const TrustedPeople = () => {
-  const [happyCustomers, setHappyCustomers] = useState<number>(0);
+  // const [happyCustomers, setHappyCustomers] = useState<number>(0);
+  const [happyCustomers,] = useState<number>(52000);
   const [activeProfile, setActiveProfile] = useState<number>(0);
   // const [originalData, setOriginalData] = useState<any[]>([]);
-   const [, setOriginalData] = useState<any[]>([]);
-  
+  const [, setOriginalData] = useState<any[]>([]);
+
   const [cardData, setCardData] = useState<any[]>([]);
 
   const fetchGalleryItems = async () => {
     try {
       const response = await justRegistered(); // Replace `justRegistered` with your actual API call function
-      setHappyCustomers(response?.data.happy_customers_count);
+     // setHappyCustomers(response?.data.happy_customers_count);
       setActiveProfile(response?.data.active_profiles_count);
 
       const fetchedData = response?.data.data || [];
@@ -328,7 +329,8 @@ const TrustedPeople = () => {
         >
           <div className="flex flex-col justify-center items-center pt-10 mb-20 max-md:mb-4 max-md:pt-5">
             <h1 className="text-main text-3xl font-bold mb-2 max-lg:text-[30px] max-md:text-[28px] max-sm:text-[24px] max-sm:mb-2">
-              Trusted by 32K people
+              {/* Total happy customer = Trusted people. */}
+              Trusted by 52K people
             </h1>
             <p className="text-xl text-vysyamalaBlack text-center max-md:text-medium max-sm:text-base">
               Most trusted online matrimonial exclusive for Arya Vysya Community

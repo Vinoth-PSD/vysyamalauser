@@ -17,7 +17,14 @@ interface Profile {
     int_status: number;
 }
 
-const InterestCard: React.FC = () => {
+
+type InterestProfilesCardProps = {
+    pageNumber: number;
+    dataPerPage: number;
+};
+
+// const InterestCard: React.FC = () => {
+export const InterestCard: React.FC<InterestProfilesCardProps> = ({ pageNumber }) => {
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -29,7 +36,10 @@ const InterestCard: React.FC = () => {
             try {
                 const response = await apiClient.post<{ Status: number, message: string, data: { profiles: Profile[] } }>(
                     '/auth/Get_profile_intrests_list/',
-                    { profile_id: loginuser_profileId}
+                    {
+                        profile_id: loginuser_profileId,
+                        page_number: pageNumber,
+                    }
                 );
                 if (response.data.Status === 1) {
                     setProfiles(response.data.data.profiles);
@@ -44,7 +54,8 @@ const InterestCard: React.FC = () => {
         };
 
         fetchProfiles();
-    }, [loginuser_profileId]);
+    }, [loginuser_profileId, pageNumber]);
+
 
     const handleUpdateInterest = async (profileId: string, status: string) => {
         try {
@@ -78,8 +89,16 @@ const InterestCard: React.FC = () => {
         }
     };
 
+    // const handleProfileClick = (profileId: string) => {
+    //     navigate(`/profiledetails?id=${profileId}&interest=1`,);
+    // };
     const handleProfileClick = (profileId: string) => {
-        navigate(`/profiledetails?id=${profileId}&interest=1`);
+        navigate(`/profiledetails?id=${profileId}&interest=1`, {
+            state: {
+                from: 'viewedProfiles',
+                pageNumber: pageNumber // Pass the current page number
+            }
+        });
     };
 
     return (
@@ -87,7 +106,7 @@ const InterestCard: React.FC = () => {
             {loading ? (
                 <p>Loading...</p> // Or any loading indicator you prefer
             ) : profiles.length === 0 ? (
-                
+
 
                 // Received Interest Empty State
                 <div className="text-center py-4">

@@ -5,13 +5,14 @@ import Pagination from "../Pagination";
 //import axios from "axios";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface InterestSentProps {
   dashBoardAgain: () => void;
 }
 
 export const InterestSent: React.FC<InterestSentProps> = ({
-  dashBoardAgain,
+
 }) => {
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
@@ -21,8 +22,21 @@ export const InterestSent: React.FC<InterestSentProps> = ({
   // const [totalPages,setTotalPages]=useState<number>(0)
 
   //console.log(dataPerPage, "dataPerPage" ,toptalPages,"toptalPages",totalRecords,"totalRecords");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  // Get page number from URL query parameter or default to 1
+  const getInitialPageNumber = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get('page');
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+  const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+
+  const handleBackToDashboard = () => {
+    navigate('/Dashboard');
+  };
   const fetchData = async () => {
     const response = await apiClient.post(
       "/auth/My_intrests_list/",
@@ -42,13 +56,23 @@ export const InterestSent: React.FC<InterestSentProps> = ({
     fetchData();
   }, [pageNumber]);
 
+  useEffect(() => {
+    // Update URL when page changes
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', pageNumber.toString());
+
+    // Replace current URL without causing navigation
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [pageNumber, location.search, navigate]);
+
+
   return (
     <div className="bg-grayBg py-10">
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-5 max-md:flex-wrap max-md:gap-y-5">
           <div className="w-full flex justify-start items-center">
             <IoArrowBackOutline
-              onClick={dashBoardAgain}
+              onClick={handleBackToDashboard}
               className="text-[24px] mr-2 cursor-pointer"
             />
             <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-sm:text-[18px]">

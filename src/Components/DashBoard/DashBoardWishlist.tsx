@@ -4,11 +4,12 @@ import { WishlistCard } from "../../Components/Wishlist/WishlistCard";
 import { ProfileContext } from "../../ProfileContext";
 import Pagination from "../../Components/Pagination";
 import { IoArrowBackOutline } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
 interface DashBoardWishlistProps {
-    dashBoardAgain: () => void;
+  dashBoardAgain: () => void;
 }
 
-export const DashBoardWishlist:React.FC<DashBoardWishlistProps> = ({ dashBoardAgain }) => {
+export const DashBoardWishlist: React.FC<DashBoardWishlistProps> = ({ }) => {
   useEffect(() => {
     sessionStorage.removeItem("searchvalue");
   }, []);
@@ -19,8 +20,17 @@ export const DashBoardWishlist:React.FC<DashBoardWishlistProps> = ({ dashBoardAg
     throw new Error("MyComponent must be used within a ProfileProvider");
   }
 
+  const getInitialPageNumber = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get('page');
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+
   const { TotalRecords, totalPage } = context;
-  const [page, setPage] = useState<number>(1);
+  // const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(getInitialPageNumber());
+
   const perPage = 10;
 
   const {
@@ -32,7 +42,6 @@ export const DashBoardWishlist:React.FC<DashBoardWishlistProps> = ({ dashBoardAg
     setAdvanceSelectedProfessions,
     Set_Maritial_Status,
     setAdvanceSelectedEducation,
-
     setSelectedIncomes,
     setChevvai_dhosam,
     setRehuDhosam,
@@ -60,12 +69,28 @@ export const DashBoardWishlist:React.FC<DashBoardWishlistProps> = ({ dashBoardAg
     setAdvanceSearchData([]);
   }, []);
 
-return (
-  <div className="bg-grayBg">
-    <div className="container mx-auto py-10 max-md:py-8">
-      
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Update URL when page changes
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', page.toString());
+
+    // Replace current URL without causing navigation
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [page, location.search, navigate]);
+
+  const handleBackToDashboard = () => {
+    navigate('/Dashboard');
+  };
+
+  return (
+    <div className="bg-grayBg">
+      <div className="container mx-auto py-10 max-md:py-8">
+
         <div className="flex items-center mb-5">
-          <IoArrowBackOutline onClick={dashBoardAgain} className="text-[24px] mr-2 cursor-pointer" />
+          <IoArrowBackOutline onClick={handleBackToDashboard} className="text-[24px] mr-2 cursor-pointer" />
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold">
             Wishlist
             <span className="text-lg text-primary"> ({TotalRecords?.toString()})</span>
@@ -83,9 +108,9 @@ return (
             toptalPages={totalPage}
           />
         </div>
-      {/* {/ Suggested Profiles /} */}
-      <SuggestedProfiles />
+        {/* {/ Suggested Profiles /} */}
+        <SuggestedProfiles />
+      </div>
     </div>
-  </div>
-);
+  );
 };

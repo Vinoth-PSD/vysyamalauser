@@ -53,7 +53,14 @@ export const ViewAllFeaturedProfiles: React.FC = () => {
 
   // State to hold the profiles data
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [page, setPage] = useState<number>(1);
+
+  const getInitialPage = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get("page");
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+  const [page, setPage] = useState<number>(getInitialPage());
   const perPage = 10;
   // Fetch data from API
   const fetchProfiles = async (profileId: string, page: number) => {
@@ -85,6 +92,13 @@ export const ViewAllFeaturedProfiles: React.FC = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("page", page.toString());
+
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [page, location.search, navigate]);
+
 
   useEffect(() => {
     // Retrieve profile_id from sessionStorage

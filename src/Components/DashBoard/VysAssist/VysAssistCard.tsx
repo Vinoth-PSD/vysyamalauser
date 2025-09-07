@@ -54,7 +54,11 @@ interface ApiResponse {
     vysassist_count: number;
 }
 
-export const VysAssistCard: React.FC = () => {
+interface VysassistCardProps {
+    pageNumber: number;
+}
+
+export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber }) => {
     const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({}); // Track bookmarks for each profile
     const [profiles, setProfiles] = useState<ProfileData[]>([]); // Store all profiles
     const [noVysassistFound, setNoVysassistFound] = useState(false); // Track if no vysassist is found
@@ -122,7 +126,12 @@ export const VysAssistCard: React.FC = () => {
                 return;
             }
             // Navigate after validation
-            navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+            navigate(`/ProfileDetails?id=${profileId}&rasi=1`, {
+                state: {
+                    from: 'VysAssit',
+                    pageNumber: pageNumber // Pass the current page number
+                }
+            });
         } catch (error) {
             toast.error("Error accessing profile.");
             console.error("API Error:", error);
@@ -259,7 +268,7 @@ export const VysAssistCard: React.FC = () => {
 
                             {/* Matching Score */}
                             {profile.vys_match_score !== undefined &&
-                                profile.vys_match_score > 50 && profile.vys_match_score !== 100 &&  (
+                                profile.vys_match_score > 50 && profile.vys_match_score !== 100 && (
                                     <div className="max-lg:hidden">
                                         <div>
                                             <MatchingScore scorePercentage={profile.vys_match_score} />

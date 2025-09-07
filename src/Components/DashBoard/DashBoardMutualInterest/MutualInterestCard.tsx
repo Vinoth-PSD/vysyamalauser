@@ -223,7 +223,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       // Navigate after validation
       // navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
       // navigate(`/ProfileDetails?id=${profileId}&page=1&from=mutualInterest`);
-       navigate(`/ProfileDetails?id=${profileId}&page=1`);
+      // navigate(`/ProfileDetails?id=${profileId}&page=1`);
+      // Get current page number from URL or state if available
+      const searchParams = new URLSearchParams(location.search);
+      const pageFromUrl = searchParams.get('page');
+      const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
+
+      // Navigate with state containing page number and source
+      navigate(`/ProfileDetails?id=${profileId}&page=1`, {
+        state: {
+          from: 'MutualInterest',
+          pageNumber: currentPage
+        }
+      });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

@@ -116,9 +116,18 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
         return;
       }
-
+      // Get current page number from URL
+      const searchParams = new URLSearchParams(window.location.search);
+      const pageFromUrl = searchParams.get('page');
+      const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
+      
       // If successful, create profile visit and navigate
-      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`);
+      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`, {
+        state: {
+         from: ["LoginHome", "SearchResults","Searchresults"],
+          pageNumber: currentPage // Pass the current page number
+        }
+      });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

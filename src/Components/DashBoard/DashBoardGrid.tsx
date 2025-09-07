@@ -24,38 +24,25 @@ import PhotoReq from "../../assets/icons/PhotoReq.png";
 import { Puff } from 'react-loader-spinner';
 import { useNavigate } from "react-router-dom";
 
-interface DashBoardGridProps {
-  onDashBoardMatchingProfiles: () => void;
-  onDashBoardMutualInterest: () => void;
-  onDashBoardWishlist: () => void;
-  // Profile Card
-  onProfileDetails: () => void;
-  // Indicator Cards
-  onInterestSent: () => void;
-  onViewedProfiles: () => void;
-  onMyVisitors: () => void;
-  onPhotoRequest: () => void;
-  onGallery: () => void;
-  // Optional Cards
-  onPersonalNotes: () => void;
-  onVysAssist: () => void;
-  onOtherSettings: () => void;
-}
+// interface DashBoardGridProps {
+//   onDashBoardMatchingProfiles: () => void;
+//   onDashBoardMutualInterest: () => void;
+//   onDashBoardWishlist: () => void;
+//   // Profile Card
+//   onProfileDetails: () => void;
+//   // Indicator Cards
+//   onInterestSent: () => void;
+//   onViewedProfiles: () => void;
+//   onMyVisitors: () => void;
+//   onPhotoRequest: () => void;
+//   onGallery: () => void;
+//   // Optional Cards
+//   onPersonalNotes: () => void;
+//   onVysAssist: () => void;
+//   onOtherSettings: () => void;
+// }
 
-export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
-  onDashBoardMatchingProfiles,
-  onDashBoardMutualInterest,
-  onDashBoardWishlist,
-  //onProfileDetails,
-  onInterestSent,
-  onViewedProfiles,
-  onMyVisitors,
-  onPhotoRequest,
-  onPersonalNotes,
-  onGallery,
-  onVysAssist,
-  onOtherSettings,
-}) => {
+export const DashBoardGrid: React.FC = () => {
   // Circular Progress bar value
 
   // Use context safely
@@ -102,6 +89,47 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
       </div>
     );
   }
+
+  const handleViewedProfilesClick = () => {
+    navigate('/Dashboard/viewedprofiles');
+  };
+
+  const handleInterestProfilesClick = () => {
+    navigate('/Dashboard/interestsent');
+  };
+
+  const handleMutualInterestProfilesClick = () => {
+    navigate('/Dashboard/MutualInterest');
+  };
+
+  const handleGalleryClick = () => {
+    navigate('/Dashboard/Gallery');
+  };
+
+  const handleMyvisitorsProfilesClick = () => {
+    navigate('/Dashboard/Myvisitors');
+  };
+
+  const handlePhotoRequestClick = () => {
+    navigate('/Dashboard/PhotoRequest');
+  };
+  const handlePersonalNotesClick = () => {
+    navigate('/Dashboard/PersonalNotes');
+  };
+  const handleVysAssistClick = () => {
+    navigate('/Dashboard/VysAssit');
+  };
+  const handleOtherSettingsClick = () => {
+    navigate('/Dashboard/OtherSettings');
+  };
+  const handleWishlistClick = () => {
+    navigate('/Dashboard/Wishlisting');
+  };
+  const handleMatchingProfilesClick = () => {
+    navigate('/LoginHome/MatchingProfiles');
+  };
+
+
   return (
     <div className="container mx-auto py-10 overflow-hidden">
       <h4 className="text-[30px] text-vysyamalaBlackSecondary font-bold mb-6">
@@ -115,7 +143,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
             <div className="grid grid-rows-2 grid-cols-2 gap-5 items-center max-sm:grid-cols-1">
               {/* {/ Matching Profiles /} */}
               <div
-                onClick={onDashBoardMatchingProfiles}
+                onClick={handleMatchingProfilesClick}
                 className="relative row-span-2 w-full h-full bg-vysyamalaPink shadow-matchingProfileShadow rounded-xl p-5 cursor-pointer z-[1]"
               >
                 <div className="absolute top-0 bottom-0 right-0 z-[-1]">
@@ -142,7 +170,8 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
 
               {/* {/ Mutual Interest /} */}
               <div
-                onClick={onDashBoardMutualInterest}
+                // onClick={onDashBoardMutualInterest}
+                onClick={handleMutualInterestProfilesClick}
                 className="relative w-full h-full bg-vysyamalaViolet rounded-xl shadow-mutualIntersetShadow p-5 cursor-pointer z-[1]"
               >
                 <div className="absolute top-0 bottom-0 right-0 z-[-1]">
@@ -166,7 +195,8 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
 
               {/* {/ Wishlist /} */}
               <div
-                onClick={onDashBoardWishlist}
+                //onClick={onDashBoardWishlist}
+                onClick={handleWishlistClick}
                 className="relative w-full bg-vysyamalaYellow rounded-xl shadow-WishlistShadow p-5 cursor-pointer z-[1]"
               >
                 <div className="absolute top-0 bottom-0 right-0 z-[-1]">
@@ -296,7 +326,7 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
               <p className="text-sm text-ashSecondary font-semibold mb-3">
                 Today
               </p>
-              <InterestCard />
+              <InterestCard pageNumber={1} dataPerPage={10} />
             </div>
           </div>
 
@@ -304,19 +334,22 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
           <div>
             <div className="grid grid-rows-2 grid-cols-2 gap-6  max-sm:grid-cols-1">
               <IndicatorCard
-                onClick={onInterestSent}
+                // onClick={onInterestSent}
+                onClick={handleInterestProfilesClick}
                 cardTitle="Interest Sent"
                 cardCount={String(dashboardDetails?.sent_int_count || 0)}
                 cardIcon={InterestSent}
               />
               <IndicatorCard
-                onClick={onViewedProfiles}
+                //onClick={onViewedProfiles}
+                onClick={handleViewedProfilesClick}
                 cardTitle="Viewed Profiles"
                 cardCount={String(dashboardDetails?.viewed_profile_count || 0)}
                 cardIcon={ViewedProfile}
               />
               <IndicatorCard
-                onClick={onMyVisitors}
+                // onClick={onMyVisitors}
+                onClick={handleMyvisitorsProfilesClick}
                 cardTitle="My Visitors"
                 cardCount={String(dashboardDetails?.myvisitor_count || 0)}
                 cardIcon={MyVisitors}
@@ -324,14 +357,16 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
 
 
               <IndicatorCard
-                onClick={onGallery}
+                // onClick={onGallery}
+                onClick={handleGalleryClick}
                 cardTitle="Gallery"
                 cardCount={String(dashboardDetails?.gallery_count || 0)}
                 cardIcon={Gallery}
               />
 
               <IndicatorCard
-                onClick={onPhotoRequest}
+                // onClick={onPhotoRequest}
+                onClick={handlePhotoRequestClick}
                 cardTitle="Photo Request"
                 cardCount={String(dashboardDetails?.photo_int_count || 0)}
                 cardIcon={PhotoReq}
@@ -343,18 +378,21 @@ export const DashBoardGrid: React.FC<DashBoardGridProps> = ({
             <div className="mt-5">
               <div className="flex justify-start items-center gap-6 max-sm:flex-col">
                 <OptionCard
-                  onClick={onPersonalNotes}
+                  //onClick={onPersonalNotes}
+                  onClick={handlePersonalNotesClick}
                   cardTitle="Personal Notes"
                   cardIcon={PersonalNote}
                 />
                 <OptionCard
                   cardTitle="Vys Assist"
                   cardIcon={VysAssist}
-                  onClick={onVysAssist}
+                  // onClick={onVysAssist}
+                  onClick={handleVysAssistClick}
                 />
 
                 <OptionCard
-                  onClick={onOtherSettings}
+                  // onClick={onOtherSettings}
+                  onClick={handleOtherSettingsClick}
                   cardTitle="Other Settings"
                   cardIcon={OtherSettings}
                 />

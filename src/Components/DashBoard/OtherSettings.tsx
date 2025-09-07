@@ -19,7 +19,7 @@ interface OtherSettingsProps {
 }
 
 export const OtherSettings: React.FC<OtherSettingsProps> = ({
- // dashBoardAgain,
+  dashBoardAgain,
 }) => {
   // Corresponding Component State Declaration
   const [activeSection, setActiveSection] = useState<string>("AlertSettings");
@@ -44,7 +44,13 @@ export const OtherSettings: React.FC<OtherSettingsProps> = ({
   const navigate = useNavigate();
 
   const handleBackToDashboard = () => {
-    navigate("/Dashboard");
+    if (location.pathname === "/Dashboard") {
+      // 👈 If already on Dashboard → call prop function
+      dashBoardAgain();
+    } else {
+      // 👈 Else navigate to Dashboard
+      navigate("/Dashboard");
+    }
   };
 
   return (

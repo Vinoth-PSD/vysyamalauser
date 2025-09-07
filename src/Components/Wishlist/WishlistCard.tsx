@@ -149,7 +149,12 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
       // Navigate after validation
       // navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
       // navigate(`/ProfileDetails?id=${profileId}&page=2&from=wishlist`);
-            navigate(`/ProfileDetails?id=${profileId}&page=2`);
+      navigate(`/ProfileDetails?id=${profileId}&page=2`, {
+        state: {
+          from: 'Wishlist',
+          pageNumber: page // Pass the current page number
+        }
+      });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);

@@ -103,9 +103,16 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
         return;
       }
-
+      const searchParams = new URLSearchParams(window.location.search);
+      const pageFromUrl = searchParams.get('page');
+      const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
       // If successful, create profile visit and navigate
-      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`);
+      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`, {
+        state: {
+           from: ["LoginHome", "SearchResults","Searchresults"],
+          pageNumber: currentPage // Pass the current page number
+        }
+      });
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
@@ -122,10 +129,10 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
   // }, []);
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   if (!profile)
@@ -155,7 +162,7 @@ const defaultImgUrl =
       )}
 
       <div className="mb-3">
-        <ToastContainer/>
+        <ToastContainer />
         {profile.photo_protection === 1 ? (
           <div className="relative">
             <img

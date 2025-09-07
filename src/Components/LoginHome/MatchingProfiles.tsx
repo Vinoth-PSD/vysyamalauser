@@ -30,6 +30,7 @@ import { ToastNotification } from "../Toast/ToastNotification";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 import { Hearts } from "react-loader-spinner";
+import { useLocation, useNavigate } from "react-router-dom";
 // import { log } from "console";
 
 // const items = [
@@ -177,25 +178,36 @@ export const MatchingProfiles = () => {
   const [totalCountSearch, setCount] = useState<number>(0);
 
   const totalPageCount = Math.ceil(Number(totalCount) / pegeDataCount) || 0;
-  const [paginationValue, setPaginationValue] = useState(1);
+  //const [paginationValue, setPaginationValue] = useState(1);
   const [loading, setLoading] = useState(false);
   // const matchingProfileRef = useRef<HTMLDivElement>(null); // Define the ref
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get page number from URL query parameter or default to 1
+  const getInitialPageNumber = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get('page');
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+  const [paginationValue, setPaginationValue] = useState<number>(getInitialPageNumber());
+
+  useEffect(() => {
+    // Update URL when page changes
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', paginationValue.toString());
+
+    // Replace current URL without causing navigation
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [paginationValue, location.search, navigate]);
 
   useEffect(() => {
     handleFindMatch()
   }, [sortOrder]);
 
   const handleFindMatch = async () => {
-
-    // console.log(
-    //   "valuessss",
-    //   searchProfileId,
-    //   profession,
-    //   selectAge,
-    //   selectedLocation
-    // );
-
     setLoading(true); // Show the spinner while the search is being processed
 
     try {
@@ -236,18 +248,6 @@ export const MatchingProfiles = () => {
       setShouldScroll(false); // Reset the flag after scrolling
     }
   }, [searchResult, shouldScroll]);
-
-
-  //   useEffect(() => {
-  //   if (searchResult) {
-  //     const tempElement = document.getElementById("temp");
-  //     if (tempElement) {
-  //       //console.log("Scrolling to temp element");
-  //       tempElement.scrollIntoView({ behavior: 'smooth' });
-  //     }
-  //   }
-  // }, [searchResult]);
-
 
   useEffect(() => {
     if (paginationValue > 1) {

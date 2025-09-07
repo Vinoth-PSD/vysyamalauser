@@ -32,17 +32,21 @@ interface GetProfListMatch {
   notes_views?: number,
 }
 
-export const PersonalNotesCard = () => {
+interface PersonalNotesCardProps {
+  pageNumber: number;
+}
+
+export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [profilesData, setProfilesData] = useState<GetProfListMatch[]>([]); // Updated to an array for multiple profiles
   const [statusMessage] = useState<string>(""); // State variable for the status message
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
   const gender = localStorage.getItem("gender");
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   useEffect(() => {
@@ -129,7 +133,13 @@ const defaultImgUrl =
       }
 
       // If successful, create profile visit and navigate
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
+     // If successful, navigate with pageNumber in state
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1`, {
+        state: {
+          from: 'PersonalNotes',
+          pageNumber: pageNumber // Pass the current page number
+        }
+      });
 
       await apiClient.post(
         "/auth/Create_profile_visit/",
@@ -263,7 +273,7 @@ const defaultImgUrl =
 
                 {/* Matching Score */}
                 {profileData.notes_match_score !== undefined &&
-                  profileData.notes_match_score > 50 && profileData.notes_match_score !== 100 &&  (
+                  profileData.notes_match_score > 50 && profileData.notes_match_score !== 100 && (
                     <div className="max-lg:hidden">
                       <div>
                         <MatchingScore scorePercentage={profileData.notes_match_score} />

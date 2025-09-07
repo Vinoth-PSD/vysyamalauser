@@ -7,13 +7,14 @@ import Pagination from '../Pagination';
 // import { IoMdArrowDropdown } from 'react-icons/io';
 import apiClient from '../../API';
 import { Hearts } from 'react-loader-spinner';
+import { useLocation, useNavigate } from 'react-router-dom';
 //import { useNavigate } from 'react-router-dom';
 
 interface ViewedProfilesProps {
     dashBoardAgain: () => void;
 }
 
-export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }) => {
+export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const [loading, setLoading] = useState<boolean>(true);
@@ -21,12 +22,25 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    // Get page number from URL query parameter or default to 1
+    const getInitialPageNumber = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const pageFromUrl = searchParams.get('page');
+        return pageFromUrl ? parseInt(pageFromUrl) : 1;
+    };
+
+    const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+
+    const handleBackToDashboard = () => {
+        navigate('/Dashboard');
+    };
     // const [totalPages,setTotalPages]=useState<number>(0)
 
     //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
 
-    const [pageNumber, setPageNumber] = useState<number>(1);
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -48,7 +62,16 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
     };
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [pageNumber]);
+
+    useEffect(() => {
+        // Update URL when page changes
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('page', pageNumber.toString());
+
+        // Replace current URL without causing navigation
+        navigate(`?${searchParams.toString()}`, { replace: true });
+    }, [pageNumber, location.search, navigate]);
 
     //const navigate = useNavigate();
 
@@ -59,10 +82,10 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = ({ dashBoardAgain }
                 <div className="flex justify-between items-center mb-5 max-md:flex-wrap max-md:gap-y-5">
 
                     <div className="w-full flex justify-start items-center">
-                        <IoArrowBackOutline 
-                        // onClick={() => navigate("/Dashboard")} 
-                        onClick={dashBoardAgain}
-                        className="text-[24px] mr-2 cursor-pointer" />
+                        <IoArrowBackOutline
+                            // onClick={() => navigate("/Dashboard")} 
+                            onClick={handleBackToDashboard}
+                            className="text-[24px] mr-2 cursor-pointer" />
                         <h4 className=" text-[24px] text-vysyamalaBlackSecondary font-bold max-md:text-[18px]"> Viewed Profiles {" "}
                             <span className="text-sm text-primary">({totalRecords})</span>
                         </h4>

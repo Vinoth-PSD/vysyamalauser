@@ -6,12 +6,13 @@ import Pagination from "../Pagination";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 import { Hearts } from 'react-loader-spinner';
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface MyVisitorsProps {
   dashBoardAgain: () => void;
 }
 
-export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
+export const MyVisitors: React.FC<MyVisitorsProps> = ({  }) => {
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   // State for loading and error handling, similar to ViewedProfiles
@@ -20,11 +21,27 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
 
   // State for pagination
   const [totalRecords, setTotalRecords] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+
 
   // Set a constant for items per page for consistency
   const dataPerPage = 10;
   const totalPages = totalRecords > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get page number from URL query parameter or default to 1
+  const getInitialPageNumber = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const pageFromUrl = searchParams.get('page');
+    return pageFromUrl ? parseInt(pageFromUrl) : 1;
+  };
+
+  const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+
+  const handleBackToDashboard = () => {
+    navigate('/Dashboard');
+  };
 
   const fetchData = async () => {
     try {
@@ -57,13 +74,24 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ dashBoardAgain }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pageNumber]);
 
+
+  useEffect(() => {
+    // Update URL when page changes
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', pageNumber.toString());
+
+    // Replace current URL without causing navigation
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [pageNumber, location.search, navigate]);
+
+
   return (
     <div className="bg-grayBg pt-10">
       <div className="container mx-auto pb-10">
         <div className="flex justify-between items-center mb-5 max-md:flex-wrap max-md:gap-y-5">
           <div className="w-full flex justify-start items-center">
             <IoArrowBackOutline
-              onClick={dashBoardAgain}
+              onClick={handleBackToDashboard}
               className="text-[24px] mr-2 cursor-pointer max-sm:text-[18px]"
             />
             <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold">
