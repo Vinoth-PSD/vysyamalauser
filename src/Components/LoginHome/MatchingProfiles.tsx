@@ -71,13 +71,14 @@ sessionStorage.removeItem("photolockval");
 
 export const MatchingProfiles = () => {
   const context = useContext(ProfileContext);
+
+  if (!context) {
+    throw new Error("MyComponent must be used within a ProfileProvider");
+  }
   const scrollRef = useRef<HTMLDivElement>(null); // Type the ref as HTMLDivElement
   // State for managing scrolling
   const [shouldScroll, setShouldScroll] = useState(false);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
-  if (!context) {
-    throw new Error("MyComponent must be used within a ProfileProvider");
-  }
 
   const {
     MatchingProfileperPage,
@@ -90,6 +91,7 @@ export const MatchingProfiles = () => {
   } = context;
 
 
+
   const noOfPages = Math.ceil(
     MatchingProfiletotalCount / MatchingProfileperPage
   );
@@ -97,23 +99,63 @@ export const MatchingProfiles = () => {
   // View state changed
   const [currentView, setCurrentView] = useState("gridlist");
 
-  // Function to sort profiles by name and toggle order
-
   // Advanced Popup Show
   let showAdvancedSearchPopup;
   // const [showAdvancedSearchPopup, setShowAdvancedSearchPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
-
   const [Get_Profes_Pref, setGet_Profes_Pref] = useState<ProfesPrefType[]>([]);
   const [profession, setProfession] = useState<string>("");
 
+  // const handleAdvancedSearchPopup = () => {
+  //   setProfession("");
+  //   setSelectAge("");
+  //   setSelectedLocation("");
+  //   // setSelectedLocation("");
+  //   setSearchProfileId("");
+  //   sessionStorage.removeItem("searchvalue");
+  // };
+
   const handleAdvancedSearchPopup = () => {
+    // Clear all search states
     setProfession("");
     setSelectAge("");
     setSelectedLocation("");
-    // setSelectedLocation("");
     setSearchProfileId("");
+
+    // Clear session storage
+    sessionStorage.removeItem("searchProfileId");
+    sessionStorage.removeItem("profession");
+    sessionStorage.removeItem("selectAge");
+    sessionStorage.removeItem("selectedLocation");
     sessionStorage.removeItem("searchvalue");
+
+    // Reset to first page and fetch default results
+    setPaginationValue(1);
+    setMatchingProfilePageNumber(1);
+
+    // Fetch default profiles without filters
+    const fetchDefaultProfiles = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProfiles(
+          loginuser_profileId,
+          1, // page 1
+          MatchingProfileperPage,
+          sortOrder
+        );
+        setMatchingProfileTotalCount(data.total_count);
+        setSearchResult(data.profiles || []);
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDefaultProfiles();
+
+    // Clear URL parameters
+    navigate('/LoginHome/MatchingProfiles', { replace: true });
   };
 
   const [states, setStates] = useState<State[]>([]); // Adjust the State type according to the response structure
@@ -193,22 +235,17 @@ export const MatchingProfiles = () => {
   };
 
   const [paginationValue, setPaginationValue] = useState<number>(getInitialPageNumber());
+  console.log("paginationValue matching profile", paginationValue)
+  console.log("MatchingProfilepageNumber", MatchingProfilepageNumber)
 
-  useEffect(() => {
-    // Update URL when page changes
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set('page', paginationValue.toString());
-
-    // Replace current URL without causing navigation
-    navigate(`?${searchParams.toString()}`, { replace: true });
-  }, [paginationValue, location.search, navigate]);
 
   useEffect(() => {
     handleFindMatch()
   }, [sortOrder]);
 
-  const handleFindMatch = async () => {
-    setLoading(true); // Show the spinner while the search is being processed
+
+  const handleFindMatch = async (page: number = paginationValue) => {
+    setLoading(true);
 
     try {
       const result = await fetchSearchProfiles(
@@ -216,30 +253,33 @@ export const MatchingProfiles = () => {
         profession,
         selectAge,
         selectedLocation,
-        paginationValue,
+        page,
         sortOrder
       );
-      ////console.log("count", result.total_count);
-      setCount(result.total_count);
-      // //console.log("Search result:", result.profiles);
-      // //console.log("Search value:", result.search_result);
-      // //console.log("Search status:", result.Status);
-      sessionStorage.setItem("searchvalue", result.search_result);
 
+      setCount(result.total_count);
+      sessionStorage.setItem("searchvalue", result.search_result);
       setTotalCount(result.total_count);
       setSearchStatus(result.Status);
-      setSearchResult(result.profiles); // Set the response data in the state
+      setSearchResult(result.profiles);
       setShouldScroll(true);
+
+      // Update URL with current search parameters
+      const searchParams = new URLSearchParams();
+      searchParams.set('page', page.toString());
+      if (searchProfileId) searchParams.set('search', searchProfileId);
+      if (profession) searchParams.set('profession', profession);
+      if (selectAge) searchParams.set('age', selectAge);
+      if (selectedLocation) searchParams.set('location', selectedLocation);
+
+      navigate(`?${searchParams.toString()}`, { replace: true });
 
     } catch (error) {
       console.error("Search failed:", error);
-      // Handle error as needed
-    }
-    finally {
-      setLoading(false); // Hide the spinner once the search completes
+    } finally {
+      setLoading(false);
     }
   };
-
 
   useEffect(() => {
 
@@ -249,11 +289,103 @@ export const MatchingProfiles = () => {
     }
   }, [searchResult, shouldScroll]);
 
+  // useEffect(() => {
+  //   if (paginationValue > 1) {
+  //     handleFindMatch();
+  //   }
+  // }, [paginationValue]);
   useEffect(() => {
-    if (paginationValue > 1) {
-      handleFindMatch();
+    if (paginationValue >= 1) {
+      handleFindMatch(paginationValue);
     }
   }, [paginationValue]);
+
+  const handleNewSearch = async () => {
+    handleFindMatch(1);
+    setPaginationValue(1); // This will trigger the useEffect and call handleFindMatch
+    setMatchingProfilePageNumber(1);
+  };
+
+  // useEffect(() => {
+  //   // Update URL when page changes
+  //   const searchParams = new URLSearchParams(location.search);
+  //   searchParams.set('page', paginationValue.toString());
+
+  //   // Replace current URL without causing navigation
+  //   navigate(`?${searchParams.toString()}`, { replace: true });
+  // }, [paginationValue, location.search, navigate]);
+  // useEffect(() => {
+  //   // Update the URL when the paginationValue state changes.
+  //   const searchParams = new URLSearchParams(location.search);
+  //   searchParams.set('page', paginationValue.toString());
+
+  //   // Use navigate to update the URL without triggering a full page reload.
+  //   // 'replace: true' prevents adding the new URL to the browser's history,
+  //   // so the back button still works as expected.
+  //   navigate(`?${searchParams.toString()}`, { replace: true });
+  // }, [paginationValue, location.search, navigate]);
+
+  useEffect(() => {
+    // This effect runs when the component first mounts.
+
+    // 1. Get the search parameters from the URL first.
+    const searchParams = new URLSearchParams(location.search);
+    const urlSearch = searchParams.get('search');
+    const urlProfession = searchParams.get('profession');
+    const urlAge = searchParams.get('age');
+    const urlLocation = searchParams.get('location');
+    const urlPage = searchParams.get('page');
+
+    // 2. If there are no URL parameters, fall back to session storage.
+    const initialSearchId = urlSearch ?? sessionStorage.getItem('searchProfileId') ?? '';
+    const initialProfession = urlProfession ?? sessionStorage.getItem('profession') ?? '';
+    const initialAge = urlAge ?? sessionStorage.getItem('selectAge') ?? '';
+    const initialLocation = urlLocation ?? sessionStorage.getItem('selectedLocation') ?? '';
+    const initialPage = urlPage
+      ? parseInt(urlPage)
+      : parseInt(sessionStorage.getItem('paginationValue') ?? '1');
+
+    // 3. Update the component's state with these values.
+    setSearchProfileId(initialSearchId);
+    setProfession(initialProfession);
+    setSelectAge(initialAge);
+    setSelectedLocation(initialLocation);
+    setPaginationValue(initialPage);
+
+    // 4. Define a function to call the API with these values.
+    const performInitialSearch = async (searchId: string, profession: string, age: string, location: string, page: number) => {
+      setLoading(true);
+      try {
+        const result = await fetchSearchProfiles(
+          searchId,
+          profession,
+          age,
+          location,
+          page,
+          sortOrder
+        );
+        // Update state with the results from the API call
+        setCount(result.total_count);
+        sessionStorage.setItem("searchvalue", result.search_result);
+        setTotalCount(result.total_count);
+        setSearchStatus(result.Status);
+        setSearchResult(result.profiles);
+      } catch (error) {
+        console.error("Initial search failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // 5. Call the search function if there are any search terms.
+    if (initialSearchId || initialProfession || initialAge || initialLocation) {
+      performInitialSearch(initialSearchId, initialProfession, initialAge, initialLocation, initialPage);
+    } else {
+      // If there are no search terms, you can fetch the default list of profiles.
+      // For example: fetchProfiles(loginuser_profileId, initialPage, ...);
+    }
+
+  }, [location.search, sortOrder]); // This effect will re-run if the URL or sort order changes.
   //console.log(searchResult);
   //console.log(matchingProfileSearchId, "matchingProfileSearchId");
 
@@ -265,6 +397,11 @@ export const MatchingProfiles = () => {
     if (value.trim() === "") {
       // Clear the session storage when the input field is empty
       sessionStorage.removeItem("searchvalue");
+      setPaginationValue(1);
+      setSearchResult([]);
+      setCount(0);
+      setTotalCount(0);
+      setPaginationValue(MatchingProfilepageNumber);
     }
   };
   const searchvalue = sessionStorage.getItem("searchvalue") || " ";
@@ -316,6 +453,39 @@ export const MatchingProfiles = () => {
     fetchStates();
   }, []);
 
+
+
+  useEffect(() => {
+    // Save search state to sessionStorage whenever it changes
+    sessionStorage.setItem('searchProfileId', searchProfileId);
+    sessionStorage.setItem('profession', profession);
+    sessionStorage.setItem('selectAge', selectAge);
+    sessionStorage.setItem('selectedLocation', selectedLocation);
+    sessionStorage.setItem('paginationValue', paginationValue.toString());
+    sessionStorage.setItem('currentView', currentView);
+    sessionStorage.setItem('sortOrder', sortOrder);
+  }, [searchProfileId, profession, selectAge, selectedLocation, paginationValue, currentView, sortOrder]);
+
+  // Add useEffect to restore state on component mount
+  useEffect(() => {
+    // Restore state from sessionStorage when component mounts
+    const savedSearchProfileId = sessionStorage.getItem('searchProfileId');
+    const savedProfession = sessionStorage.getItem('profession');
+    const savedSelectAge = sessionStorage.getItem('selectAge');
+    const savedSelectedLocation = sessionStorage.getItem('selectedLocation');
+    const savedPaginationValue = sessionStorage.getItem('paginationValue');
+    const savedCurrentView = sessionStorage.getItem('currentView');
+
+    if (savedSearchProfileId) setSearchProfileId(savedSearchProfileId);
+    if (savedProfession) setProfession(savedProfession);
+    if (savedSelectAge) setSelectAge(savedSelectAge);
+    if (savedSelectedLocation) setSelectedLocation(savedSelectedLocation);
+    if (savedPaginationValue) setPaginationValue(parseInt(savedPaginationValue));
+    if (savedCurrentView) setCurrentView(savedCurrentView);
+
+  }, []);
+
+
   if (loading) {
     return (
       // <div className="flex justify-center items-center h-screen">
@@ -335,7 +505,6 @@ export const MatchingProfiles = () => {
       </div>
     );
   }
-
   return (
     <div className=" max-xl:py-4 max-lg:py-3 bg-grayBg">
       <div className="container mx-auto py-10 max-lg:py-8 max-md:py-6">
@@ -347,9 +516,6 @@ export const MatchingProfiles = () => {
                 ? `(${totalCountSearch || 0})`
                 : `(${MatchingProfiletotalCount || 0})`}
             </span>
-
-
-
           </h4>
         </div>
 
@@ -464,7 +630,8 @@ export const MatchingProfiles = () => {
               <button
                 // disabled={!searchProfileId}
                 className="w-full  bg-gradient text-white text-sm   rounded-r-[6px] font-semibold px-[26px] py-[14px]   max-xl:px-4 max-sm:rounded-md"
-                onClick={handleFindMatch}
+                // onClick={handleFindMatch}
+                onClick={handleNewSearch}
               >
                 Find Match
               </button>
@@ -583,7 +750,11 @@ export const MatchingProfiles = () => {
           <>
             <Pagination
               pageNumber={paginationValue}
-              setPageNumber={setPaginationValue}
+              //setPageNumber={setPaginationValue}
+              setPageNumber={(page) => {
+                setPaginationValue(page);
+                setMatchingProfilePageNumber(page); // ✅ keep synced
+              }}
               totalRecords={Number(totalCount)}
               dataPerPage={pegeDataCount}
               toptalPages={totalPageCount}
@@ -593,7 +764,11 @@ export const MatchingProfiles = () => {
           <>
             <Pagination
               pageNumber={MatchingProfilepageNumber}
-              setPageNumber={setMatchingProfilePageNumber}
+              //setPageNumber={setMatchingProfilePageNumber}
+              setPageNumber={(page) => {
+                setPaginationValue(page);
+                setMatchingProfilePageNumber(page); // ✅ keep synced
+              }}
               totalRecords={MatchingProfiletotalCount}
               dataPerPage={MatchingProfileperPage}
               toptalPages={noOfPages}

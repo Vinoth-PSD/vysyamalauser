@@ -103,14 +103,27 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
         toast.error(checkResponse.data.message || "Limit reached to view profile");
         return;
       }
+
+
       const searchParams = new URLSearchParams(window.location.search);
       const pageFromUrl = searchParams.get('page');
       const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
+      const searchState = {
+        searchProfileId: sessionStorage.getItem('searchProfileId') || '',
+        profession: sessionStorage.getItem('profession') || '',
+        selectAge: sessionStorage.getItem('selectAge') || '',
+        selectedLocation: sessionStorage.getItem('selectedLocation') || '',
+        paginationValue: sessionStorage.getItem('paginationValue') || '1',
+        currentView: sessionStorage.getItem('currentView') || 'gridlist',
+        // sortOrder: sessionStorage.getItem('sortOrder') || '',
+        searchValue: sessionStorage.getItem('searchvalue') || ''
+      };
       // If successful, create profile visit and navigate
       navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`, {
         state: {
-           from: ["LoginHome", "SearchResults","Searchresults"],
-          pageNumber: currentPage // Pass the current page number
+          from: ["LoginHome", "SearchProfiles"],
+          pageNumber: currentPage, // Pass the current page number
+          searchState: searchState
         }
       });
     } catch (error) {

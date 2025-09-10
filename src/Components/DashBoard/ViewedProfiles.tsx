@@ -15,7 +15,6 @@ interface ViewedProfilesProps {
 }
 
 export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
-
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);

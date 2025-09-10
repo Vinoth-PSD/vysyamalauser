@@ -1,4 +1,4 @@
-import {  useEffect } from "react";
+import { useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -73,6 +73,8 @@ import { VysAssist } from "./Components/DashBoard/VysAssist";
 import { DashBoardMutualInterest } from "./Components/DashBoard/DashBoardMutualInterest";
 //import { DashBoardWishlist } from "./Components/DashBoard/DashBoardWishlist";
 import { MatchingProfiles } from "./Components/LoginHome/MatchingProfiles";
+import { SearchResults } from "./Components/LoginSearch/SearchResults";
+import FindMatch from "./Components/LoginSearch/FindMatchResults";
 //import { SearchResults } from "./Components/LoginSearch/SearchResults";
 
 // Define prop types for AppContent
@@ -176,6 +178,14 @@ function AppContent({ token }: AppContentProps) {
           <Route element={<LoginLayout />}>
             <Route path="/LoginHome" element={<LoginHome />} />
             <Route path="/Search" element={<Search />} />
+            <Route path="/Search/FindMatch" element={<FindMatch />} />
+            {/* <Route path="/Search" element={<AdvancedSearch />} /> */}
+            {/* <Route path="/Search/AdvanceSearch" element={<Search />} /> */}
+            <Route path="/Search/SearchProfiles" element={<SearchResults onSearchAgain={function (): void {
+              throw new Error("Function not implemented.");
+            } } calculatedPerPage={0} totalPages={0} setPageNo={function (): void {
+              throw new Error("Function not implemented.");
+            } } pageNo={0} error={false} totalCount={0} responseMsg={""} />} />
             <Route path="/Dashboard" element={<DashBoard />} />
             <Route path="/Dashboard/Settings" element={<OtherSettings dashBoardAgain={function (): void {
               throw new Error("Function not implemented.");
