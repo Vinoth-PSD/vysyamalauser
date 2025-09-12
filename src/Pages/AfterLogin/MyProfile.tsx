@@ -931,12 +931,7 @@ export const MyProfile = () => {
                                 {personalData && personalData.empty_fields && personalData.empty_fields.length > 0 ? (
                                   personalData.empty_fields.map((field, index) => (
                                     <div key={index} style={{ marginBottom: '10px' }}>
-
                                       <div className="flex flex-col">
-
-                                        {/* <button>
-                                        <strong>Tab:</strong> {field.tab}
-                                      </button> */}
                                         <button>
                                           {/* <strong>Missing Fields:</strong> {field.field} */}
                                           {/* {fieldNameMapping[field.field] || field.field} */}

@@ -245,37 +245,31 @@ export const EducationProfession = () => {
         setSelectedWorkCountryId(data.personal_work_coun_id);
         setSelectedWorkStateId(data.personal_work_sta_id);
         setSelectedProfessionId(data.personal_profession);
-
-
         setSelectedWorkCityId(data.personal_work_city_id || "");
-        const cityId = data.personal_work_city_id;
         const cityName = data.personal_work_city_name;
 
-        // Convert cityId to a number for checking, handle potential NaN
-        const numericCityId = parseInt(cityId, 10);
+        // Find the city in the dropdown list by name instead of ID
+        const cityFoundInDropdown = cities.find(city =>
+          city.city_name.toLowerCase() === cityName?.toLowerCase()
+        );
 
-        if (!isNaN(numericCityId) && numericCityId > 0) {
-          // Case 1: A valid numeric city ID is saved. Show the dropdown.
-          setSelectedWorkCityId(numericCityId);
-          setIsCityDropdown(true); // Ensure the dropdown is visible
-
+        if (cityFoundInDropdown) {
+          // If city is found in the dropdown options
+          setSelectedWorkCityId(cityFoundInDropdown.city_id);
+          setIsCityDropdown(true);
+          setCustomCity(""); // Clear custom city if a dropdown city is found
         } else if (cityName) {
-          // Case 2: The city_id is not a number, but a city_name exists.
-          // This means it's a custom entry like "xzxxxxxxxxx".
-          setSelectedWorkCityId("others"); // Set the select's value to 'others'
-          setIsCityDropdown(false); // **Crucially, switch to the input box view**
-
-          // **The key fix:** Update formData so the input field shows the custom value.
-          setFormData(prev => ({
-            ...prev,
-            personal_work_city_name: cityName
-          }));
-
+          // If city name exists but not in dropdown, treat as custom entry
+          setSelectedWorkCityId("others");
+          setIsCityDropdown(false);
+          setCustomCity(cityName); // Set the custom city input with the saved name
         } else {
-          // Case 3: No city data at all. Reset to the default dropdown view.
+          // No city data available
           setSelectedWorkCityId("");
           setIsCityDropdown(true);
+          setCustomCity("");
         }
+
 
       } catch (error) {
         console.error(
@@ -595,15 +589,48 @@ export const EducationProfession = () => {
     }));
   };
 
+  // const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedId = event.target.value;
+  //   setSelectedWorkDistrictId(selectedId);
+  //   setWorkDistrictInput("");
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     personal_work_district_name: event.target.options[event.target.selectedIndex].text,
+  //   }));
+  // };
+
   const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
     setSelectedWorkDistrictId(selectedId);
+
+    // Get the selected text
+    const selectedText = event.target.options[event.target.selectedIndex].text;
+
+    // Clear the workDistrictInput if the dropdown option is selected
     setWorkDistrictInput("");
+
     setFormData((prevState) => ({
       ...prevState,
-      personal_work_district_name: event.target.options[event.target.selectedIndex].text,
+      personal_work_district_name: selectedId === "" ? "" : selectedText,
+      personal_work_district: selectedId === "" ? "" : selectedText,
     }));
+
+    // Reset the city state - this will trigger the useEffect above
+    setSelectedWorkCityId("");
+    setCustomCity("");
+    setIsCityDropdown(true);
   };
+
+  // Reset city when district changes
+  useEffect(() => {
+    setSelectedWorkCityId("");
+    setCustomCity("");
+    setIsCityDropdown(true);
+    setFormData(prev => ({
+      ...prev,
+      personal_work_city_name: ""
+    }));
+  }, [selectedWorkDistrictId]);
 
   const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
@@ -618,11 +645,21 @@ export const EducationProfession = () => {
       }));
     } else {
       setIsCityDropdown(true);
+      const selectedCityName = event.target.options[event.target.selectedIndex].text;
       setFormData((prevState) => ({
         ...prevState,
-        personal_work_city_name: event.target.options[event.target.selectedIndex].text,
+        personal_work_city_name: selectedCityName,
       }));
     }
+  };
+
+  const handleCustomCityInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCustomCity(value);
+    setFormData((prev) => ({
+      ...prev,
+      personal_work_city_name: value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -717,19 +754,31 @@ export const EducationProfession = () => {
       // Only pass state if country is India (ID: 1), otherwise empty string
       work_state: selectedWorkCountryId === "1" ? selectedWorkStateId : workStateInput,
       // Only pass district if country is India, otherwise empty string
+      // work_district:
+      //   selectedWorkCountryId === "1"
+      //     ? (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || "")
+      //     : "",
       work_district:
         selectedWorkCountryId === "1"
-          ? (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || "")
+          ? (selectedWorkDistrictId === ""
+            ? "" // If the blank option is selected, send an empty string
+            : (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || ""))
           : "",
       // Only pass city if country is India, otherwise empty string
       // work_city: selectedWorkCountryId === "1"
       //   ? (selectedWorkCityId || formData.personal_work_city_name || "")
       //   : "",
+      // work_city: selectedWorkCountryId === "1"
+      //   ? (selectedWorkCityId === "others"
+      //     ? customCity
+      //     : (selectedWorkCityId || formData.personal_work_city_name || ""))
+      //   : "",
       work_city: selectedWorkCountryId === "1"
         ? (selectedWorkCityId === "others"
-          ? customCity
-          : (selectedWorkCityId || formData.personal_work_city_name || ""))
+          ? customCity // Custom city name when "Others" is selected
+          : (formData.personal_work_city_name || "")) // City ID when a city is selected, empty string otherwise
         : "",
+
       work_pincode: formData.personal_work_pin,
       career_plans: formData.personal_career_plans,
       field_ofstudy: fieldOfStudyy, // Add field of study
@@ -1306,7 +1355,8 @@ export const EducationProfession = () => {
                   {selectedWorkDistrictId && (
                     <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                       Work City:
-                      {cities.length > 0 && isCityDropdown ? (
+                      {/* {cities.length > 0 && isCityDropdown ? ( */}
+                      {isCityDropdown ? (
                         <>
                           <div className="relative">
                             <select
@@ -1329,14 +1379,8 @@ export const EducationProfession = () => {
                         <input
                           type="text"
                           name="personal_work_city_name"
-                          value={formData.personal_work_city_name || ""}
-                          onChange={(e) => {
-                            setCustomCity(e.target.value);
-                            setFormData((prev) => ({
-                              ...prev,
-                              personal_work_city_name: e.target.value,
-                            }));
-                          }}
+                          value={customCity}
+                          onChange={handleCustomCityInput}
                           className="font-normal border rounded px-3 py-2 w-full focus:outline-none border-ashBorder"
                           placeholder="Enter City Name"
                         />

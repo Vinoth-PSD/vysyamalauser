@@ -492,31 +492,31 @@ export const Contact = () => {
                       className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium"
                     >
                       State
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="state"
-                        className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
-                          `}
-                        value={selectedStateId}
-                        onChange={(e) => {
-                          handleStateChange(e);
-                          setErrors((prev) => ({
-                            ...prev,
-                            selectedStateId: "",
-                          })); // Clear error on change
-                        }}
-                      >
-                        <option value="" selected disabled>
-                          Select State
-                        </option>
-                        {states.map((state) => (
-                          <option key={state.state_id} value={state.state_id}>
-                            {state.state_name}
+
+                      <div className="relative">
+                        <select
+                          id="state"
+                          className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder`}
+                          value={selectedStateId}
+                          onChange={(e) => {
+                            handleStateChange(e);
+                            setErrors((prev) => ({
+                              ...prev,
+                              selectedStateId: "",
+                            })); // Clear error on change
+                          }}
+                        >
+                          <option value="" selected disabled>
+                            Select State
                           </option>
-                        ))}
-                      </select>
-                    </div>
+                          {states.map((state) => (
+                            <option key={state.state_id} value={state.state_id}>
+                              {state.state_name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </label>
                   </div>
 
                   {["1", "2", "3", "4", "5", "6", "7"].includes(
@@ -528,34 +528,35 @@ export const Contact = () => {
                         className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium"
                       >
                         District
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="district"
-                          className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
+
+                        <div className="relative">
+                          <select
+                            id="district"
+                            className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                           `}
-                          value={selectedDistrictId}
-                          onChange={(e) => {
-                            handleDistrictChange(e);
-                            setErrors((prev) => ({
-                              ...prev,
-                              selectedDistrictId: "",
-                            })); // Clear error on change
-                          }}
-                        >
-                          <option value="" selected disabled>
-                            Select District
-                          </option>
-                          {districts.map((option: any) => (
-                            <option
-                              key={option.disctict_id}
-                              value={option.disctict_id}
-                            >
-                              {option.disctict_name}
+                            value={selectedDistrictId}
+                            onChange={(e) => {
+                              handleDistrictChange(e);
+                              setErrors((prev) => ({
+                                ...prev,
+                                selectedDistrictId: "",
+                              })); // Clear error on change
+                            }}
+                          >
+                            <option value="" selected disabled>
+                              Select District
                             </option>
-                          ))}
-                        </select>
-                      </div>
+                            {districts.map((option: any) => (
+                              <option
+                                key={option.disctict_id}
+                                value={option.disctict_id}
+                              >
+                                {option.disctict_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </label>
                     </div>
                   ) : (
                     <div>
@@ -624,30 +625,31 @@ export const Contact = () => {
                               </p>
                             </div>
                           </div>
-                        </label>
-                        <div className="relative">
-                          <select
-                            id="city"
-                            className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
+
+                          <div className="relative">
+                            <select
+                              id="city"
+                              className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none  border-ashBorder
                           `}
-                            value={selectedCityId}
-                            onChange={handleCityChange}
-                          >
-                            <option value="" disabled selected>
-                              Select city
-                            </option>
-                            {cities?.map((city: any) => (
-                              <option key={city.city_id} value={city.city_id}>
-                                {city.city_name}
+                              value={selectedCityId}
+                              onChange={handleCityChange}
+                            >
+                              <option value="" disabled selected>
+                                Select city
                               </option>
-                            ))}
-                            <option value="others">Others</option>
-                          </select>
-                        </div>
+                              {cities?.map((city: any) => (
+                                <option key={city.city_id} value={city.city_id}>
+                                  {city.city_name}
+                                </option>
+                              ))}
+                              <option value="others">Others</option>
+                            </select>
+                          </div>
+                        </label>
                       </>
                     ) : (
                       <>
-                      <label
+                        <label
                           htmlFor="city"
                           className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium"
                         >

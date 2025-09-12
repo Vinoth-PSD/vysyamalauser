@@ -146,6 +146,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
   const [selectedDegrees, setSelectedDegrees] = useState<number[]>([]);
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
   const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
+  const [selectedCityName, setSelectedCityName] = useState<string>("");
 
   const handleEduLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
@@ -250,15 +251,6 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     // Handle focus for each error condition
     handleFocus(professionRef, errors.profession);
   }, [errors.profession]);
-
-  // const handleFieldOfStudyChange = (
-  //   e: React.ChangeEvent<HTMLSelectElement>
-  // ) => {
-  //   const selectedValue = e.target.value;
-  //   setFieldOfStudy(selectedValue); // Update state
-  //   setSelectedFieldOfStudy(selectedValue); // Sync with selectedFieldOfStudy
-  //   setValue("field_ofstudy", selectedValue); // Update form value
-  // };
 
   const handleFieldOfStudyChange = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -375,16 +367,6 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     fetchProfileData();
   }, [profileId, setValue, professionOptions]); // Add professionOptions dependency
 
-  // useEffect(() => {
-  //   // Clear all profession-related fields when profession changes
-  //   setValue("company_name", "");
-  //   setValue("designation", "");
-  //   setValue("profession_details", "");
-  //   setValue("business_name", "");
-  //   setValue("business_address", "");
-  //   setValue("nature_of_business", "");
-  // }, [selectedProfessionId, setValue]);
-
   // Reset fields when profession changes
   useEffect(() => {
     if (selectedProfessionId !== 1 && selectedProfessionId !== 7 && selectedProfessionId !== 6) {
@@ -472,7 +454,6 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     fetchAnnualIncome();
   }, []);
 
-
   useEffect(() => {
     const fetchCountryStatus = async () => {
       try {
@@ -545,7 +526,10 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
         career_plans: data.careerPlans,
         status: "1",
         work_country: data.country,
-        work_city: data.country === "1" ? workCity.trim() : "",
+        // work_city: data.country === "1" ? workCity.trim() : "",
+        work_city: data.country === "1"
+          ? (workCity === "others" ? customWorkCity.trim() : selectedCityName)
+          : "",
         work_district: data.country === "1" ? selectedDistrict : "",
         work_state: data.country === "1" ? state.trim() : "",
         work_place: data.country !== "1" ? workPlace.trim() : "",
@@ -660,6 +644,24 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     (code) => !preferredCurrencies.includes(code)
   );
   const sortedCurrencyOptions = [...preferredCurrencies, ...otherCurrencies]; // Combine preferred and other currencies
+
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+
+    if (selectedValue === "others") {
+      setWorkCity("others");
+      setSelectedCityName(""); // Reset when selecting "Others"
+    } else {
+      const selectedOption = workCityList.find(
+        (option: any) => option.city_id.toString() === selectedValue
+      );
+
+      if (selectedOption) {
+        setWorkCity(selectedValue);
+        setSelectedCityName(selectedOption.city_name); // Store the city name
+      }
+    }
+  };
 
   return (
     <div className="mt-24 max-lg:mt-20">
@@ -1374,7 +1376,8 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
                             id="workCity"
                             value={workCity}
                             className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
-                            onChange={(e) => setWorkCity(e.target.value)}
+                            // onChange={(e) => setWorkCity(e.target.value)}
+                            onChange={handleCityChange}
                           >
                             <option value="" selected disabled>
                               Select Work City

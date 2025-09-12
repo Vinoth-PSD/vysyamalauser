@@ -13,17 +13,19 @@ import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoMdArrowDropdown } from "react-icons/io";
+
 // ZOD Schema
 const schema = zod.object({
   address: zod.string().optional(),
   country: zod.string().min(1, "Country is required"),
-  state: zod.string().optional(), // State is optional
+  state: zod.string().optional(),
   city: zod.string().optional(),
   district: zod.string().optional(),
   pincode: zod.string().optional(),
   daughterMobileNumber: zod.string().optional(),
   daughterEmail: zod.string().optional(),
 });
+
 interface FormInputs {
   address: string;
   country: string;
@@ -36,18 +38,32 @@ interface FormInputs {
   daughterEmail?: string;
   district?: string;
 }
+
 interface ContactDetailsProps {
   heading?: string;
   desc?: string;
 }
+
 interface CountryOption {
   country_id: number;
   country_name: string;
 }
+
 interface StateOption {
   state_id: number;
   state_name: string;
 }
+
+interface DistrictOption {
+  disctict_id: number;
+  disctict_name: string;
+}
+
+interface CityOption {
+  city_id: number;
+  city_name: string;
+}
+
 const ContactDetails: React.FC<ContactDetailsProps> = () => {
   const navigate = useNavigate();
   const {
@@ -59,147 +75,32 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
     setError,
     clearErrors,
   } = useForm<FormInputs>({ resolver: zodResolver(schema) });
+
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
   const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
+  const [districtOptions, setDistrictOptions] = useState<DistrictOption[]>([]);
+  const [cityOptions, setCityOptions] = useState<CityOption[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profileowner, setProfileOwner] = useState<string | null>(null);
-  const [cities, setCities] = useState<any>([]);
-  const [district, getDistrict] = useState<any>([]);
   const [whatsAppNumber, setWhatsAppNumber] = useState<string>("");
   const [alterNativeNumber, setAlterNativeNumber] = useState<string>("");
+  const [profileData, setProfileData] = useState<any>(null);
+
+  // Watch form values
+  const selectedCountryId = watch("country");
   const selectedStateId = watch("state");
   const selectedDistrictId = watch("district");
-  const [, setSelectedCity] = React.useState("");
+
+  // State management for conditional rendering
   const [isCityDropdown, setIsCityDropdown] = useState(true);
-  const [districtValue, setDistrictValue] = useState(""); // Add state for the district value
-
-  const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    if (value === "others") {
-      setDistrictValue(""); // Clear district value
-      setIsCityDropdown(false); // Show the free textbox
-      setValue("district", ""); // Clear the district value in the form
-    } else {
-      setDistrictValue(value);
-      setIsCityDropdown(true); // Use dropdown
-      setValue("district", value); // Update the form value for district
-    }
-  };
-
-  useEffect(() => {
-    setDistrictValue(""); // Clear district value when state changes
-    setValue("district", ""); // Reset form value
-    setIsCityDropdown(true); // Reset to dropdown
-  }, [selectedStateId, setValue]);
-
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedCity(value);
-
-    // Switch to free text input if "Others" is selected
-    if (value === "others") {
-      setIsCityDropdown(false);
-      setValue("city", ""); // Clear city value
-    } else {
-      setValue("city", value); // Update the form value for city
-    }
-  };
-
-  const fetchDistrict = async () => {
-    try {
-      const response = await apiClient.post("/auth/Get_District/",
-        {
-          state_id: selectedStateId,
-        }
-      );
-      getDistrict(Object.values(response.data));
-    } catch (error) {
-      console.error("distric:", error);
-    }
-  };
-  console.log(district, "district");
-
-  useEffect(() => {
-    if (selectedStateId) {
-      fetchDistrict();
-    }
-  }, [selectedStateId]);
-
-  useState(() => { });
-
-  const fetchCities = async () => {
-    try {
-      const response = await apiClient.post("/auth/Get_City/",
-        {
-          district_id: selectedDistrictId?.toString(),
-        }
-      );
-      const cityData = Object.values(response.data);
-      setCities(cityData);
-      // Toggle dropdown only if cities are available
-      if (cityData.length > 0) {
-        setIsCityDropdown(true);
-      } else {
-        setIsCityDropdown(false);
-        setValue("city", ""); // Clear city value if dropdown is hidden
-      }
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedDistrictId) {
-      fetchCities();
-    }
-  }, [selectedDistrictId]);
+  const [customCity, setCustomCity] = useState("");
+  const [customDistrict, setCustomDistrict] = useState("");
+ // const [customState, setCustomState] = useState("");
 
   const profileId = localStorage.getItem("profile_id_new") || localStorage.getItem("loginuser_profile_id");
-  console.log(profileId);
-  console.log(stateOptions, "stateOptions");
-  useEffect(() => {
-    const fetchCountryData = async () => {
-      if (profileId) {
-        try {
-          const requestData = {
-            profile_id: profileId,
-            page_id: 1,
-          };
-          const response = await apiClient.post(`/auth/Get_save_details/`, requestData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          //console.log("API Response:", response.data); // Log the entire API response
-          const profileData = response.data.data; // Access the 'data' object directly
-          //console.log("Profile Data:", profileData); // Log the profile data
-          setValue("address", profileData.Profile_address);
-          setValue("country", profileData.Profile_country);
-          setValue("state", profileData.Profile_state);
-          setValue("city", profileData.Profile_city);
-          setValue("pincode", profileData.Profile_pincode);
-          setValue("district", profileData.Profile_district);
-          setAlterNativeNumber(profileData.Profile_alternate_mobile);
-          setWhatsAppNumber(profileData.Profile_whatsapp);
-          setValue("daughterMobileNumber", profileData.Profile_mobile_no);
-          setValue("daughterEmail", profileData.Profile_emailid);
-        } catch (error) {
-          console.error("Error fetching country data:", error);
-        }
-      } else {
-        console.warn("Profile ID not found in sessionStorage");
-      }
-    };
-    fetchCountryData();
-  }, [profileId, setValue]);
+  
 
-  useEffect(() => {
-    const profileowner = sessionStorage.getItem("profile_owner");
-    setProfileOwner(profileowner);
-  }, []);
-  const profileName = profileowner === "Ownself" ? "Your" : profileowner;
+  // Fetch countries on component mount
   useEffect(() => {
     const fetchCountryStatus = async () => {
       try {
@@ -213,13 +114,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
     fetchCountryStatus();
   }, []);
 
-  const selectedCountryId = watch("country");
-  useEffect(() => {
-    if (selectedCountryId === "1") { // Country ID for India
-      setIsCityDropdown(false); // Default to textbox for India
-      setSelectedCity(""); // Reset city value
-    }
-  }, [selectedCountryId]);
+  // Fetch states when country changes
   useEffect(() => {
     if (selectedCountryId) {
       const fetchStateStatus = async () => {
@@ -229,13 +124,209 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
           });
           const options = Object.values(response.data) as StateOption[];
           setStateOptions(options);
+
+          // Clear dependent fields when country changes
+          setValue("state", "");
+          setValue("district", "");
+          setValue("city", "");
+          setDistrictOptions([]);
+          setCityOptions([]);
+          setCustomDistrict("");
+          setCustomCity("");
         } catch (error) {
           console.error("Error fetching state options:", error);
         }
       };
       fetchStateStatus();
     }
-  }, [selectedCountryId, countryOptions]);
+  }, [selectedCountryId, setValue]);
+
+  // Fetch districts when state changes (only for India and specific states)
+  useEffect(() => {
+    if (selectedStateId && selectedCountryId === "1") {
+      if (["1", "2", "3", "4", "5", "6", "7"].includes(selectedStateId)) {
+        const fetchDistricts = async () => {
+          try {
+            const response = await apiClient.post("/auth/Get_District/", {
+              state_id: selectedStateId,
+            });
+            const districtData = Object.values(response.data) as DistrictOption[];
+            setDistrictOptions(districtData);
+
+            // Clear dependent fields
+            setValue("district", "");
+            setValue("city", "");
+            setCityOptions([]);
+            setCustomCity("");
+          } catch (error) {
+            console.error("Error fetching districts:", error);
+            setDistrictOptions([]);
+          }
+        };
+        fetchDistricts();
+      } else {
+        // For states that don't have predefined districts, clear the district options
+        setDistrictOptions([]);
+        setValue("district", "");
+        setValue("city", "");
+        setCityOptions([]);
+        setCustomDistrict("");
+        setCustomCity("");
+      }
+    }
+  }, [selectedStateId, selectedCountryId, setValue]);
+
+  // Fetch cities when district changes
+  // Fetch cities when district changes
+  useEffect(() => {
+    if (selectedDistrictId && selectedCountryId === "1") {
+      const fetchCities = async () => {
+        try {
+          const response = await apiClient.post("/auth/Get_City/", {
+            district_id: selectedDistrictId.toString(),
+          });
+          const cityData = Object.values(response.data) as CityOption[];
+          setCityOptions(cityData);
+          setIsCityDropdown(true);
+          setValue("city", "");
+          setCustomCity("");
+
+          // Add this new logic: Check if there's a pre-filled city value
+          if (profileData?.Profile_city) {
+            const cityMatch = cityData.find(
+              (c) => c.city_name === profileData.Profile_city
+            );
+            if (cityMatch) {
+              // If the city is in the new list, select it
+              setValue("city", cityMatch.city_id.toString());
+            } else {
+              // If the city is not in the list, treat it as a custom city
+              setCustomCity(profileData.Profile_city);
+              setValue("city", profileData.Profile_city);
+              setIsCityDropdown(false);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching cities:", error);
+          setCityOptions([]);
+          setIsCityDropdown(false);
+          // This is where you need to check if a previous value exists
+          if (profileData?.Profile_city) {
+            setCustomCity(profileData.Profile_city);
+            setValue("city", profileData.Profile_city);
+          } else {
+            setCustomCity("");
+            setValue("city", "");
+          }
+        }
+      };
+      fetchCities();
+    }
+  }, [selectedDistrictId, selectedCountryId, setValue, profileData]);
+
+  useEffect(() => {
+    if (profileId) {
+      const fetchProfile = async () => {
+        try {
+          const requestData = { profile_id: profileId, page_id: 1 };
+          const response = await apiClient.post(`/auth/Get_save_details/`, requestData);
+          setProfileData(response.data.data);
+        } catch (error) {
+          console.error("Error fetching saved data:", error);
+        }
+      };
+      fetchProfile();
+    }
+  }, [profileId]);
+
+  // When countries loaded, set country
+  useEffect(() => {
+    if (profileData?.Profile_country && countryOptions.length > 0) {
+      setValue("country", profileData.Profile_country);
+    }
+  }, [countryOptions, profileData, setValue]);
+
+  // When states loaded, set state
+  useEffect(() => {
+    if (profileData?.Profile_state && stateOptions.length > 0) {
+      setValue("state", profileData.Profile_state);
+    }
+  }, [stateOptions, profileData, setValue]);
+
+  // When districts loaded, set district
+  useEffect(() => {
+    if (profileData?.Profile_district && districtOptions.length > 0) {
+      setValue("district", profileData.Profile_district);
+    }
+  }, [districtOptions, profileData, setValue]);
+
+  // When cities loaded, set city
+  useEffect(() => {
+    if (profileData?.Profile_city && cityOptions.length > 0) {
+      const cityMatch = cityOptions.find(
+        (c) => c.city_name === profileData.Profile_city
+      );
+      if (cityMatch) {
+        setValue("city", cityMatch.city_id.toString());
+        setIsCityDropdown(true);
+      } else {
+        setCustomCity(profileData.Profile_city);
+        setValue("city", profileData.Profile_city);
+        setIsCityDropdown(false);
+      }
+    }
+  }, [cityOptions, profileData, setValue]);
+
+
+  useEffect(() => {
+    if (profileData) {
+      setValue("address", profileData.Profile_address || "");
+      setValue("pincode", profileData.Profile_pincode || "");
+      setAlterNativeNumber(profileData.Profile_alternate_mobile || "");
+      setWhatsAppNumber(profileData.Profile_whatsapp || "");
+      setValue("daughterMobileNumber", profileData.Profile_mobile_no || "");
+      setValue("daughterEmail", profileData.Profile_emailid || "");
+    }
+  }, [profileData, setValue]);
+
+
+  useEffect(() => {
+    const profileowner = sessionStorage.getItem("profile_owner");
+    setProfileOwner(profileowner);
+  }, []);
+
+  const profileName = profileowner === "Ownself" ? "Your" : profileowner;
+
+  // Update the handleDistrictChange function
+  const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setValue("district", value);
+    setValue("city", ""); // Clear city value
+    setCustomCity(""); // Clear custom city text
+    setIsCityDropdown(true); // Force back to dropdown mode
+    setCityOptions([]); // Clear old city list to trigger fresh fetch
+  };
+
+  // Handle city change
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+
+    if (value === "others") {
+      setIsCityDropdown(false);
+      setCustomCity("");
+      setValue("city", "");
+    } else {
+      setValue("city", value);
+      setIsCityDropdown(true);
+    }
+  };
+
+  // Handle custom city input
+  const handleCustomCityInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCustomCity(value);
+    setValue("city", value);
+  };
 
   const validateDaughterMobileNumber = (value: string) => {
     if (!value) {
@@ -243,9 +334,8 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
       return;
     }
 
-    // Validate the actual input value length
     if (value.length < 12) {
-      clearErrors("daughterMobileNumber"); // no error while typing
+      clearErrors("daughterMobileNumber");
     } else if (value.length === 12) {
       const regex = /^\d{12}$/;
       if (!regex.test(value)) {
@@ -283,38 +373,50 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
       if (!profileId) {
         throw new Error("ProfileId not found in sessionStorage");
       }
+
+      let cityNameToSend = "";
+      if (selectedCountryId === "1" && !isCityDropdown) {
+        // If it's India and the custom city input is shown, use that value
+        cityNameToSend = customCity;
+      } else if (data.city) {
+        // For all other cases (dropdown selection or non-India country),
+        // get the city name from the selected ID or the direct input
+        const selectedCityOption = cityOptions.find(
+          (city) => city.city_id.toString() === data.city
+        );
+        cityNameToSend = selectedCityOption?.city_name || data.city;
+      }
       const postData = {
         ProfileId: profileId,
         Profile_address: data.address,
         Profile_country: data.country,
         Profile_state: data.state,
-        Profile_city: data.city,
+        // Profile_city: cityToSend, // Send ID for dropdown selection, empty for custom
+        Profile_city: cityNameToSend,
+        // Profile_city_name: cityNameToSend, // Send name for both cases
         Profile_pincode: data.pincode,
         Profile_alternate_mobile: alterNativeNumber,
         Profile_whatsapp: whatsAppNumber,
         Profile_mobile_no: data.daughterMobileNumber,
         Profile_district: data.district,
-        Profile_emailid: data.daughterEmail, // Add this line to include the email
+        Profile_emailid: data.daughterEmail,
       };
-      //console.log(" postData:", postData);
+
       const response = await apiClient.post(`/auth/Contact_registration/`, postData);
+
       if (response.data.Status === 1) {
         NotifySuccess("Contact details saved successfully");
-        // Get quick_reg value from sessionStorage
-        const quickreg = sessionStorage.getItem("quick_reg") || "0"; // Default to "0" if not found
+        const quickreg = sessionStorage.getItem("quick_reg") || "0";
         setTimeout(() => {
           if (quickreg === "1") {
-            navigate("/FamilyDetails"); // Redirect to ThankYouReg pageppe
+            navigate("/FamilyDetails");
           } else {
-            navigate("/UploadImages"); // Redirect to UploadImages page
+            navigate("/UploadImages");
           }
         }, 2000);
-      } else {
-        //console.log("Registration unsuccessful:", response.data);
       }
     } catch (error: any) {
       if (error.response?.data?.Profile_alternate_mobile) {
-        // Specific backend error for alternate mobile
         setError("alternatemobileNumber", {
           type: "manual",
           message: error.response.data.Profile_alternate_mobile[0],
@@ -365,18 +467,16 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
     key: string;
     preventDefault: () => void;
   }) => {
-    // Allow Backspace, Tab, Arrow keys (left, right), Delete, and numbers (0-9)
     if (
       event.key === "Backspace" ||
       event.key === "Tab" ||
       event.key === "ArrowLeft" ||
       event.key === "ArrowRight" ||
       event.key === "Delete" ||
-      /^[0-9]$/.test(event.key) // Only allow numbers 0-9
+      /^[0-9]$/.test(event.key)
     ) {
-      return; // Allow the key event
+      return;
     }
-    // Prevent all other keys
     event.preventDefault();
   };
 
@@ -387,11 +487,11 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
         heading={"Contact Information"}
         desc="Please provide accurate contact details to ensure smooth communication with potential matches."
       />
-      <div className="mx-auto w-[60%]  my-10  max-2xl:w-[60%] max-xl:w-[80%] max-lg:w-full max-md:w-full max-md:my-5">
-        <div className="container flex justify-between space-x-24  max-lg:flex-col max-lg:space-x-0 max-lg:gap-y-8 ">
+      <div className="mx-auto w-[60%] my-10 max-2xl:w-[60%] max-xl:w-[80%] max-lg:w-full max-md:w-full max-md:my-5">
+        <div className="container flex justify-between space-x-24 max-lg:flex-col max-lg:space-x-0 max-lg:gap-y-8">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full space-y-4  max-sm:gap-x-0 "
+            className="w-full space-y-4 max-sm:gap-x-0"
           >
             <div>
               <label
@@ -406,7 +506,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                   className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                   {...register("country")}
                 >
-                  <option value="" selected disabled>
+                  <option value="" disabled>
                     Select your Country
                   </option>
                   {countryOptions.map((option) => (
@@ -451,9 +551,8 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                       id="state"
                       className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                       {...register("state")}
-                    // onChange={handleStateChange}
                     >
-                      <option value="" selected disabled>
+                      <option value="" disabled>
                         Select State
                       </option>
                       {stateOptions.map((option) => (
@@ -472,9 +571,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                   )}
                 </div>
 
-                {["1", "2", "3", "4", "5", "6", "7"].includes(
-                  selectedStateId
-                ) ? (
+                {["1", "2", "3", "4", "5", "6", "7"].includes(selectedStateId) ? (
                   <div>
                     <label
                       htmlFor="district"
@@ -488,12 +585,11 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                         className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                         {...register("district")}
                         onChange={handleDistrictChange}
-                      //value={districtValue} // Controlled value
                       >
-                        <option value="" selected disabled>
+                        <option value="" disabled>
                           Select District
                         </option>
-                        {district.map((option: any) => (
+                        {districtOptions.map((option) => (
                           <option
                             key={option.disctict_id}
                             value={option.disctict_id}
@@ -514,50 +610,44 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                     )}
                   </div>
                 ) : (
-                  <div>
-                    <label
-                      htmlFor="district"
-                      className="block mb-2 text-base text-primary font-medium"
-                    ></label>
-                    <InputField
-                      id="district"
-                      label="District"
-                      {...register("district", {
-                        setValueAs: (value) => value.trim(),
-                      })}
-                      value={districtValue} // Bind to districtValue state
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDistrictValue(value); // Update district value state
-                        setValue("district", value); // Update react-hook-form value
-                      }}
-                    />
-                    {errors.district && (
-                      <span className="text-red-500">
-                        {errors.district.message}
-                      </span>
-                    )}
-                  </div>
+                  selectedStateId && (
+                    <div>
+                      <InputField
+                        id="district"
+                        label="District"
+                        {...register("district", {
+                          setValueAs: (value) => value.trim(),
+                        })}
+                        value={customDistrict}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setCustomDistrict(value);
+                          setValue("district", value);
+                        }}
+                      />
+                      {errors.district && (
+                        <span className="text-red-500">
+                          {errors.district.message}
+                        </span>
+                      )}
+                    </div>
+                  )
                 )}
               </>
             )}
 
             <div>
               {selectedCountryId !== "1" ? (
-                // Show city as a textbox if selectedCountryId is 1
-                <>
-                  <InputField
-                    id="city"
-                    label="City"
-                    {...register("city", {
-                      setValueAs: (value) => value.trim(),
-                    })}
-                  />
-                </>
+                <InputField
+                  id="city"
+                  label="City"
+                  {...register("city", {
+                    setValueAs: (value) => value.trim(),
+                  })}
+                />
               ) : (
-                // Retain dropdown behavior for other countries
                 <>
-                  {isCityDropdown ? (
+                  {isCityDropdown && cityOptions.length > 0 ? (
                     <>
                       <label
                         htmlFor="city"
@@ -566,7 +656,6 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                         City
                         <div className="relative inline-block ml-2 group">
                           <AiOutlineInfoCircle className="text-gray-500 cursor-pointer ml-2" />
-                          {/* Tooltip */}
                           <div className="absolute hidden group-hover:flex flex-col bg-white border border-ashSecondary rounded shadow-md p-2 w-48 z-10">
                             <p className="text-sm text-black">
                               Select your city from the list. If your city is
@@ -582,10 +671,10 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                           {...register("city")}
                           onChange={handleCityChange}
                         >
-                          <option value="" disabled selected>
+                          <option value="" disabled>
                             Select city
                           </option>
-                          {cities?.map((city: any) => (
+                          {cityOptions.map((city) => (
                             <option key={city.city_id} value={city.city_id}>
                               {city.city_name}
                             </option>
@@ -597,25 +686,19 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                           size={20}
                         />
                       </div>
-                      {errors.city && (
-                        <span className="text-red-500">
-                          {errors.city.message}
-                        </span>
-                      )}
                     </>
                   ) : (
-                    <>
-
-                      <InputField
-                        id="city"
-                        label="City"
-                        {...register("city", {
-                          setValueAs: (value) => value.trim(),
-                        })}
-                      />
-                    </>
+                    <InputField
+                      id="city"
+                      label="City"
+                      value={customCity}
+                      onChange={handleCustomCityInput}
+                    />
                   )}
                 </>
+              )}
+              {errors.city && (
+                <span className="text-red-500">{errors.city.message}</span>
               )}
             </div>
 
@@ -638,8 +721,8 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
               </label>
               <PhoneInput
                 value={alterNativeNumber}
-                country="in" // Default selected country
-                preferredCountries={["in", "sg", "my", "ae", "us", "gb"]} // Ensure "in" is first
+                country="in"
+                preferredCountries={["in", "sg", "my", "ae", "us", "gb"]}
                 onChange={(value: string) => setAlterNativeNumber(value)}
                 inputProps={{
                   autoFocus: true,
@@ -652,13 +735,8 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                   {errors.alternatemobileNumber.message}
                 </span>
               )}
-
-              {errors.alternatemobileNumber && (
-                <span className="text-red-500">
-                  {errors.alternatemobileNumber.message}
-                </span>
-              )}
             </div>
+
             <div>
               <label className="block mb-2 text-base text-primary font-medium">
                 Whatsapp Number
@@ -672,9 +750,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                   className: "input-style",
                 }}
                 country={"in"}
-                // preferredCountries={["us", "in", "gb"]}
-                // preferredCountries={["in", "sg", "my", "ae", "us", "gb", "ca"]} // Your preferred country order
-                preferredCountries={["in", "sg", "my", "ae", "us", "gb"]} // order of preferred countries
+                preferredCountries={["in", "sg", "my", "ae", "us", "gb"]}
               />
               {errors.whatsappNumber && (
                 <span className="text-red-500">
@@ -683,32 +759,30 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
               )}
             </div>
 
-            <div className="!mt-12 col-span-2 ">
+            <div className="!mt-12 col-span-2">
               <h1 className="font-bold text-xl text-primary mb-4">
-                For admin purpose only <span className="text-sm font-normal">(This information will not be displayed online)</span>
+                For admin purpose only{" "}
+                <span className="text-sm font-normal">
+                  (This information will not be displayed online)
+                </span>
               </h1>
 
               <div className="mb-5">
                 <label className="block mb-2 text-base text-primary font-medium">
                   {profileName} Mobile Number
                 </label>
-
                 <PhoneInput
-                  country={"in"} // Default country code
-                  value={watch("daughterMobileNumber")} // Bind value to react-hook-form
-                  preferredCountries={["in", "sg", "my", "ae", "us", "gb"]} // Your preferred country order
+                  country={"in"}
+                  value={watch("daughterMobileNumber")}
+                  preferredCountries={["in", "sg", "my", "ae", "us", "gb"]}
                   inputStyle={{
                     width: "100%",
                     borderColor: errors.daughterMobileNumber ? "red" : "#85878C91",
                   }}
-
                   onChange={(value) => {
-                    // Update the form field with the trimmed value
                     setValue("daughterMobileNumber", value.trim());
-                    validateDaughterMobileNumber(value); // Your custom validation function
+                    validateDaughterMobileNumber(value);
                   }}
-                  // preferredCountries={["us", "in", "gb"]}
-
                   inputProps={{
                     name: "daughterMobileNumber",
                     required: true,
@@ -741,7 +815,6 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
               </div>
 
               <div className="mt-10 flex justify-end space-x-4 max-lg:justify-start max-sm:justify-center">
-                {/* Skip Button */}
                 <Link to="/UploadImages">
                   <button className="py-[10px] px-14 bg-white text-main font-semibold rounded-[6px] mt-2">
                     Skip

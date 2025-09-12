@@ -1,12 +1,11 @@
-import React, {  useState } from "react";
+import React from "react";
 import { IoClose } from "react-icons/io5";
 import QRCodeImage from "../../assets/images/GPayQRcode.jpeg";
-import { toast } from "react-toastify";
 
 interface GPayPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => void;
 }
 
 export const GPayPopup: React.FC<GPayPopupProps> = ({
@@ -14,7 +13,7 @@ export const GPayPopup: React.FC<GPayPopupProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const [showMessage, setShowMessage] = useState(false);
+  // const [showMessage, setShowMessage] = useState(false);
 
 
   if (!isOpen) return null;
@@ -30,15 +29,15 @@ export const GPayPopup: React.FC<GPayPopupProps> = ({
   //   toast.success("Payment paided successfully")
   // };
 
-    const handleSubmit = async () => {
-   
+  const handleSubmit = async () => {
+
     try {
-      setShowMessage(true);
-      toast.success("Payment Paided successfully");
+      // setShowMessage(true);
+      console.log("Payment Paided successfully");
       await onConfirm(); // Call the save function
     } catch (error) {
       console.error("Confirmation failed:", error);
-    } 
+    }
   };
 
   return (
@@ -67,12 +66,12 @@ export const GPayPopup: React.FC<GPayPopupProps> = ({
             Submit
           </button>
 
-          {showMessage && (
+          {/* {showMessage && (
             <p className="text-sm font-semibold mt-2 text-right">
               Send the payment screenshot to the mentioned WhatsApp number.
               We will verify your profile and share it with you.
             </p>
-          )}
+          )} */}
         </div>
       </div>
     </div>
