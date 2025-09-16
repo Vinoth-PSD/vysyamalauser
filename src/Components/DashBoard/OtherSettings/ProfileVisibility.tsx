@@ -1,11 +1,13 @@
-
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { NotifyError, NotifySuccess } from "../../Toast/ToastNotification";
+import { NotifyError, NotifySuccess, ToastNotification } from "../../Toast/ToastNotification";
 import apiClient from "../../../API";
+import { IoMdArrowDropdown } from "react-icons/io";
+import Select from 'react-select';
 
+// Define Zod schema for validation
 // Define Zod schema for validation
 const schema = z.object({
   ageFrom: z
@@ -22,30 +24,37 @@ const schema = z.object({
     }),
   heightFrom: z.string().optional(),
   heightTo: z.string().optional(),
-  education: z
-    .array(z.string())
-    .nonempty("Please select at least one education option."),
-  profession: z
-    .array(z.string())
-    .nonempty("Please select at least one profession option."),
-  income: z
-    .array(z.string())
-    .nonempty("Please select at least one income option.")
-    .refine(
-      (items) => items.join(",").length <= 50,
-      "Please select a maximum of 20 annual incomes."
-    ),
-  rahuKetuDhosam: z.string().nonempty("Please select Rahu/Ketu Dhosam option."),
-  chevvaiDhosam: z.string().nonempty("Please select Chevvai Dhosam option."),
-  foreignInterest: z
-    .string()
-    .nonempty("Please select Foreign Interest option."),
+  education: z.array(z.string()).optional().default([]),
+  profession: z.array(z.string()).optional().default([]),
+  incomeMin: z.string().optional(),
+  incomeMax: z.string().optional(),
+  familyStatus: z.array(z.string()).optional().default([]),
+  rahuKetuDhosam: z.string().optional(),
+  chevvaiDhosam: z.string().optional(),
+  foreignInterest: z.string().optional(),
+  fieldOfStudy: z.array(z.string()).optional().default([]),
+  degree: z.array(z.string()).optional().default([]),
 });
+
 
 // Define types
 interface Option {
   id: string;
   name: string;
+}
+interface FieldOfStudy {
+  study_id: number;
+  study_description: string;
+}
+
+interface Degree {
+  degeree_id: number;
+  degeree_description: string;
+}
+
+interface FamilyStatus {
+  family_status_id: number;
+  family_status_name: string;
 }
 
 type ProfileVisibilityForm = z.infer<typeof schema>;
@@ -55,7 +64,13 @@ export const ProfileVisibility: React.FC = () => {
   const [educationOptions, setEducationOptions] = useState<Option[]>([]);
   const [professionOptions, setProfessionOptions] = useState<Option[]>([]);
   const [incomeOptions, setIncomeOptions] = useState<Option[]>([]);
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  // const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [, setFormErrors] = useState<Record<string, string>>({});
+  const [fieldOfStudyOptions, setFieldOfStudyOptions] = useState<FieldOfStudy[]>([]);
+  const [selectedMinIncome, setSelectedMinIncome] = useState<string>("");
+  const [selectedMaxIncome, setSelectedMaxIncome] = useState<string>("");
+  const [degreeOptions, setDegreeOptions] = useState<Degree[]>([]);
+  const [familyStatusOptions, setFamilyStatusOptions] = useState<FamilyStatus[]>([]);
 
   const {
     register,
@@ -70,7 +85,9 @@ export const ProfileVisibility: React.FC = () => {
   // Watch the checkbox values
   const educationValues = watch("education") || [];
   const professionValues = watch("profession") || [];
-  const incomeValues = watch("income") || [];
+  const fieldOfStudyValues = watch("fieldOfStudy") || [];
+  const degreeValues = watch("degree") || [];
+  const familyStatusValues = watch("familyStatus") || [];
 
   const fetchOptions = async () => {
     try {
@@ -97,10 +114,68 @@ export const ProfileVisibility: React.FC = () => {
           name: item.income_description,
         }))
       );
+
+      // const familyStatusRes = await apiClient.post("/auth/Get_Family_Status/");
+      // setFamilyStatusOptions(
+      //   Object.values(familyStatusRes.data).map((item: any) => ({
+      //     family_status_id: item.family_status_id,
+      //     family_status_name: item.family_status_name,
+      //   }))
+      // );
     } catch (error) {
       console.error("Error fetching options:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchFieldOfStudy = async () => {
+      try {
+        const response = await apiClient.post("/auth/Get_Field_ofstudy/");
+        const options = Object.values(response.data) as FieldOfStudy[];
+        setFieldOfStudyOptions(options);
+      } catch (error) {
+        console.error("Error fetching Field of Study options:", error);
+      }
+    };
+    const fetchDegrees = async () => {
+      try {
+        const response = await apiClient.get("/auth/pref_degree_list/");
+        // Check the actual response structure
+        console.log('Degree API response:', response.data);
+
+        // Adjust based on actual API response structure
+        const options = Array.isArray(response.data)
+          ? response.data
+          : Object.values(response.data) as Degree[];
+
+        setDegreeOptions(options);
+      } catch (error) {
+        console.error("Error fetching Degree options:", error);
+      }
+    };
+
+    const fetchfamilystatus = async () => {
+      try {
+        const response = await apiClient.post("/auth/Get_FamilyStatus/");
+        // Check the actual response structure
+        console.log('Degree API response:', response.data);
+
+        // Adjust based on actual API response structure
+        const options = Array.isArray(response.data)
+          ? response.data
+          : Object.values(response.data) as FamilyStatus[];
+
+        setFamilyStatusOptions(options);
+      } catch (error) {
+        console.error("Error fetching Degree options:", error);
+      }
+    };
+
+    fetchfamilystatus();
+    fetchDegrees();
+    fetchFieldOfStudy();
+  }, []);
+
 
   useEffect(() => {
     fetchOptions();
@@ -121,15 +196,31 @@ export const ProfileVisibility: React.FC = () => {
         setValue("ageTo", profileData.visibility_age_to || "");
         setValue("heightFrom", profileData.visibility_height_from || "");
         setValue("heightTo", profileData.visibility_height_to || "");
-        setValue("education", profileData.visibility_education?.split(",") || []);
         setValue("profession", profileData.visibility_profession?.split(",") || []);
-        setValue("income", profileData.visibility_anual_income?.split(",") || []);
+        setValue("education", profileData.visibility_education?.split(",") || []);
+        setValue("fieldOfStudy", profileData.visibility_field_of_study?.split(",") || []);
+        setValue("degree", profileData.degree?.split(",") || []);
+        // setValue("income", profileData.visibility_anual_income?.split(",") || []);
+        setValue("familyStatus", profileData.visibility_family_status?.split(",") || []);
         setValue("rahuKetuDhosam", profileData.visibility_ragukethu || "");
         setValue("chevvaiDhosam", profileData.visibility_chevvai || "");
         setValue(
           "foreignInterest",
           profileData.visibility_foreign_interest || ""
         );
+        // Handle income values - split into min and max
+        const incomeValues = profileData.visibility_anual_income || "";
+        const incomeMaxValue = profileData.visibility_anual_income_max || "";
+
+        if (incomeValues.length > 0) {
+          setSelectedMinIncome(incomeValues[0]);
+          setValue("incomeMin", incomeValues[0]);
+        }
+
+        if (incomeMaxValue) {
+          setSelectedMaxIncome(incomeMaxValue);
+          setValue("incomeMax", incomeMaxValue);
+        }
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
@@ -140,7 +231,7 @@ export const ProfileVisibility: React.FC = () => {
 
   // Toggle all checkboxes in a section
   const toggleAllCheckboxes = (
-    field: "education" | "profession" | "income",
+    field: "education" | "profession" | "fieldOfStudy" | "familyStatus",
     options: Option[]
   ) => {
     const currentValues = watch(field) || [];
@@ -153,6 +244,29 @@ export const ProfileVisibility: React.FC = () => {
     }
   };
 
+  const handleMinIncomeChange = (value: string) => {
+    setSelectedMinIncome(value);
+    setValue("incomeMin", value);
+  };
+
+  const handleMaxIncomeChange = (value: string) => {
+    setSelectedMaxIncome(value);
+    setValue("incomeMax", value);
+  };
+
+  const handleDegreeChange = (selectedOptions: any) => {
+    const selectedIds = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
+    setValue("degree", selectedIds);
+  };
+
+  const getSelectedDegreeOptions = () => {
+    return degreeOptions
+      .filter(degree => degreeValues.includes(degree.degeree_id.toString()))
+      .map(degree => ({
+        value: degree.degeree_id.toString(),
+        label: degree.degeree_description
+      }));
+  };
   const onSubmit = async (data: ProfileVisibilityForm) => {
     try {
       // Log form data and errors to console
@@ -167,10 +281,15 @@ export const ProfileVisibility: React.FC = () => {
         visibility_height_to: data.heightTo,
         visibility_education: data.education.join(","),
         visibility_profession: data.profession.join(","),
-        visibility_anual_income: data.income.join(","),
+        // visibility_anual_income: data.income.join(","),
+        visibility_anual_income: data.incomeMin || "", // Use min income
+        visibility_anual_income_max: data.incomeMax || "", // Use max income
+        visibility_family_status: data.familyStatus.join(","),
         visibility_ragukethu: data.rahuKetuDhosam,
         visibility_chevvai: data.chevvaiDhosam,
         visibility_foreign_interest: data.foreignInterest,
+        visibility_field_of_study: data.fieldOfStudy.join(","), // new field
+        degree: data.degree.join(","),
         status: 1,
       };
 
@@ -183,7 +302,12 @@ export const ProfileVisibility: React.FC = () => {
 
       console.log("API response:", response.data);
 
-      NotifySuccess(response.data.message || "Profile visibility updated successfully");
+      if (response.status === 200 && response.data?.Status === 1) {
+        NotifySuccess(response.data.message || "Profile visibility updated successfully");
+      } else {
+        NotifyError(response.data?.message || "Something went wrong");
+      }
+
     } catch (error: any) {
       console.error("API error:", error);
 
@@ -207,11 +331,12 @@ export const ProfileVisibility: React.FC = () => {
   const isAllProfessionSelected = professionOptions.length > 0 &&
     professionOptions.every((opt) => professionValues.includes(opt.id));
 
-      const isAllAnnualIncomeSelected = incomeOptions.length > 0 &&
-    incomeOptions.every((opt) => incomeValues.includes(opt.id));
+  const isAllFamilyStatusSelected = familyStatusOptions.length > 0 &&
+    familyStatusOptions.every((opt) => familyStatusValues.includes(opt.family_status_id.toString()));
 
   return (
     <div>
+      <ToastNotification />
       <div>
         <h2 className="flex items-center text-[30px] text-vysyamalaBlack font-bold mb-5 max-xl:text-[26px] max-md:text-[24px] max-sm:text-[18px] max-sm:justify-between max-sm:mb-2">
           Profile Visibility
@@ -309,6 +434,59 @@ export const ProfileVisibility: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Profession */}
+          <div className="mb-5">
+            <div
+              className="flex justify-between items-center mb-2 cursor-pointer"
+              onClick={() => toggleAllCheckboxes("profession", professionOptions)}
+            >
+              <div className="flex items-center gap-x-2">
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering parent div's onClick twice
+                    toggleAllCheckboxes("profession", professionOptions);
+                  }}
+                  checked={isAllProfessionSelected}
+                  readOnly
+                  className="cursor-pointer"
+                />
+                <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                  Profession
+                </h4>
+                {/* <span className="text-sm text-blue-500">
+                {professionValues.length === professionOptions.length 
+                  ? "Unselect All" 
+                  : "Select All"}
+              </span> */}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
+              {professionOptions.map((option) => (
+                <div key={option.id} className="flex items-center mb-2 w-full">
+                  <input
+                    type="checkbox"
+                    id={`profession-${option.id}`}
+                    value={option.id}
+                    {...register("profession")}
+                    //checked={professionValues.includes(option.id)}
+                    className="mr-2"
+                  />
+                  <label
+                    htmlFor={`profession-${option.id}`}
+                    className="text-[20px] text-ash cursor-pointer"
+                  >
+                    {option.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+            {errors.profession && (
+              <span className="text-red-500">{errors.profession.message}</span>
+            )}
+          </div>
+
           {/* Education */}
           <div className="mb-5">
             <div
@@ -361,116 +539,183 @@ export const ProfileVisibility: React.FC = () => {
             )}
           </div>
 
-          {/* Profession */}
+          {/* Field of Study */}
           <div className="mb-5">
             <div
               className="flex justify-between items-center mb-2 cursor-pointer"
-              onClick={() => toggleAllCheckboxes("profession", professionOptions)}
+              onClick={() => toggleAllCheckboxes("fieldOfStudy", fieldOfStudyOptions.map(o => ({ id: o.study_id.toString(), name: o.study_description })))}
             >
               <div className="flex items-center gap-x-2">
                 <input
                   type="checkbox"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering parent div's onClick twice
-                    toggleAllCheckboxes("profession", professionOptions);
+                    e.stopPropagation();
+                    toggleAllCheckboxes(
+                      "fieldOfStudy",
+                      fieldOfStudyOptions.map(o => ({ id: o.study_id.toString(), name: o.study_description }))
+                    );
                   }}
-                  checked={isAllProfessionSelected}
+                  checked={
+                    fieldOfStudyOptions.length > 0 &&
+                    fieldOfStudyOptions.every((opt) =>
+                      fieldOfStudyValues.includes(opt.study_id.toString())
+                    )
+                  }
                   readOnly
                   className="cursor-pointer"
                 />
                 <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
-                  Profession
+                  Field of Study
                 </h4>
-                {/* <span className="text-sm text-blue-500">
-                {professionValues.length === professionOptions.length 
-                  ? "Unselect All" 
-                  : "Select All"}
-              </span> */}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
-              {professionOptions.map((option) => (
-                <div key={option.id} className="flex items-center mb-2 w-full">
+            <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+              {fieldOfStudyOptions.map((option) => (
+                <div key={option.study_id} className="flex items-center mb-2 w-full">
                   <input
                     type="checkbox"
-                    id={`profession-${option.id}`}
-                    value={option.id}
-                    {...register("profession")}
-                    checked={professionValues.includes(option.id)}
+                    id={`fieldOfStudy-${option.study_id}`}
+                    value={option.study_id}
+                    {...register("fieldOfStudy")}
+                    checked={fieldOfStudyValues.includes(option.study_id.toString())}
                     className="mr-2"
                   />
                   <label
-                    htmlFor={`profession-${option.id}`}
+                    htmlFor={`fieldOfStudy-${option.study_id}`}
                     className="text-[20px] text-ash cursor-pointer"
                   >
-                    {option.name}
+                    {option.study_description}
                   </label>
                 </div>
               ))}
             </div>
-            {errors.profession && (
-              <span className="text-red-500">{errors.profession.message}</span>
+            {errors.fieldOfStudy && (
+              <span className="text-red-500">{errors.fieldOfStudy.message}</span>
+            )}
+          </div>
+
+          <div className="mb-5">
+            <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
+              Degree
+            </h4>
+            <Select
+              isMulti
+              options={degreeOptions.map(degree => ({
+                value: degree.degeree_id.toString(),
+                label: degree.degeree_description,
+              }))}
+              value={getSelectedDegreeOptions()}
+              onChange={handleDegreeChange}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select Degrees"
+            />
+            {errors.degree && (
+              <span className="text-red-500">{errors.degree.message}</span>
             )}
           </div>
 
           {/* Income */}
           <div className="mb-5">
+            <h4 className="text-[20px] text-primary font-semibold mb-3 block">
+              Annual Income
+            </h4>
+            <div className="flex space-x-4 mb-4">
+              <div className="relative w-full">
+                <select
+                  {...register("incomeMin")}
+                  className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                  value={selectedMinIncome}
+                  onChange={(e) => handleMinIncomeChange(e.target.value)}
+                >
+                  <option value="">Select min Annual Income</option>
+                  {incomeOptions.map((option) => (
+                    <option key={option.id} value={option.id}>{option.name}</option>
+                  ))}
+                </select>
+                <IoMdArrowDropdown className="absolute right-3 top-1/2 transform -translate-y-1/2" />
+                {errors.incomeMin && <span className="text-red-500">{errors.incomeMin.message}</span>}
+              </div>
+
+              <div className="relative w-full">
+                <select
+                  {...register("incomeMax")}
+                  className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
+                  value={selectedMaxIncome}
+                  onChange={(e) => handleMaxIncomeChange(e.target.value)}
+                >
+                  <option value="">Select max Annual Income</option>
+                  {incomeOptions.map((option) => (
+                    <option key={option.id} value={option.id}>{option.name}</option>
+                  ))}
+                </select>
+                <IoMdArrowDropdown className="absolute right-3 top-1/2 transform -translate-y-1/2" />
+                {errors.incomeMax && (
+                  <span className="text-red-500">{errors.incomeMax.message}</span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="mb-5">
             <div
               className="flex justify-between items-center mb-2 cursor-pointer"
-              onClick={() => toggleAllCheckboxes("income", incomeOptions)}
+              onClick={() =>
+                toggleAllCheckboxes(
+                  "familyStatus",
+                  familyStatusOptions.map((f) => ({
+                    id: f.family_status_id.toString(),
+                    name: f.family_status_name,
+                  }))
+                )
+              }
+
             >
-                <div className="flex items-center gap-x-2">
+              <div className="flex items-center gap-x-2">
                 <input
                   type="checkbox"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering parent div's onClick twice
-                    toggleAllCheckboxes("income", incomeOptions);
-                  }}
-                  checked={isAllAnnualIncomeSelected}
+                  onClick={() =>
+                    toggleAllCheckboxes(
+                      "familyStatus",
+                      familyStatusOptions.map((f) => ({
+                        id: f.family_status_id.toString(),
+                        name: f.family_status_name,
+                      }))
+                    )
+                  }
+                  checked={isAllFamilyStatusSelected}
                   readOnly
                   className="cursor-pointer"
                 />
-              <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
-                Annual Income
-              </h4>
+                <h4 className="text-[20px] text-primary font-semibold max-md:text-[18px]">
+                  Family Status
+                </h4>
               </div>
-              {/* <span className="text-sm text-blue-500">
-                {incomeValues.length === incomeOptions.length 
-                  ? "Unselect All" 
-                  : "Select All"}
-              </span> */}
             </div>
-            <div className="grid grid-cols-2 gap-4 items-star max-xl:grid-cols-2 max-sm:grid-cols-1">
-              {incomeOptions.map((option) => (
-                <div key={option.id} className="flex items-center mb-2 w-full">
+            <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+              {familyStatusOptions.map((option) => (
+                <div key={option.family_status_id} className="flex items-center mb-2 w-full">
                   <input
                     type="checkbox"
-                    id={`income-${option.id}`}
-                    value={option.id}
-                    {...register("income")}
-                    checked={incomeValues.includes(option.id)}
+                    id={`familyStatus-${option.family_status_id}`}
+                    value={option.family_status_id.toString()}
+                    {...register("familyStatus")}
+                    checked={familyStatusValues.includes(option.family_status_id.toString())}
                     className="mr-2"
                   />
                   <label
-                    htmlFor={`income-${option.id}`}
+                    htmlFor={`familyStatus-${option.family_status_id}`}
                     className="text-[20px] text-ash cursor-pointer"
                   >
-                    {option.name}
+                    {option.family_status_name}
                   </label>
                 </div>
               ))}
             </div>
-            {errors.income && (
-              <span className="text-red-500">{errors.income.message}</span>
-            )}
-            {formErrors.visibility_anual_income && (
-              <span className="text-red-500">
-                {formErrors.visibility_anual_income}
-              </span>
+            {errors.familyStatus && (
+              <span className="text-red-500">{errors.familyStatus.message}</span>
             )}
           </div>
 
-          {/* Rest of the form sections (radio buttons) remain the same */}
           {/* Rahu/Ketu Dhosam */}
           <div className="mb-5">
             <h4 className="text-[20px] text-primary font-semibold mb-2 max-md:text-[18px]">
@@ -480,7 +725,7 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="YES"
+                  value="Yes"
                   {...register("rahuKetuDhosam")}
                   className="mr-2"
                 />
@@ -489,11 +734,20 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="NO"
+                  value="No"
                   {...register("rahuKetuDhosam")}
                   className="mr-2"
                 />
                 No
+              </label>
+              <label className="inline-flex items-center text-ash">
+                <input
+                  type="radio"
+                  value="Both"
+                  {...register("rahuKetuDhosam")}
+                  className="mr-2"
+                />
+                Both
               </label>
             </div>
             {errors.rahuKetuDhosam && (
@@ -512,7 +766,7 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="YES"
+                  value="Yes"
                   {...register("chevvaiDhosam")}
                   className="mr-2"
                 />
@@ -521,11 +775,20 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="NO"
+                  value="No"
                   {...register("chevvaiDhosam")}
                   className="mr-2"
                 />
                 No
+              </label>
+              <label className="inline-flex items-center text-ash">
+                <input
+                  type="radio"
+                  value="Both"
+                  {...register("chevvaiDhosam")}
+                  className="mr-2"
+                />
+                Both
               </label>
             </div>
             {errors.chevvaiDhosam && (
@@ -544,7 +807,7 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="YES"
+                  value="Yes"
                   {...register("foreignInterest")}
                   className="mr-2"
                 />
@@ -553,7 +816,7 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="NO"
+                  value="No"
                   {...register("foreignInterest")}
                   className="mr-2"
                 />
@@ -562,7 +825,7 @@ export const ProfileVisibility: React.FC = () => {
               <label className="inline-flex items-center text-ash">
                 <input
                   type="radio"
-                  value="BOTH"
+                  value="Both"
                   {...register("foreignInterest")}
                   className="mr-2"
                 />

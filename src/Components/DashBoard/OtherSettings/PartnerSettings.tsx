@@ -880,10 +880,10 @@ export const PartnerSettings: React.FC = () => {
 
         {/* Annual Income Section */}
         <div>
-          <label className="text-[18px] text-primary font-semibold mb-5 block">
+          <label className="text-[18px] text-primary font-semibold mb-3 block">
             Annual Income
           </label>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 mb-4">
             <div className="relative w-full">
               <select
                 {...register("income")}
