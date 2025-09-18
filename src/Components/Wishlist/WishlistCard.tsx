@@ -289,7 +289,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page }) => {
                         </p>
                       </div>
 
-                      <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                      <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap">
                         {/* Horoscope Available */}
                         <div>
                           <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">

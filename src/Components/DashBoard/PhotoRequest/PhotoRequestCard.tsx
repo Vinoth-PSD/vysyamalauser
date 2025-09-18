@@ -408,7 +408,7 @@ const defaultImgUrl =
                   </p>
                 </div>
 
-                <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap">
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                       <MdOutlineGrid3X3 className="mr-2 text-primary" /> {data.req_horoscope}

@@ -36,6 +36,7 @@ interface Profile {
   visited_userstatus: string;
   visited_horoscope: string;
   visited_profile_wishlist: number;
+  visited_datetime: string;
 }
 
 interface ApiResponse {
@@ -303,7 +304,12 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                 </div>
 
                 {/* Tags */}
-                <div className=" hidden justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap">
+                  <div>
+                    <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
+                      <IoCalendar className="mr-2 text-primary" /> Last viewed on {profile.visited_datetime}
+                    </p>
+                  </div>
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                       <MdOutlineGrid3X3 className="mr-2 text-primary" /> {profile.visited_horoscope}
@@ -312,12 +318,6 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                       <FaUser className="mr-2 text-primary" /> {profile.visited_userstatus}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
-                      <IoCalendar className="mr-2 text-primary" /> Last visit on {profile.visited_lastvisit}
-
                     </p>
                   </div>
                   <div>

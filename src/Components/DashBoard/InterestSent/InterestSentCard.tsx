@@ -339,7 +339,7 @@ const defaultImgUrl =
                     e.currentTarget.onerror = null; // Prevent infinite loop
                     e.currentTarget.src = defaultImgUrl; // Set default image
                   }}
-                  className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
+                  className="rounded-[6px] w-[245px] h-[245px]  max-md:w-full"
                 />
 
 
@@ -448,7 +448,7 @@ const defaultImgUrl =
                 </div>
 
                 {/* Tags */}
-                <div className="hidden justify-start items-center gap-3 max-2xl:flex-wrap max-md:hidden">
+                <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap ">
                   {/* Horoscope Available */}
                   <div>
                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">

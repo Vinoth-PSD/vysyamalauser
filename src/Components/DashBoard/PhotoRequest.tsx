@@ -5,13 +5,14 @@ import { SuggestedProfiles } from "../LoginHome/SuggestedProfiles";
 import Pagination from "../Pagination";
 import apiClient from "../../API";
 import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
+import { useNavigate } from "react-router-dom";
 
 interface DashBoardMyProfileProps {
   dashBoardAgain: () => void;
 }
 
 const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
-  dashBoardAgain,
+
 }) => {
   // const [perPage,setPerPage]=useState<number>(0)
   const [totalRecords, setTotalRecords] = useState<number>(0);
@@ -23,6 +24,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [NewUpdatedData, setNewUPDatedData] = useState<boolean>(false);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+   const navigate = useNavigate();
 
   const getPhotoRequest = async () => {
     try {
@@ -53,12 +55,17 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pageNumber]);
 
+   const Onclick = () => {
+    navigate("/Dashboard");
+  };
+
+
   return (
     <div className="bg-grayBg pt-10">
       <div className="container mx-auto">
         <div className="flex items-center mb-5">
           <IoArrowBackOutline
-            onClick={dashBoardAgain}
+            onClick={Onclick}
             className="text-[24px] mr-2 cursor-pointer"
           />
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-md:text-[18px]">
