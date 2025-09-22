@@ -100,15 +100,15 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
                         {sortBy === "profile_id" ? (
                             <MdToggleOff
                                 onClick={toggleSort}
-                                className="text-3xl text-gray-400 cursor-pointer hover:text-primary transition"
+                                className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
                             />
                         ) : (
                             <MdToggleOn
                                 onClick={toggleSort}
-                                className="text-3xl text-primary cursor-pointer hover:text-primary-dark transition"
+                                className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
                             />
                         )}
-                        <span className="text-sm font-medium text-primary whitespace-nowrap">
+                        <span className="text-lg font-medium text-primary whitespace-nowrap">
                             {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Date"}
                         </span>
                     </div>
