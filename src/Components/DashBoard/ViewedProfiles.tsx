@@ -8,6 +8,8 @@ import Pagination from '../Pagination';
 import apiClient from '../../API';
 import { Hearts } from 'react-loader-spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
+//import { IoMdArrowDropdown } from 'react-icons/io';
+import { MdToggleOn, MdToggleOff } from "react-icons/md"; // 👈 import toggle icons
 //import { useNavigate } from 'react-router-dom';
 
 interface ViewedProfilesProps {
@@ -21,6 +23,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
+    const [sortBy, setSortBy] = useState<string>("profile_id"); // default sort
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -39,6 +42,12 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
     // const [totalPages,setTotalPages]=useState<number>(0)
 
     //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
+    const toggleSort = () => {
+        setSortBy((prev) =>
+            prev === "profile_id" ? "datetime" : "profile_id"
+        );
+        setPageNumber(1); // 👈 reset to first page on sort change
+    };
 
     const fetchData = async () => {
         try {
@@ -77,9 +86,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
     return (
         <div className="bg-grayBg pt-10">
             <div className="container mx-auto pb-10">
-
                 <div className="flex justify-between items-center mb-5 max-md:flex-wrap max-md:gap-y-5">
-
                     <div className="w-full flex justify-start items-center">
                         <IoArrowBackOutline
                             // onClick={() => navigate("/Dashboard")} 
@@ -89,6 +96,24 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
                             <span className="text-sm text-primary">({totalRecords})</span>
                         </h4>
                     </div>
+                    <div className="flex items-center space-x-2">
+                        {sortBy === "profile_id" ? (
+                            <MdToggleOff
+                                onClick={toggleSort}
+                                className="text-3xl text-gray-400 cursor-pointer hover:text-primary transition"
+                            />
+                        ) : (
+                            <MdToggleOn
+                                onClick={toggleSort}
+                                className="text-3xl text-primary cursor-pointer hover:text-primary-dark transition"
+                            />
+                        )}
+                        <span className="text-sm font-medium text-primary whitespace-nowrap">
+                            {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Viewed Date"}
+                        </span>
+                    </div>
+
+
                 </div>
 
                 {/* viewed profiles Card */}
@@ -110,7 +135,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
                 ) : (
                     <div className="bg-white rounded-xl shadow-profileCardShadow px-5 py-5">
                         <p className="text-ashSecondary font-semibold">Today</p>
-                        <ViewedProfilesCard pageNumber={pageNumber} dataPerPage={dataPerPage} />
+                        <ViewedProfilesCard pageNumber={pageNumber} dataPerPage={dataPerPage} sortBy={sortBy}  />
                         <Pagination
                             pageNumber={pageNumber}
                             setPageNumber={setPageNumber}
