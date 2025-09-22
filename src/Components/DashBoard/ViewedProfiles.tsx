@@ -23,7 +23,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
-    const [sortBy, setSortBy] = useState<string>("profile_id"); // default sort
+    const [sortBy, setSortBy] = useState<string>("datetime"); // default sort
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -109,11 +109,9 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
                             />
                         )}
                         <span className="text-sm font-medium text-primary whitespace-nowrap">
-                            {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Viewed Date"}
+                            {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Date"}
                         </span>
                     </div>
-
-
                 </div>
 
                 {/* viewed profiles Card */}
