@@ -101,13 +101,13 @@ export const PayNow: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
-      const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
+    //  const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
       const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
         amountInPaise,
         String(profile_id),
-        Number(plan_id),
+        0,
         addonPackageIdsString
       );
 
@@ -219,7 +219,7 @@ export const PayNow: React.FC = () => {
         // For GPay: pass gpay_online=1
         response = await savePlanPackage(
           String(profile_id),
-          String(plan_id),
+          "0",
           addonPackageIdsString,
           totalAmount,
           1

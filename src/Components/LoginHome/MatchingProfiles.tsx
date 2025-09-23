@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { HiMiniViewColumns } from "react-icons/hi2";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { ImMenu } from "react-icons/im";
-import { BsSortDown } from "react-icons/bs";
+//import { BsSortDown } from "react-icons/bs";
 // import { BsSortUp } from "react-icons/bs";
 import { GridView } from "./MatchingProfiles/GridView";
 import { ListView } from "./MatchingProfiles/ListView";
@@ -31,6 +31,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 import { Hearts } from "react-loader-spinner";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MdToggleOff, MdToggleOn } from "react-icons/md";
 // import { log } from "console";
 
 // const items = [
@@ -683,14 +684,23 @@ export const MatchingProfiles = () => {
               />
             </div>
           </div>
-
+          {/* 
           <button
             onClick={toggleSortOrder}
             className="flex justify-start items-center"
           >
             <BsSortDown className="text-[22px] text-main cursor-pointer hover:text-secondary mr-2" />
-            {/* You can uncomment this if you have an alternative sorting direction */}
-            {/* <BsSortUp /> */}
+            <p className="text-vysyamalaBlack text-sm font-normal">Sort by date</p>
+          </button> */}
+          <button
+            onClick={toggleSortOrder}
+            className="flex justify-start items-center"
+          >
+            {sortOrder === "1" ? (
+              <MdToggleOn className="text-[35px] text-main cursor-pointer hover:text-secondary mr-2" />
+            ) : (
+              <MdToggleOff className="text-[35px] text-main cursor-pointer hover:text-secondary mr-2" />
+            )}
             <p className="text-vysyamalaBlack text-sm font-normal">Sort by date</p>
           </button>
         </div>
