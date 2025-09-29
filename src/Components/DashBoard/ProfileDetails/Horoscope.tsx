@@ -77,6 +77,42 @@ export const Horoscope = () => {
     // personal_horoscope_hints: "",
   });
 
+  // useEffect(() => {
+  //   const fetchHoroscopeDetails = async () => {
+  //     try {
+  //       const response = await apiClient.post(
+  //         "/auth/get_myprofile_horoscope/",
+  //         {
+  //           profile_id: loginuser_profileId,
+  //         }
+  //       );
+  //       const data = response.data.data;
+  //       ////console.log("horoscope", response.data.data);
+  //       setHoroscopeDetails(data);
+
+  //       const matchedLagnam = lagnams.find((lagnam) =>
+  //         lagnam.didi_description.includes(data.personal_lagnam_didi_name)
+  //       );
+  //       if (matchedLagnam) {
+  //         setSelectedLagnamId(matchedLagnam.didi_id);
+  //       }
+
+  //       setSelectedBirthStarId(data.personal_bthstar_id || "");
+  //       setSelectedRasiId(data.personal_bth_rasi_id || "");
+  //       sessionStorage.setItem("formattedDatarasi", data.personal_rasi_katt);
+  //       sessionStorage.setItem("formattedDatamsam", data.personal_amsa_katt);
+  //     } catch (error) {
+  //       console.error("Error fetching horoscope details:", error);
+  //     }
+  //   };
+
+  //   fetchHoroscopeDetails();
+  // }, [loginuser_profileId, lagnams, refreshData]);
+
+
+  // Add this useEffect after your existing useEffect that fetches horoscope details
+  // Replace the existing dasa balance parsing section with this:
+
   useEffect(() => {
     const fetchHoroscopeDetails = async () => {
       try {
@@ -87,33 +123,60 @@ export const Horoscope = () => {
           }
         );
         const data = response.data.data;
-        ////console.log("horoscope", response.data.data);
         setHoroscopeDetails(data);
 
-        // Parse dasa balance
-        // if (data.personal_dasa_bal) {
-        //   const [day, month, year] = data.personal_dasa_bal
-        //     .split(",")
-        //     .map((item: string) => item.split(":")[1]);
-        //   setDasaBalanceDay(day);
-        //   setDasaBalanceMonth(month);
-        //   setDasaBalanceYear(year);
-        // }
-        // if (data.personal_dasa_bal) {
-        //   const [dayPart, monthPart, yearPart] = data.personal_dasa_bal.split(',');
+        // Parse dasa_balance - handle both new and old formats
+        const dasaBalance1 = data.personal_dasa_bal;
+        if (dasaBalance1 && typeof dasaBalance1 === 'string') {
+          // Check for the new format first: "Y Years, M Months, D Days"
+          const yearMatch = dasaBalance1.match(/(\d+)\s*Years/);
+          const monthMatch = dasaBalance1.match(/(\d+)\s*Months/);
+          const dayMatch = dasaBalance1.match(/(\d+)\s*Days/);
 
-        //   // Extract values and format with leading zeros
-        //   const day = dayPart.split(':')[1].padStart(2, '0');
-        //   const month = monthPart.split(':')[1].padStart(2, '0');
-        //   const year = yearPart.split(':')[1];
+          if (yearMatch || monthMatch || dayMatch) {
+            const year = yearMatch ? yearMatch[1] : "";
+            const month = monthMatch ? monthMatch[1] : "";
+            const day = dayMatch ? dayMatch[1] : "";
 
-        //   setDasaBalanceDay(day);
-        //   setDasaBalanceMonth(month);
-        //   setDasaBalanceYear(year);
-        // }
+            setDasaBalanceYear(year);
+            setDasaBalanceMonth(month);
+            setDasaBalanceDay(day);
+          } else {
+            // Fallback to original parsing logic for old data formats
+            try {
+              const parsedBalance = JSON.parse(dasaBalance1);
+              if (parsedBalance && typeof parsedBalance === 'object') {
+                setDasaBalanceYear(parsedBalance.year?.toString() || "");
+                setDasaBalanceMonth(parsedBalance.month?.toString() || "");
+                setDasaBalanceDay(parsedBalance.day?.toString() || "");
+              }
+            } catch (e) {
+              // Fallback for "day:x,month:y,year:z" format
+              const balanceParts = dasaBalance1.split(',');
+              if (balanceParts.length === 3) {
+                const dayPart = balanceParts.find(part => part.includes('day:')) || 'day:';
+                const monthPart = balanceParts.find(part => part.includes('month:')) || 'month:';
+                const yearPart = balanceParts.find(part => part.includes('year:')) || 'year:';
+                const day = dayPart.split(':')[1] || '';
+                const month = monthPart.split(':')[1] || '';
+                const year = yearPart.split(':')[1] || '';
+                setDasaBalanceYear(year);
+                setDasaBalanceMonth(month);
+                setDasaBalanceDay(day);
+              } else {
+                setDasaBalanceYear('');
+                setDasaBalanceMonth('');
+                setDasaBalanceDay('');
+              }
+            }
+          }
+        } else {
+          setDasaBalanceYear('');
+          setDasaBalanceMonth('');
+          setDasaBalanceDay('');
+        }
 
-
-
+        // ... rest of your existing code for other fields
         const matchedLagnam = lagnams.find((lagnam) =>
           lagnam.didi_description.includes(data.personal_lagnam_didi_name)
         );
@@ -132,6 +195,41 @@ export const Horoscope = () => {
 
     fetchHoroscopeDetails();
   }, [loginuser_profileId, lagnams, refreshData]);
+
+  // Add these useEffects to handle dasa balance formatting
+  useEffect(() => {
+    const parts = [];
+
+    // Only include non-zero and non-empty values
+    if (dasaBalanceYear) {
+      parts.push(`${dasaBalanceYear} Years`);
+    }
+    if (dasaBalanceMonth) {
+      parts.push(`${dasaBalanceMonth} Months`);
+    }
+    if (dasaBalanceDay) {
+      parts.push(`${dasaBalanceDay} Days`);
+    }
+
+    const formattedBalance = parts.join(', ');
+    setFormData(prev => ({ ...prev, personal_dasa_bal: formattedBalance }));
+  }, [dasaBalanceYear, dasaBalanceMonth, dasaBalanceDay]);
+
+  // Update the dropdown change handlers
+  const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setDasaBalanceDay(value);
+  };
+
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setDasaBalanceMonth(value);
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setDasaBalanceYear(value);
+  };
 
   useEffect(() => {
     const fetchBirthStars = async () => {
@@ -272,72 +370,100 @@ export const Horoscope = () => {
   //   setIsEditing(!isEditing);
   // };
 
+
+  // Replace your existing useEffect that handles dasa balance formatting
+  useEffect(() => {
+    const parts = [];
+
+    // Only include non-zero and non-empty values
+    if (dasaBalanceYear) {
+      parts.push(`${dasaBalanceYear} Years`);
+    }
+    if (dasaBalanceMonth) {
+      parts.push(`${dasaBalanceMonth} Months`);
+    }
+    if (dasaBalanceDay) {
+      parts.push(`${dasaBalanceDay} Days`);
+    }
+
+    const formattedBalance = parts.join(', ');
+    setFormData(prev => ({ ...prev, personal_dasa_bal: formattedBalance }));
+  }, [dasaBalanceYear, dasaBalanceMonth, dasaBalanceDay]);
+
+  // Add this useEffect to handle the "0" default logic
+  useEffect(() => {
+    // Check if any field has a meaningful value (not '' or '0')
+    const isAnyFieldSet =
+      (dasaBalanceYear && dasaBalanceYear !== '0') ||
+      (dasaBalanceMonth && dasaBalanceMonth !== '0') ||
+      (dasaBalanceDay && dasaBalanceDay !== '0');
+
+    // Prevent this logic from running on initial load before values are set
+    if (dasaBalanceYear === undefined || dasaBalanceMonth === undefined || dasaBalanceDay === undefined) {
+      return;
+    }
+
+    if (isAnyFieldSet) {
+      // If at least one field is set, ensure others default to '0' instead of ''
+      if (!dasaBalanceYear || dasaBalanceYear === '') setDasaBalanceYear('0');
+      if (!dasaBalanceMonth || dasaBalanceMonth === '') setDasaBalanceMonth('0');
+      if (!dasaBalanceDay || dasaBalanceDay === '') setDasaBalanceDay('0');
+    } else {
+      // If all fields have been cleared by the user, reset any '0' values back to ''
+      if (dasaBalanceYear === '0') setDasaBalanceYear('');
+      if (dasaBalanceMonth === '0') setDasaBalanceMonth('');
+      if (dasaBalanceDay === '0') setDasaBalanceDay('');
+    }
+  }, [dasaBalanceYear, dasaBalanceMonth, dasaBalanceDay]);
+
+  // Update the handleEditClick function to properly initialize dasa balance
   const handleEditClick = () => {
     if (isEditing) {
       setFormData({});
-      // Reset dasa balance states
       setDasaBalanceYear("");
       setDasaBalanceMonth("");
       setDasaBalanceDay("");
     } else {
       if (horoscopeDetails) {
-
         setFormData({
           ...horoscopeDetails,
-          // Ensure all select fields have proper values
           personal_bthstar_id: horoscopeDetails.personal_bthstar_id,
           personal_bth_rasi_id: horoscopeDetails.personal_bth_rasi_id,
-          // Parse dasa balance if needed
         });
 
-        // Set all select states
         setSelectedBirthStarId(horoscopeDetails.personal_bthstar_id?.toString() || "");
         setSelectedRasiId(horoscopeDetails.personal_bth_rasi_id?.toString() || "");
 
-        // Find and set Lagnam ID
         const matchedLagnam = lagnams.find(lagnam =>
           horoscopeDetails.personal_lagnam_didi_name?.includes(lagnam.didi_description)
         );
         setSelectedLagnamId(matchedLagnam?.didi_id.toString() || "");
 
-        // Parse and set dasa balance values
+        // Parse dasa balance for editing with proper "0" handling
         if (horoscopeDetails.personal_dasa_bal) {
-          try {
-            console.log("Parsing dasa balance:", horoscopeDetails.personal_dasa_bal);
-            // Parse format like "17 Days, 12 Months, 19 Years"
-            const match = horoscopeDetails.personal_dasa_bal.match(/(\d+)\s*Years?,\s*(\d+)\s*Months?,\s*(\d+)\s*Days?/);
-            if (match) {
-              const year = match[1];
-              const month = match[2].padStart(2, '0');
-              const day = match[3].padStart(2, '0');
+          const yearMatch = horoscopeDetails.personal_dasa_bal.match(/(\d+)\s*Years/);
+          const monthMatch = horoscopeDetails.personal_dasa_bal.match(/(\d+)\s*Months/);
+          const dayMatch = horoscopeDetails.personal_dasa_bal.match(/(\d+)\s*Days/);
 
-              setDasaBalanceYear(year);
-              setDasaBalanceMonth(month);
-              setDasaBalanceDay(day);
-            } else {
-              console.log("No match found, trying fallback parsing");
-              // Fallback to old parsing method if format is different
-              const [monthPart, dayPart, yearPart] = horoscopeDetails.personal_dasa_bal.split(',');
-              const year = yearPart.split(':')[1]?.trim() || "";
-              const month = monthPart.split(':')[1]?.trim().padStart(2, '0') || "";
-              const day = dayPart.split(':')[1]?.trim().padStart(2, '0') || "";
+          if (yearMatch || monthMatch || dayMatch) {
+            const year = yearMatch ? yearMatch[1] : "0";
+            const month = monthMatch ? monthMatch[1] : "0";
+            const day = dayMatch ? dayMatch[1] : "0";
 
-
-              console.log("Fallback parsed values:", { day, month, year });
-              setDasaBalanceYear(year);
-              setDasaBalanceMonth(month);
-              setDasaBalanceDay(day);
-            }
-          } catch (error) {
-            console.error("Error parsing dasa balance:", error);
-            setDasaBalanceYear("");
-            setDasaBalanceMonth("");
-            setDasaBalanceDay("");
+            setDasaBalanceYear(year);
+            setDasaBalanceMonth(month);
+            setDasaBalanceDay(day);
+          } else {
+            // Fallback for old data formats
+            setDasaBalanceYear("0");
+            setDasaBalanceMonth("0");
+            setDasaBalanceDay("0");
           }
         } else {
-          setDasaBalanceYear("");
-          setDasaBalanceMonth("");
-          setDasaBalanceDay("");
+          // Initialize with zeros when no existing data
+          setDasaBalanceYear("0");
+          setDasaBalanceMonth("0");
+          setDasaBalanceDay("0");
         }
       }
     }
@@ -596,16 +722,18 @@ export const Horoscope = () => {
                   <div className="relative w-full">
                     <select
                       value={dasaBalanceYear}
-                      onChange={(e) => {
-                        const newYear = e.target.value;
-                        setDasaBalanceYear(newYear);
-                        const balance = ` ${newYear} Years, ${dasaBalanceMonth} Months, ${dasaBalanceDay} Days`;
-                        setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
-                      }}
+                      // onChange={(e) => {
+                      //   const newYear = e.target.value;
+                      //   setDasaBalanceYear(newYear);
+                      //   const balance = ` ${newYear} Years, ${dasaBalanceMonth} Months, ${dasaBalanceDay} Days`;
+                      //   setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
+                      // }}
+                      onChange={handleYearChange}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
                        `}
                     >
                       <option value="">Years</option>
+                      <option value="">0</option>
                       {dasaBalanceYear && !Array.from({ length: 50 }, (_, i) => i + 1).includes(Number(dasaBalanceYear)) && (
                         <option value={dasaBalanceYear}>{dasaBalanceYear}</option>
                       )}
@@ -619,19 +747,20 @@ export const Horoscope = () => {
                   <div className="relative w-full">
                     <select
                       value={dasaBalanceMonth}
-                      onChange={(e) => {
-                        const newMonth = e.target.value;
-                        setDasaBalanceMonth(newMonth);
-                        const balance = ` ${dasaBalanceYear} Years, ${newMonth} Months, ${dasaBalanceDay} Days`;
-                        setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
-                      }}
+                      // onChange={(e) => {
+                      //   const newMonth = e.target.value;
+                      //   setDasaBalanceMonth(newMonth);
+                      //   const balance = ` ${dasaBalanceYear} Years, ${newMonth} Months, ${dasaBalanceDay} Days`;
+                      //   setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
+                      // }}
+                      onChange={handleMonthChange}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
                         `}
                     >
                       <option value="">Months</option>
-                      <option value="00">00</option>
+                      <option value="0">0</option>
                       {Array.from({ length: 12 }, (_, i) => {
-                        const month = (i + 1).toString().padStart(2, '0');
+                        const month = (i + 1).toString().padStart(1, '0');
                         return (
                           <option key={month} value={month}>
                             {month}
@@ -644,19 +773,20 @@ export const Horoscope = () => {
                   <div className="relative w-full">
                     <select
                       value={dasaBalanceDay}
-                      onChange={(e) => {
-                        const newDay = e.target.value;
-                        setDasaBalanceDay(newDay);
-                        const balance = `${dasaBalanceYear} Years,  ${dasaBalanceMonth} Months, ${newDay} Days,`;
-                        setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
-                      }}
+                      // onChange={(e) => {
+                      //   const newDay = e.target.value;
+                      //   setDasaBalanceDay(newDay);
+                      //   const balance = `${dasaBalanceYear} Years,  ${dasaBalanceMonth} Months, ${newDay} Days,`;
+                      //   setFormData(prev => ({ ...prev, personal_dasa_bal: balance }));
+                      // }}
+                      onChange={handleDayChange}
                       className={`font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder
                        `}
                     >
                       <option value="">Days</option>
-                      <option value="00">00</option>
+                      <option value="0">0</option>
                       {Array.from({ length: 31 }, (_, i) => {
-                        const day = (i + 1).toString().padStart(2, '0');
+                        const day = (i + 1).toString().padStart(1, '0');
                         return (
                           <option key={day} value={day}>
                             {day}
