@@ -70,7 +70,6 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
     register,
     handleSubmit,
     formState: { errors },
-    control,
     setValue,
   } = useForm<HoroDetailsInputs>({
     resolver: zodResolver(schema),

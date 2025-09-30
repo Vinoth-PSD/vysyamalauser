@@ -26,12 +26,13 @@ import axios from "axios";
 // import { number } from "zod";
 import Pagination from "../Pagination";
 // import Spinner from "../Spinner";
-import { ToastNotification } from "../Toast/ToastNotification";
+//import { ToastNotification } from "../Toast/ToastNotification";
 import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 import { Hearts } from "react-loader-spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdToggleOff, MdToggleOn } from "react-icons/md";
+import { ToastContainer } from "react-toastify";
 // import { log } from "console";
 
 // const items = [
@@ -786,7 +787,18 @@ export const MatchingProfiles = () => {
           </>
         )}
       </div>
-      <ToastNotification />
+      {/* <ToastNotification /> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../../../Spinner";
 import { IoMdLock } from "react-icons/io";
 import apiClient from "../../../../API";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 
@@ -175,7 +175,7 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
       )}
 
       <div className="mb-3">
-        <ToastContainer />
+        {/* <ToastContainer /> */}
         {profile.photo_protection === 1 ? (
           <div className="relative">
             <img

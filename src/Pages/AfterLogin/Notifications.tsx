@@ -298,14 +298,17 @@ export const Notifications = () => {
                   <Spinner />
                 </div>
               ) : (
+                NotificationData.length !== totalRecords && (
                 <button
                   onClick={handleLoadData}
                   className="w-full rounded-md text-main py-3 font-semibold hover:bg-gradient hover:text-white max-md:text-[16px]"
                 >
-                  {NotificationData.length === totalRecords
+                  {/* {NotificationData.length === totalRecords
                     ? "You have reached the maximum number of records"
-                    : "Load more"}
+                    : "Load more"} */}
+                    Load more
                 </button>
+                )
               )}
             </div>
           </div>

@@ -18,6 +18,7 @@ import Pagination from "../Pagination";
 import apiClient from "../../API";
 import { ProfileNotFound } from "../LoginHome/MatchingProfiles/ProfileNotFound";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 interface SearchResultsProps {
   onSearchAgain: () => void; // Call back function to trigger search again when user clicks on search again button
@@ -293,6 +294,17 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
           )}
       </div>
       <SuggestedProfiles />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

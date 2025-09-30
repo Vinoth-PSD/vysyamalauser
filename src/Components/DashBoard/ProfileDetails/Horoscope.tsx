@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import apiClient from "../../../API";
 
 // Define the interface for the horoscope details
+
 interface HoroscopeDetails {
   personal_bthstar_id: number;
   personal_bthstar_name: string;
