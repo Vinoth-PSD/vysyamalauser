@@ -41,6 +41,8 @@ const schema = zod.object({
   uncle_gothram: zod.string().optional(),
   ancestor_origin: zod.string().optional(),
   aboutMyFamily: zod.string().optional(),
+  mother_alive: zod.string().optional(),
+  father_alive: zod.string().optional(),
 });
 
 
@@ -72,6 +74,8 @@ interface FamilyDetailsInputs {
   bloodGroup?: string;
   physicallyChallenged?: string;
   defectDetails?: string;
+  father_alive?: string;
+  mother_alive?: string;
 }
 
 interface Occupation {
@@ -129,6 +133,8 @@ const FamilyDetails: React.FC = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       physicallyChallenged: "no", // Set "no" as the default value
+      father_alive: "Yes",
+      mother_alive: "Yes",
     },
   });
 
@@ -255,7 +261,7 @@ const FamilyDetails: React.FC = () => {
     handleFocus(familyTypeRef, errors.familyType);
     handleFocus(familyValueRef, errors.familyValue);
     handleFocus(familyStatusRef, errors.familyStatus);
-  }, [errors.brother,errors.marriedBrother,errors.sister,errors.familyType,errors.familyValue,errors.familyStatus]);
+  }, [errors.brother, errors.marriedBrother, errors.sister, errors.familyType, errors.familyValue, errors.familyStatus]);
 
   const physicallyChallengedValue = watch("physicallyChallenged");
   const profileId = localStorage.getItem("profile_id_new");
@@ -307,6 +313,14 @@ const FamilyDetails: React.FC = () => {
           setValue(
             "physicallyChallenged",
             profileData.Pysically_changed === "yes" ? "yes" : "no"
+          );
+          setValue(
+            "mother_alive",
+            profileData.mother_alive === "Yes" ? "Yes" : "No"
+          );
+          setValue(
+            "father_alive",
+            profileData.father_alive === "Yes" ? "Yes" : "No"
           );
 
           // Set brother and sister values based on the fetched data
@@ -510,8 +524,9 @@ const FamilyDetails: React.FC = () => {
         property_details: data.propertyDetails,
         uncle_gothram: data.uncle_gothram,
         ancestor_origin: data.ancestor_origin,
-        suya_gothram: data.suyaGothram
-
+        suya_gothram: data.suyaGothram,
+        father_alive: data.father_alive,
+        mother_alive: data.mother_alive
         // Include other fields as necessary
       };
 
@@ -851,6 +866,56 @@ const FamilyDetails: React.FC = () => {
                 <InputField label="please explain the physically challenged in detail" />
               </div>
             )}
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Father Alive</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value="Yes"
+                    {...register("father_alive")}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>Yes</span>
+                </label>
+
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value="No"
+                    {...register("father_alive")}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Mother Alive</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value="Yes"
+                    {...register("mother_alive")}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>Yes</span>
+                </label>
+
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value="No"
+                    {...register("mother_alive")}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+            </div>
 
             {/* Brother and Sister selection */}
             <div className="mt-3 grid grid-cols-2 gap-x-5 max-md:block max-md:space-y-4">

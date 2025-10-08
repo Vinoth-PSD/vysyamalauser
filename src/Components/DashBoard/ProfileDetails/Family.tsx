@@ -632,7 +632,7 @@ export const Family = () => {
                       type="radio"
                       name="mother_alive"
                       value="yes"
-                      checked={formData.father_alive === "yes"}
+                      checked={formData.mother_alive === "yes"}
                       onChange={(e) => {
                         handleInputChange(e);
                         setErrors((prev) => ({
