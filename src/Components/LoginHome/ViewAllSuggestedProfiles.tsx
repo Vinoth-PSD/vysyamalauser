@@ -65,6 +65,7 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
     try {
       const response = await apiClient.post('/auth/Get_Suggested_List/', {
         profile_id: profileId,
+        per_page: perPage,
         page_number: page,
       });
 

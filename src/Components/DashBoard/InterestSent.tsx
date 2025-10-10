@@ -3,7 +3,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { InterestSentCard } from "./InterestSent/InterestSentCard";
 import Pagination from "../Pagination";
 //import axios from "axios";
-import { IoMdArrowDropdown } from "react-icons/io";
+//import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -82,7 +82,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
             </h4>
           </div>
 
-          <div className="relative max-md:w-full max-md:text-end">
+          {/* <div className="relative max-md:w-full max-md:text-end">
             <select
               name="month"
               id="month"
@@ -105,7 +105,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
               <IoMdArrowDropdown className="text-lg text-primary-400" />
             </div>
 
-          </div>
+          </div> */}
         </div>
 
         {/* Interest Sent Card */}

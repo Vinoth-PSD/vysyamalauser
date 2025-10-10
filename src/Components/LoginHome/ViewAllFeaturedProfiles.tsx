@@ -70,10 +70,10 @@ export const ViewAllFeaturedProfiles: React.FC = () => {
         "/auth/Get_Featured_List/",
         {
           profile_id: profileId,
-          from_age: 20,
-          to_age: 40,
-          from_height: 100,
-          to_height: 200,
+          // from_age: 20,
+          // to_age: 40,
+          // from_height: 100,
+          // to_height: 200,
           per_page: perPage,
           page_number: page,
         }

@@ -119,11 +119,11 @@ export const FeaturedProfiles = () => {
           "/auth/Get_Featured_List/",
           {
             profile_id: localStorage.getItem("loginuser_profile_id") ,
-            from_age: 20,
-            to_age: 40,
-            from_height: 100,
-            to_height: 200,
-            per_page: 4,
+            // from_age: 20,
+            // to_age: 40,
+            // from_height: 100,
+            // to_height: 200,
+            per_page: 6,
             page_number: 1,
           }
         );

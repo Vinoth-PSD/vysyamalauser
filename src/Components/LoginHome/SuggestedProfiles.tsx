@@ -14,7 +14,7 @@ import apiClient from "../../API";
 // Define the interface for the profile data
 interface Profile {
   profile_id: string;
-  profile_name:string;
+  profile_name: string;
   profile_img: string;
   profile_age: number;
   profile_height: number;
@@ -123,13 +123,15 @@ const settings = {
 
 export const SuggestedProfiles: React.FC = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]); // Typing the state as an array of Profile objects
-  const [totalCount,setTotalCount]=useState<number>(0)
+  const [totalCount, setTotalCount] = useState<number>(0)
   const navigate = useNavigate();
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
         const response = await apiClient.post("/auth/Get_Suggested_List/", {
-          profile_id: localStorage.getItem("loginuser_profile_id") ,
+          profile_id: localStorage.getItem("loginuser_profile_id"),
+          per_page: 6,
+          page_number: 1,
         });
         if (response.data.status === "success") {
           setProfiles(response.data.data);
@@ -148,31 +150,31 @@ export const SuggestedProfiles: React.FC = () => {
   const handleNavigate = () => {
     navigate('/ViewAllSuggestedProfiles'); // Replace with your target path
   };
-  if(totalCount===0) return null;
+  if (totalCount === 0) return null;
   return (
     <div className="bg-vysyamalaSandal overflow-hidden px-5 max-xl:py-4 max-lg:py-3">
-    <div className="container mx-auto my-10 max-lg:my-8 max-md:my-6">
-      <div className="flex justify-between items-center max-sm:flex-wrap max-sm:gap-2">
-        <div>
-          <h4 className="text-[24px] text-vysyamalaBlack font-bold  max-xl:text-[22px] max-lg:text-[20px] max-md:text-[18px]">
-            Suggested Profiles {" "}
-            <span className="text-sm text-primary font-bold">
-              {/* ({totalCount}) */}
-              
+      <div className="container mx-auto my-10 max-lg:my-8 max-md:my-6">
+        <div className="flex justify-between items-center max-sm:flex-wrap max-sm:gap-2">
+          <div>
+            <h4 className="text-[24px] text-vysyamalaBlack font-bold  max-xl:text-[22px] max-lg:text-[20px] max-md:text-[18px]">
+              Suggested Profiles {" "}
+              <span className="text-sm text-primary font-bold">
+                {/* ({totalCount}) */}
+
               </span>
-          </h4>
+            </h4>
+          </div>
+          <div>
+            <button className="flex items-center text-sm text-secondary font-semibold max-md:text-[14px]"
+              onClick={handleNavigate}
+            >
+              View All <IoChevronForwardOutline className="ml-2" />
+            </button>
+          </div>
         </div>
-        <div>
-          <button className="flex items-center text-sm text-secondary font-semibold max-md:text-[14px]"
-           onClick={handleNavigate}
-          >
-            View All <IoChevronForwardOutline className="ml-2" />
-          </button>
-        </div>
-      </div>
 
         {/* Suggested Profile Slick */}
-        <div  className="slider-container suggestedStyle" >
+        <div className="slider-container suggestedStyle" >
           <Slider {...settings}>
             {profiles.map((profile) => (
               <SuggestedCard
