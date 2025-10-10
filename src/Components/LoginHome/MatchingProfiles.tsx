@@ -24,7 +24,7 @@ import axios from "axios";
 // import { FiXCircle } from "react-icons/fi";
 //import { LuFilterX } from "react-icons/lu";
 // import { number } from "zod";
-import Pagination from "../Pagination";
+//import Pagination from "../Pagination";
 // import Spinner from "../Spinner";
 //import { ToastNotification } from "../Toast/ToastNotification";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -33,6 +33,7 @@ import { Hearts } from "react-loader-spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdToggleOff, MdToggleOn } from "react-icons/md";
 import { ToastContainer } from "react-toastify";
+import PaginationNew from "../PaginationNew";
 // import { log } from "console";
 
 // const items = [
@@ -759,7 +760,7 @@ export const MatchingProfiles = () => {
 
         {searchvalue === "1" ? (
           <>
-            <Pagination
+            <PaginationNew
               pageNumber={paginationValue}
               //setPageNumber={setPaginationValue}
               setPageNumber={(page) => {
@@ -773,7 +774,7 @@ export const MatchingProfiles = () => {
           </>
         ) : (
           <>
-            <Pagination
+            <PaginationNew
               pageNumber={MatchingProfilepageNumber}
               //setPageNumber={setMatchingProfilePageNumber}
               setPageNumber={(page) => {

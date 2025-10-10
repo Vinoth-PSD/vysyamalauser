@@ -873,7 +873,7 @@ const FamilyDetails: React.FC = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    value="Yes"
+                    value="yes"
                     {...register("father_alive")}
                     className="text-blue-600 focus:ring-blue-500"
                   />
@@ -883,7 +883,7 @@ const FamilyDetails: React.FC = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    value="No"
+                    value="no"
                     {...register("father_alive")}
                     className="text-blue-600 focus:ring-blue-500"
                   />
@@ -898,7 +898,7 @@ const FamilyDetails: React.FC = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    value="Yes"
+                    value="yes"
                     {...register("mother_alive")}
                     className="text-blue-600 focus:ring-blue-500"
                   />
@@ -908,7 +908,7 @@ const FamilyDetails: React.FC = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    value="No"
+                    value="no"
                     {...register("mother_alive")}
                     className="text-blue-600 focus:ring-blue-500"
                   />
