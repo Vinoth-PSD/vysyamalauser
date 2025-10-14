@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdVerifiedUser } from "react-icons/md";
-import { IoCalendar, IoEye } from "react-icons/io5";
-import { FaPersonArrowUpFromLine, FaSuitcase, FaLocationDot, FaUser } from "react-icons/fa6";
-import { MdBookmark, MdBookmarkBorder, MdOutlineGrid3X3 } from "react-icons/md";
+import { IoCalendar } from "react-icons/io5";
+import { FaPersonArrowUpFromLine, FaSuitcase, FaLocationDot } from "react-icons/fa6";
+import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import { IoSchool } from "react-icons/io5";
 import { Hearts } from "react-loader-spinner";
 import { LoginPopupModal } from "../HomePage/PopUpsLogin/LoginPopupModal";
@@ -169,7 +169,7 @@ export const FeaturedBrideCard: React.FC = () => {
                                             </div>
 
 
-                                            <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap">
+                                            {/* <div className=" flex justify-start items-center gap-3 max-2xl:flex-wrap">
                                                 <div>
                                                     <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                                                         <MdOutlineGrid3X3 className="mr-2" /> Horoscope Available
@@ -193,7 +193,7 @@ export const FeaturedBrideCard: React.FC = () => {
                                                         <IoEye className="mr-2" /> 31 views
                                                     </p>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                         </div>
                                     </div>
