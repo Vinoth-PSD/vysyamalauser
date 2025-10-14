@@ -760,31 +760,33 @@ export const MatchingProfiles = () => {
 
         {searchvalue === "1" ? (
           <>
-            <PaginationNew
-              pageNumber={paginationValue}
-              //setPageNumber={setPaginationValue}
-              setPageNumber={(page) => {
-                setPaginationValue(page);
-                setMatchingProfilePageNumber(page); // ✅ keep synced
-              }}
-              totalRecords={Number(totalCount)}
-              dataPerPage={pegeDataCount}
-              toptalPages={totalPageCount}
-            />
+            {totalPageCount > 0 && ( // <-- ADD THIS CHECK
+              <PaginationNew
+                pageNumber={paginationValue}
+                setPageNumber={(page) => {
+                  setPaginationValue(page);
+                  setMatchingProfilePageNumber(page);
+                }}
+                totalRecords={Number(totalCount)}
+                dataPerPage={pegeDataCount}
+                toptalPages={totalPageCount}
+              />
+            )}
           </>
         ) : (
           <>
-            <PaginationNew
-              pageNumber={MatchingProfilepageNumber}
-              //setPageNumber={setMatchingProfilePageNumber}
-              setPageNumber={(page) => {
-                setPaginationValue(page);
-                setMatchingProfilePageNumber(page); // ✅ keep synced
-              }}
-              totalRecords={MatchingProfiletotalCount}
-              dataPerPage={MatchingProfileperPage}
-              toptalPages={noOfPages}
-            />
+            {noOfPages > 0 && ( // <-- AND ADD THIS CHECK
+              <PaginationNew
+                pageNumber={MatchingProfilepageNumber}
+                setPageNumber={(page) => {
+                  setPaginationValue(page);
+                  setMatchingProfilePageNumber(page);
+                }}
+                totalRecords={MatchingProfiletotalCount}
+                dataPerPage={MatchingProfileperPage}
+                toptalPages={noOfPages}
+              />
+            )}
           </>
         )}
       </div>
