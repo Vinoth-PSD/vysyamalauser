@@ -488,7 +488,15 @@ export const EducationProfession = () => {
       setFormData({});
     } else {
       if (educationProfessionDetails) {
-        setFormData(educationProfessionDetails);
+        setFormData({
+          ...educationProfessionDetails,
+          personal_company_name: educationProfessionDetails.personal_company_name || "",
+          personal_designation: educationProfessionDetails.personal_designation || "",
+          personal_profess_details: educationProfessionDetails.personal_profess_details || "",
+          personal_business_name: educationProfessionDetails.personal_business_name || "",
+          personal_business_addresss: educationProfessionDetails.personal_business_addresss || "",
+          personal_nature_of_business: educationProfessionDetails.personal_nature_of_business || ""
+        });
       }
     }
     setIsEditing(!isEditing); // Toggle editing state
@@ -794,15 +802,21 @@ export const EducationProfession = () => {
       nature_of_business: ""
     };
 
-    // Conditionally update fields based on profession
-    if (selectedProfessionId === "1" || selectedProfessionId === "7" || selectedProfessionId === "6") {
-      // Employment fields
+    if (selectedProfessionId === "6") {
+      // For profession 6: Set both employment AND business fields
       payload.company_name = formData.personal_company_name || "";
       payload.designation = formData.personal_designation || "";
       payload.profession_details = formData.personal_profess_details || "";
-    }
-    else if (selectedProfessionId === "2" || selectedProfessionId === "6") {
-      // Business fields
+      payload.business_name = formData.personal_business_name || "";
+      payload.business_address = formData.personal_business_addresss || "";
+      payload.nature_of_business = formData.personal_nature_of_business || "";
+    } else if (selectedProfessionId === "1" || selectedProfessionId === "7") {
+      // Employment only
+      payload.company_name = formData.personal_company_name || "";
+      payload.designation = formData.personal_designation || "";
+      payload.profession_details = formData.personal_profess_details || "";
+    } else if (selectedProfessionId === "2") {
+      // Business only
       payload.business_name = formData.personal_business_name || "";
       payload.business_address = formData.personal_business_addresss || "";
       payload.nature_of_business = formData.personal_nature_of_business || "";
@@ -1063,7 +1077,7 @@ export const EducationProfession = () => {
                       <input
                         name="personal_company_name"
                         // value={formData.personal_company_name || ""}
-                        value={formData.personal_company_name || educationProfessionDetails?.personal_company_name || ""}
+                        value={formData.personal_company_name || ""}
                         onChange={(e) => {
                           handleInputChange(e); // Handle input change
                           setErrors((prev) => ({
@@ -1091,7 +1105,7 @@ export const EducationProfession = () => {
                       <input
                         name="personal_designation"
                         //value={formData.personal_designation || ""}
-                        value={formData.personal_designation || educationProfessionDetails?.personal_designation || ""}
+                        value={formData.personal_designation || ""}
                         onChange={(e) => {
                           handleInputChange(e); // Handle input change
                           setErrors((prev) => ({
@@ -1108,7 +1122,7 @@ export const EducationProfession = () => {
                       <input
                         name="personal_profess_details"
                         // value={formData.personal_profess_details || ""}
-                        value={formData.personal_profess_details || educationProfessionDetails?.personal_profess_details || ""}
+                        value={formData.personal_profess_details || ""}
                         onChange={(e) => {
                           handleInputChange(e); // Handle input change
                           setErrors((prev) => ({
@@ -1145,7 +1159,7 @@ export const EducationProfession = () => {
                       <input
                         name="personal_business_name"
                         //value={formData.personal_business_name || ""}
-                        value={formData.personal_business_name || educationProfessionDetails?.personal_business_name || ""}
+                        value={formData.personal_business_name || ""}
                         // onChange={handleInputChange}
                         // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
                         onChange={(e) => {
@@ -1164,7 +1178,7 @@ export const EducationProfession = () => {
                       <input
                         name="personal_business_addresss"
                         //value={formData.personal_business_addresss || ""}
-                        value={formData.personal_business_addresss || educationProfessionDetails?.personal_business_addresss || ""}
+                        value={formData.personal_business_addresss || ""}
                         // onChange={handleInputChange}
                         // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
                         onChange={(e) => {
@@ -1184,7 +1198,7 @@ export const EducationProfession = () => {
                       <input
                         name="personal_nature_of_business"
                         //value={formData.personal_nature_of_business || ""}
-                        value={formData.personal_nature_of_business || educationProfessionDetails?.personal_nature_of_business || ""}
+                        value={formData.personal_nature_of_business || ""}
                         // onChange={handleInputChange}
                         // className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
                         onChange={(e) => {
