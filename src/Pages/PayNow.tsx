@@ -407,7 +407,7 @@ export const PayNow: React.FC = () => {
               <h4 className="text-[24px] text-[#333333] font-semibold leading-9 mb-2">
                 {packageName}
               </h4>
-              <Link to="/MembershipPlan">
+              <Link to="/UpgradePlan">
                 <p className="text-secondary text-xs leading-3 underline font-normal">
                   Change Plan
                 </p>

@@ -7,8 +7,10 @@ import { ProfileContext } from "../../ProfileContext";
 import Pagination from "../../Components/Pagination";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoArrowBackOutline } from "react-icons/io5";
+import { MdToggleOff, MdToggleOn } from "react-icons/md";
 
 export const Wishlist = () => {
+  const [sortBy, setSortBy] = useState<string>("datetime");
   useEffect(() => {
     sessionStorage.removeItem("searchvalue");
   }, []);
@@ -41,7 +43,12 @@ export const Wishlist = () => {
     navigate(`?${searchParams.toString()}`, { replace: true });
   }, [page, location.search, navigate]);
 
-
+  const toggleSort = () => {
+    setSortBy((prev) =>
+      prev === "profile_id" ? "datetime" : "profile_id"
+    );
+    setPage(1); // reset to first page on sort change
+  };
 
 
 
@@ -86,44 +93,62 @@ export const Wishlist = () => {
   return (
     <div className="bg-grayBg">
       <div className="container mx-auto py-10">
-        <div className="flex items-center gap-3 mb-5">
-          {/* Back Icon */}
-          <button
-            onClick={() => navigate(-1)}
-            className="p-1 rounded-full hover:bg-gray-100 transition"
-          >
-            <IoArrowBackOutline className="w-6 h-6 text-vysyamalaBlackSecondary" />
-          </button>
+        <div className="flex justify-between items-center mb-5 max-md:flex-wrap max-md:gap-y-5">
+          <div className="flex items-center gap-3">
+            {/* Back Icon */}
+            <button
+              onClick={() => navigate(-1)}
+              className="p-1 rounded-full hover:bg-gray-100 transition"
+            >
+              <IoArrowBackOutline className="w-6 h-6 text-vysyamalaBlackSecondary" />
+            </button>
 
-          {/* Title */}
-          <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-md:text-[18px] flex items-center gap-2">
-            Wishlist
-            <span className="text-sm text-primary">
-              ({TotalRecords?.toString()})
-            </span>
-          </h4>
-        </div>
-        {/* WishlistCard */}
-        <div>
-          <WishlistCard perPage={perPage} page={page} />
-          {/* <WishlistCard />
+            {/* Title */}
+            <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold max-md:text-[18px] flex items-center gap-2">
+              Wishlist
+              <span className="text-sm text-primary">
+                ({TotalRecords?.toString()})
+              </span>
+            </h4>
+            </div>
+            <div className="flex items-center space-x-2">
+              {sortBy === "profile_id" ? (
+                <MdToggleOff
+                  onClick={toggleSort}
+                  className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
+                />
+              ) : (
+                <MdToggleOn
+                  onClick={toggleSort}
+                  className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
+                />
+              )}
+              <span className="text-lg font-medium text-primary whitespace-nowrap">
+                {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Date"}
+              </span>
+            </div>
+          </div>
+          {/* WishlistCard */}
+          <div>
+            <WishlistCard perPage={perPage} page={page} sortBy={sortBy}/>
+            {/* <WishlistCard />
                     <WishlistCard /> */}
 
-          <Pagination
-            pageNumber={page}
-            setPageNumber={setPage}
-            totalRecords={TotalRecords}
-            dataPerPage={perPage}
-            toptalPages={totalPage}
-          />
+            <Pagination
+              pageNumber={page}
+              setPageNumber={setPage}
+              totalRecords={TotalRecords}
+              dataPerPage={perPage}
+              toptalPages={totalPage}
+            />
 
 
+          </div>
         </div>
+
+        {/* Suggested Profiles */}
+
+        <SuggestedProfiles />
       </div>
-
-      {/* Suggested Profiles */}
-
-      <SuggestedProfiles />
-    </div>
-  );
+      );
 };

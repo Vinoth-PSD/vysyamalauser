@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../../API";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Hearts } from "react-loader-spinner";
 
 interface GetProfListMatch {
   profile_id: string;
@@ -34,15 +35,17 @@ interface GetProfListMatch {
 
 interface PersonalNotesCardProps {
   pageNumber: number;
+  sortBy: string;
 }
 
-export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber }) => {
+export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber, sortBy }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [profilesData, setProfilesData] = useState<GetProfListMatch[]>([]); // Updated to an array for multiple profiles
   const [statusMessage] = useState<string>(""); // State variable for the status message
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
   const gender = localStorage.getItem("gender");
+  const [loading, setLoading] = useState<boolean>(true);
   const defaultImgUrl =
     gender?.toLowerCase() === "male"
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
@@ -51,9 +54,12 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
 
   useEffect(() => {
     const fetchProfileData = async () => {
+      setLoading(true);
       try {
         const response = await apiClient.post("/auth/Get_personal_notes/", {
           profile_id: loginuser_profileId,
+          page_number: pageNumber,
+          sort_by: sortBy,
         });
         //console.log(response.data);
 
@@ -87,11 +93,13 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
         } else {
           console.error("Unexpected error:", error);
         }
+      } finally {
+        setLoading(false); // 👈 always stop loading here
       }
     };
 
     fetchProfileData();
-  }, []);
+  }, [pageNumber, sortBy]);
 
 
   const handleBookmark = () => {
@@ -133,7 +141,7 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
       }
 
       // If successful, create profile visit and navigate
-     // If successful, navigate with pageNumber in state
+      // If successful, navigate with pageNumber in state
       navigate(`/ProfileDetails?id=${profileId}&rasi=1`, {
         state: {
           from: 'PersonalNotes',
@@ -155,6 +163,15 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
       setIsLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[200px]">
+        <Hearts height="80" width="80" color="#FF6666" visible={true} />
+        <p className="mt-2 text-sm text-primary">Loading profiles...</p>
+      </div>
+    );
+  }
 
   return (
     <div>

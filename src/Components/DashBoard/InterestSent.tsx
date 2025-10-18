@@ -6,6 +6,7 @@ import Pagination from "../Pagination";
 //import { IoMdArrowDropdown } from "react-icons/io";
 import apiClient from "../../API";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MdToggleOff, MdToggleOn } from "react-icons/md";
 
 interface InterestSentProps {
   dashBoardAgain: () => void;
@@ -20,6 +21,8 @@ export const InterestSent: React.FC<InterestSentProps> = ({
   const [dataPerPage, setDataPerPage] = useState(0);
   const toptalPages = dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
   // const [totalPages,setTotalPages]=useState<number>(0)
+  const [sortBy, setSortBy] = useState<string>("datetime"); // 👈 default sort
+
 
   //console.log(dataPerPage, "dataPerPage" ,toptalPages,"toptalPages",totalRecords,"totalRecords");
   const navigate = useNavigate();
@@ -65,6 +68,11 @@ export const InterestSent: React.FC<InterestSentProps> = ({
     navigate(`?${searchParams.toString()}`, { replace: true });
   }, [pageNumber, location.search, navigate]);
 
+  const toggleSort = () => {
+    setSortBy((prev) => (prev === "profile_id" ? "datetime" : "profile_id"));
+    setPageNumber(1); // 👈 reset to first page on sort change
+  };
+
 
   return (
     <div className="bg-grayBg py-10">
@@ -81,6 +89,26 @@ export const InterestSent: React.FC<InterestSentProps> = ({
               <span className="text-sm text-primary"> ({totalRecords})</span>
             </h4>
           </div>
+          {/* 👇 Toggle added */}
+          <div className="flex items-center space-x-2 mr-5">
+            {sortBy === "profile_id" ? (
+              <MdToggleOff
+                onClick={toggleSort}
+                className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
+              />
+            ) : (
+              <MdToggleOn
+                onClick={toggleSort}
+                className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
+              />
+            )}
+            <span className="text-lg font-medium text-primary whitespace-nowrap">
+              {sortBy === "profile_id"
+                ? "Sort by Profile ID"
+                : "Sort by Date"}
+            </span>
+          </div>
+
 
           {/* <div className="relative max-md:w-full max-md:text-end">
             <select
@@ -112,7 +140,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
         <div className="bg-white rounded-xl shadow-profileCardShadow px-5 py-5">
           <p className="text-ashSecondary font-semibold">Today</p>
 
-          <InterestSentCard pageNumber={pageNumber} dataPerPage={dataPerPage} />
+          <InterestSentCard pageNumber={pageNumber} dataPerPage={dataPerPage}  sortBy={sortBy} />
           {/* <InterestSentCard /> */}
 
         </div>

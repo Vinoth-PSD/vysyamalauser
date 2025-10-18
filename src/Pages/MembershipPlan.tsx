@@ -51,16 +51,16 @@ export const MembershipPlan: React.FC = () => {
   const handleSkipClick = async () => {
     try {
       const response = await apiClient.post(
-        "/auth/Save_plan_package/",
+        "/auth/Free_packages/",
         {
           profile_id,
-          plan_id: "0",
-          addon_package_id: "",
-          total_amount: 0,
+          // plan_id: "0",
+          // addon_package_id: "",
+          // total_amount: 0,
         }
       );
       if (response.status === 200) {
-        NotifySuccess("Plans and packages updated successfully");
+        NotifySuccess("Free packages updated successfully");
         sessionStorage.setItem(
           "Save_plan_package_message",
           response.data.data_message

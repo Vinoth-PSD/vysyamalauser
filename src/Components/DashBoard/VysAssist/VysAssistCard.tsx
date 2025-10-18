@@ -56,15 +56,17 @@ interface ApiResponse {
 
 interface VysassistCardProps {
     pageNumber: number;
+    sortBy: string;
 }
 
-export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber }) => {
+export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber, sortBy }) => {
     const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({}); // Track bookmarks for each profile
     const [profiles, setProfiles] = useState<ProfileData[]>([]); // Store all profiles
     const [noVysassistFound, setNoVysassistFound] = useState(false); // Track if no vysassist is found
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     const navigate = useNavigate();
     const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const location = useLocation();
     const gender = localStorage.getItem("gender");
     const defaultImgUrl =
@@ -81,9 +83,12 @@ export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber }) => {
     };
 
     const fetchProfileData = async () => {
+        setLoading(true);
         try {
             const response = await apiClient.post<ApiResponse>("/auth/My_vysassist_list/", {
                 profile_id: loginuser_profileId, // Pass the profile ID in the payload
+                page_number: pageNumber,
+                sort_by: sortBy,
             });
             if (response.data.Status === 1 && response.data.data.profiles.length > 0) {
                 setProfiles(response.data.data.profiles); // Store all profile data
@@ -92,12 +97,14 @@ export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber }) => {
             }
         } catch (error) {
             console.error("Error fetching profile data:", error);
+        } finally {
+            setLoading(false); // 👈 always stop loading here
         }
     };
 
     useEffect(() => {
         fetchProfileData();
-    }, []);
+    }, [pageNumber, sortBy, loginuser_profileId]);
 
     const handleProfileClick = async (profileId: string) => {
         if (activeProfileId) return;
@@ -139,6 +146,15 @@ export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber }) => {
             setActiveProfileId(null); // reset loading
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[200px]">
+                <Hearts height="80" width="80" color="#FF6666" visible={true} />
+                <p className="mt-2 text-sm text-primary">Loading profiles...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-5 rounded-xl shadow-profileCardShadow p-5 mb-5">

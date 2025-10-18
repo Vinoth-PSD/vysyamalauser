@@ -290,7 +290,7 @@ export const MyProfile = () => {
 
   const handleClick = () => {
     if (get_myprofile_personal?.package_name === "Free") {
-      navigate("/MemberShipPlan");
+      navigate("/UpgradePlan");
     } else {
       navigate("/PayNow", {
         state: {

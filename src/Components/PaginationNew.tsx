@@ -59,7 +59,7 @@ const PaginationNew: React.FC<PaginationProps> = ({
             setPageNumber(1);
             setInputValue(1);
           }
-        }, 2000); // Wait 1 second after user stops typing
+        }, 1000); // Wait 1 second after user stops typing
       }
     }
   };

@@ -38,9 +38,10 @@ export interface Profile {
 type InterestSentCardProps = {
   pageNumber: number;
   dataPerPage: number;
+  sortBy: string;
 };
 
-export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }) => {
+export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, sortBy }) => {
   const navigate = useNavigate();
   // State to track if the card is bookmarked or not
   // const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>(
@@ -132,12 +133,14 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
         setLoading(false);
         return;
       }
+      setLoading(true);
       try {
         const response = await apiClient.post(
           "/auth/My_intrests_list/",
           {
             profile_id: loginuser_profileId,
             page_number: pageNumber,
+            sort_by: sortBy,
 
           }
         );
@@ -167,7 +170,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
       }
     };
     fetchProfiles();
-  }, [loginuser_profileId, pageNumber]);
+  }, [loginuser_profileId, pageNumber, sortBy]);
 
   if (loading) {
     return (
@@ -306,10 +309,10 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber }
 
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   return (

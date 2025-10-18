@@ -99,7 +99,7 @@ export const DashBoardWishlist: React.FC<DashBoardWishlistProps> = ({ }) => {
 
         {/* {/ WishlistCard /} */}
         <div>
-          <WishlistCard perPage={perPage} page={page} />
+          <WishlistCard perPage={perPage} page={page} sortBy={""} />
           <Pagination
             pageNumber={page}
             setPageNumber={setPage}

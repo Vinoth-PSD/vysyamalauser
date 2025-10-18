@@ -401,7 +401,7 @@ export const UpgradePayNow: React.FC = () => {
                 {/* Platinum */}
                 {planName}
               </h4>
-              <Link to="/MembershipPlan">
+              <Link to="/UpgradePlan">
                 <p className="text-main underline font-normal">Change Plan</p>
               </Link>
             </div>

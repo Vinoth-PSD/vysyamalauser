@@ -157,7 +157,7 @@ export const SuggestedProfiles: React.FC = () => {
         <div className="flex justify-between items-center max-sm:flex-wrap max-sm:gap-2">
           <div>
             <h4 className="text-[24px] text-vysyamalaBlack font-bold  max-xl:text-[22px] max-lg:text-[20px] max-md:text-[18px]">
-              Suggested Profiles {" "}
+              Suggested Profiles{" "}
               <span className="text-sm text-primary font-bold">
                 {/* ({totalCount}) */}
 

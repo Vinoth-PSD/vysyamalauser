@@ -7,21 +7,21 @@ import Pagination from "../Pagination";
 import apiClient from "../../API";
 import { Hearts } from 'react-loader-spinner';
 import { useLocation, useNavigate } from "react-router-dom";
+import { MdToggleOff, MdToggleOn } from "react-icons/md";
 
 interface MyVisitorsProps {
   dashBoardAgain: () => void;
 }
 
-export const MyVisitors: React.FC<MyVisitorsProps> = ({  }) => {
+export const MyVisitors: React.FC<MyVisitorsProps> = ({ }) => {
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   // State for loading and error handling, similar to ViewedProfiles
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   // State for pagination
   const [totalRecords, setTotalRecords] = useState<number>(0);
-
+  const [sortBy, setSortBy] = useState<string>("datetime");
 
   // Set a constant for items per page for consistency
   const dataPerPage = 10;
@@ -84,6 +84,10 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({  }) => {
     navigate(`?${searchParams.toString()}`, { replace: true });
   }, [pageNumber, location.search, navigate]);
 
+  const toggleSort = () => {
+    setSortBy((prev) => (prev === "profile_id" ? "datetime" : "profile_id"));
+    setPageNumber(1); // reset page when changing sort
+  };
 
   return (
     <div className="bg-grayBg pt-10">
@@ -100,13 +104,33 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({  }) => {
             </h4>
           </div>
 
+
+          {/* 👇 Toggle sort added */}
+          <div className="flex items-center space-x-2 mr-4">
+            {sortBy === "profile_id" ? (
+              <MdToggleOff
+                onClick={toggleSort}
+                className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
+              />
+            ) : (
+              <MdToggleOn
+                onClick={toggleSort}
+                className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
+              />
+            )}
+            <span className="text-lg font-medium text-primary whitespace-nowrap">
+              {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Date"}
+            </span>
+          </div>
+
+
           {/* <div className="relative max-md:w-full max-md:text-end">
             <select
               name="month"
               id="month"
               className="w-[160px] rounded-md px-4 py-[10px] text-sm text-primary-400 shadow border border-ashSecondary focus-visible:outline-none appearance-none"
             >
-            
+              
               <option value="jan">January</option>
               <option value="feb">February</option>
               <option value="mar">March</option>
@@ -144,7 +168,7 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({  }) => {
           <div className="bg-white rounded-xl shadow-profileCardShadow px-5 py-5 mb-10">
             <p className="text-ashSecondary font-semibold">Today</p>
             {/* Pass pagination props to the card component */}
-            <MyVisitorsCard pageNumber={pageNumber} dataPerPage={dataPerPage} />
+            <MyVisitorsCard pageNumber={pageNumber} dataPerPage={dataPerPage} sortBy={sortBy} />
             <Pagination
               pageNumber={pageNumber}
               setPageNumber={setPageNumber}
