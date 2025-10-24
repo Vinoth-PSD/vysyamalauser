@@ -17,7 +17,7 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ }) => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
-    const [sortBy, setSortBy] = useState<string>("datetime");
+    //const [sortBy, setSortBy] = useState<string>("datetime");
     // const [totalPages,setTotalPages]=useState<number>(0)
 
     //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
@@ -33,7 +33,14 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ }) => {
         return pageFromUrl ? parseInt(pageFromUrl) : 1;
     };
 
+    const getInitialSortBy = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const sortFromUrl = searchParams.get('sortBy');
+        return sortFromUrl || 'datetime';
+    }
+
     const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+    const [sortBy, setSortBy] = useState<string>(getInitialSortBy());
 
     const handleBackToDashboard = () => {
         navigate('/Dashboard');
@@ -50,20 +57,20 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ }) => {
     };
     useEffect(() => {
         fetchData();
-    }, [pageNumber]);
+    }, [pageNumber, sortBy]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
-    }, [pageNumber]);
+    }, [pageNumber, sortBy]);
 
     useEffect(() => {
         // Update URL when page changes
         const searchParams = new URLSearchParams(location.search);
         searchParams.set('page', pageNumber.toString());
-
+        searchParams.set('sortBy', sortBy);
         // Replace current URL without causing navigation
         navigate(`?${searchParams.toString()}`, { replace: true });
-    }, [pageNumber, location.search, navigate]);
+    }, [pageNumber, sortBy, location.search, navigate]);
 
     const toggleSort = () => {
         setSortBy((prev) => (prev === "profile_id" ? "datetime" : "profile_id"));
@@ -79,42 +86,42 @@ export const PersonalNotes: React.FC<PersonalNotesProps> = ({ }) => {
                         <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold"> Personal Notes
                             <span className="text-sm text-primary"> ({totalRecords})</span>
                         </h4>
-                        </div>
-                        {/* Toggle Sort */}
-                        <div className="flex items-center space-x-2">
-                            {sortBy === "profile_id" ? (
-                                <MdToggleOff
-                                    onClick={toggleSort}
-                                    className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
-                                />
-                            ) : (
-                                <MdToggleOn
-                                    onClick={toggleSort}
-                                    className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
-                                />
-                            )}
-                            <span className="text-lg font-medium text-primary whitespace-nowrap">
-                                {sortBy === "profile_id"
-                                    ? "Sort by Profile ID"
-                                    : "Sort by Date"}
-                            </span>
-                        </div>
                     </div>
-
-                    {/* Personal Notes Card */}
-                    <div className="mb-10 max-md:mb-5">
-                        <PersonalNotesCard pageNumber={pageNumber} sortBy={sortBy}/>
-                        {/* <PersonalNotesCard /> */}
-                        <Pagination
-                            pageNumber={pageNumber}
-                            setPageNumber={setPageNumber}
-                            totalRecords={totalRecords}
-                            dataPerPage={dataPerPage}
-                            toptalPages={toptalPages}
-                        />
+                    {/* Toggle Sort */}
+                    <div className="flex items-center space-x-2">
+                        {sortBy === "profile_id" ? (
+                            <MdToggleOff
+                                onClick={toggleSort}
+                                className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
+                            />
+                        ) : (
+                            <MdToggleOn
+                                onClick={toggleSort}
+                                className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
+                            />
+                        )}
+                        <span className="text-lg font-medium text-primary whitespace-nowrap">
+                            {sortBy === "profile_id"
+                                ? "Sort by Profile ID"
+                                : "Sort by Date"}
+                        </span>
                     </div>
                 </div>
-                <SuggestedProfiles />
+
+                {/* Personal Notes Card */}
+                <div className="mb-10 max-md:mb-5">
+                    <PersonalNotesCard pageNumber={pageNumber} sortBy={sortBy} />
+                    {/* <PersonalNotesCard /> */}
+                    <Pagination
+                        pageNumber={pageNumber}
+                        setPageNumber={setPageNumber}
+                        totalRecords={totalRecords}
+                        dataPerPage={dataPerPage}
+                        toptalPages={toptalPages}
+                    />
+                </div>
             </div>
-            )
+            <SuggestedProfiles />
+        </div>
+    )
 }

@@ -21,7 +21,7 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ }) => {
   const [error, setError] = useState<string | null>(null);
   // State for pagination
   const [totalRecords, setTotalRecords] = useState<number>(0);
-  const [sortBy, setSortBy] = useState<string>("datetime");
+  //const [sortBy, setSortBy] = useState<string>("datetime");
 
   // Set a constant for items per page for consistency
   const dataPerPage = 10;
@@ -37,7 +37,13 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ }) => {
     return pageFromUrl ? parseInt(pageFromUrl) : 1;
   };
 
+  const getInitialSortBy = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const sortFromUrl = searchParams.get('sortBy');
+    return sortFromUrl || 'datetime';
+  }
   const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+  const [sortBy, setSortBy] = useState<string>(getInitialSortBy());
 
   const handleBackToDashboard = () => {
     navigate('/Dashboard');
@@ -68,21 +74,21 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ }) => {
 
   useEffect(() => {
     fetchData();
-  }, [pageNumber]);
+  }, [pageNumber, sortBy]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pageNumber]);
+  }, [pageNumber, sortBy]);
 
 
   useEffect(() => {
     // Update URL when page changes
     const searchParams = new URLSearchParams(location.search);
     searchParams.set('page', pageNumber.toString());
-
+    searchParams.set('sortBy', sortBy);
     // Replace current URL without causing navigation
     navigate(`?${searchParams.toString()}`, { replace: true });
-  }, [pageNumber, location.search, navigate]);
+  }, [pageNumber, sortBy, location.search, navigate]);
 
   const toggleSort = () => {
     setSortBy((prev) => (prev === "profile_id" ? "datetime" : "profile_id"));
@@ -175,6 +181,7 @@ export const MyVisitors: React.FC<MyVisitorsProps> = ({ }) => {
               totalRecords={totalRecords}
               dataPerPage={dataPerPage}
               toptalPages={totalPages}
+              //sortBy={sortBy}
             />
           </div>
         )}

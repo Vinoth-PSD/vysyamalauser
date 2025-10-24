@@ -142,10 +142,11 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
 
       // If successful, create profile visit and navigate
       // If successful, navigate with pageNumber in state
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`, {
+      navigate(`/ProfileDetails?id=${profileId}&rasi=1&sortBy=${sortBy}`, {
         state: {
           from: 'PersonalNotes',
-          pageNumber: pageNumber // Pass the current page number
+          pageNumber: pageNumber,
+          sortBy: sortBy
         }
       });
 

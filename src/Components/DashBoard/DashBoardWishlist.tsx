@@ -26,11 +26,16 @@ export const DashBoardWishlist: React.FC<DashBoardWishlistProps> = ({ }) => {
     return pageFromUrl ? parseInt(pageFromUrl) : 1;
   };
 
+  const getInitialSortBy = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const sortFromUrl = searchParams.get('sortBy');
+    return sortFromUrl || 'datetime';
+  }
 
   const { TotalRecords, totalPage } = context;
   // const [page, setPage] = useState<number>(1);
   const [page, setPage] = useState<number>(getInitialPageNumber());
-
+  const [sortBy] = useState<string>(getInitialSortBy());
   const perPage = 10;
 
   const {
@@ -76,10 +81,10 @@ export const DashBoardWishlist: React.FC<DashBoardWishlistProps> = ({ }) => {
     // Update URL when page changes
     const searchParams = new URLSearchParams(location.search);
     searchParams.set('page', page.toString());
-
+    searchParams.set('sortBy', sortBy);
     // Replace current URL without causing navigation
     navigate(`?${searchParams.toString()}`, { replace: true });
-  }, [page, location.search, navigate]);
+  }, [page, sortBy, location.search, navigate]);
 
   const handleBackToDashboard = () => {
     navigate('/Dashboard');
@@ -99,10 +104,11 @@ export const DashBoardWishlist: React.FC<DashBoardWishlistProps> = ({ }) => {
 
         {/* {/ WishlistCard /} */}
         <div>
-          <WishlistCard perPage={perPage} page={page} sortBy={""} />
+          <WishlistCard perPage={perPage} page={page} sortBy={sortBy} />
           <Pagination
             pageNumber={page}
             setPageNumber={setPage}
+            //sortBy={sortBy}
             totalRecords={TotalRecords}
             dataPerPage={perPage}
             toptalPages={totalPage}

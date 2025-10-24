@@ -270,6 +270,7 @@ export const MatchingProfiles = () => {
       // Update URL with current search parameters
       const searchParams = new URLSearchParams();
       searchParams.set('page', page.toString());
+      searchParams.set('order_by', sortOrder);
       if (searchProfileId) searchParams.set('search', searchProfileId);
       if (profession) searchParams.set('profession', profession);
       if (selectAge) searchParams.set('age', selectAge);

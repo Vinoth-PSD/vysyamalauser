@@ -62,12 +62,13 @@ interface proptype {
   data: PhotoRequestData;
   totalRecords: number;
   toptalPages: number;
+  sortBy: string;
 }
 
 const PhotoRequestCard = ({
   NewUpdatedData,
   setNewUPDatedData,
-
+  sortBy,
   data,
 }: proptype) => {
   const navigate = useNavigate();
@@ -257,7 +258,7 @@ const PhotoRequestCard = ({
   //   navigate(`/ProfileDetails?id=${profileId}&page=6`);
   // };
 
-  const handleProfileClick = async (profileId: string) => {
+  const handleProfileClick = async (profileId: string, sortBy: string) => {
     if (activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
 
@@ -284,7 +285,7 @@ const PhotoRequestCard = ({
         return;
       }
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&page=6`);
+      navigate(`/ProfileDetails?id=${profileId}&page=6&sortBy=${sortBy}`);
     } catch (error) {
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
@@ -295,10 +296,10 @@ const PhotoRequestCard = ({
 
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   return (
@@ -327,7 +328,7 @@ const defaultImgUrl =
                     e.currentTarget.src = defaultImgUrl; // Set default image
                   }}
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
-                  onClick={() => handleProfileClick(data.req_profileid)} // ✅ Add this line
+                  onClick={() => handleProfileClick(data.req_profileid, sortBy)} // ✅ Add this line
                 />
                 {isBookmarked ? (
                   <MdBookmark
@@ -355,7 +356,7 @@ const defaultImgUrl =
                   <div className="flex items-center">
                     <h5
                       className="text-[20px] text-secondary font-semibold cursor-pointer flex gap-2 items-center"
-                      onClick={() => handleProfileClick(data.req_profileid)}
+                      onClick={() => handleProfileClick(data.req_profileid, sortBy)}
                     >
                       {data.req_profile_name}
                       <span className="text-sm text-ashSecondary">

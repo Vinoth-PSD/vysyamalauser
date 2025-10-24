@@ -10,7 +10,7 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { MdToggleOff, MdToggleOn } from "react-icons/md";
 
 export const Wishlist = () => {
-  const [sortBy, setSortBy] = useState<string>("datetime");
+  // const [sortBy, setSortBy] = useState<string>("datetime");
   useEffect(() => {
     sessionStorage.removeItem("searchvalue");
   }, []);
@@ -29,19 +29,26 @@ export const Wishlist = () => {
     return pageFromUrl ? parseInt(pageFromUrl) : 1;
   };
 
+  const getInitialSortBy = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const sortFromUrl = searchParams.get('sortBy');
+    return sortFromUrl || 'datetime';
+  }
+
   const { TotalRecords, totalPage } = context;
   // const [page, setPage] = useState<number>(1);
   const [page, setPage] = useState<number>(getInitialPageNumber());
+  const [sortBy, setSortBy] = useState<string>(getInitialSortBy());
   const perPage = 10;
 
   useEffect(() => {
     // Update URL when page changes
     const searchParams = new URLSearchParams(location.search);
     searchParams.set('page', page.toString());
-
+    searchParams.set('sortBy', sortBy);
     // Replace current URL without causing navigation
     navigate(`?${searchParams.toString()}`, { replace: true });
-  }, [page, location.search, navigate]);
+  }, [page, sortBy, location.search, navigate]);
 
   const toggleSort = () => {
     setSortBy((prev) =>
@@ -49,8 +56,6 @@ export const Wishlist = () => {
     );
     setPage(1); // reset to first page on sort change
   };
-
-
 
   const {
     setFromAge,
@@ -110,45 +115,43 @@ export const Wishlist = () => {
                 ({TotalRecords?.toString()})
               </span>
             </h4>
-            </div>
-            <div className="flex items-center space-x-2">
-              {sortBy === "profile_id" ? (
-                <MdToggleOff
-                  onClick={toggleSort}
-                  className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
-                />
-              ) : (
-                <MdToggleOn
-                  onClick={toggleSort}
-                  className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
-                />
-              )}
-              <span className="text-lg font-medium text-primary whitespace-nowrap">
-                {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Date"}
-              </span>
-            </div>
           </div>
-          {/* WishlistCard */}
-          <div>
-            <WishlistCard perPage={perPage} page={page} sortBy={sortBy}/>
-            {/* <WishlistCard />
-                    <WishlistCard /> */}
-
-            <Pagination
-              pageNumber={page}
-              setPageNumber={setPage}
-              totalRecords={TotalRecords}
-              dataPerPage={perPage}
-              toptalPages={totalPage}
-            />
-
-
+          <div className="flex items-center space-x-2">
+            {sortBy === "profile_id" ? (
+              <MdToggleOff
+                onClick={toggleSort}
+                className="text-5xl text-gray-400 cursor-pointer hover:text-primary transition"
+              />
+            ) : (
+              <MdToggleOn
+                onClick={toggleSort}
+                className="text-5xl text-primary cursor-pointer hover:text-primary-dark transition"
+              />
+            )}
+            <span className="text-lg font-medium text-primary whitespace-nowrap">
+              {sortBy === "profile_id" ? "Sort by Profile ID" : "Sort by Date"}
+            </span>
           </div>
         </div>
+        {/* WishlistCard */}
+        <div>
+          <WishlistCard perPage={perPage} page={page} sortBy={sortBy} />
+          {/* <WishlistCard />
+                    <WishlistCard /> */}
 
-        {/* Suggested Profiles */}
-
-        <SuggestedProfiles />
+          <Pagination
+            pageNumber={page}
+            setPageNumber={setPage}
+            totalRecords={TotalRecords}
+            dataPerPage={perPage}
+            toptalPages={totalPage}
+          //sortBy={sortBy}
+          />
+        </div>
       </div>
-      );
+
+      {/* Suggested Profiles */}
+      <SuggestedProfiles />
+    </div>
+  );
 };

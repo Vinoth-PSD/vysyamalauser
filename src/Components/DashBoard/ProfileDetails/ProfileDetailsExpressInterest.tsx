@@ -743,18 +743,30 @@ export const ProfileDetailsExpressInterest: React.FC<
   // Get the navigation state with default values
   const navigationState = location.state || {};
   //const { from = '', pageNumber = 1 } = navigationState;
-  const { from = '', pageNumber = 1, searchState = {} } = navigationState;
+  const { from = '', pageNumber = 1, searchState = {}, sortBy = 'datetime'  } = navigationState;
 
   const handleBackClick = () => {
 
-    // Special case: MatchingProfiles → restore search state
+    const queryParams = new URLSearchParams(location.search);
+    const orderBy = queryParams.get('order_by') || '1';
+
     if (from === 'MatchingProfiles' && searchState) {
+      // Restore all search state to sessionStorage
       Object.entries(searchState).forEach(([key, value]) => {
         sessionStorage.setItem(key, value as string);
       });
 
-      navigate(`/LoginHome/MatchingProfiles?page=${pageNumber}`, {
-        state: { from, pageNumber, searchState }
+      // Navigate back with order_by preserved (but hidden in display)
+      navigate(`/LoginHome/MatchingProfiles?page=${pageNumber}&orderBy=${orderBy}`, {
+        state: {
+          from,
+          pageNumber,
+          searchState: {
+            ...searchState,
+            sortOrder: orderBy // Ensure sortOrder is preserved
+          }
+        },
+        replace: true
       });
       return;
     }
@@ -764,8 +776,16 @@ export const ProfileDetailsExpressInterest: React.FC<
         sessionStorage.setItem(key, value as string);
       });
 
-      navigate(`/LoginHome?page=${pageNumber}`, {
-        state: { from, pageNumber, searchState }
+      navigate(`/LoginHome?page=${pageNumber}&orderBy=${orderBy}`, {
+        state: {
+          from,
+          pageNumber,
+          searchState: {
+            ...searchState,
+            sortOrder: orderBy
+          }
+        },
+        replace: true
       });
       return;
     }
@@ -775,23 +795,23 @@ export const ProfileDetailsExpressInterest: React.FC<
         navigate('/Dashboard');
         break;
       case 'viewedProfiles':
-        navigate(`/Dashboard/viewedprofiles?page=${pageNumber}`);
+        navigate(`/Dashboard/viewedprofiles?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       // case 'LoginHome':
       //   navigate(`/LoginHome/MatchingProfiles?page=${pageNumber}`);
       //   break;
 
       case 'MutualInterest':
-        navigate(`/Dashboard/MutualInterest?page=${pageNumber}`);
+        navigate(`/Dashboard/MutualInterest?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'Wishlisting':
-        navigate(`/Dashboard/Wishlisting?page=${pageNumber}`);
+        navigate(`/Dashboard/Wishlisting?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'interestSent':
-        navigate(`/Dashboard/interestsent?page=${pageNumber}`);
+        navigate(`/Dashboard/interestsent?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'myVisitors':
-        navigate(`/Dashboard/myvisitors?page=${pageNumber}`);
+        navigate(`/Dashboard/myvisitors?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'ViewAllFeaturedProfiles':
         navigate(`/Dashboard/ViewAllFeaturedProfiles?page=${pageNumber}`);
@@ -812,13 +832,13 @@ export const ProfileDetailsExpressInterest: React.FC<
         navigate(`/Dashboard/Gallery?page=${pageNumber}`);
         break;
       case 'PhotoRequest':
-        navigate(`/Dashboard/PhotoRequest?page=${pageNumber}`);
+        navigate(`/Dashboard/PhotoRequest?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'PersonalNotes':
-        navigate(`/Dashboard/PersonalNotes?page=${pageNumber}`);
+        navigate(`/Dashboard/PersonalNotes?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'VysAssit':
-        navigate(`/Dashboard/VysAssit?page=${pageNumber}`);
+        navigate(`/Dashboard/VysAssit?page=${pageNumber}&sortBy=${sortBy}`);
         break;
       case 'OtherSettings':
         navigate(`/Dashboard/OtherSettings?page=${pageNumber}`);

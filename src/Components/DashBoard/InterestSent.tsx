@@ -21,7 +21,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
   const [dataPerPage, setDataPerPage] = useState(0);
   const toptalPages = dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
   // const [totalPages,setTotalPages]=useState<number>(0)
-  const [sortBy, setSortBy] = useState<string>("datetime"); // 👈 default sort
+  //const [sortBy, setSortBy] = useState<string>("datetime"); // 👈 default sort
 
 
   //console.log(dataPerPage, "dataPerPage" ,toptalPages,"toptalPages",totalRecords,"totalRecords");
@@ -35,7 +35,14 @@ export const InterestSent: React.FC<InterestSentProps> = ({
     return pageFromUrl ? parseInt(pageFromUrl) : 1;
   };
 
+  const getInitialSortBy = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const sortFromUrl = searchParams.get('sortBy');
+    return sortFromUrl || 'datetime';
+  }
+
   const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+  const [sortBy, setSortBy] = useState<string>(getInitialSortBy());
 
   const handleBackToDashboard = () => {
     navigate('/Dashboard');
@@ -53,20 +60,20 @@ export const InterestSent: React.FC<InterestSentProps> = ({
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pageNumber]);
+  }, [pageNumber, sortBy,]);
 
   useEffect(() => {
     fetchData();
-  }, [pageNumber]);
+  }, [pageNumber, sortBy]);
 
   useEffect(() => {
     // Update URL when page changes
     const searchParams = new URLSearchParams(location.search);
     searchParams.set('page', pageNumber.toString());
-
+    searchParams.set('sortBy', sortBy);
     // Replace current URL without causing navigation
     navigate(`?${searchParams.toString()}`, { replace: true });
-  }, [pageNumber, location.search, navigate]);
+  }, [pageNumber, sortBy, location.search, navigate]);
 
   const toggleSort = () => {
     setSortBy((prev) => (prev === "profile_id" ? "datetime" : "profile_id"));
@@ -140,7 +147,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
         <div className="bg-white rounded-xl shadow-profileCardShadow px-5 py-5">
           <p className="text-ashSecondary font-semibold">Today</p>
 
-          <InterestSentCard pageNumber={pageNumber} dataPerPage={dataPerPage}  sortBy={sortBy} />
+          <InterestSentCard pageNumber={pageNumber} dataPerPage={dataPerPage} sortBy={sortBy} />
           {/* <InterestSentCard /> */}
 
         </div>
@@ -150,6 +157,7 @@ export const InterestSent: React.FC<InterestSentProps> = ({
           totalRecords={totalRecords}
           dataPerPage={dataPerPage}
           toptalPages={toptalPages}
+        //sortBy={sortBy} 
         />
       </div>
     </div>

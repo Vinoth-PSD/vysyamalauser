@@ -135,10 +135,11 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&page=5`, {
+      navigate(`/ProfileDetails?id=${profileId}&page=5&sortBy=${sortBy}`, {
         state: {
           from: 'myVisitors',
-          pageNumber: pageNumber // Pass the current page number
+          pageNumber: pageNumber,
+          sortBy: sortBy
         }
       });
     } catch (error) {

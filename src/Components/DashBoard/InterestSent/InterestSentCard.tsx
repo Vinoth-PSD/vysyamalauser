@@ -293,7 +293,14 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&page=3`);
+      //navigate(`/ProfileDetails?id=${profileId}&page=3`);
+       navigate(`/Profiledetails?id=${profileId}&page=3&sortBy=${sortBy}`, {
+        state: {
+          from: 'interestSent',
+          pageNumber: pageNumber, // Pass the current page number
+          sortBy: sortBy
+        }
+      });
 
       // await apiClient.post("/auth/Create_profile_visit/", {
       //   profile_id: loginuser_profileId,

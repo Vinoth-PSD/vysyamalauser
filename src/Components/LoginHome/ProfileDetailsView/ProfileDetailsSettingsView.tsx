@@ -32,6 +32,8 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
     const queryParams = new URLSearchParams(location.search);
     const pageid = queryParams.get("page") || "";
     const currentProfileId = queryParams.get("id") || "";
+    const sortBy = queryParams.get("sortBy") || "datetime";
+    const orderBy = queryParams.get("order_by") || "1"; // Get order_by from URL
 
     const renderSection = () => {
         switch (activeSection) {
@@ -80,9 +82,18 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
                 const apiEndpoint = apiEndpoints[pageid] || 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_prof_list_match/';
                 //const apiEndpoint = apiEndpoints[pageid] || 'http://103.214.132.20:8000/auth/Get_prof_list_match/';
 
-                const response = await axios.post<ProfileListResponse>(apiEndpoint, {
+                const requestBody: any = {
                     profile_id: loginuser_profileId,
-                });
+                };
+
+
+                if (!pageid || pageid === "") {
+                    requestBody.order_by = orderBy;
+                } else {
+                    requestBody.sort_by = sortBy; // Adjust based on your needs
+                }
+
+                const response = await axios.post<ProfileListResponse>(apiEndpoint, requestBody);
 
                 let data: {
                     Status?: number;
@@ -118,7 +129,7 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
         };
 
         fetchProfileIds();
-    }, [loginuser_profileId, pageid, currentProfileId]);
+    }, [loginuser_profileId, pageid, orderBy, sortBy, currentProfileId]);
 
     // Effect to watch the currentProfileId and re-fetch if changed
     useEffect(() => {
@@ -140,7 +151,11 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
             console.log("within")
             const newIndex = currentIndex - 1;
             setCurrentIndex(newIndex);
-            navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
+            // navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}&sortBy=${sortBy}`);
+            const newUrl = pageid
+                ? `/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}&sortBy=${sortBy}`
+                : `/ProfileDetails?id=${profileIds[newIndex]}&rasi=1&order_by=${orderBy}`;
+            navigate(newUrl);
             setTimeout(() => {
                 window.scrollTo(0, 0);  // Move scroll to the top after navigation
             }, 2000);
@@ -152,7 +167,11 @@ export const ProfileDetailsSettingsView: React.FC<ProfileDetailsSettingsViewProp
             const newIndex = currentIndex + 1;
             //console.log("Navigating to next profile, New Index:", newIndex); // Debugging log
             setCurrentIndex(newIndex);
-            navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}`);
+            // navigate(`/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}&sortBy=${sortBy}`);
+            const newUrl = pageid
+                ? `/ProfileDetails?id=${profileIds[newIndex]}&page=${pageid}&sortBy=${sortBy}`
+                : `/ProfileDetails?id=${profileIds[newIndex]}&rasi=1&order_by=${orderBy}`;
+            navigate(newUrl);
             setTimeout(() => {
                 window.scrollTo(0, 0);  // Move scroll to the top after navigation
             }, 2000);

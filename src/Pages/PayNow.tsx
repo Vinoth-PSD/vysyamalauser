@@ -197,7 +197,7 @@ export const PayNow: React.FC = () => {
       await cancelPaymentFunction(orderId);
 
       // Then show the popup with the message
-      const message = "It looks like your payment was not completed. Please retry, or share your transaction screenshot with us on WhatsApp 99944851550 for assistance.";
+      const message = "It looks like your payment was not completed. Please retry, or share your transaction screenshot with us on WhatsApp 9944851550 for assistance.";
       setPopupMessage(message);
       setShowConfirmationPopup(true);
       setIsPaymentCancelled(true);
@@ -386,7 +386,7 @@ export const PayNow: React.FC = () => {
       setShowGPayPopup(false);
       setShowConfirmationPopup(true);
       setPopupHeading("Thank You");
-      setPopupMessage("Thank you for choosing Vysyamala for your soulmate search. Our customer support team will connect with you shortly. In the meantime, please share your payment screenshot via WhatsApp at 99944851550.");
+      setPopupMessage("Thank you for choosing Vysyamala for your soulmate search. Our customer support team will connect with you shortly. In the meantime, please share your payment screenshot via WhatsApp at 9944851550.");
     } catch (error) {
       console.error("Error saving package:", error);
       NotifyError("Failed to process payment. Please try again.");

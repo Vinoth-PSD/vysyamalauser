@@ -18,7 +18,7 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ }) => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
-    const [sortBy, setSortBy] = useState<string>("datetime");
+    //const [sortBy, setSortBy] = useState<string>("datetime");
     // const [totalPages,setTotalPages]=useState<number>(0)
 
     //console.log(totalRecords, "totalRecords", dataPerPage, "dataPerPage", toptalPages, "toptalPages", totalRecords, "totalRecords");
@@ -35,7 +35,14 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ }) => {
         return pageFromUrl ? parseInt(pageFromUrl) : 1;
     };
 
+    const getInitialSortBy = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const sortFromUrl = searchParams.get('sortBy');
+        return sortFromUrl || 'datetime';
+    }
+
     const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+    const [sortBy, setSortBy] = useState<string>(getInitialSortBy());
 
     const handleBackToDashboard = () => {
         navigate('/Dashboard');
@@ -60,18 +67,18 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ }) => {
     };
     useEffect(() => {
         fetchData();
-    }, [pageNumber]);
+    }, [pageNumber, sortBy]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
-    }, [pageNumber]);
+    }, [pageNumber, sortBy]);
 
 
     useEffect(() => {
         // Update URL when page changes
         const searchParams = new URLSearchParams(location.search);
         searchParams.set('page', pageNumber.toString());
-
+        searchParams.set('sortBy', sortBy);
         // Replace current URL without causing navigation
         navigate(`?${searchParams.toString()}`, { replace: true });
     }, [pageNumber, location.search, navigate]);
@@ -109,7 +116,7 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ }) => {
 
                 {/* Personal Notes Card */}
                 <div>
-                    <VysAssistCard pageNumber={pageNumber}  sortBy={sortBy}/>
+                    <VysAssistCard pageNumber={pageNumber} sortBy={sortBy} />
                     {/* <PersonalNotesCard /> */}
                     <Pagination
                         pageNumber={pageNumber}
@@ -117,7 +124,8 @@ export const VysAssist: React.FC<VysassistNotesPopupProps> = ({ }) => {
                         totalRecords={totalRecords}
                         dataPerPage={dataPerPage}
                         toptalPages={toptalPages}
-                    />
+                        //sortBy={sortBy} 
+                        />
                 </div>
             </div>
             <SuggestedProfiles />

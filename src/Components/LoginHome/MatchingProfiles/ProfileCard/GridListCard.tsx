@@ -120,6 +120,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
       const searchParams = new URLSearchParams(window.location.search);
       const pageFromUrl = searchParams.get('page');
       const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
+      const currentSortOrder = sessionStorage.getItem('sortOrder') || '1';
 
       const searchState = {
         searchProfileId: sessionStorage.getItem('searchProfileId') || '',
@@ -128,15 +129,16 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
         selectedLocation: sessionStorage.getItem('selectedLocation') || '',
         paginationValue: sessionStorage.getItem('paginationValue') || '1',
         currentView: sessionStorage.getItem('currentView') || 'gridlist',
-        // sortOrder: sessionStorage.getItem('sortOrder') || '',
+        sortOrder: currentSortOrder,
         searchValue: sessionStorage.getItem('searchvalue') || ''
       };
       // If successful, create profile visit and navigate
-      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1`, {
+      navigate(`/ProfileDetails?id=${profile.profile_id}&rasi=1&order_by=${currentSortOrder}`, {
         state: {
           from: ["LoginHome", "SearchProfiles"],
           pageNumber: currentPage,
-          searchState: searchState
+          searchState: searchState,
+          sortOrder: currentSortOrder
         }
       });
     } catch (error) {

@@ -67,7 +67,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
 
   useEffect(() => {
     // Fetch the data from the API
-     setLoading(true); // start loading before API
+    setLoading(true); // start loading before API
     apiClient
       .post<ApiResponse>(
         "/auth/My_viewed_profiles/",
@@ -182,10 +182,11 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       // Navigate after validation
       //navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
       // navigate(`/ProfileDetails?id=${profileId}&page=4&from=viewedProfiles`);
-      navigate(`/Profiledetails?id=${profileId}&page=4`, {
+      navigate(`/Profiledetails?id=${profileId}&page=4&sortBy=${sortBy}`, {
         state: {
           from: 'viewedProfiles',
-          pageNumber: pageNumber // Pass the current page number
+          pageNumber: pageNumber, // Pass the current page number
+          sortBy: sortBy
         }
       });
       // navigate(`/ProfileDetails?id=${profileId}&page=4`);
@@ -205,7 +206,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
   //console.log(profiles, "profilesssssss");
-    if (loading) {
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[200px]">
         <Hearts height="80" width="80" color="#FF6666" visible={true} />

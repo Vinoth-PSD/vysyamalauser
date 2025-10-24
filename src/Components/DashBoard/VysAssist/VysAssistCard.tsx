@@ -133,10 +133,11 @@ export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber, sortBy
                 return;
             }
             // Navigate after validation
-            navigate(`/ProfileDetails?id=${profileId}&rasi=1`, {
+            navigate(`/ProfileDetails?id=${profileId}&rasi=1&sortBy=${sortBy}`, {
                 state: {
                     from: 'VysAssit',
-                    pageNumber: pageNumber // Pass the current page number
+                    pageNumber: pageNumber, // Pass the current page number
+                    sortBy: sortBy
                 }
             });
         } catch (error) {

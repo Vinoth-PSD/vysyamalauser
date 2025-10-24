@@ -61,7 +61,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pageNumber]);
+  }, [pageNumber, sortBy]);
 
   const Onclick = () => {
     navigate("/Dashboard");
@@ -126,6 +126,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
                 NewUpdatedData={NewUpdatedData}
                 setNewUPDatedData={setNewUPDatedData}
                 data={requests}
+                sortBy={sortBy}
               />
             ))
           )}
@@ -137,6 +138,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
             totalRecords={totalRecords}
             dataPerPage={dataPerPage}
             toptalPages={toptalPages}
+            //sortBy={sortBy}
           />
         </div>
 

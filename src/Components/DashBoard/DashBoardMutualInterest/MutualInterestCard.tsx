@@ -179,6 +179,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
               e.stopPropagation();
               handleBookmarkToggle(profile.mutint_profileid);
             }}
+            sortBy={sortBy}
           />
         ))
       ) : (
@@ -194,12 +195,14 @@ interface ProfileCardProps {
   profile: Profile;
   isBookmarked: boolean;
   onBookmarkToggle: (e: React.MouseEvent<SVGElement, MouseEvent>) => void;
+  sortBy: string;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   profile,
   isBookmarked,
   onBookmarkToggle,
+  sortBy
 }) => {
   const navigate = useNavigate();
   // const handleProfileClick = (profileId: string) => {
@@ -210,7 +213,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const location = useLocation();
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
 
-  const handleProfileClick = async (profileId: string) => {
+  const handleProfileClick = async (profileId: string, sortBy: string) => {
     if (activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
 
@@ -247,10 +250,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
 
       // Navigate with state containing page number and source
-      navigate(`/ProfileDetails?id=${profileId}&page=1`, {
+      navigate(`/ProfileDetails?id=${profileId}&page=1&sortBy=${sortBy}`, {
         state: {
           from: 'MutualInterest',
-          pageNumber: currentPage
+          pageNumber: currentPage,
+          sortBy: sortBy
         }
       });
     } catch (error) {
@@ -272,7 +276,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <div
       className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow p-5 mb-5"
-      onClick={() => handleProfileClick(profile.mutint_profileid)}
+      onClick={() => handleProfileClick(profile.mutint_profileid, sortBy)}
     >
       {activeProfileId === profile.mutint_profileid && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">

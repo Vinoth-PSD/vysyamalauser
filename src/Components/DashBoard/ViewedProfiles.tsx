@@ -23,7 +23,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const dataPerPage = 10
     const toptalPages = totalRecords > 0 && dataPerPage > 0 ? Math.ceil(totalRecords / dataPerPage) : 1;
-    const [sortBy, setSortBy] = useState<string>("datetime"); // default sort
+    //const [sortBy, setSortBy] = useState<string>("datetime"); // default sort
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -33,8 +33,14 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
         const pageFromUrl = searchParams.get('page');
         return pageFromUrl ? parseInt(pageFromUrl) : 1;
     };
+    const getInitialSortBy = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const sortFromUrl = searchParams.get('sortBy');
+        return sortFromUrl || 'datetime';
+    }
 
     const [pageNumber, setPageNumber] = useState<number>(getInitialPageNumber());
+    const [sortBy, setSortBy] = useState<string>(getInitialSortBy());
 
     const handleBackToDashboard = () => {
         navigate('/Dashboard');
@@ -70,16 +76,16 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
     };
     useEffect(() => {
         fetchData();
-    }, [pageNumber]);
+    }, [pageNumber, sortBy]);
 
     useEffect(() => {
         // Update URL when page changes
         const searchParams = new URLSearchParams(location.search);
         searchParams.set('page', pageNumber.toString());
-
+        searchParams.set('sortBy', sortBy);
         // Replace current URL without causing navigation
         navigate(`?${searchParams.toString()}`, { replace: true });
-    }, [pageNumber, location.search, navigate]);
+    }, [pageNumber, sortBy, location.search, navigate]);
 
     //const navigate = useNavigate();
 
@@ -133,7 +139,7 @@ export const ViewedProfiles: React.FC<ViewedProfilesProps> = () => {
                 ) : (
                     <div className="bg-white rounded-xl shadow-profileCardShadow px-5 py-5">
                         <p className="text-ashSecondary font-semibold">Today</p>
-                        <ViewedProfilesCard pageNumber={pageNumber} dataPerPage={dataPerPage} sortBy={sortBy}  />
+                        <ViewedProfilesCard pageNumber={pageNumber} dataPerPage={dataPerPage} sortBy={sortBy} />
                         <Pagination
                             pageNumber={pageNumber}
                             setPageNumber={setPageNumber}
