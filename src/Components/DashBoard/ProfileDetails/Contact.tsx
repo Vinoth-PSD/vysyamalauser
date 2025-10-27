@@ -161,21 +161,41 @@ export const Contact = () => {
   }, [selectedStateId, refreshData]);
 
   useEffect(() => {
-    if (!selectedDistrictId) return;
+    // Clear cities and reset to dropdown if no district is selected
+    if (!selectedDistrictId) {
+      setCities([]);
+      setIsCityDropdown(true); // Default to dropdown
+      return;
+    }
 
     const fetchCities = async () => {
       try {
         const response = await apiClient.post("/auth/Get_City/", {
           district_id: selectedDistrictId.toString(),
         });
-        setCities(Object.values(response.data) as City[]);
+
+        const cityData = Object.values(response.data) as City[];
+        setCities(cityData);
+
+        // --- THIS IS THE NEW LOGIC ---
+        if (cityData.length > 0) {
+          // If we have cities, show the dropdown
+          setIsCityDropdown(true);
+        } else {
+          // If API returns no cities, force the text input
+          setIsCityDropdown(false);
+        }
+        // --- END OF NEW LOGIC ---
+
       } catch (error) {
         console.error("Error fetching cities:", error);
+        setCities([]);
+        setIsCityDropdown(false); // Also force text input on error
       }
     };
 
     fetchCities();
-  }, [selectedDistrictId, refreshData]);
+  }, [selectedDistrictId, refreshData]); // Dependencies are correct
 
   // /********** MODIFIED CODE START **********/
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -205,15 +225,34 @@ export const Contact = () => {
       }));
     }
   };
-  // /********** MODIFIED CODE END **********/
 
   const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
+    const selectedName = event.target.options[event.target.selectedIndex].text;
+
+    // Set the new state
     setSelectedStateId(selectedId);
+
+    // --- NEW: Clear all child data ---
+    setSelectedDistrictId("");
+    setSelectedCityId("");
+    setDistricts([]); // Clear district options
+    setCities([]); // Clear city options
+    setIsCityDropdown(true); // Reset city to dropdown
+
+    // Update form data: set new state name, clear all child names
     setFormData((prevState) => ({
       ...prevState,
-      personal_prof_stat_name:
-        event.target.options[event.target.selectedIndex].text,
+      personal_prof_stat_name: selectedName,
+      personal_prof_district_name: "", // Clear district name
+      personal_prof_city_name: "", // Clear city name
+    }));
+
+    // Clear any potential errors related to children
+    setErrors((prev) => ({
+      ...prev,
+      selectedDistrictId: "", // Clear any potential stale errors
+      selectedCityId: "", // Clear any potential stale errors
     }));
   };
 
@@ -221,11 +260,27 @@ export const Contact = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedId = event.target.value;
+    const selectedName = event.target.options[event.target.selectedIndex].text;
+
+    // Set the new district
     setSelectedDistrictId(selectedId);
+
+    // --- NEW: Clear child data ---
+    setSelectedCityId("");
+    setCities([]);
+    setIsCityDropdown(true);
+
+    // Update form data
     setFormData((prevState) => ({
       ...prevState,
-      personal_prof_district_name:
-        event.target.options[event.target.selectedIndex].text,
+      personal_prof_district_name: selectedName,
+      personal_prof_city_name: "", // Clear city name
+    }));
+
+    // Clear any potential errors related to city
+    setErrors((prev) => ({
+      ...prev,
+      selectedCityId: "", // Clear any potential stale errors
     }));
   };
 
@@ -369,7 +424,8 @@ export const Contact = () => {
         {
           profile_id: loginuser_profileId,
           Profile_address: formData.personal_prof_addr,
-          Profile_city: selectedCityId || formData.personal_prof_city_name,
+          //Profile_city: selectedCityId || formData.personal_prof_city_name,
+          Profile_city: formData.personal_prof_city_name,
           Profile_district:
             selectedDistrictId || formData.personal_prof_district_name,
           Profile_state: selectedStateId || formData.personal_prof_stat_name,
@@ -569,13 +625,24 @@ export const Contact = () => {
                         label=""
                         value={formData.personal_prof_district_name || ""}
                         onChange={(e) => {
+                          const newDistrictName = e.target.value;
+
+                          // --- NEW: Update form data and clear city ---
                           setFormData((prev) => ({
                             ...prev,
-                            personal_prof_district_name: e.target.value,
+                            personal_prof_district_name: newDistrictName,
+                            personal_prof_city_name: "", // Clear city name
                           }));
+
+                          // --- NEW: Clear child state ---
+                          setSelectedCityId("");
+                          setCities([]);
+                          setIsCityDropdown(true);
+
                           setErrors((prev) => ({
                             ...prev,
                             selectedDistrictId: "",
+                            selectedCityId: "",
                           })); // Clear error on change
                         }}
                       />

@@ -232,7 +232,6 @@ export const EducationProfession = () => {
 
         setSelectedWorkDistrictId(data.personal_work_district_id || "");
         if (!data.personal_work_district_id && data.personal_work_district) {
-          // If there's a name but no ID, it was a custom text entry
           setWorkDistrictInput(data.personal_work_district);
         }
         // For city
@@ -607,23 +606,45 @@ export const EducationProfession = () => {
   //   }));
   // };
 
+  // const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedId = event.target.value;
+  //   setSelectedWorkDistrictId(selectedId);
+
+  //   // Get the selected text
+  //   const selectedText = event.target.options[event.target.selectedIndex].text;
+
+  //   // Clear the workDistrictInput if the dropdown option is selected
+  //   setWorkDistrictInput("");
+
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     personal_work_district_name: selectedId === "" ? "" : selectedText,
+  //     personal_work_district: selectedId === "" ? "" : selectedText,
+  //   }));
+
+  //   // Reset the city state - this will trigger the useEffect above
+  //   setSelectedWorkCityId("");
+  //   setCustomCity("");
+  //   setIsCityDropdown(true);
+  // };
+
   const handleDistrictChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
     setSelectedWorkDistrictId(selectedId);
 
-    // Get the selected text
-    const selectedText = event.target.options[event.target.selectedIndex].text;
-
-    // Clear the workDistrictInput if the dropdown option is selected
+    // Clear the text input when dropdown is used
     setWorkDistrictInput("");
+
+    // Get the selected text from dropdown
+    const selectedText = event.target.options[event.target.selectedIndex].text;
 
     setFormData((prevState) => ({
       ...prevState,
-      personal_work_district_name: selectedId === "" ? "" : selectedText,
-      personal_work_district: selectedId === "" ? "" : selectedText,
+      personal_work_district_name: selectedText,
+      personal_work_district: selectedText,
     }));
 
-    // Reset the city state - this will trigger the useEffect above
+    // Reset city when district changes
     setSelectedWorkCityId("");
     setCustomCity("");
     setIsCityDropdown(true);
@@ -766,12 +787,15 @@ export const EducationProfession = () => {
       //   selectedWorkCountryId === "1"
       //     ? (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || "")
       //     : "",
-      work_district:
-        selectedWorkCountryId === "1"
-          ? (selectedWorkDistrictId === ""
-            ? "" // If the blank option is selected, send an empty string
-            : (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || ""))
-          : "",
+      // work_district:
+      //   selectedWorkCountryId === "1"
+      //     ? (selectedWorkDistrictId === ""
+      //       ? "" // If the blank option is selected, send an empty string
+      //       : (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || ""))
+      //     : "",
+      work_district: selectedWorkCountryId === "1"
+        ? (selectedWorkDistrictId || workDistrictInput || formData.personal_work_district || "")
+        : "",
       // Only pass city if country is India, otherwise empty string
       // work_city: selectedWorkCountryId === "1"
       //   ? (selectedWorkCityId || formData.personal_work_city_name || "")
@@ -781,12 +805,16 @@ export const EducationProfession = () => {
       //     ? customCity
       //     : (selectedWorkCityId || formData.personal_work_city_name || ""))
       //   : "",
+      // work_city: selectedWorkCountryId === "1"
+      //   ? (selectedWorkCityId === "others"
+      //     ? customCity // Custom city name when "Others" is selected
+      //     : (formData.personal_work_city_name || "")) // City ID when a city is selected, empty string otherwise
+      //   : "",
       work_city: selectedWorkCountryId === "1"
         ? (selectedWorkCityId === "others"
-          ? customCity // Custom city name when "Others" is selected
-          : (formData.personal_work_city_name || "")) // City ID when a city is selected, empty string otherwise
+          ? customCity
+          : (formData.personal_work_city_name || ""))
         : "",
-
       work_pincode: formData.personal_work_pin,
       career_plans: formData.personal_career_plans,
       field_ofstudy: fieldOfStudyy, // Add field of study
@@ -1352,12 +1380,13 @@ export const EducationProfession = () => {
                         name="personal_work_district"
                         value={workDistrictInput || formData.personal_work_district || ""}
                         onChange={(e) => {
-                          setWorkDistrictInput(e.target.value);
-                          // Update form data as well
+                          const value = e.target.value;
+                          setWorkDistrictInput(value);
+                          // Update form data for both text input scenarios
                           setFormData(prev => ({
                             ...prev,
-                            personal_work_district: e.target.value,
-                            personal_work_district_name: e.target.value // Update both fields if needed
+                            personal_work_district: value,
+                            personal_work_district_name: value
                           }));
                         }}
                         className="font-normal border rounded px-3 py-2 w-full focus:outline-none border-ashBorder"
