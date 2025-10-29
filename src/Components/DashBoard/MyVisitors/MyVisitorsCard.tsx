@@ -20,7 +20,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
 import apiClient from "../../../API";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 
@@ -41,7 +41,7 @@ interface Profile {
   viwed_lastvisit: string;
   viwed_userstatus: string;
   viwed_horoscope: string;
-  viwed_profile_wishlist: number;
+  viwed_profile_wishlist?: number;
 }
 
 interface ApiResponse {
@@ -60,7 +60,8 @@ type VisitorsProfilesCardProps = {
 
 export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber, sortBy }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]); // Store multiple profiles
-  const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({});
+  // const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({});
+  const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>([]);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
@@ -68,11 +69,69 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
   const location = useLocation();
 
   // Function to handle the bookmark toggle
-  const handleBookmark = (profileId: string) => {
-    setIsBookmarked((prev) => ({
-      ...prev,
-      [profileId]: !prev[profileId],
-    }));
+  // const handleBookmark = (profileId: string) => {
+  //   setIsBookmarked((prev) => ({
+  //     ...prev,
+  //     [profileId]: !prev[profileId],
+  //   }));
+  // };
+
+  const handleBookmarkToggle = async (profileId: string) => {
+    if (bookmarkedProfiles.includes(profileId)) {
+      await removeBookmark(profileId);
+    } else {
+      await addBookmark(profileId);
+    }
+  };
+
+  const addBookmark = async (profileId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: "1",
+        }
+      );
+      if (response.data.Status === 1) {
+        toast.success("Profile added to wishlist!");
+        ////console.log("Profile added to wishlist!");
+        setBookmarkedProfiles((prev) => [...prev, profileId]);
+        // sessionStorage.setItem(
+        //   "bookmarkedProfiles",
+        //   JSON.stringify([...bookmarkedProfiles, profileId])
+        // );ss
+      } else {
+        toast.error("Failed to add to wishlist.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding to wishlist.");
+    }
+  };
+
+  const removeBookmark = async (profileId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: "0",
+        }
+      );
+      if (response.data.Status === 1) {
+        toast.success("Profile removed from wishlist.");
+        ////console.log("Profile removed from wishlist.");
+        const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
+        setBookmarkedProfiles(updatedBookmarks);
+        // sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
+      } else {
+        toast.error("Failed to remove from wishlist.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while removing from wishlist.");
+    }
   };
 
   // Fetch profile data when the component mounts
@@ -91,7 +150,20 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
 
         // Check if response is successful and contains profiles
         if (response.data.Status === 1 && response.data.data.profiles.length > 0) {
-          setProfiles(response.data.data.profiles); // Store all profiles
+          // setProfiles(response.data.data.profiles); // Store all profiles
+          const fetchedProfiles = response.data.data.profiles;
+          setProfiles(fetchedProfiles); // Set the full profile data
+
+          // const initialBookmarks: { [key: string]: boolean } = {};
+          // fetchedProfiles.forEach(profile => {
+          //   initialBookmarks[profile.viwed_profileid] = profile.viwed_profile_wishlist === 1;
+          // });
+          // setBookmarkedProfiles(initialBookmarks);
+          const bookmarkedIds = fetchedProfiles
+            .filter(profile => profile.viwed_profile_wishlist === 1)
+            .map(profile => profile.viwed_profileid);
+
+          setBookmarkedProfiles(bookmarkedIds);
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -176,6 +248,7 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
 
   return (
     <div>
+      <ToastContainer/>
       {profiles.map((profile) => (
         <div
           key={profile.viwed_profileid}
@@ -202,7 +275,7 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
                     className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                   />
 
-                  {isBookmarked[profile.viwed_profileid] ? (
+                  {/* {bookmarkedProfiles[profile.viwed_profileid] ? (
                     <MdBookmark
                       onClick={() => handleBookmark(profile.viwed_profileid)}
                       className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
@@ -210,6 +283,23 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
                   ) : (
                     <MdBookmarkBorder
                       onClick={() => handleBookmark(profile.viwed_profileid)}
+                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                    />
+                  )} */}
+                  {bookmarkedProfiles.includes(profile.viwed_profileid) ? (
+                    <MdBookmark
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(profile.viwed_profileid);
+                      }}
+                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                    />
+                  ) : (
+                    <MdBookmarkBorder
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(profile.viwed_profileid);
+                      }}
                       className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                     />
                   )}

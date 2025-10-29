@@ -47,10 +47,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
   // const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>(
   //   {}
   // );
-  const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>(() => {
-    const savedBookmarks = sessionStorage.getItem("bookmarkedProfiles");
-    return savedBookmarks ? JSON.parse(savedBookmarks) : [];
-  });
+  const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>([]);
   // State to store the profile data fetched from the API
   const [profile, setProfiles] = useState<Profile[]>([]);
   //console.log(profile, "proooo");
@@ -146,8 +143,14 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
         );
         // Check the response status
         if (response.data.Status === 1) {
-          setProfiles(response.data.data.profiles);
-          setNoData(response.data.data.profiles.length === 0);
+          const fetchedProfiles = response.data.data.profiles;
+          setProfiles(fetchedProfiles);
+          setNoData(fetchedProfiles.length === 0);
+          const bookmarkedIds = fetchedProfiles
+            .filter((profile: { myint_profile_wishlist: number; }) => profile.myint_profile_wishlist === 1)
+            .map((profile: { myint_profileid: any; }) => profile.myint_profileid);
+
+          setBookmarkedProfiles(bookmarkedIds);
         } else if (response.data.Status === 0) {
           setNoData(true);
           setProfiles([]);
@@ -223,10 +226,10 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
         toast.success("Profile added to wishlist!");
         ////console.log("Profile added to wishlist!");
         setBookmarkedProfiles((prev) => [...prev, profileId]);
-        sessionStorage.setItem(
-          "bookmarkedProfiles",
-          JSON.stringify([...bookmarkedProfiles, profileId])
-        );
+        // sessionStorage.setItem(
+        //   "bookmarkedProfiles",
+        //   JSON.stringify([...bookmarkedProfiles, profileId])
+        // );
       } else {
         toast.error("Failed to add to wishlist.");
       }
@@ -246,11 +249,11 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
         }
       );
       if (response.data.Status === 1) {
-        toast.error("Profile removed from wishlist.");
+        toast.success("Profile removed from wishlist.");
         ////console.log("Profile removed from wishlist.");
         const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
         setBookmarkedProfiles(updatedBookmarks);
-        sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
+        // sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
       } else {
         toast.error("Failed to remove from wishlist.");
       }
@@ -294,7 +297,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
 
       // Navigate after validation
       //navigate(`/ProfileDetails?id=${profileId}&page=3`);
-       navigate(`/Profiledetails?id=${profileId}&page=3&sortBy=${sortBy}`, {
+      navigate(`/Profiledetails?id=${profileId}&page=3&sortBy=${sortBy}`, {
         state: {
           from: 'interestSent',
           pageNumber: pageNumber, // Pass the current page number

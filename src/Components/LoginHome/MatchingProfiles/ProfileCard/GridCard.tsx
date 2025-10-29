@@ -29,15 +29,24 @@ export const GridCard: React.FC<GridCardProps> = ({ profile }) => {
     setSelectedProfiles: () => { },
   };
 
+  // useEffect(() => {
+  //   const bookmarkedProfiles = JSON.parse(
+  //     localStorage.getItem("bookmarkedProfiles") || "[]"
+  //   );
+  //   const isBookmarked = bookmarkedProfiles.some(
+  //     (item: Profile) => item.profile_id === profile.profile_id
+  //   );
+  //   setIsBookmarked(isBookmarked);
+  // }, [profile.profile_id]);
+  
   useEffect(() => {
-    const bookmarkedProfiles = JSON.parse(
-      localStorage.getItem("bookmarkedProfiles") || "[]"
-    );
-    const isBookmarked = bookmarkedProfiles.some(
-      (item: Profile) => item.profile_id === profile.profile_id
-    );
-    setIsBookmarked(isBookmarked);
-  }, [profile.profile_id]);
+    if (profile) {
+      // Set the initial bookmark state based on the 'wish_list' property
+      // from the API response.
+      setIsBookmarked(profile.wish_list === 1);
+    }
+  }, [profile]); // This dependency array is correct
+
 
   const handleBookmark = async (
     e: React.MouseEvent<SVGElement, MouseEvent>

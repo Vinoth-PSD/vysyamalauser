@@ -40,6 +40,9 @@ interface GetProfileDetMatch {
   prosession: string;
   heightest_education: string;
   video_url: string;
+  anual_income?: string;
+  company_name?: string;
+  place_of_stay?: string;
 }
 
 interface EmptyField {
@@ -63,6 +66,17 @@ const fieldNameMapping = {
   anual_income: "Annual Income",
   Video_url: "Video URL",
 };
+
+interface EducationWorkData {
+  personal_company_name?: string;
+  personal_business_name?: string;
+  personal_work_district?: string;
+  personal_work_city_name?: string;
+  personal_ann_inc_name?: string;
+  personal_profession_name?: string;
+  personal_edu_name?: string;
+  persoanl_degree_name?: string;
+}
 
 export const MyProfile = () => {
   // const handleScrollToSettings = () => {
@@ -139,6 +153,8 @@ export const MyProfile = () => {
   const [profileId, setProfileId] = useState<string | null>(null);
   // const [showVideoModal, setShowVideoModal] = useState(false);
   // const [showThumbnail, setShowThumbnail] = useState(false);
+  const [educationWorkData, setEducationWorkData] = useState<EducationWorkData | null>(null);
+  const [, setEducationLoading] = useState<boolean>(true);
 
 
   useEffect(() => {
@@ -440,7 +456,31 @@ export const MyProfile = () => {
   //   console.log(`Printing PDF in ${selectedLanguage}`);
   //   // Add your logic to print the PDF in the selected language
   // };
+  useEffect(() => {
+    const fetchEducationWorkData = async () => {
+      if (!loginuser_profileId) return;
 
+      setEducationLoading(true);
+      try {
+        const response = await apiClient.post(
+          "/auth/get_myprofile_education/",
+          {
+            profile_id: loginuser_profileId
+          }
+        );
+
+        if (response.data.status === "success") {
+          setEducationWorkData(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching education/work details:", error);
+      } finally {
+        setEducationLoading(false);
+      }
+    };
+
+    fetchEducationWorkData();
+  }, [loginuser_profileId]);
 
   return (
     <div className="">
@@ -550,6 +590,12 @@ export const MyProfile = () => {
                               profileName={get_myprofile_personal?.personal_profile_name}
                               age={get_myprofile_personal?.personal_age}
                               starName={get_myprofile_personal?.star}
+                              annualIncome={educationWorkData?.personal_ann_inc_name}
+                              education={educationWorkData?.persoanl_degree_name}
+                              profession={get_myprofile_personal?.prosession}
+                              companyName={educationWorkData?.personal_company_name}
+                              businessName={educationWorkData?.personal_business_name}
+                              placeOfStay={educationWorkData?.personal_work_district || educationWorkData?.personal_work_city_name}
                             />
                           )}
                         </div>

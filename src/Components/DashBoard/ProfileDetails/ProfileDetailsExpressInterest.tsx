@@ -304,6 +304,7 @@ export const ProfileDetailsExpressInterest: React.FC<
         if (response.data.basic_details.express_int === "1") {
           setIsHeartMarked(true);
         }
+        setIsBookmarked(response.data.basic_details.wish_list === 1);
       } catch (error) {
         console.error("Error fetching profile data:", error);
       } finally {
@@ -420,7 +421,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
       // Show toast based on API response
       if (response.data.Status === 1) {
-        toast.error(response.data.Message || "Profile removed from Bookmark Successfully");
+        toast.success(response.data.Message || "Profile removed from Bookmark Successfully");
         setBookmarkedProfiles((prev) => {
           return prev.filter((profile) => {
             if (!profile || !profile.basic_details) {

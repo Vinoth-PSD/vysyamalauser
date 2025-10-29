@@ -79,8 +79,22 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       )
       .then((response) => {
         if (response.data.Status === 1) {
-          setProfiles(response.data.data.profiles);
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          const fetchedProfiles = response.data.data.profiles;
+          setProfiles(fetchedProfiles); // Set the full profile data
+
+          // --- START: New logic to set bookmark state ---
+          // Get all profile IDs that are bookmarked (wishlist = 1)
+          const bookmarkedIds = fetchedProfiles
+            .filter(profile => profile.visited_profile_wishlist === 1)
+            .map(profile => profile.visited_profileid);
+
+          // Update the bookmarkedProfiles state
+          setBookmarkedProfiles(bookmarkedIds);
+
+          // Also update sessionStorage to keep it in sync
+        //  localStorage.setItem("bookmarkedProfiles", JSON.stringify(bookmarkedIds));
+          // --- END: New logic ---
+
         }
       })
       .catch((error) => {
@@ -135,7 +149,7 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
         }
       );
       if (response.data.Status === 1) {
-        toast.error("Profile removed from wishlist.");
+        toast.success("Profile removed from wishlist.");
         ////console.log("Profile removed from wishlist.");
         const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
         setBookmarkedProfiles(updatedBookmarks);

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import VysyamalaLogo from "../assets/icons/VysyamalaLogo.png";
 import ProfileImg from "../assets/icons/profileRound.png";
-import { MdMessage } from "react-icons/md";
+//import { MdMessage } from "react-icons/md";
 import { FaBell } from "react-icons/fa";
 // import NotificationsImg from "../assets/images/NotificationsImg.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -61,7 +61,8 @@ export const LoginHeader: React.FC = () => {
   const [, setSelectedFromProfileId] = useState<string | null>(null);
   const [refreshNotifications, setRefreshNotifications] = useState(false); // Trigger for refresh
   ////console.log("setSelectedFromProfileId", setSelectedFromProfileId);
-  const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
+  // const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
+  const [, setUnreadMessageCount] = useState<number>(0);
   const gender = localStorage.getItem("gender");
   const PlanID = Number(localStorage.getItem("plan_id"));
   const ValidTill = localStorage.getItem("valid_till");
@@ -398,7 +399,7 @@ export const LoginHeader: React.FC = () => {
                   <MdMessage className="text-[22px]" />
                 </li>
               </NavLink> */}
-              <NavLink
+              {/* <NavLink
                 to={"/Messages"}
                 aria-current="page"
                 className="active-nav before:!content-none"
@@ -411,7 +412,7 @@ export const LoginHeader: React.FC = () => {
                     </span>
                   )}
                 </li>
-              </NavLink>
+              </NavLink> */}
               {/* Notifications */}
               <li
                 // onClick={handleNotificationClick}

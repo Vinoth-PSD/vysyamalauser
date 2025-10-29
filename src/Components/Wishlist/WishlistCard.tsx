@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 //import axios from "axios";
 //import ProfileListImg from "../../assets/images/ProfileListImg.png";
-import { MdVerifiedUser } from "react-icons/md";
+import { MdBookmark, MdBookmarkBorder, MdVerifiedUser } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { MdStars } from "react-icons/md";
@@ -16,7 +16,7 @@ import MatchingScore from "../DashBoard/ProfileDetails/MatchingScore";
 import { ProfileContext } from "../../ProfileContext";
 import { WhishlistNotFound } from "./WhishlistNotFound";
 import apiClient from "../../API";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 
@@ -59,6 +59,8 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
   const [wishlistProfiles, setWishlistProfiles] = useState<WishlistProfile[]>([]);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
+  const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>([]);
 
   const fetchWishlistProfiles = async (profileId: string) => {
     setIsLoading(true); // Start loading
@@ -80,7 +82,15 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
         )
         console.log(response.data.data, "lllllllllllll");
         // Assuming you have a state to store the profiles
-        setWishlistProfiles(response.data.data.profiles);
+        const fetchedProfiles = response.data.data.profiles;
+        setWishlistProfiles(fetchedProfiles);
+
+        const bookmarkedIds = fetchedProfiles
+          .filter((profile: { wishlist_profile: number; }) => profile.wishlist_profile === 1)
+          .map((profile: { wishlist_profileid: any; }) => profile.wishlist_profileid);
+
+        // Set the bookmarked state
+        setBookmarkedProfiles(bookmarkedIds);
         // Scroll to the top of the window
         window.scrollTo({
           top: 0,
@@ -173,9 +183,74 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
       : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
+  const handleBookmarkToggle = async (profileId: string) => {
+    if (bookmarkedProfiles.includes(profileId)) {
+      await removeBookmark(profileId);
+    } else {
+      await addBookmark(profileId);
+    }
+  };
+
+  const addBookmark = async (profileId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: "1",
+        }
+      );
+      if (response.data.Status === 1) {
+        toast.success("Profile added to wishlist!");
+
+        ////console.log("Profile added to wishlist!");
+        setBookmarkedProfiles((prev) => [...prev, profileId]);
+        // sessionStorage.setItem(
+        //   "bookmarkedProfiles",
+        //   JSON.stringify([...bookmarkedProfiles, profileId])
+        // );
+        if (loginuser_profileId) {
+          await fetchWishlistProfiles(loginuser_profileId);
+        }
+      } else {
+        toast.error("Failed to add to wishlist.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding to wishlist.");
+    }
+  };
+
+  const removeBookmark = async (profileId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: "0",
+        }
+      );
+      if (response.data.Status === 1) {
+        toast.success("Profile removed from wishlist.");
+        ////console.log("Profile removed from wishlist.");
+        const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
+        setBookmarkedProfiles(updatedBookmarks);
+        if (loginuser_profileId) {
+          await fetchWishlistProfiles(loginuser_profileId);
+        }
+        // sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
+      } else {
+        toast.error("Failed to remove from wishlist.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while removing from wishlist.");
+    }
+  };
 
   return (
     <div>
+      <ToastContainer />
       <div>
         {isLoading ? (
           <div className="flex flex-col items-center justify-center min-h-[300px]">
@@ -218,7 +293,23 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
                         }}
                         className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                       />
-
+                      {bookmarkedProfiles.includes(profile.wishlist_profileid) ? (
+                        <MdBookmark
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBookmarkToggle(profile.wishlist_profileid);
+                          }}
+                          className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                        />
+                      ) : (
+                        <MdBookmarkBorder
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBookmarkToggle(profile.wishlist_profileid);
+                          }}
+                          className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                        />
+                      )}
                       {/* No Bookmark icon functionality here */}
                     </div>
 

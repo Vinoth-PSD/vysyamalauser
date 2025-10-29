@@ -26,7 +26,7 @@ export interface Profile {
   profession?: string;
   location?: string;
   profile_image?: string;
-  wish_list?: string;
+  wish_list?: number;
   user_profile_views?: string;
   star?: string
   matching_score?: string
