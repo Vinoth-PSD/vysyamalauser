@@ -316,11 +316,11 @@ const FamilyDetails: React.FC = () => {
           );
           setValue(
             "mother_alive",
-            profileData.mother_alive === "Yes" ? "Yes" : "No"
+            profileData.mother_alive === "yes" ? "yes" : "no"
           );
           setValue(
             "father_alive",
-            profileData.father_alive === "Yes" ? "Yes" : "No"
+            profileData.father_alive === "yes" ? "yes" : "no"
           );
 
           // Set brother and sister values based on the fetched data

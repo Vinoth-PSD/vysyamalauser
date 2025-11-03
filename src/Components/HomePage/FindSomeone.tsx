@@ -75,10 +75,10 @@ const FindProfessionals = () => {
           to_age: toAge.trim(),
           gender: gender,
           profession: profession,
-          native_state: "Tamilnadu",
-          city: "Trichy",
-          received_per_page: "2",
-          received_page_number: "1",
+          // native_state: "Tamilnadu",
+          // city: "Trichy",
+          // received_per_page: "2",
+          // received_page_number: "1",
         }
       );
 

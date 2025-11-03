@@ -260,15 +260,15 @@ const TrustedPeople = () => {
   const fetchGalleryItems = async () => {
     try {
       const response = await justRegistered(); // Replace `justRegistered` with your actual API call function
-     // setHappyCustomers(response?.data.happy_customers_count);
+      // setHappyCustomers(response?.data.happy_customers_count);
       setActiveProfile(response?.data.active_profiles_count);
 
       const fetchedData = response?.data.data || [];
       setOriginalData(fetchedData);
 
       // Separate male and female cards
-      const males = fetchedData.filter((card: { gender: string; }) => card.gender === "male");
-      const females = fetchedData.filter((card: { gender: string; }) => card.gender === "female");
+      const males = fetchedData.filter((card: { gender: string; }) => card.gender?.toLowerCase() === "male");
+      const females = fetchedData.filter((card: { gender: string; }) => card.gender?.toLowerCase() === "female");
 
       // Interleave male and female cards
       const interleaved = [];

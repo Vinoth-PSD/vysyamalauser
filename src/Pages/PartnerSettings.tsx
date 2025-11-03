@@ -1086,7 +1086,7 @@ const PartnerSettings: React.FC = () => {
                   <option value="" selected disabled>
                     Select Chevvai
                   </option>
-                  {["UnKnown", "Yes", "No"].map((option) => (
+                  {["Yes", "No", "Both"].map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -1115,7 +1115,7 @@ const PartnerSettings: React.FC = () => {
                   <option value="" selected disabled>
                     Select Rehu / Ketu
                   </option>
-                  {["UnKnown", "Yes", "No"].map((option) => (
+                  {["Yes", "No", "Both"].map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -1140,9 +1140,9 @@ const PartnerSettings: React.FC = () => {
                     required: "Foreign interest selection is required",
                   })}
                 >
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                  <option value="both">Both</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Both">Both</option>
                 </select>
                 <IoMdArrowDropdown />
               </div>

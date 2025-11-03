@@ -276,94 +276,94 @@ export const PartnerSettings: React.FC = () => {
   // }, [storedBirthStar, storedGender, storedRasi]);
   // Replace all the useEffect hooks related to star selection with this single, consolidated version
   useEffect(() => {
-  const initializeStarSelection = async () => {
-    // Return early if essential data for fetching is missing
-    if (!storedBirthStar || !storedGender || !storedRasi) return;
+    const initializeStarSelection = async () => {
+      // Return early if essential data for fetching is missing
+      if (!storedBirthStar || !storedGender || !storedRasi) return;
 
-    try {
-      // 1. Fetch the master list of all possible matching stars
-      const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
-        birth_star_id: storedBirthStar,
-        gender: storedGender,
-        birth_rasi_id: storedRasi,
-      });
+      try {
+        // 1. Fetch the master list of all possible matching stars
+        const response = await apiClient.post(`/auth/Get_Matchstr_Pref/`, {
+          birth_star_id: storedBirthStar,
+          gender: storedGender,
+          birth_rasi_id: storedRasi,
+        });
 
-      // The response is an object with keys like "8 Poruthas". We just need the arrays of stars.
-      const matchCountArrays: MatchingStar[][] = Object.values(response.data);
-      
-      // Flatten the groups of stars into a single "master list" for easy lookup
-      const allAvailableStars: MatchingStar[] = matchCountArrays.flat();
-      
-      // Sort the grouped array for display purposes (optional, but good for UI)
-      const sortedMatchGroups = [...matchCountArrays].sort(
-        (a: MatchingStar[], b: MatchingStar[]) => (b[0]?.match_count ?? 0) - (a[0]?.match_count ?? 0)
-      );
-      setMatchStars(sortedMatchGroups);
+        // The response is an object with keys like "8 Poruthas". We just need the arrays of stars.
+        const matchCountArrays: MatchingStar[][] = Object.values(response.data);
 
-      // 2. Fetch the user's saved partner preferences, which contains the IDs
-      const profileId = localStorage.getItem("loginuser_profile_id");
-      if (!profileId) {
+        // Flatten the groups of stars into a single "master list" for easy lookup
+        const allAvailableStars: MatchingStar[] = matchCountArrays.flat();
+
+        // Sort the grouped array for display purposes (optional, but good for UI)
+        const sortedMatchGroups = [...matchCountArrays].sort(
+          (a: MatchingStar[], b: MatchingStar[]) => (b[0]?.match_count ?? 0) - (a[0]?.match_count ?? 0)
+        );
+        setMatchStars(sortedMatchGroups);
+
+        // 2. Fetch the user's saved partner preferences, which contains the IDs
+        const profileId = localStorage.getItem("loginuser_profile_id");
+        if (!profileId) {
           // If no profile ID, we can't fetch saved data, so proceed to default selection
           console.log("No profile ID found. Setting default star selections.");
           setDefaultSelections(allAvailableStars);
           return;
+        }
+
+        const profileResponse = await apiClient.post("/auth/Get_myprofile_partner/", {
+          profile_id: profileId
+        });
+        const profileData = profileResponse.data.data;
+
+        // 3. Check if the user has previously saved star preferences (partner_porutham_ids)
+        if (profileData && profileData.partner_porutham_ids && profileData.partner_porutham_ids.trim() !== '') {
+
+          console.log("Found saved star preferences:", profileData.partner_porutham_ids);
+
+          // Split the comma-separated string of saved IDs into an array of strings
+          const savedStarIds = profileData.partner_porutham_ids
+            .split(",")
+            .map((id: string) => id.trim());
+
+          // Map over the saved IDs and find the full star object from our master list
+          const apiSelectedItems: SelectedStarIdItem[] = savedStarIds
+            .map((savedId: string) => {
+              // Find the complete star object in our master list that matches the saved ID
+              const matchingStar = allAvailableStars.find(
+                (star) => star.id.toString() === savedId
+              );
+
+              // If found, construct the object needed for the state
+              if (matchingStar) {
+                return {
+                  id: matchingStar.id.toString(),
+                  rasi: matchingStar.dest_rasi_id.toString(),
+                  star: matchingStar.dest_star_id.toString(),
+                  label: `${matchingStar.matching_starname} - ${matchingStar.matching_rasiname}`,
+                };
+              }
+              // If an old ID is not in the current master list, it will be ignored
+              return null;
+            })
+            .filter((item: any): item is SelectedStarIdItem => item !== null); // Filter out any nulls
+
+          // Set the state with the preferences loaded from the API
+          setSelectedStarIds(apiSelectedItems);
+          sessionStorage.setItem("selectedStarIds", JSON.stringify(apiSelectedItems));
+
+        } else {
+          // 4. FALLBACK: If there's no saved profile data, set the default selections
+          console.log("No saved preferences found. Setting default star selections.");
+          setDefaultSelections(allAvailableStars);
+        }
+
+      } catch (error) {
+        console.error("Error initializing star selection:", error);
+        // You might want to handle the error state in the UI
       }
+    };
 
-      const profileResponse = await apiClient.post("/auth/Get_myprofile_partner/", {
-        profile_id: profileId
-      });
-      const profileData = profileResponse.data.data;
-
-      // 3. Check if the user has previously saved star preferences (partner_porutham_ids)
-      if (profileData && profileData.partner_porutham_ids && profileData.partner_porutham_ids.trim() !== '') {
-        
-        console.log("Found saved star preferences:", profileData.partner_porutham_ids);
-        
-        // Split the comma-separated string of saved IDs into an array of strings
-        const savedStarIds = profileData.partner_porutham_ids
-          .split(",")
-          .map((id: string) => id.trim());
-
-        // Map over the saved IDs and find the full star object from our master list
-        const apiSelectedItems: SelectedStarIdItem[] = savedStarIds
-          .map((savedId: string) => {
-            // Find the complete star object in our master list that matches the saved ID
-            const matchingStar = allAvailableStars.find(
-              (star) => star.id.toString() === savedId
-            );
-
-            // If found, construct the object needed for the state
-            if (matchingStar) {
-              return {
-                id: matchingStar.id.toString(),
-                rasi: matchingStar.dest_rasi_id.toString(),
-                star: matchingStar.dest_star_id.toString(),
-                label: `${matchingStar.matching_starname} - ${matchingStar.matching_rasiname}`,
-              };
-            }
-            // If an old ID is not in the current master list, it will be ignored
-            return null; 
-          })
-          .filter((item:any): item is SelectedStarIdItem => item !== null); // Filter out any nulls
-
-        // Set the state with the preferences loaded from the API
-        setSelectedStarIds(apiSelectedItems);
-        sessionStorage.setItem("selectedStarIds", JSON.stringify(apiSelectedItems));
-
-      } else {
-        // 4. FALLBACK: If there's no saved profile data, set the default selections
-        console.log("No saved preferences found. Setting default star selections.");
-        setDefaultSelections(allAvailableStars);
-      }
-
-    } catch (error) {
-      console.error("Error initializing star selection:", error);
-      // You might want to handle the error state in the UI
-    }
-  };
-
-  // Helper function to set default selections
-  const setDefaultSelections = (allStars: MatchingStar[]) => {
+    // Helper function to set default selections
+    const setDefaultSelections = (allStars: MatchingStar[]) => {
       const defaultSelectedIds = allStars
         .filter((item) => item.match_count > 0) // Select all with at least one match
         .map((item) => ({
@@ -375,10 +375,10 @@ export const PartnerSettings: React.FC = () => {
 
       setSelectedStarIds(defaultSelectedIds);
       sessionStorage.setItem("selectedStarIds", JSON.stringify(defaultSelectedIds));
-  }
+    }
 
-  initializeStarSelection();
-}, [storedBirthStar, storedGender, storedRasi]);
+    initializeStarSelection();
+  }, [storedBirthStar, storedGender, storedRasi]);
 
   // Alternative approach if you want to check for existing profile data first
   useEffect(() => {
@@ -601,7 +601,7 @@ export const PartnerSettings: React.FC = () => {
 
       // Prepare star data
       const starArray = selectedStarIds.map((item) => item.id);
-      console.log("starArray other partner settings",starArray)
+      console.log("starArray other partner settings", starArray)
       const starRasiArray = selectedStarIds.map((item) => `${item.star}-${item.rasi}`);
 
       // Combine pre-filled and new selections
