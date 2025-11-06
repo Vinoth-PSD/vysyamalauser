@@ -184,6 +184,7 @@ export const ProfileSlick = () => {
     setShowOptions(false);
     setCurrentEditIndex(null); // Reset edit mode after upload
   };
+  
   const handleRemoveImage = async () => {
     if (currentEditIndex !== null) {
       try {

@@ -751,7 +751,7 @@ export const LoginHeader: React.FC = () => {
                       Wishlist
                     </li>
                   </NavLink>
-                  <NavLink
+                  {/* <NavLink
                     to="/Messages"
                     aria-current="page"
                     className="active-nav"
@@ -760,7 +760,7 @@ export const LoginHeader: React.FC = () => {
                     <li className="text-[16px] text-primary cursor-pointer font-normal">
                       Message
                     </li>
-                  </NavLink>
+                  </NavLink> */}
 
                   {/* Notifications */}
                   <li

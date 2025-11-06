@@ -424,7 +424,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
 
                   <p className="flex items-center text-sm text-primary font-normal">
                     <FaPersonArrowUpFromLine className="mr-2 text-primary" />
-                    {profile.myint_height} ft
+                    {profile.myint_height}
                   </p>
                 </div>
 

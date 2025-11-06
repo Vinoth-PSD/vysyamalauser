@@ -332,7 +332,7 @@ export const MyVisitorsCard: React.FC<VisitorsProfilesCardProps> = ({ pageNumber
                     <p className="text-gray font-semibold">|</p>
                     <p className="flex items-center text-sm text-primary font-normal">
                       <FaPersonArrowUpFromLine className="mr-2 text-primary" />
-                      {profile.viwed_height}ft
+                      {profile.viwed_height}
                     </p>
                   </div>
 
