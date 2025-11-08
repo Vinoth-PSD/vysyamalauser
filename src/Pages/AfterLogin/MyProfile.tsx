@@ -263,7 +263,7 @@ export const MyProfile = () => {
     // link.href = `https://apiupg.rainyseasun.com/auth/generate-pdf/${loginuser_profileId}/${Get_profile_det_match?.profile_id}`;
     // link.download = `pdf_${Get_profile_det_match?.profile_id}.pdf`; // Customize the file name
 
-    link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/My_horoscope_pdf_color/${get_myprofile_personal?.profile_id}/`;
+    link.href = `https://app.vysyamala.com/auth/My_horoscope_pdf_color/${get_myprofile_personal?.profile_id}/`;
     //link.href = `http://103.214.132.20:8000/auth/My_horoscope_pdf_color/${get_myprofile_personal?.profile_id}/`;
 
     // link.download = `pdf_${get_myprofile_personal?.profile_id}.pdf`; // Customize the file name
@@ -277,7 +277,7 @@ export const MyProfile = () => {
     // link.href = `https://apiupg.rainyseasun.com/auth/generate-pdf/${loginuser_profileId}/${Get_profile_det_match?.profile_id}`;
     // link.download = `pdf_${Get_profile_det_match?.profile_id}.pdf`; // Customize the file name
 
-    link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/My_horoscope_black/${get_myprofile_personal?.profile_id}/`;
+    link.href = `https://app.vysyamala.com/auth/My_horoscope_black/${get_myprofile_personal?.profile_id}/`;
     // link.href = `http://103.214.132.20:8000/auth/My_horoscope_black/${get_myprofile_personal?.profile_id}/`;
 
     // link.download = `pdf_${get_myprofile_personal?.profile_id}.pdf`; // Customize the file name

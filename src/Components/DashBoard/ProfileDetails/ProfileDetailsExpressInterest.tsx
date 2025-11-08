@@ -555,8 +555,10 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   const generatePoruthamPDF = async () => {
     try {
-      const response = await apiClient.get(
-        `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
+      const response = await axios.get(
+        `https://app.vysyamala.com/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
+      // const response = await apiClient.get(
+      //   `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
         {
           responseType: "blob", // Needed for PDF download
         }
@@ -693,7 +695,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
     // link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/New_horoscope_black/${idparam}/${loginuser_profileId}/`;
+    link.href = `https://app.vysyamala.com/auth/New_horoscope_black/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -702,7 +704,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
     // link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/New_horoscope_color/${idparam}/${loginuser_profileId}/`;
+    link.href = `https://app.vysyamala.com/auth/New_horoscope_color/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -744,7 +746,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   // Get the navigation state with default values
   const navigationState = location.state || {};
   //const { from = '', pageNumber = 1 } = navigationState;
-  const { from = '', pageNumber = 1, searchState = {}, sortBy = 'datetime'  } = navigationState;
+  const { from = '', pageNumber = 1, searchState = {}, sortBy = 'datetime' } = navigationState;
 
   const handleBackClick = () => {
 
