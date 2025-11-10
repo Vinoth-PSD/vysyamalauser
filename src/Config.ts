@@ -1,6 +1,6 @@
 // src/config.js
 const config = {
-  apiUrl: 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net'   
+  apiUrl: 'https://app.vysyamala.com'   
   };
   
   export default config;

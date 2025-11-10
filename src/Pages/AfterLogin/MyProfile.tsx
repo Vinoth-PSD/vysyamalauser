@@ -493,10 +493,10 @@ export const MyProfile = () => {
         />
         <meta
           property="og:image"
-          content={'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/media/default_groom.png'} // Use placeholder if no image
+          content={'https://app.vysyamala.com/media/default_groom.png'} // Use placeholder if no image
         // content={'http://103.214.132.20:8000/media/default_groom.png'} // Use placeholder if no image
         />
-        <meta property="og:url" content={'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/media/default_groom.png'} />
+        <meta property="og:url" content={'https://app.vysyamala.com/media/default_groom.png'} />
         {/* <meta property="og:url" content={'http://103.214.132.20:8000/media/default_groom.png'} /> */}
       </Helmet>
       <div className="bg-grayBg py-20 max-lg:py-14 max-md:py-10 max-sm:py-10">

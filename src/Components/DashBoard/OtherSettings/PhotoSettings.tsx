@@ -84,7 +84,7 @@ export const PhotoSettings = () => {
 
     try {
       const response = await fetch(
-        "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Photo_Id_Settings/",
+        "https://app.vysyamala.com/auth/Photo_Id_Settings/",
         //"http://103.214.132.20:8000/auth/Photo_Id_Settings/",
         {
           method: "POST",

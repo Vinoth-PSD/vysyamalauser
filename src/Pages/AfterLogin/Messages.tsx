@@ -87,7 +87,7 @@ export const Messages = () => {
       setSelectedProfile({
         room_name_id: 'VY240001VY240023',
 
-         profile_image: 'https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/media/profile_VY240023/images.jpeg',
+         profile_image: 'https://app.vysyamala.com/media/profile_VY240023/images.jpeg',
         //profile_image: 'http://103.214.132.20:8000/media/profile_VY240023/images.jpeg',
         profile_user_name: 'User23',
         profile_lastvist: '(October 22, 2024)',

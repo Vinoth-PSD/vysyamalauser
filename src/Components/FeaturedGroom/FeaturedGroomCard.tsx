@@ -30,7 +30,7 @@ interface ApiResponse {
 
 const defaultImgUrl = "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
-const API_URL = "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_featured_profiles/";
+const API_URL = "https://app.vysyamala.com/auth/Get_featured_profiles/";
 //const API_URL = "http://103.214.132.20:8000/auth/Get_featured_profiles/";
 
 export const FeaturedGroomCard: React.FC = () => {

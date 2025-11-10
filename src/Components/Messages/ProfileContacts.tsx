@@ -46,7 +46,7 @@ export const ProfileContacts: React.FC<ProfileContactsProps> = ({
         let data: any[] = [];
         if (searchTerm === "") {
           const response = await fetch(
-             "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_user_chatlist/",
+             "https://app.vysyamala.com/auth/Get_user_chatlist/",
            // "http://103.214.132.20:8000/auth/Get_user_chatlist/",
             {
               method: "POST",
@@ -62,7 +62,7 @@ export const ProfileContacts: React.FC<ProfileContactsProps> = ({
           }
         } else {
           const response = await fetch(
-            "https://vsysmalamat-ejh3ftcdbnezhhfv.westus2-01.azurewebsites.net/auth/Get_user_chatlist_search/",
+            "https://app.vysyamala.com/auth/Get_user_chatlist_search/",
             //"http://103.214.132.20:8000/auth/Get_user_chatlist_search/",
             {
               method: "POST",
