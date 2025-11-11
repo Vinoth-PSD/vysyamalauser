@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -44,6 +43,7 @@ export const PhotoSettings = () => {
     handleSubmit,
     getValues,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -51,6 +51,10 @@ export const PhotoSettings = () => {
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
+    // If unchecking, clear the password
+    if (!e.target.checked) {
+      setValue("password", "");
+    }
   };
 
   const handleShowPassword = () => {
@@ -79,8 +83,6 @@ export const PhotoSettings = () => {
     formData.append("Video_url", videoUrl); // Replace with actual static value
     //  const filePreview = URL.createObjectURL(file);
     //   setUploadingImages((prev) => [...prev, filePreview]);
-
-
 
     try {
       const response = await fetch(
@@ -118,6 +120,7 @@ export const PhotoSettings = () => {
     setSelectedDivorceProof(null);
     setIsChecked(false);
     setVideoUrl('');
+    setValue("password", "");
     // Reset other states if necessary
   };
 
@@ -192,6 +195,14 @@ export const PhotoSettings = () => {
         setUploadedDivorceProof(data.Profile_divorceproof || "");
         setVideoUrl(data.Video_url || ""); // Set video URL from API response
         setIsChecked(data.Photo_protection === "1");
+        const photoProtection = data.Photo_protection === "1";
+        setIsChecked(photoProtection);
+
+        if (photoProtection && data.Photo_password) {
+          setValue("password", data.Photo_password); // Set the password value
+        } else {
+          setValue("password", ""); // Clear password if protection is off
+        }
       }
     } catch (error) {
       console.error("Error fetching uploaded images:", error);

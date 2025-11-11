@@ -8,7 +8,7 @@ import { FaPersonArrowUpFromLine, FaSuitcase, FaLocationDot, FaUser } from "reac
 import MatchingScore from "../ProfileDetails/MatchingScore";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../../API";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 
@@ -23,7 +23,7 @@ interface GetProfListMatch {
   profession: string;
   location: string;
   profile_image: string;
-  wish_list: string;
+  wish_list: number | string;
   notes_details: string;
   notes_datetime: string;
   notes_match_score?: number;
@@ -39,13 +39,17 @@ interface PersonalNotesCardProps {
 }
 
 export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber, sortBy }) => {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  // const [isBookmarked, setIsBookmarked] = useState(false);
   const [profilesData, setProfilesData] = useState<GetProfListMatch[]>([]); // Updated to an array for multiple profiles
   const [statusMessage] = useState<string>(""); // State variable for the status message
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const navigate = useNavigate();
   const gender = localStorage.getItem("gender");
   const [loading, setLoading] = useState<boolean>(true);
+  // const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>(() => {
+  //   const savedBookmarks = sessionStorage.getItem("bookmarkedProfiles");
+  //   return savedBookmarks ? JSON.parse(savedBookmarks) : [];
+  // });
   const defaultImgUrl =
     gender?.toLowerCase() === "male"
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
@@ -76,7 +80,7 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
           profession: profile.notes_profession, // Add profession if available
           location: profile.notes_city, // Add location if available
           profile_image: profile.notes_Profile_img || defaultImgUrl,
-          wish_list: profile.notes_profile_wishlist, // Add wish_list status if available
+          wish_list: profile.notes_profile_wishlist,
           notes_details: profile.notes_details,
           notes_datetime: profile.notes_datetime,
           notes_match_score: profile.notes_match_score, // Match score if available
@@ -102,8 +106,46 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
   }, [pageNumber, sortBy]);
 
 
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
+  // const handleBookmark = () => {
+  //   setIsBookmarked(!isBookmarked);
+  // };
+
+  const handleBookmarkToggle = async (profileId: string, currentWishListStatus: number | string) => {
+    const newStatus = (currentWishListStatus === 1 || currentWishListStatus === "1") ? "0" : "1";
+
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: newStatus,
+        }
+      );
+
+      if (response.data.Status === 1) {
+        // Update the local state to reflect the change
+        setProfilesData(prevProfiles =>
+          prevProfiles.map(profile =>
+            profile.profile_id === profileId
+              ? { ...profile, wish_list: newStatus === "1" ? 1 : 0 }
+              : profile
+          )
+        );
+
+        // Show appropriate toast message
+        if (newStatus === "1") {
+          toast.success("Profile added to wishlist!");
+        } else {
+          toast.success("Profile removed from wishlist.");
+        }
+      } else {
+        toast.error(`Failed to ${newStatus === "1" ? "add to" : "remove from"} wishlist.`);
+      }
+    } catch (error) {
+      toast.error(`An error occurred while ${newStatus === "1" ? "adding to" : "removing from"} wishlist.`);
+      console.error("Error toggling bookmark:", error);
+    }
   };
 
   // const handleProfileClick = (profileId: string) => {
@@ -176,6 +218,7 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
 
   return (
     <div>
+      <ToastContainer />
       {profilesData.length > 0 ? (
         profilesData.map((profileData) => (
           <div key={profileData.profile_id} className="space-y-5 rounded-xl shadow-profileCardShadow p-5 mb-5">
@@ -190,14 +233,14 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
                         e.currentTarget.src = defaultImgUrl; // Set default image
                       }}
                       className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full" />
-                    {isBookmarked ? (
+                    {profileData.wish_list === 1 || profileData.wish_list === "1" ? (
                       <MdBookmark
-                        onClick={handleBookmark}
+                        onClick={() => handleBookmarkToggle(profileData.profile_id, profileData.wish_list)}
                         className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                       />
                     ) : (
                       <MdBookmarkBorder
-                        onClick={handleBookmark}
+                        onClick={() => handleBookmarkToggle(profileData.profile_id, profileData.wish_list)}
                         className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                       />
                     )}
@@ -307,7 +350,9 @@ export const PersonalNotesCard: React.FC<PersonalNotesCardProps> = ({ pageNumber
                 {profileData.notes_details ?? "N/A"}
               </h5>
               <p className="text-sm text-primary">
-                Last updated on {profileData.notes_datetime ?? "N/A"}
+                Last updated on {profileData.notes_datetime
+                  ? profileData.notes_datetime.split('T')[0]
+                  : "N/A"}
               </p>
               {statusMessage && <p className="mt-2 text-sm">{statusMessage}</p>}
             </div>

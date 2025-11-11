@@ -36,6 +36,7 @@ interface ProfileData {
     vys_lastvisit: string;
     vys_userstatus: string;
     vys_horoscope: string;
+    vys_profile_wishlist: number
     // score: number; // Define the score prop
 }
 
@@ -60,7 +61,8 @@ interface VysassistCardProps {
 }
 
 export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber, sortBy }) => {
-    const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({}); // Track bookmarks for each profile
+    // const [isBookmarked, setIsBookmarked] = useState<{ [key: string]: boolean }>({}); // Track bookmarks for each profile
+    const [updatingBookmarks, setUpdatingBookmarks] = useState<Set<string>>(new Set());
     const [profiles, setProfiles] = useState<ProfileData[]>([]); // Store all profiles
     const [noVysassistFound, setNoVysassistFound] = useState(false); // Track if no vysassist is found
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -73,13 +75,73 @@ export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber, sortBy
         gender?.toLowerCase() === "male"
             ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
             : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+    const isBookmarked = (wishListStatus: number): boolean => {
+        return wishListStatus === 1;
+    };
 
+    // const handleBookmark = (profileId: string) => {
+    //     setIsBookmarked(prevState => ({
+    //         ...prevState,
+    //         [profileId]: !prevState[profileId]
+    //     }));
+    // };
 
-    const handleBookmark = (profileId: string) => {
-        setIsBookmarked(prevState => ({
-            ...prevState,
-            [profileId]: !prevState[profileId]
-        }));
+    const handleBookmarkToggle = async (profileId: string, currentWishListStatus: number) => {
+        // Prevent multiple clicks while updating
+        if (updatingBookmarks.has(profileId)) return;
+
+        const newStatus = isBookmarked(currentWishListStatus) ? 0 : 1;
+
+        // Optimistically update UI
+        setProfiles(prev => prev.map(profile =>
+            profile.vys_profileid === profileId
+                ? { ...profile, vys_profile_wishlist: newStatus }
+                : profile
+        ));
+
+        setUpdatingBookmarks(prev => new Set(prev.add(profileId)));
+
+        try {
+            const response = await apiClient.post(
+                "/auth/Mark_profile_wishlist/",
+                {
+                    profile_id: loginuser_profileId,
+                    profile_to: profileId,
+                    status: newStatus.toString(),
+                }
+            );
+
+            if (response.data.Status === 1) {
+                if (newStatus === 1) {
+                    toast.success("Profile added to wishlist!");
+                } else {
+                    toast.success("Profile removed from wishlist!");
+                }
+            } else {
+                // Revert on failure
+                setProfiles(prev => prev.map(profile =>
+                    profile.vys_profileid === profileId
+                        ? { ...profile, vys_profile_wishlist: currentWishListStatus }
+                        : profile
+                ));
+                toast.error(`Failed to ${newStatus === 1 ? "add to" : "remove from"} wishlist.`);
+            }
+        } catch (error) {
+            // Revert on error
+            setProfiles(prev => prev.map(profile =>
+                profile.vys_profileid === profileId
+                    ? { ...profile, vys_profile_wishlist: currentWishListStatus }
+                    : profile
+            ));
+            toast.error(`An error occurred while ${newStatus === 1 ? "adding to" : "removing from"} wishlist.`);
+            console.error("Error updating bookmark:", error);
+        } finally {
+            setUpdatingBookmarks(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(profileId);
+                return newSet;
+            });
+        }
     };
 
     const fetchProfileData = async () => {
@@ -185,15 +247,25 @@ export const VysAssistCard: React.FC<VysassistCardProps> = ({ pageNumber, sortBy
                                         onClick={() => handleProfileClick(profile.vys_profileid)}
                                         className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                                     />
-                                    {isBookmarked[profile.vys_profileid] ? (
+                                    {/* {isBookmarked[profile.vys_profileid] ? ( */}
+
+                                    {isBookmarked(profile.vys_profile_wishlist) ? (
                                         <MdBookmark
-                                            onClick={() => handleBookmark(profile.vys_profileid)}
-                                            className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleBookmarkToggle(profile.vys_profileid, profile.vys_profile_wishlist);
+                                            }}
+                                            className={`absolute top-2 right-2 text-white text-[22px] cursor-pointer ${updatingBookmarks.has(profile.vys_profileid) ? 'opacity-50' : ''
+                                                }`}
                                         />
                                     ) : (
                                         <MdBookmarkBorder
-                                            onClick={() => handleBookmark(profile.vys_profileid)}
-                                            className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleBookmarkToggle(profile.vys_profileid, profile.vys_profile_wishlist);
+                                            }}
+                                            className={`absolute top-2 right-2 text-white text-[22px] cursor-pointer ${updatingBookmarks.has(profile.vys_profileid) ? 'opacity-50' : ''
+                                                }`}
                                         />
                                     )}
                                 </div>

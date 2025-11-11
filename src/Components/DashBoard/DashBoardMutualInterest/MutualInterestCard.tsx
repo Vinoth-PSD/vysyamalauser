@@ -1,8 +1,5 @@
-
-
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import axios from "axios";
-//import ProfileListImg from "../../../assets/images/ProfileListImg.png";
 import { MdVerifiedUser, MdBookmark, MdBookmarkBorder, MdOutlineGrid3X3, MdStars } from "react-icons/md";
 import { IoCalendar, IoEye, IoSchool } from "react-icons/io5";
 import { FaUser, FaSuitcase } from "react-icons/fa";
@@ -10,9 +7,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import MatchingScore from "../ProfileDetails/MatchingScore";
 import { ProfileNotFound } from "../../LoginHome/MatchingProfiles/ProfileNotFound";
-// import { toast } from "react-toastify";
-import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
-import "react-toastify/dist/ReactToastify.css"; // Import the CSS for react-toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
 
@@ -32,14 +28,15 @@ export interface Profile {
   mutint_userstatus?: string;
   mutint_lastvisit?: string;
   mutint_views?: string;
+  mutint_profile_wishlist: number; // Add this field from API
 }
 
 interface MutualInterestCardProps {
-  setCount: React.Dispatch<React.SetStateAction<number>>; // Type for setState function
+  setCount: React.Dispatch<React.SetStateAction<number>>;
   setTotalRecords: Dispatch<SetStateAction<number>>;
   setViewCount: Dispatch<SetStateAction<number>>;
   setDataPerPage: Dispatch<SetStateAction<number>>;
-  pageNumber: number;   // 👈 add this
+  pageNumber: number;
   sortBy: string;
 }
 
@@ -52,14 +49,73 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
   sortBy,
 }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>(() => {
-    const savedBookmarks = sessionStorage.getItem("bookmarkedProfiles");
-    return savedBookmarks ? JSON.parse(savedBookmarks) : [];
-  });
   const [loading, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
+  const [updatingBookmarks, setUpdatingBookmarks] = useState<Set<string>>(new Set());
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
+  // Helper function to check if profile is bookmarked
+  const isBookmarked = (wishListStatus: number): boolean => {
+    return wishListStatus === 1;
+  };
+
+  const handleBookmarkToggle = async (profileId: string, currentWishListStatus: number) => {
+    // Prevent multiple clicks while updating
+    if (updatingBookmarks.has(profileId)) return;
+    
+    const newStatus = isBookmarked(currentWishListStatus) ? 0 : 1;
+
+    // Optimistically update UI
+    setProfiles(prev => prev.map(profile => 
+      profile.mutint_profileid === profileId 
+        ? { ...profile, mutint_profile_wishlist: newStatus }
+        : profile
+    ));
+    
+    setUpdatingBookmarks(prev => new Set(prev.add(profileId)));
+
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: newStatus.toString(),
+        }
+      );
+      
+      if (response.data.Status === 1) {
+        if (newStatus === 1) {
+          toast.success("Profile added to wishlist!");
+        } else {
+          toast.success("Profile removed from wishlist!");
+        }
+      } else {
+        // Revert on failure
+        setProfiles(prev => prev.map(profile => 
+          profile.mutint_profileid === profileId 
+            ? { ...profile, mutint_profile_wishlist: currentWishListStatus }
+            : profile
+        ));
+        toast.error(`Failed to ${newStatus === 1 ? "add to" : "remove from"} wishlist.`);
+      }
+    } catch (error) {
+      // Revert on error
+      setProfiles(prev => prev.map(profile => 
+        profile.mutint_profileid === profileId 
+          ? { ...profile, mutint_profile_wishlist: currentWishListStatus }
+          : profile
+      ));
+      toast.error(`An error occurred while ${newStatus === 1 ? "adding to" : "removing from"} wishlist.`);
+      console.error("Error updating bookmark:", error);
+    } finally {
+      setUpdatingBookmarks(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(profileId);
+        return newSet;
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -69,8 +125,8 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
           "/auth/Get_mutual_intrests/",
           {
             profile_id: loginuser_profileId,
-            page_number: pageNumber, // 👈 send page
-            sort_by: sortBy,        // 👈 send sort
+            page_number: pageNumber,
+            sort_by: sortBy,
           }
         );
         setCount(response.data.mut_int_count);
@@ -97,66 +153,6 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
     fetchProfiles();
   }, [loginuser_profileId, setCount, setTotalRecords, setDataPerPage, setViewCount, pageNumber, sortBy]);
 
-  const handleBookmarkToggle = async (profileId: string) => {
-    if (bookmarkedProfiles.includes(profileId)) {
-      await removeBookmark(profileId);
-    } else {
-      await addBookmark(profileId);
-    }
-  };
-
-  const addBookmark = async (profileId: string) => {
-    try {
-      const response = await apiClient.post(
-        "/auth/Mark_profile_wishlist/",
-        {
-          profile_id: loginuser_profileId,
-          profile_to: profileId,
-          status: "1",
-        }
-      );
-      if (response.data.Status === 1) {
-        toast.success("Profile added to wishlist!");
-        // //console.log("Profile added to wishlist!");
-        setBookmarkedProfiles((prev) => [...prev, profileId]);
-        sessionStorage.setItem(
-          "bookmarkedProfiles",
-          JSON.stringify([...bookmarkedProfiles, profileId])
-        );
-      } else {
-        toast.error("Failed to add to wishlist.");
-      }
-    } catch (error) {
-      toast.error("An error occurred while adding to wishlist.");
-      console.error("Error adding bookmark:", error);
-    }
-  };
-
-  const removeBookmark = async (profileId: string) => {
-    try {
-      const response = await apiClient.post(
-        "/auth/Mark_profile_wishlist/",
-        {
-          profile_id: loginuser_profileId,
-          profile_to: profileId,
-          status: "0",
-        }
-      );
-      if (response.data.Status === 1) {
-        toast.error("Profile removed from wishlist.");
-        ////console.log("Profile removed from wishlist.");
-        const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
-        setBookmarkedProfiles(updatedBookmarks);
-        sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
-      } else {
-        toast.error("Failed to remove from wishlist.");
-      }
-    } catch (error) {
-      toast.error("An error occurred while removing from wishlist.");
-      console.error("Error removing bookmark:", error);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[200px]">
@@ -168,16 +164,17 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
 
   return (
     <div className="">
-      <ToastContainer /> {/* Include ToastContainer */}
+      <ToastContainer />
       {profiles.length ? (
         profiles.map((profile) => (
           <ProfileCard
             key={profile.mutint_profileid}
             profile={profile}
-            isBookmarked={bookmarkedProfiles.includes(profile.mutint_profileid)}
+            isBookmarked={isBookmarked(profile.mutint_profile_wishlist)}
+            isUpdating={updatingBookmarks.has(profile.mutint_profileid)}
             onBookmarkToggle={(e) => {
               e.stopPropagation();
-              handleBookmarkToggle(profile.mutint_profileid);
+              handleBookmarkToggle(profile.mutint_profileid, profile.mutint_profile_wishlist);
             }}
             sortBy={sortBy}
           />
@@ -194,6 +191,7 @@ export const MutualInterestCard: React.FC<MutualInterestCardProps> = ({
 interface ProfileCardProps {
   profile: Profile;
   isBookmarked: boolean;
+  isUpdating: boolean;
   onBookmarkToggle: (e: React.MouseEvent<SVGElement, MouseEvent>) => void;
   sortBy: string;
 }
@@ -201,21 +199,17 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({
   profile,
   isBookmarked,
+  isUpdating,
   onBookmarkToggle,
   sortBy
 }) => {
   const navigate = useNavigate();
-  // const handleProfileClick = (profileId: string) => {
-  //   navigate(`/ProfileDetails?id=${profileId}`);
-  // };
-
-  // const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
 
   const handleProfileClick = async (profileId: string, sortBy: string) => {
     if (activeProfileId) return;
-    setActiveProfileId(profileId); // set the card that's loading
+    setActiveProfileId(profileId);
 
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     let page_id = "2";
@@ -240,16 +234,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         return;
       }
 
-      // Navigate after validation
-      // navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-      // navigate(`/ProfileDetails?id=${profileId}&page=1&from=mutualInterest`);
-      // navigate(`/ProfileDetails?id=${profileId}&page=1`);
-      // Get current page number from URL or state if available
       const searchParams = new URLSearchParams(location.search);
       const pageFromUrl = searchParams.get('page');
       const currentPage = pageFromUrl ? parseInt(pageFromUrl) : 1;
 
-      // Navigate with state containing page number and source
       navigate(`/ProfileDetails?id=${profileId}&page=1&sortBy=${sortBy}`, {
         state: {
           from: 'MutualInterest',
@@ -261,17 +249,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       toast.error("Error accessing profile.");
       console.error("API Error:", error);
     } finally {
-      setActiveProfileId(null); // reset loading
+      setActiveProfileId(null);
     }
   };
 
   const gender = localStorage.getItem("gender");
-
   const defaultImgUrl =
     gender?.toLowerCase() === "male"
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
       : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
-
 
   return (
     <div
@@ -291,20 +277,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               src={profile.mutint_Profile_img || defaultImgUrl}
               alt="Profile image"
               onError={(e) => {
-                e.currentTarget.onerror = null; // Prevent infinite loop
-                e.currentTarget.src = defaultImgUrl; // Set default image
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = defaultImgUrl;
               }}
-              className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
+              className="rounded-[6px] w-[218px] h-[218px] max-md:w-full"
             />
             {isBookmarked ? (
               <MdBookmark
                 onClick={onBookmarkToggle}
-                className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                className={`absolute top-2 right-2 text-white text-[22px] cursor-pointer ${
+                  isUpdating ? 'opacity-50' : ''
+                }`}
               />
             ) : (
               <MdBookmarkBorder
                 onClick={onBookmarkToggle}
-                className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                className={`absolute top-2 right-2 text-white text-[22px] cursor-pointer ${
+                  isUpdating ? 'opacity-50' : ''
+                }`}
               />
             )}
           </div>
@@ -318,12 +308,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     ({profile.mutint_profileid || "N/A"})
                   </span>
                 </h5>
-
                 <MdVerifiedUser className="text-[20px] text-checkGreen ml-2" />
               </div>
             </div>
 
-            <div className=" flex items-center space-x-3 mb-2">
+            <div className="flex items-center space-x-3 mb-2">
               <p className="flex items-center text-sm text-primary font-normal">
                 <IoCalendar className="mr-2 text-primary" />
                 {profile.mutint_profile_age || "N/A"} yrs
@@ -355,7 +344,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </p>
             </div>
 
-            <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap ">
+            <div className="flex justify-start items-center gap-3 max-2xl:flex-wrap">
               <div>
                 <p className="flex items-center bg-gray px-2 py-0.5 rounded-md text-ashSecondary font-semibold">
                   <MdOutlineGrid3X3 className="mr-2 text-primary" />{" "}

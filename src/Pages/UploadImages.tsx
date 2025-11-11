@@ -9,12 +9,12 @@ import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SideContent from "../Components/RegistrationForm/SideContent";
 import arrow from "../assets/icons/arrow.png";
-import {ToastNotification,NotifySuccess,NotifyError} from "../Components/Toast/ToastNotification";
+import { ToastNotification, NotifySuccess, NotifyError } from "../Components/Toast/ToastNotification";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { update_photo_password } from "../commonapicall";
 import apiClient from "../API";
-interface UploadImagesProps {}
+interface UploadImagesProps { }
 
 // Define an interface for uploaded images
 interface UploadedImage {
@@ -62,7 +62,9 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   // State to track if the checkbox is checked
   const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [photoPassword, setPhotoPassword] = useState("");
   const loginuser_profile_id = localStorage.getItem("loginuser_profile_id");
+
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -71,9 +73,17 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   // Handle checkbox change event
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+    // If unchecking, clear the password
+    if (isChecked) {
+      setPhotoPassword("");
+    }
   };
 
-  
+  // Handle password input change
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhotoPassword(e.target.value);
+  };
+
   // const handle_Update_photo_password = async (password: string) => {
   //   try {
   //     const response = await axios.post(update_photo_password, {
@@ -91,7 +101,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
   //     NotifyError("Something went wrong");
   //   }
   // };
-  
+
   //const [uploadedFiles, setUploadedFiles] = useState(images);
 
   // //console.log("ppppppppppppppppp",Param);
@@ -214,11 +224,11 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
     const quick_reg = Param === "1" ? "1" : "0";
     const profileId = localStorage.getItem("profile_id_new");
 
-     // Determine photo password and protection status
-  // const photoPassword = isChecked ? document.getElementById('password').value : ''; // Get the password if checkbox is checked
-  const photoProtection = isChecked ? 1 : 0; // Set photo protection based on checkbox
-  const passwordElement = document.getElementById('password') as HTMLInputElement | null;
-  const photoPassword = isChecked && passwordElement ? passwordElement.value : ''; 
+    // Determine photo password and protection status
+    // const photoPassword = isChecked ? document.getElementById('password').value : ''; // Get the password if checkbox is checked
+    const photoProtection = isChecked ? 1 : 0; // Set photo protection based on checkbox
+    const passwordElement = document.getElementById('password') as HTMLInputElement | null;
+    const photoPassword = isChecked && passwordElement ? passwordElement.value : '';
 
 
 
@@ -256,33 +266,36 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
     await uploadImages(
       selectedFiles,
-       "https://app.vysyamala.com/auth/ImageSetUpload/",
+      "https://app.vysyamala.com/auth/ImageSetUpload/",
       //"http://103.214.132.20:8000/auth/ImageSetUpload/",
       "image_files"
     );
     await uploadImages(
       selectedHoroscopeFiles,
       "https://app.vysyamala.com/auth/Horoscope_upload/",
-     // "http://103.214.132.20:8000/auth/Horoscope_upload/",
+      // "http://103.214.132.20:8000/auth/Horoscope_upload/",
       "horoscope_file"
     );
     await uploadImages(
       selectedDivorceProofFiles,
-       "https://app.vysyamala.com/auth/Divorceproof_upload/",
+      "https://app.vysyamala.com/auth/Divorceproof_upload/",
       //"http://103.214.132.20:8000/auth/Divorceproof_upload/",
       "divorcepf_file"
     );
     await uploadImages(
       selectedIDProofFiles,
-       "https://app.vysyamala.com/auth/Idproof_upload/",
-     // "http://103.214.132.20:8000/auth/Idproof_upload/",
+      "https://app.vysyamala.com/auth/Idproof_upload/",
+      // "http://103.214.132.20:8000/auth/Idproof_upload/",
       "idproof_file"
     );
 
-      // Update photo password if checkbox is checked
-  if (isChecked) {
-    await handle_Update_photo_password(photoPassword); // Call photo password update function
-  }
+    // Update photo password if checkbox is checked
+    if (isChecked) {
+      await handle_Update_photo_password(photoPassword); // Call photo password update function
+    }
+    else {
+      await handle_Update_photo_password("");
+    }
 
     setTimeout(() => {
       if (Param === "1") {
@@ -300,7 +313,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         photo_password: password,
         photo_protection: isChecked ? 1 : 0,
       });
-  
+
       if (response.status === 200) {
         // Handle the successful update here
         NotifySuccess("Photo password updated successfully.");
@@ -311,7 +324,7 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
     }
   };
 
-// Fetch the uploaded images from the API
+  // Fetch the uploaded images from the API
   const fetchUploadedImages = async () => {
     try {
       const response = await apiClient.post(
@@ -332,7 +345,14 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
         setUploadedIDProof(data.Profile_idproof || "");
         // Set the video URL from the API response
         setUrl(data.Video_url || ""); // Set the video URL in the state
-        
+
+        if (data.Photo_protection === "1") {
+          setIsChecked(true);
+          setPhotoPassword(data.Photo_password || "");
+        } else {
+          setIsChecked(false);
+          setPhotoPassword("");
+        }
       }
     } catch (error) {
       console.error("Error fetching uploaded images:", error);
@@ -587,9 +607,11 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
                 {/* <div className="w-fit relative"> */}
                 <div className="relative w-full">
                   <input
-                  type={showPassword ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
+                    value={photoPassword} // Use the state here
+                    onChange={handlePasswordChange} // Add onChange handler
                     className="outline-none w-full px-5 py-1.5 border border-ashSecondary rounded"
                     placeholder="Enter password"
                   />

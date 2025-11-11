@@ -28,7 +28,7 @@ import MatchingScore from "../ProfileDetails/MatchingScore";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { PhotoRequestPopup } from "./PhotoRequestPopup";
-import Spinner from "../../Spinner";
+//import Spinner from "../../Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../../API";
 import { toast } from "react-toastify";
@@ -53,7 +53,7 @@ interface PhotoRequestData {
   req_lastvisit: string;
   req_userstatus: string;
   req_horoscope: string;
-  req_profile_wishlist: string;
+  req_profile_wishlist: string | number;
 }
 
 interface proptype {
@@ -81,7 +81,7 @@ const PhotoRequestCard = ({
   // const [, setShowPhotoRequestNotesPopup] = useState<boolean>(false);
 
   //const [showMessageButton, setShowMessageButton] = useState<boolean>(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  //const [isBookmarked, setIsBookmarked] = useState(false);
   // const [requestHandled, setRequestHandled] = useState(false);
   const [showPhotoRequestPopup, setshowPhotoRequestPopup] = useState(false);
   //const [declineButtonVisible, setDeclineButtonVisible] = useState(true); // State to control the visibility of the Decline button
@@ -96,7 +96,16 @@ const PhotoRequestCard = ({
   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const location = useLocation();
-
+  // const [isBookmarked, setIsBookmarked] = useState(
+  //   data.req_profile_wishlist === 1 || data.req_profile_wishlist === "1"
+  // );
+  const [isBookmarked] = useState(
+    data.req_profile_wishlist === 1 || data.req_profile_wishlist === "1"
+  );
+  const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>(() => {
+    const savedBookmarks = sessionStorage.getItem("bookmarkedProfiles");
+    return savedBookmarks ? JSON.parse(savedBookmarks) : [];
+  });
 
   const handleMessage = async (fromProfileId: string) => {
     try {
@@ -190,7 +199,6 @@ const PhotoRequestCard = ({
   //console.log(photoRequests, "ddddddddddddddd");
 
 
-
   const handleUpdateInterest = async (status: string) => {
     const payload = {
       profile_id: loginuser_profileId,
@@ -218,8 +226,70 @@ const PhotoRequestCard = ({
     }
   };
 
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
+  // const handleBookmark = () => {
+  //   setIsBookmarked(!isBookmarked);
+  // };
+
+  const handleBookmarkToggle = async () => {
+    const profileId = data.req_profileid;
+
+    if (isBookmarked) {
+      await removeBookmark(profileId);
+    } else {
+      await addBookmark(profileId);
+    }
+  };
+
+  const addBookmark = async (profileId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: "1",
+        }
+      );
+      if (response.data.Status === 1) {
+        toast.success("Profile added to wishlist!");
+        // //console.log("Profile added to wishlist!");
+        setBookmarkedProfiles((prev) => [...prev, profileId]);
+        sessionStorage.setItem(
+          "bookmarkedProfiles",
+          JSON.stringify([...bookmarkedProfiles, profileId])
+        );
+      } else {
+        toast.error("Failed to add to wishlist.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding to wishlist.");
+      console.error("Error adding bookmark:", error);
+    }
+  };
+
+  const removeBookmark = async (profileId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Mark_profile_wishlist/",
+        {
+          profile_id: loginuser_profileId,
+          profile_to: profileId,
+          status: "0",
+        }
+      );
+      if (response.data.Status === 1) {
+        toast.error("Profile removed from wishlist.");
+        ////console.log("Profile removed from wishlist.");
+        const updatedBookmarks = bookmarkedProfiles.filter((id) => id !== profileId);
+        setBookmarkedProfiles(updatedBookmarks);
+        sessionStorage.setItem("bookmarkedProfiles", JSON.stringify(updatedBookmarks));
+      } else {
+        toast.error("Failed to remove from wishlist.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while removing from wishlist.");
+      console.error("Error removing bookmark:", error);
+    }
   };
 
   const handleshowPhotoRequestPopup = (profileId: string) => {
@@ -251,7 +321,22 @@ const PhotoRequestCard = ({
   };
 
 
-  if (loading) return <Spinner />;
+  if (loading) {
+    return (
+      <div className="w-fit mx-auto py-40">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
+      </div>
+    );
+  }
   if (error) return <div>{error}</div>;
 
   // const handleProfileClick = (profileId: string) => {
@@ -332,12 +417,12 @@ const PhotoRequestCard = ({
                 />
                 {isBookmarked ? (
                   <MdBookmark
-                    onClick={handleBookmark}
+                    onClick={handleBookmarkToggle}
                     className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                   />
                 ) : (
                   <MdBookmarkBorder
-                    onClick={handleBookmark}
+                    onClick={handleBookmarkToggle}
                     className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                   />
                 )}
