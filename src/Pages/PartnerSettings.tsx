@@ -1086,7 +1086,7 @@ const PartnerSettings: React.FC = () => {
                   <option value="" selected disabled>
                     Select Chevvai
                   </option>
-                  {["Unknown", "Yes", "No"].map((option) => (
+                  {["Yes", "No", "Both"].map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -1115,7 +1115,7 @@ const PartnerSettings: React.FC = () => {
                   <option value="" selected disabled>
                     Select Rehu / Ketu
                   </option>
-                  {["Unknown", "Yes", "No"].map((option) => (
+                  {["Yes", "No", "Both"].map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>

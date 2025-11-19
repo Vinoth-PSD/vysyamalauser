@@ -316,7 +316,8 @@ const UploadImages: React.FC<UploadImagesProps> = () => {
 
       if (response.status === 200) {
         // Handle the successful update here
-        NotifySuccess("Photo password updated successfully.");
+        // NotifySuccess("Photo password updated successfully.");
+        console.log("Photo password updated successfully.");
       }
     } catch (error) {
       //console.log(error);

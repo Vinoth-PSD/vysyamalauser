@@ -75,6 +75,8 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   useEffect(() => {
     // Set loading to false when data is available
     if (advanceSearchData) {
+      const count = advanceSearchData.length;
+      setSearchtotalCount(count); // local count (if needed)
       setLoading(false);
     }
   }, [advanceSearchData]);
@@ -109,6 +111,8 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   // };
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [searchProfile, setSearchProfile] = useState<string>("");
+  const [searchtotalcount, setSearchtotalCount] = useState<number>(0);
+  console.log("searchtotalcount", searchtotalcount)
 
   const HandlesearchProfile = async () => {
     try {
@@ -120,15 +124,21 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
         }
       );
       if (response.status == 200) {
-        console.log(response.data.data);
-        setAdvanceSearchData(response.data.data);
-        setTotalCount(response.data.data.length); // <--- ADD THIS LINE
-        // setAdvanceSearchData()
+        // console.log(response.data.data);
+        // setAdvanceSearchData(response.data.data);
+        // setSearchtotalCount(response.data.data.length); // <--- ADD THIS LINE
+        const results = response.data.data;
+
+        setAdvanceSearchData(results);
+
+        const count = results.length;
+        setTotalCount(count);
+        setSearchtotalCount(count);
       }
     } catch (error) {
       console.log(error);
       setAdvanceSearchData([]);
-      setTotalCount(0); // <--- ADD THIS LINE
+      setSearchtotalCount(0); // <--- ADD THIS LINE
     }
   };
   console.log(advanceSearchData, "advanceSearchData");
@@ -146,7 +156,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold">
             {" "}
             Search results
-            <span className="text-sm text-primary"> ({totalCount})</span>
+            <span className="text-sm text-primary"> ({totalCount || searchtotalcount})</span>
           </h4>
         </div>
 

@@ -22,12 +22,39 @@ export const AwardsGalleryMobile = () => {
     const [awards, setAwards] = useState<AwardType[]>([]);
     const [isAccountSetupOpen, setIsAccountSetupOpen] = useState(false); // Modal state
 
+    const cleanHTMLEntities = (text: string): string => {
+        if (!text) return '';
+
+        // Method 1: Use DOMParser (most reliable)
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        let cleaned = doc.body.textContent || '';
+
+        // Method 2: Also manually replace common entities as fallback
+        cleaned = cleaned
+            .replace(/&nbsp;/gi, ' ')
+            .replace(/&amp;/gi, '&')
+            .replace(/&lt;/gi, '<')
+            .replace(/&gt;/gi, '>')
+            .replace(/&quot;/gi, '"')
+            .replace(/&#39;/gi, "'")
+            .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+            .trim();
+
+        return cleaned;
+    };
+
     const happyStories = async () => {
         const response = await apiClient.post(
             "/auth/Awards_gallery/"
         );
+        const cleanedAwards = response.data.data.map((award: AwardType) => ({
+            ...award,
+            name: cleanHTMLEntities(award.name),
+            description: cleanHTMLEntities(award.description)
+        }));
 
-        setAwards(response.data.data);
+        setAwards(cleanedAwards);
         return response.data;
     };
     useEffect(() => {
