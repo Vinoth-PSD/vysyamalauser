@@ -6,7 +6,7 @@ import { ProfileContext } from "../../ProfileContext";
 import Spinner from "../../Components/Spinner";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../API";
-
+import { toast } from "react-toastify";
 
 export const Notifications = () => {
   const context = useContext(ProfileContext);
@@ -65,7 +65,7 @@ export const Notifications = () => {
   const [roomId, setRoomId] = useState("");
   const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
-
+  const [showClearAllConfirmation, setShowClearAllConfirmation] = useState(false);
 
   // Added state to capture the selected from_profile_id for messaging
   //const [, setSelectedFromProfileId] = useState<string | null>(null);
@@ -198,14 +198,69 @@ export const Notifications = () => {
   //   navigate('/MyProfile'); // Navigates to the MyProfile page
   // };
 
+  //READ INDIVIDUAL NOTIFICATION (View Profile)
+  const markNotificationRead = async (notificationId: string) => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Read_notifications_induvidual/",
+        {
+          profile_id: userId,
+          notification_id: notificationId,
+        }
+      );
+
+      console.log("Read Individual Notification:", response.data);
+
+      // refresh list
+      getNotification();
+    } catch (error) {
+      console.error("Read Individual Notification Error:", error);
+    }
+  };
+
+  // CLEAR ALL NOTIFICATIONS
+  const handleClearNotifications = async () => {
+    setShowClearAllConfirmation(false);
+    try {
+      const response = await apiClient.post(
+        "/auth/Clear_notifications/",
+        {
+          profile_id: userId,
+        }
+      );
+
+      console.log("Clear All Response:", response.data);
+
+      if (response.data.Status === 1) {
+        toast.success("All Notifications cleared successfully");
+        getNotification();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Clear All Notifications Error:", error);
+      toast.error("Unable to clear notifications");
+    }
+  };
+
+
   return (
     <>
       <div className="bg-grayBg py-10">
         <div className="container mx-auto">
           <div className="notification-dropdown bg-white rounded-lg shadow-profileCardShadow py-1 z-20">
-            <h4 className="text-[24px] text-vysyamalaBlack font-bold px-3 py-3 max-md:text-[18px]">
-              Notifications ({totalRecords})
-            </h4>
+            <div className="flex justify-between items-center px-3 py-3">
+              <h4 className="text-[24px] text-vysyamalaBlack font-bold max-md:text-[18px]">
+                Notifications ({totalRecords})
+              </h4>
+              <button
+                className="bg-main text-white text-sm font-semibold px-3 py-2 rounded-md shadow hover:opacity-90"
+                //onClick={handleClearNotifications}
+                onClick={() => setShowClearAllConfirmation(true)}
+              >
+                Clear All
+              </button>
+            </div>
 
             <div className="">
               {NotificationData.map((data) => (
@@ -263,7 +318,11 @@ export const Notifications = () => {
                     ) : (data.notification_type === "Profile_update" || data.notification_type === "express_interests") ? (
                       <button
                         className="text-main rounded-md border-[2px] border-main px-2 py-1"
-                        onClick={() => navigate(`/ProfileDetails?id=${data.from_profile_id}`)}
+                        // onClick={() => navigate(`/ProfileDetails?id=${data.from_profile_id}`)}
+                        onClick={() => {
+                          markNotificationRead(data.id);
+                          navigate(`/ProfileDetails?id=${data.from_profile_id}`);
+                        }}
                       >
                         View Profile
                       </button>
@@ -299,21 +358,47 @@ export const Notifications = () => {
                 </div>
               ) : (
                 NotificationData.length !== totalRecords && (
-                <button
-                  onClick={handleLoadData}
-                  className="w-full rounded-md text-main py-3 font-semibold hover:bg-gradient hover:text-white max-md:text-[16px]"
-                >
-                  {/* {NotificationData.length === totalRecords
+                  <button
+                    onClick={handleLoadData}
+                    className="w-full rounded-md text-main py-3 font-semibold hover:bg-gradient hover:text-white max-md:text-[16px]"
+                  >
+                    {/* {NotificationData.length === totalRecords
                     ? "You have reached the maximum number of records"
                     : "Load more"} */}
                     Load more
-                </button>
+                  </button>
                 )
               )}
             </div>
           </div>
         </div>
       </div>
+      {showClearAllConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-100 shadow-2xl">
+            <h3 className="text-xl font-bold text-vysyamalaBlack mb-4">
+              Clear All Notifications?
+            </h3>
+            <p className="text-ashSecondary mb-6">
+              Are you sure you want to clear all notifications?
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowClearAllConfirmation(false)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleClearNotifications} // This calls the function to clear notifications AND closes the popup
+                className="px-4 py-2 bg-main text-white rounded-md font-semibold hover:bg-red-700 transition"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -12,10 +12,11 @@ import { FiLogOut } from "react-icons/fi";
 //import OfferHeaderBg from "../assets/images/OfferHeader.png"
 //import axios from "axios";
 import apiClient from "../API";
+import { toast } from "react-toastify";
 
 export interface Notification {
   notify_img: string | undefined;
-  id: number;
+  id: string;
   from_profile_id: string;
   is_read: boolean;
   message_titile: string;
@@ -63,15 +64,15 @@ export const LoginHeader: React.FC = () => {
   ////console.log("setSelectedFromProfileId", setSelectedFromProfileId);
   // const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
   const [, setUnreadMessageCount] = useState<number>(0);
+  const [showClearAllConfirmation, setShowClearAllConfirmation] = useState(false);
+
   const gender = localStorage.getItem("gender");
   const PlanID = Number(localStorage.getItem("plan_id"));
   const ValidTill = localStorage.getItem("valid_till");
   const currentDate = new Date();
   const validDate = ValidTill ? new Date(ValidTill) : null;
   console.log("validDate", validDate)
-
   const allowedPremiumIds = [1, 2, 3, 14, 15, 17, 10, 11, 12, 13];
-
   let buttonType: "addon" | "renew" | "upgrade" = "upgrade";
 
   if (allowedPremiumIds.includes(PlanID) && validDate) {
@@ -288,15 +289,72 @@ export const LoginHeader: React.FC = () => {
   //   setIsMenuOpen(isMenuOpen);
   // };
 
-    const handleUpdateSettings = () => {
+  const handleUpdateSettings = () => {
     // CHANGE THIS LINE:
     // navigate("/DashBoard?key=1"); 
-    
+
     // TO THIS:
-    navigate("/Dashboard/Settings"); 
-    
+    navigate("/Dashboard/Settings");
+
     // This is a good place to ensure the mobile menu closes after navigation
-    setIsMenuOpen(false); 
+    setIsMenuOpen(false);
+  };
+
+  const markNotificationRead = async (notificationId: string) => {
+    const profileId = localStorage.getItem("loginuser_profile_id") || localStorage.getItem("profile_id_new");
+
+    try {
+      const response = await apiClient.post(
+        `/auth/Read_notifications_induvidual/`,
+        {
+          profile_id: profileId,
+          notification_id: notificationId,
+        }
+      );
+
+      console.log("Read Notification individual Response:", response.data);
+
+      getNotification();
+    } catch (error) {
+      console.error("Read Notification Error:", error);
+    }
+  };
+
+  const handleClearNotifications = async () => {
+    if (!userId) {
+      console.error("Profile ID is missing for Clear Notifications.");
+      return;
+    }
+
+    // Close the confirmation modal regardless of API success/fail
+    setShowClearAllConfirmation(false);
+
+    try {
+      const response = await apiClient.post(
+        `/auth/Clear_notifications/`,
+        {
+          profile_id: userId,
+        }
+      );
+
+      console.log("Clear All Notifications Response:", response.data);
+
+      if (response.data.Status === 1) {
+        // Status 1 indicates success
+        console.log(response.data.message);
+        toast.success("All Notifications cleared sucesssfully");
+        getNotification();
+        setIsNotificationVisible(false); // Close the dropdown
+      } else {
+        // Handle case where Status is 0 (e.g., "No unread notifications found")
+        console.warn("Clear Notifications Warning:", response.data.message);
+        toast.error(`Clear Notifications Warning: ${response.data.message}`);
+
+      }
+    } catch (error: any) {
+      console.error("Clear All Notifications Error:", error);
+      toast.error("Unable to clear Notifications");
+    }
   };
 
   return (
@@ -361,8 +419,8 @@ export const LoginHeader: React.FC = () => {
                 </li>
               </NavLink>
               <NavLink to="/Search" aria-current="page" className="active-nav">
-                <li 
-                className="text-[16px] cursor-pointer font-normal  px-2 py-4  max-lg:text-[14px]">
+                <li
+                  className="text-[16px] cursor-pointer font-normal  px-2 py-4  max-lg:text-[14px]">
                   Search
                 </li>
               </NavLink>
@@ -439,130 +497,154 @@ export const LoginHeader: React.FC = () => {
                     ref={dropdownRef}
                     className="notification-dropdown absolute top-16 right-0 translate-x-2/4 w-[30rem] bg-white rounded-md shadow-lg py-1 z-20"
                   >
-                    <h4 className="text-vysyamalaBlack text-[20px] font-bold px-3 py-3">
-                      Notifications
-                    </h4>
+                    <div className="flex justify-between items-center px-3 py-3">
+                      <h4 className="text-vysyamalaBlack text-[20px] font-bold">
+                        Notifications
+                      </h4>
+                      {NotificationData.length > 0 && (
+                        <button
+                          className="bg-main text-white text-xs font-semibold px-3 py-1 rounded-md shadow hover:opacity-90"
+                          //onClick={handleClearNotifications}
+                          onClick={() => setShowClearAllConfirmation(true)}
+                        >
+                          Clear All
+                        </button>
+                      )}
+                    </div>
                     <div className="h-96 overflow-y-auto message-box">
                       {/* Express Interest */}
-                      {NotificationData.length > 10
-                        ? NotificationData.slice(0, 10).map((notification) => (
-                          <div
-                            className="bg-lightFade-pink flex items-start gap-2 border-b-[1px] border-gray p-4 space-x-5"
-                            key={notification.id}
-                          >
-                            <div>
-                              <img
-                                // src={notification.notify_img}
-                                src={notification.profile_image}
-                                alt={notification.notify_profile_name}
-                                className="!w-8 h-8 rounded-full size-20"
-                              />
-                            </div>
-                            <div>
-                              <h5 className="text-vysyamalaBlack font-semibold">
-                                {notification.notify_profile_name}{" "}
-                                {notification.message_titile}
-                              </h5>
-                              <p className="text-ashSecondary text-sm font-normal mb-3">
-                                {notification.to_message}
-                              </p>
-                              {notification.notification_type ===
-                                "express_interests_accept" ? (
-                                // <button className="text-main rounded-md border-[2px] border-main px-2 py-1">
-                                //   Messages
-                                // </button>
-                                <button
-                                  className="text-main rounded-md border-[2px] border-main px-2 py-1"
-                                  onClick={() => {
-                                    setSelectedFromProfileId(
-                                      notification.from_profile_id
-                                    ); // Set the selected profile ID
-                                    handleMessage(
-                                      notification.from_profile_id
-                                    ); // Pass the ID to the handler
-                                  }}
-                                >
-                                  Message
-                                </button>
-                              ) : (
-                                // <button className="text-main rounded-md border-[2px] border-main px-2 py-1">
-                                //   Update my photo
-                                // </button>
-                                <button
-                                  className="text-main rounded-md border-[2px] border-main px-2 py-1"
-                                  onClick={handleUpdatePhoto}
-                                >
-                                  Update my photo
-                                </button>
-                              )}
+                      {NotificationData.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full py-8">
+                          {/* <FaBell className="text-gray-400 text-5xl mb-4" /> */}
+                          <p className="text-ashSecondary text-base font-medium">
+                            No notifications found
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          {NotificationData.length > 10
+                            ? NotificationData.slice(0, 10).map((notification) => (
+                              <div
+                                className="bg-lightFade-pink flex items-start gap-2 border-b-[1px] border-gray p-4 space-x-5"
+                                key={notification.id}
+                              >
+                                <div>
+                                  <img
+                                    // src={notification.notify_img}
+                                    src={notification.profile_image}
+                                    alt={notification.notify_profile_name}
+                                    className="!w-8 h-8 rounded-full size-20"
+                                  />
+                                </div>
+                                <div>
+                                  <h5 className="text-vysyamalaBlack font-semibold">
+                                    {notification.notify_profile_name}{" "}
+                                    {notification.message_titile}
+                                  </h5>
+                                  <p className="text-ashSecondary text-sm font-normal mb-3">
+                                    {notification.to_message}
+                                  </p>
+                                  {notification.notification_type ===
+                                    "express_interests_accept" ? (
+                                    // <button className="text-main rounded-md border-[2px] border-main px-2 py-1">
+                                    //   Messages
+                                    // </button>
+                                    <button
+                                      className="text-main rounded-md border-[2px] border-main px-2 py-1"
+                                      onClick={() => {
+                                        setSelectedFromProfileId(
+                                          notification.from_profile_id
+                                        ); // Set the selected profile ID
+                                        handleMessage(
+                                          notification.from_profile_id
+                                        ); // Pass the ID to the handler
+                                      }}
+                                    >
+                                      Message
+                                    </button>
+                                  ) : (
+                                    // <button className="text-main rounded-md border-[2px] border-main px-2 py-1">
+                                    //   Update my photo
+                                    // </button>
+                                    <button
+                                      className="text-main rounded-md border-[2px] border-main px-2 py-1"
+                                      onClick={handleUpdatePhoto}
+                                    >
+                                      Update my photo
+                                    </button>
+                                  )}
 
-                              <p className="text-sm text-ashSecondary font-semibold mt-3">
-                                {notification.time_ago}
-                              </p>
-                            </div>
-                          </div>
-                        ))
-                        : NotificationData.map((notification) => (
-                          <div
-                            className="bg-lightFade-pink flex items-start border-b-[1px] border-gray px-3 py-3 space-x-5"
-                            key={notification.id}
-                          >
-                            <div>
-                              <img
-                                src={notification.profile_image || defaultImgUrl}
-                                alt={notification.notify_profile_name}
-                                onError={(e) => {
-                                  e.currentTarget.onerror = null; // Prevent infinite loop
-                                  e.currentTarget.src = defaultImgUrl; // Set default image
-                                }}
-                                className="!w-8 h-8 rounded-full"
-                              />
-                            </div>
+                                  <p className="text-sm text-ashSecondary font-semibold mt-3">
+                                    {notification.time_ago}
+                                  </p>
+                                </div>
+                              </div>
+                            ))
+                            : NotificationData.map((notification) => (
+                              <div
+                                className="bg-lightFade-pink flex items-start border-b-[1px] border-gray px-3 py-3 space-x-5"
+                                key={notification.id}
+                              >
+                                <div>
+                                  <img
+                                    src={notification.profile_image || defaultImgUrl}
+                                    alt={notification.notify_profile_name}
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null; // Prevent infinite loop
+                                      e.currentTarget.src = defaultImgUrl; // Set default image
+                                    }}
+                                    className="!w-8 h-8 rounded-full"
+                                  />
+                                </div>
 
-                            <div>
-                              <h5 className="text-[14px] font-semibold text-vysyamalaBlack ">
-                                {notification.notify_profile_name}{" "}
-                                {notification.message_titile}
-                              </h5>
-                              <p className="text-ashSecondary text-sm font-normal mb-3">
-                                {notification.to_message}
-                              </p>
+                                <div>
+                                  <h5 className="text-[14px] font-semibold text-vysyamalaBlack ">
+                                    {notification.notify_profile_name}{" "}
+                                    {notification.message_titile}
+                                  </h5>
+                                  <p className="text-ashSecondary text-sm font-normal mb-3">
+                                    {notification.to_message}
+                                  </p>
 
-                              {notification.notification_type ===
-                                "express_interests_accept" ? (
-                                <button
-                                  onClick={() => handleMessage(notification.from_profile_id)}
-                                  className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
-                                  Message
-                                </button>
-                              ) : (notification.notification_type === "Profile_update" || notification.notification_type === "express_interests") ? (
-                                <button
-                                  className="text-main rounded-md border-[2px] border-main px-2 py-1"
-                                  onClick={() => navigate(`/ProfileDetails?id=${notification.from_profile_id}`)}
-                                >
-                                  View Profile
-                                </button>
-                              ) : (notification.notification_type === "Call_request" || notification.notification_type === "Vys_assists") ? (
-                                // Hide the button for Call_request and Vys_assists
-                                null
-                              ) : (
-                                // <button className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
-                                //   Update my photo
-                                // </button>
-                                <button
-                                  className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1"
-                                  onClick={() => navigate("/MyProfile")} // Use navigate instead of window.location
-                                >
-                                  Update my photo
-                                </button>
-                              )}
-                              <p className="text-[12px] font-semibold text-ashSecondary mt-3">
-                                {notification.time_ago}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-
+                                  {notification.notification_type ===
+                                    "express_interests_accept" ? (
+                                    <button
+                                      onClick={() => handleMessage(notification.from_profile_id)}
+                                      className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
+                                      Message
+                                    </button>
+                                  ) : (notification.notification_type === "Profile_update" || notification.notification_type === "express_interests") ? (
+                                    <button
+                                      className="text-main rounded-md border-[2px] border-main px-2 py-1"
+                                      onClick={() => {
+                                        markNotificationRead(notification.id);  // 🔥 mark as read
+                                        navigate(`/ProfileDetails?id=${notification.from_profile_id}`); // go to profile
+                                        //  setIsNotificationVisible(false); // close dropdown (optional)
+                                      }}
+                                    >
+                                      View Profile
+                                    </button>
+                                  ) : (notification.notification_type === "Call_request" || notification.notification_type === "Vys_assists") ? (
+                                    // Hide the button for Call_request and Vys_assists
+                                    null
+                                  ) : (
+                                    // <button className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1">
+                                    //   Update my photo
+                                    // </button>
+                                    <button
+                                      className="text-main text-[14px]  rounded-md border-[2px] border-main px-2 py-1"
+                                      onClick={() => navigate("/MyProfile")} // Use navigate instead of window.location
+                                    >
+                                      Update my photo
+                                    </button>
+                                  )}
+                                  <p className="text-[12px] font-semibold text-ashSecondary mt-3">
+                                    {notification.time_ago}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                        </>)}
                       {/* Photo Request */}
 
                       {/* Change in Photo */}
@@ -804,6 +886,32 @@ export const LoginHeader: React.FC = () => {
           </div>
         )}
       </header>
+      {showClearAllConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-100 shadow-2xl">
+            <h3 className="text-xl font-bold text-vysyamalaBlack mb-4">
+              Clear All Notifications?
+            </h3>
+            <p className="text-ashSecondary mb-6">
+              Are you sure you want to clear all notifications?
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowClearAllConfirmation(false)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleClearNotifications}
+                className="px-4 py-2 bg-main text-white rounded-md font-semibold hover:bg-red-700 transition"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

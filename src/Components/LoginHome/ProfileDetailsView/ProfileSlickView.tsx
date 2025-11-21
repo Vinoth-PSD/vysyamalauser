@@ -197,7 +197,7 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
   const [nav2, setNav2] = useState<Slider | null>(null);
   const [popupPassword, setPopPassword] = useState<boolean>(false);
   // const [photoPassword, _setPhotoPassword] = useState<string>("");
-   const [, _setPhotoPassword] = useState<string>("");
+  const [, _setPhotoPassword] = useState<string>("");
   const [PhotoPasswordlock, setPhotoPasswordlock] = useState<number>(1);
   const sliderRef1 = useRef<Slider | null>(null);
   const sliderRef2 = useRef<Slider | null>(null);
@@ -211,13 +211,34 @@ export const ProfileSlickView: React.FC<ProfileSlickViewProps> = ({
     ? JSON.parse(storedProtectedImg)
     : {};
 
-  const gender = localStorage.getItem("gender");
+  //const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
+  // const defaultImgUrl =
+  //   gender?.toLowerCase() === "male"
+  //     ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+  //     : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+
+  const defaultImgUrl = profileId?.startsWith("VF")
     ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
     : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
+
+  const getSafeImage = (imageUrl: string, profileId?: string): string => {
+    // Determine if FEMALE profile (profile ID starts with "VF")
+    const isFemaleProfile = profileId?.startsWith("VF");
+
+    // Set default image based on profile gender prefix
+    const defaultImgUrl = isFemaleProfile
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+
+    // Return default image if missing or empty
+    if (!imageUrl || imageUrl.trim() === "") {
+      return defaultImgUrl;
+    }
+
+    return imageUrl;
+  };
 
 
   const handleMouseEnter = useCallback((image: string) => {
@@ -229,13 +250,35 @@ const defaultImgUrl =
   }, []);
 
   // Convert single image string to an object with a default key if needed
+  // const normalizeImages = (images: UserImages | string): UserImages => {
+  //   if (typeof images === 'string') {
+  //     return { 'default': images };
+  //   }
+  //   return images;
+  // };
   const normalizeImages = (images: UserImages | string): UserImages => {
     if (typeof images === 'string') {
-      return { 'default': images };
+      // If it's a string, check if it's empty
+      const safeImage = getSafeImage(images, profileId);
+      return { 'default': safeImage };
     }
-    return images;
-  };
 
+    // If it's an object, check if it's empty or has empty values
+    if (Object.keys(images).length === 0) {
+      return { 'default': defaultImgUrl };
+    }
+
+    // Filter out empty image URLs and replace with defaults
+    const normalizedImages: UserImages = {};
+    Object.entries(images).forEach(([key, value]) => {
+      normalizedImages[key] = getSafeImage(value, profileId);
+    });
+
+    // If all images were empty, return default
+    return Object.keys(normalizedImages).length > 0
+      ? normalizedImages
+      : { 'default': defaultImgUrl };
+  };
   // const images = Object.values(storedProtectedImg ? sessionImage : userImages);
 
   // In your component, use it like this:
@@ -256,10 +299,21 @@ const defaultImgUrl =
     try {
       if (profileId) {
         const data = await fetchProfilesDetails(profileId, page_id);
-        const normalizedImages = typeof data.user_images === 'string'
-          ? { 'default': data.user_images }
-          : data.user_images;
-        setUserImages(normalizedImages);
+        // const normalizedImages = typeof data.user_images === 'string'
+        //   ? { 'default': data.user_images }
+        //   : data.user_images;
+        // setUserImages(normalizedImages);
+        if (!data.user_images ||
+          (typeof data.user_images === 'object' && Object.keys(data.user_images).length === 0) ||
+          (typeof data.user_images === 'string' && data.user_images.trim() === '')) {
+          // Set default image based on profile ID
+          setUserImages({ 'default': defaultImgUrl });
+        } else {
+          const normalizedImages = typeof data.user_images === 'string'
+            ? { 'default': getSafeImage(data.user_images, profileId) }
+            : data.user_images;
+          setUserImages(normalizedImages);
+        }
         //setUserImages(data.user_images);
         setError(null);
       }
@@ -272,7 +326,7 @@ const defaultImgUrl =
     } finally {
       setLoading(false);
     }
-  }, [profileId]);
+  }, [profileId,defaultImgUrl]);
 
   useEffect(() => {
     const storedLockVal = sessionStorage.getItem("photolock");
