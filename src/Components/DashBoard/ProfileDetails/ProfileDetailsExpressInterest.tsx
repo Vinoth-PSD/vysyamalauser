@@ -557,8 +557,8 @@ export const ProfileDetailsExpressInterest: React.FC<
     try {
       const response = await axios.get(
         `https://app.vysyamala.com/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
-      // const response = await apiClient.get(
-      //   `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
+        // const response = await apiClient.get(
+        //   `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
         {
           responseType: "blob", // Needed for PDF download
         }
@@ -1136,7 +1136,7 @@ export const ProfileDetailsExpressInterest: React.FC<
 
                   {/* {profileData?.basic_details?.matching_score !== undefined &&
                     profileData.basic_details.matching_score > 50 && ( */}
-                  {profileData?.basic_details?.matching_score !== undefined &&
+                  {profileData?.basic_details?.matching_score !== undefined && profileData.basic_details?.matching_score > 50 &&
                     profileData.basic_details?.matching_score !== 100 && (
                       <div onClick={() => generatePoruthamPDF()} title="Matching Score pdf" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]">
                         {/* <div title="Matching Score" className="max-sm:absolute max-sm:-top-[100px] max-sm:-right-[45px] max-sm:scale-[0.6]"> */}
