@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import InputField from "../../Components/RegistrationForm/InputField";
+//import InputField from "../../Components/RegistrationForm/InputField";
 import { HiOutlineSearch } from "react-icons/hi";
 import { ProfileContext } from "../../ProfileContext";
 import { useForm } from "react-hook-form";
@@ -61,6 +61,11 @@ interface AdvancedSearchProps {
   handle_Get_advance_search: () => void;
 }
 
+interface StateOption {
+  State_Pref_id: number;
+  State_name: string;
+}
+
 export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   //handle_Get_advance_search,
   onFindMatch,
@@ -80,13 +85,37 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   const [birthStars, setBirthStars] = useState<BirthStar[]>([]);
   const [incomeOptions, setIncomeOptions] = useState<Income[]>([]);
   const [fieldofstudyOptions, setfieldofstudyOptions] = useState<FieldOfStudy[]>([]);
+  const [stateOptions, setStateOptions] = useState<StateOption[]>([]);
   const loginuser_profile_id = localStorage.getItem("loginuser_profile_id");
   const context = useContext(ProfileContext);
   const navigate = useNavigate();
 
+
   if (!context) {
     throw new Error("MyComponent must be used within a ProfileProvider");
   }
+
+  useEffect(() => {
+    resetAdvancedSearchFilters();
+  }, [location.pathname]);
+
+  useEffect(() => {
+    resetAdvancedSearchFilters();
+
+    // Optional: Clear session storage items if needed
+    sessionStorage.removeItem("searchProfile");
+  }, []);
+
+  useEffect(() => {
+    // Check if this is a navigation (not a refresh)
+    const isNavigation = window.performance.navigation.type === 0;
+
+    if (isNavigation) {
+      resetAdvancedSearchFilters();
+    }
+  }, []);
+
+  const { resetAdvancedSearchFilters } = context;
 
   const {
     setFromAge,
@@ -125,13 +154,13 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     setAdvanceSelectedEducation(event.target.value);
   };
 
-//   const handleSearch = () => {
+  //   const handleSearch = () => {
 
-//     handle_Get_advance_search();
-//     onFindMatch();
-//     // navigate('/Search/SearchProfiles');
-// };
-const handleSearch = () => {
+  //     handle_Get_advance_search();
+  //     onFindMatch();
+  //     // navigate('/Search/SearchProfiles');
+  // };
+  const handleSearch = () => {
     // Just navigate to the new results route.
     // The context already holds all the form values.
     navigate('/Search/FindMatch');
@@ -263,89 +292,106 @@ const handleSearch = () => {
       });
     }
   };
-  useEffect(() => {
-    const fetchMaritalStatuses = async () => {
-      try {
-        const response = await apiClient.post(
-          "/auth/Get_Marital_Status/"
-        );
-        const status = Object.values(response.data) as MaritalStatus[];
-        setMaritalStatuses(status);
-      } catch (error) {
-        console.error("Error fetching marital statuses", error);
-      }
-    };
 
-    const fetchProfessions = async () => {
-      try {
-        const response = await apiClient.post(
-          "/auth/Get_Profes_Pref/"
-        );
-        const professionList = Object.values(response.data) as Profession[];
-        setProfessions(professionList);
-      } catch (error) {
-        console.error("Error fetching professions", error);
-      }
-    };
+  const fetchMaritalStatuses = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_Marital_Status/"
+      );
+      const status = Object.values(response.data) as MaritalStatus[];
+      setMaritalStatuses(status);
+    } catch (error) {
+      console.error("Error fetching marital statuses", error);
+    }
+  };
 
-    const fetchEducationOptions = async () => {
-      try {
-        const response = await apiClient.post(
-          "/auth/Get_Highest_Education/"
-        );
-        const educationList = Object.values(response.data) as Education[];
-        setEducationOptions(educationList);
-      } catch (error) {
-        console.error("Error fetching education options", error);
-      }
-    };
-    const fetchBirthStars = async () => {
-      try {
-        const response = await apiClient.post(
-          "/auth/Get_Birth_Star/",
-          {
-            state_id: "", // or `null` depending on what the API expects
-          }
-        );
-        const starList = Object.values(response.data) as BirthStar[];
-        setBirthStars(starList);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error(
-            "Error fetching birth stars:",
-            error.response?.data || error.message
-          );
-        } else {
-          console.error("Unexpected error:", error);
+  const fetchProfessions = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_Profes_Pref/"
+      );
+      const professionList = Object.values(response.data) as Profession[];
+      setProfessions(professionList);
+    } catch (error) {
+      console.error("Error fetching professions", error);
+    }
+  };
+
+  const fetchEducationOptions = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_Highest_Education/"
+      );
+      const educationList = Object.values(response.data) as Education[];
+      setEducationOptions(educationList);
+    } catch (error) {
+      console.error("Error fetching education options", error);
+    }
+  };
+  const fetchBirthStars = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_Birth_Star/",
+        {
+          state_id: "", // or `null` depending on what the API expects
         }
-      }
-    };
-
-    const fetchIncomeOptions = async () => {
-      try {
-        const response = await apiClient.post(
-          "/auth/Get_Annual_Income/"
+      );
+      const starList = Object.values(response.data) as BirthStar[];
+      setBirthStars(starList);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error fetching birth stars:",
+          error.response?.data || error.message
         );
-        const incomeList = Object.values(response.data) as Income[];
-        setIncomeOptions(incomeList);
-      } catch (error) {
-        console.error("Error fetching income options", error);
+      } else {
+        console.error("Unexpected error:", error);
       }
-    };
+    }
+  };
+
+  const fetchIncomeOptions = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_Annual_Income/"
+      );
+      const incomeList = Object.values(response.data) as Income[];
+      setIncomeOptions(incomeList);
+    } catch (error) {
+      console.error("Error fetching income options", error);
+    }
+  };
 
 
-    const fetchFieldofStudyOptions = async () => {
-      try {
-        const response = await apiClient.post(
-          "/auth/Get_Field_ofstudy/"
-        );
-        const fieldofstudyList = Object.values(response.data) as FieldOfStudy[];
-        setfieldofstudyOptions(fieldofstudyList);
-      } catch (error) {
-        console.error("Error fetching income options", error);
-      }
-    };
+  const fetchFieldofStudyOptions = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_Field_ofstudy/"
+      );
+      const fieldofstudyList = Object.values(response.data) as FieldOfStudy[];
+      setfieldofstudyOptions(fieldofstudyList);
+    } catch (error) {
+      console.error("Error fetching income options", error);
+    }
+  };
 
+  const fetchStateOptions = async () => {
+    try {
+      const response = await apiClient.post(
+        "/auth/Get_State_Pref/",
+        {}
+      );
+      // The response data is an object where keys are indices, and values are StateOption objects.
+      // Convert the object values into an array.
+      const stateList = Object.values(response.data) as StateOption[];
+      setStateOptions(stateList);
+    } catch (error) {
+      console.error("Error fetching state options", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStateOptions();
     fetchFieldofStudyOptions();
     fetchIncomeOptions();
     fetchBirthStars();
@@ -354,14 +400,15 @@ const handleSearch = () => {
     fetchProfessions();
   }, []);
 
+  const handleWorkLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setWorkLocation(event.target.value);
+  };
+
   const onSubmit = (data: ProfileIdForm) => {
     // Proceed with the search if no errors
     Search_By_profileId(data.profile_id);
     navigate('/Search/SearchProfiles');
   };
-
-
-
 
   const storedGender = localStorage.getItem("gender");
   const storedHeight = sessionStorage.getItem("userheightfromapi") || 0;
@@ -382,6 +429,7 @@ const handleSearch = () => {
 
 
   const handleCancelClick = () => {
+    resetAdvancedSearchFilters();
     navigate('/Dashboard');
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top smoothly
   };
@@ -902,7 +950,7 @@ const handleSearch = () => {
                     type="checkbox"
                     id="tamilNadu"
                     name="tamilNadu"
-                    value="tamilNadu"
+                    value="2,7"
                   />
                   <label htmlFor="tamilNadu" className="pl-1">
                     TamilNadu and Pondhicherry
@@ -915,7 +963,7 @@ const handleSearch = () => {
                     type="checkbox"
                     id="karnataka"
                     name="karnataka"
-                    value="karnataka"
+                    value="4"
                   />
                   <label htmlFor="karnataka" className="pl-1">
                     Karnataka
@@ -928,7 +976,7 @@ const handleSearch = () => {
                     type="checkbox"
                     id="andhraPradesh"
                     name="andhraPradesh"
-                    value="andhraPradesh"
+                    value="1"
                   />
                   <label htmlFor="andhraPradesh" className="pl-1">
                     Andhra Pradesh
@@ -941,7 +989,7 @@ const handleSearch = () => {
                     type="checkbox"
                     id="telangana"
                     name="telangana"
-                    value="telangana"
+                    value="3"
                   />
                   <label htmlFor="telangana" className="pl-1">
                     Telangana
@@ -954,7 +1002,7 @@ const handleSearch = () => {
                     type="checkbox"
                     id="kerala"
                     name="kerala"
-                    value="kerala"
+                    value="5"
                   />
                   <label htmlFor="kerala" className="pl-1">
                     Kerala
@@ -967,7 +1015,7 @@ const handleSearch = () => {
                     type="checkbox"
                     id="others"
                     name="others"
-                    value="others"
+                    value="6"
                   />
                   <label htmlFor="others" className="pl-1">
                     Others
@@ -977,15 +1025,31 @@ const handleSearch = () => {
             </div>
 
             <div>
-              {/* {/ Work Location /} */}
-              <label htmlFor="" className="text-secondary text-lg font-semibold">Work Location</label>
-              <InputField
-                onChange={(e) => setWorkLocation(e.target.value)}
-                label={""}
-                name={"workLocation"}
-              />
+              <label htmlFor="workLocation" className="block text-secondary text-lg font-semibold mb-2">
+                Work Location (State)
+              </label>
+              <div className="relative">
+                <select
+                  id="workLocation"
+                  className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded appearance-none"
+                  onChange={handleWorkLocationChange}
+                // You may want to control the value with the context state if needed
+                // value={workLocation}
+                >
+                  <option value="" selected>
+                    Select Work Location
+                  </option>
+                  {stateOptions.map((option) => (
+                    <option key={option.State_Pref_id} value={option.State_Pref_id}>
+                      {option.State_name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-1 top-4 ">
+                  <IoMdArrowDropdown className="text-ashSecondary" />
+                </div>
+              </div>
             </div>
-
 
             {/* {/ Profile Photo /} */}
             <div>
@@ -1014,7 +1078,7 @@ const handleSearch = () => {
               </button>
               <button
                 // onClick={() => handleSearch()}
-                 onClick={handleSearch} 
+                onClick={handleSearch}
                 // disabled={disableFindMatch}
                 type="submit"
                 className="flex items-center text-sm py-[10px] px-6 bg-gradient text-white rounded-[6px] mt-2"

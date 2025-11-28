@@ -687,8 +687,6 @@ export const LoginHeader: React.FC = () => {
                   </li>
                 </Link>
               )}
-
-
             </ul>
 
             {/* Profile Image on hover */}
@@ -872,14 +870,35 @@ export const LoginHeader: React.FC = () => {
                   </a>
 
                   {/* Upgrade Button */}
-                  <Link to="/UpgradePlan"
+                  {/* <Link to="/UpgradePlan"
                     onClick={handleMenuToggle}
 
                   >
                     <li className="bg-gradient rounded-[6px] py-[8px] px-[24px] text-white text-[16px] font-semibold cursor-pointer">
                       Upgrade
                     </li>
-                  </Link>
+                  </Link> */}
+                  {buttonType === "addon" && (
+                    <Link to={"/PayNow"}>
+                      <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                        Add-On-Packages
+                      </li>
+                    </Link>
+                  )}
+                  {buttonType === "renew" && (
+                    <Link to={"/UpgradePlan"}>
+                      <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                        Renew
+                      </li>
+                    </Link>
+                  )}
+                  {buttonType === "upgrade" && (
+                    <Link to={"/UpgradePlan"}>
+                      <li className="bg-gradient rounded-[6px] py-[6px] px-[24px] text-white text-sm font-semibold cursor-pointer max-lg:text-[14px]">
+                        Upgrade
+                      </li>
+                    </Link>
+                  )}
                 </ul>
               </nav>
             </div>

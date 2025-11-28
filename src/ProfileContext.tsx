@@ -60,6 +60,8 @@ interface ImageDataItem {
 interface ProfileContextType {
   // Existing properties...
   profileImages?: string[];
+  resetAdvancedSearchFilters: () => void;
+
   // Add this line
   // Remaining properties...
 }
@@ -70,7 +72,6 @@ export interface Image {
   url: string;
   alt: string;
 }
-
 
 
 interface ProfileContextType {
@@ -346,34 +347,34 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   // };
 
   const fetchImages = async () => {
-  try {
-    const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
-    if (!loginUserProfileId) throw new Error('Profile ID not found');
+    try {
+      const loginUserProfileId = localStorage.getItem("loginuser_profile_id");
+      if (!loginUserProfileId) throw new Error('Profile ID not found');
 
-    const response = await apiClient.post(
-      '/auth/Get_profile_images/',
-      { profile_id: loginUserProfileId }
-    );
+      const response = await apiClient.post(
+        '/auth/Get_profile_images/',
+        { profile_id: loginUserProfileId }
+      );
 
-    if (response.data.Status === 1) {
-      // Process the actual images from the response
-      const imageObjects: Image[] = response.data.data.map((img: any) => ({
-        id: img.id,
-        imageUrl: img.image, // Use the direct URL from response
-        url: img.image,
-        alt: "Profile image"
-      }));
+      if (response.data.Status === 1) {
+        // Process the actual images from the response
+        const imageObjects: Image[] = response.data.data.map((img: any) => ({
+          id: img.id,
+          imageUrl: img.image, // Use the direct URL from response
+          url: img.image,
+          alt: "Profile image"
+        }));
 
-      setImages(imageObjects);
-    } else {
-      console.error('Failed to fetch images:', response.data.message);
-      setImages([]); // Set empty array if no images are available
+        setImages(imageObjects);
+      } else {
+        console.error('Failed to fetch images:', response.data.message);
+        setImages([]); // Set empty array if no images are available
+      }
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      setImages([]); // Set empty array on error
     }
-  } catch (error) {
-    console.error('Error fetching images:', error);
-    setImages([]); // Set empty array on error
-  }
-};
+  };
 
   // Fetch images when the component mounts
   useEffect(() => {
@@ -506,6 +507,26 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const resetAdvancedSearchFilters = () => {
+    setFromAge(0);
+    setToAge(0);
+    setFromHeight(0);
+    setToHeight(0);
+    setWorkLocation("");
+    setAdvanceSelectedProfessions([]);
+    Set_Maritial_Status([]);
+    setfieldofstudy([]);
+    setAdvanceSelectedEducation("");
+    setSelectedIncomes("");
+    setSelectedMaxIncomes("");
+    setChevvai_dhosam("no");
+    setRehuDhosam("no");
+    setAdvanceSelectedBirthStar("");
+    setNativeState([]);
+    setPeopleOnlyWithPhoto(0);
+    setAdvanceSearchData([]);
+  };
+
   return (
     <ProfileContext.Provider
       value={{
@@ -596,6 +617,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
         handleMouseEnter,
         handleMouseLeave,
         fetchImages,
+        resetAdvancedSearchFilters,
       }}
     >
       {children}
