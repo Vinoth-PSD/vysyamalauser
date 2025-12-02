@@ -199,7 +199,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   const [perWhistListPage, setWhistListPerpage] = useState<number>(0);
 
   const [searchProfileData, setSearchProfileData] = useState<any>([]); //advance search page search by id
-  const [chevvai_dhosam, setChevvai_dhosam] = useState<string>("no");
+  const [chevvai_dhosam, setChevvai_dhosam] = useState<string>("No");
   const [perPage, setPerPage] = useState<number>(10);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
@@ -247,7 +247,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
     useState<string>("");
   const [maritial_Status, Set_Maritial_Status] = useState<number[]>([]);
   const [fieldofstudy, setfieldofstudy] = useState<number[]>([]);
-  const [rehuDhosam, setRehuDhosam] = useState<string>("no");
+  const [rehuDhosam, setRehuDhosam] = useState<string>("No");
   const [images, setImages] = useState<Image[]>([])
   const [zoomImage, setZoomImage] = useState<string | null>(null)
   const [key, setKey] = useState<boolean>(false);
@@ -519,8 +519,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
     setAdvanceSelectedEducation("");
     setSelectedIncomes("");
     setSelectedMaxIncomes("");
-    setChevvai_dhosam("no");
-    setRehuDhosam("no");
+    setChevvai_dhosam("No");
+    setRehuDhosam("No");
     setAdvanceSelectedBirthStar("");
     setNativeState([]);
     setPeopleOnlyWithPhoto(0);

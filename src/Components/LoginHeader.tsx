@@ -702,7 +702,7 @@ export const LoginHeader: React.FC = () => {
                   e.currentTarget.onerror = null; // Prevent infinite loop
                   e.currentTarget.src = defaultImgUrl; // Set default image
                 }}
-                className="w-11 h-11 rounded-full cursor-pointer object-cover"
+                className="w-11 h-11 rounded-full cursor-pointer object-cover object-top"
               />
 
               {isHovered && (
@@ -850,7 +850,6 @@ export const LoginHeader: React.FC = () => {
                     className={`active-nav text-[16px] text-primary rounded-md transition-all cursor-pointer !font-normal relative`}
                   >
                     Notification
-
                   </li>
 
 

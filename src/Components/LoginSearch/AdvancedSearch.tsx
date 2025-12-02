@@ -835,8 +835,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     <input
                       type="radio"
                       name="chevvai_dhosam"
-                      value="yes"
-                      checked={chevvai_dhosam === "yes"}
+                      value="Yes"
+                      checked={chevvai_dhosam === "Yes"}
                       onChange={(e) => setChevvai_dhosam(e.target.value)}
                     />
                     Yes
@@ -846,8 +846,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     <input
                       type="radio"
                       name="chevvai_dhosam"
-                      value="no"
-                      checked={chevvai_dhosam === "no"}
+                      value="Yes"
+                      checked={chevvai_dhosam === "No"}
                       onChange={(e) => setChevvai_dhosam(e.target.value)}
                     />
                     No
@@ -857,8 +857,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     <input
                       type="radio"
                       name="chevvai_dhosam"
-                      value="both"
-                      checked={chevvai_dhosam === "both"}
+                      value="Both"
+                      checked={chevvai_dhosam === "Both"}
                       onChange={(e) => setChevvai_dhosam(e.target.value)}
                     />
                     Both
@@ -877,8 +877,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     <input
                       type="radio"
                       name="rehu_dhosam"
-                      value="yes"
-                      checked={rehuDhosam === "yes"}
+                      value="Yes"
+                      checked={rehuDhosam === "Yes"}
                       onChange={(e) => setRehuDhosam(e.target.value)}
                     />
                     Yes
@@ -888,8 +888,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     <input
                       type="radio"
                       name="rehu_dhosam"
-                      value="no"
-                      checked={rehuDhosam === "no"}
+                      value="No"
+                      checked={rehuDhosam === "No"}
                       onChange={(e) => setRehuDhosam(e.target.value)}
                     />
                     No
@@ -899,8 +899,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     <input
                       type="radio"
                       name="rehu_dhosam"
-                      value="both"
-                      checked={rehuDhosam === "both"}
+                      value="Both"
+                      checked={rehuDhosam === "Both"}
                       onChange={(e) => setRehuDhosam(e.target.value)}
                     />
                     Both

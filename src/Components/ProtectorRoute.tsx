@@ -23,7 +23,7 @@
 
 
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface ProtectedRouteProps {
   redirectTo: string;
@@ -31,11 +31,14 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ redirectTo }) => {
   // Use localStorage instead of sessionStorage
+  const location = useLocation();
   const token = localStorage.getItem("token");
   const registerToken = sessionStorage.getItem("register_token");
   const accessToken = token || registerToken;
 
   if (!accessToken) {
+    const intendedUrl = location.pathname + location.search;
+    sessionStorage.setItem("intendedUrl", intendedUrl);
     return <Navigate to={redirectTo} replace />;
   }
 

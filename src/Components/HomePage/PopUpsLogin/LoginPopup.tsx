@@ -142,7 +142,17 @@ export const LoginPopup: React.FC<LoginPopUpProps> = ({
           localStorage.removeItem("rememberMeProfileID");
           localStorage.removeItem("password"); // Remove password from localStorage
         }
-        onNext(); // Proceed to the next step upon successful login
+        const intendedUrl = sessionStorage.getItem("intendedUrl");
+
+        if (intendedUrl) {
+          // Clear the intended URL from storage
+          sessionStorage.removeItem("intendedUrl");
+          // Redirect to the intended URL
+          window.location.href = intendedUrl;
+        } else {
+          // Proceed with the normal onNext() flow
+          onNext();
+        }
       } else {
         setErrorMessage("Please Enter the Correct Username and Password.");
       }

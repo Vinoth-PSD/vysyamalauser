@@ -25,6 +25,7 @@ import { VysAssistPopup } from "../VysAssist/VysAssistPopup";
 import apiClient from "../../../API";
 import { Hearts } from 'react-loader-spinner'
 import { ReUseUpGradePopup } from "../ReUsePopup/ReUseUpGradePopup";
+import { GenderRestrictionPopup } from "../ReUsePopup/GenderRestrictionPopup";
 
 // Define the interfaces for profile data
 interface HoroscopeDetails {
@@ -97,6 +98,8 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [expressPopup, setExpressPopup] = useState<boolean>(false);
   const [bookMarkPopup, setBookMarkPopup] = useState<boolean>(false);
   const [matchingScorePopup, setMatchingScorePopup] = useState<boolean>(false);
+  const [genderRestrictionMessage, setGenderRestrictionMessage] = useState<string>("");
+  const [showGenderRestrictionPopup, setShowGenderRestrictionPopup] = useState<boolean>(false);
   //console.log('matchingScorePopup', matchingScorePopup)
   const [loading, setLoading] = useState(false);
   const location = useLocation();
@@ -109,6 +112,19 @@ export const ProfileDetailsExpressInterest: React.FC<
   ////console.log("vysya", storedPlanId);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // Save the current URL (including query params like ?id=VF37462)
+      const currentUrl = window.location.pathname + window.location.search;
+      sessionStorage.setItem("intendedUrl", currentUrl);
+
+      // Redirect to homepage
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
 
   const handleMessageClick = async () => {
     try {
@@ -286,7 +302,12 @@ export const ProfileDetailsExpressInterest: React.FC<
           profile_id: loginuser_profileId,
           user_profile_id: idparam,
         });
-
+        if (response.data.status === "failure" && response.data.message) {
+          setGenderRestrictionMessage(response.data.message);
+          setShowGenderRestrictionPopup(true);
+          setProfileData(null); // Ensure profile data is cleared if this error occurs
+          return; // Stop processing the rest of the success logic
+        }
         // Store the response data for Vys Assist
         setVysAssistData(response.data);
 
@@ -709,7 +730,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };
-  const horoscopeLink = profileData?.basic_details.horoscope_link
+  const horoscopeLink = profileData?.basic_details?.horoscope_link
   const [isPdfMenuOpen, setIsPdfMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   // const handleSelectLanguage = (language: SetStateAction<string | null>) => {
@@ -891,7 +912,16 @@ export const ProfileDetailsExpressInterest: React.FC<
               />
               <p className="text-sm">Please wait...</p>
             </div>
-          ) : (
+          ) : showGenderRestrictionPopup ? (
+            // Show ONLY the popup when there's a restriction
+            <GenderRestrictionPopup
+              text={genderRestrictionMessage}
+            // closePopup={() => {
+            //   setShowGenderRestrictionPopup(false);
+            //   handleBackClick(); // Navigate back after closing
+            // }}
+            />
+          ) : profileData ? (
             <div className="grid grid-rows-1 grid-cols-3 justify-start items-start space-x-10 max-lg:grid-cols-1 max-lg:space-x-0">
               <div>
                 <ProfileSlickView
@@ -1382,6 +1412,11 @@ export const ProfileDetailsExpressInterest: React.FC<
                 </div>
               </div>
             </div>
+          ) : (
+            // Fallback for unexpected null state
+            <div className="text-center py-20">
+              <p className="text-gray-500">Profile not available</p>
+            </div>
           )}
         </div>
       </div>
@@ -1404,6 +1439,13 @@ export const ProfileDetailsExpressInterest: React.FC<
         matchingScorePopup && (
           <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={apimsgMatchingScore} />
         )
+      }
+      {showGenderRestrictionPopup && (
+        <GenderRestrictionPopup
+          text={genderRestrictionMessage}
+        // closePopup={() => setShowGenderRestrictionPopup(false)}
+        />
+      )
       }
     </div >
   );

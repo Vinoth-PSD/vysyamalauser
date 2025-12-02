@@ -225,11 +225,18 @@ export const DashBoardGrid: React.FC = () => {
             <div className="bg-white rounded-xl shadow-profileCardShadow p-5 max-sm:p-4">
               <div className="flex justify-between items-start mb-6">
                 <div className="flex justify-center items-center space-x-5 max-sm:flex-col max-sm:items-start max-md:space-x-0">
-                  <div>
+                  {/* <div>
                     <img
                       src={dashboardDetails?.profile_details.profile_image}
                       alt="My Profile Image"
                       className=" w-[88px] rounded-[6px]"
+                    />
+                  </div> */}
+                  <div className="w-[100px] h-[100px] overflow-hidden rounded-[6px]">
+                    <img
+                      src={dashboardDetails?.profile_details.profile_image}
+                      alt="My Profile Image"
+                      className="w-full h-full object-cover object-top" // Fill the container and cover the area
                     />
                   </div>
                   <div className="mt-2">
@@ -246,11 +253,11 @@ export const DashBoardGrid: React.FC = () => {
                 </div>
 
 
-                <div>
+                {/* <div>
                   <p className="bg-gradientGold text-primary font-semibold rounded-md px-3 py-0.5 ">
                     {dashboardDetails?.profile_details.package_name}
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="bg-vysyamalaLightSandal p-6 rounded-xl max-sm:p-5">
