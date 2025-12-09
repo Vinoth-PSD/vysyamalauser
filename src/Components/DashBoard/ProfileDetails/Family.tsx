@@ -278,8 +278,8 @@ export const Family = () => {
           property_details: formData.personal_prope_det,
           property_worth: formData.personal_property_worth,
           no_of_children: formData.personal_no_of_children,
-          father_alive:formData.father_alive,
-          mother_alive:formData.mother_alive,
+          father_alive: formData.father_alive,
+          mother_alive: formData.mother_alive,
           about_family: formData.personal_about_fam,
         }
       );
@@ -624,7 +624,7 @@ export const Family = () => {
                   </label>
                 </div>
               </label>
-               <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Mother Alive:
                 <div className="flex space-x-4 mt-2">
                   <label className="inline-flex items-center">
@@ -739,11 +739,9 @@ export const Family = () => {
                 Sisters:
                 <span className="font-normal">
                   {" "}
-                  {familyDetails.personal_sis === "0"
-                    ? "No"
-                    : familyDetails.personal_sis?.toString().trim()
-                      ? familyDetails.personal_sis
-                      : "N/A"}
+                  {familyDetails.personal_sis?.toString().trim()
+                    ? familyDetails.personal_sis
+                    : "N/A"}
                 </span>
               </h5>
               <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
@@ -751,11 +749,14 @@ export const Family = () => {
                 <span className="font-normal">
                   {" "}
                   {/* {familyDetails.personal_sis_married || "N/A"} */}
-                  {familyDetails.personal_sis_married === "0"
+                  {/* {familyDetails.personal_sis_married === "0"
                     ? "No"
                     : familyDetails.personal_sis_married?.toString().trim()
                       ? familyDetails.personal_sis_married
-                      : "N/A"}
+                      : "N/A"} */}
+                  {familyDetails.personal_sis_married?.toString().trim()
+                    ? familyDetails.personal_sis_married
+                    : "N/A"}
                 </span>
               </h5>
             </div>
@@ -765,11 +766,9 @@ export const Family = () => {
                 <span className="font-normal">
                   {" "}
                   {/* {familyDetails.personal_bro || "N/A"} */}
-                  {familyDetails.personal_bro === "0"
-                    ? "No"
-                    : familyDetails.personal_bro?.toString().trim()
-                      ? familyDetails.personal_bro
-                      : "N/A"}
+                  {familyDetails.personal_bro?.toString().trim()
+                    ? familyDetails.personal_bro
+                    : "N/A"}
                 </span>
               </h5>
 
@@ -778,11 +777,9 @@ export const Family = () => {
                 <span className="font-normal">
                   {" "}
                   {/* {familyDetails.personal_bro_married || "N/A"} */}
-                  {familyDetails.personal_bro_married === "0"
-                    ? "No"
-                    : familyDetails.personal_bro_married?.toString().trim()
-                      ? familyDetails.personal_bro_married
-                      : "N/A"}
+                  {familyDetails.personal_bro_married?.toString().trim()
+                    ? familyDetails.personal_bro_married
+                    : "N/A"}
                 </span>
               </h5>
 
