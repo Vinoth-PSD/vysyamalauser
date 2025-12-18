@@ -281,7 +281,7 @@ const HoroDetails: React.FC<HoroDetailsProps> = () => {
       } else if (periods === "AM" && formattedHour === 12) {
         formattedHour = 0;
       }
-      combinedTime = `${formattedHour.toString().padStart(2, "0")}:${minutes}`;
+      combinedTime = `${formattedHour.toString().padStart(2, "0")}:${minutes} ${periods}`;
     }
 
     try {

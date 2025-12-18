@@ -506,7 +506,7 @@ const ContactDetails: React.FC<ContactDetailsProps> = () => {
                   className="outline-none w-full text-placeHolderColor px-3 py-[13px] text-sm border border-ashBorder rounded appearance-none"
                   {...register("country")}
                 >
-                  <option value="" disabled>
+                  <option value="">
                     Select your Country
                   </option>
                   {countryOptions.map((option) => (

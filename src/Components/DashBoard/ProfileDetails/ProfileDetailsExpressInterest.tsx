@@ -1371,13 +1371,15 @@ export const ProfileDetailsExpressInterest: React.FC<
                             </li> */}
                             <li
                               className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
-                              onClick={handleViewPdf}
+                              // onClick={handleViewPdf}
+                              onClick={handleColorViewPdf}
                             >
                               Download PDF
                             </li>
                             <li
                               className="block px-4 py-2 text-gray-800 hover:bg-gray cursor-pointer"
-                              onClick={handleColorViewPdf}
+                              // onClick={handleColorViewPdf}
+                              onClick={handleViewPdf}
                             >
                               Print PDF
                             </li>

@@ -753,7 +753,7 @@ export const Personal = () => {
                   name="personal_weight"
                   value={formData.personal_weight || ""}
                   onChange={handleInputChange}
-                  className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorderfocus:border-blue-500"
+                  className="font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder focus:border-blue-500"
                   maxLength={3} // Limit input length to 3 characters
                   onInput={(e) => {
                     const value = e.currentTarget.value;

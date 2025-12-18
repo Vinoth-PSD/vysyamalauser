@@ -5,7 +5,7 @@ import AmsamGridview from '../../HoroDetails/AmsamGridview';
 //import axios from 'axios';
 import { useLocation } from "react-router-dom";
 // import apiClient from '../../../API';
-import { useProfileData  } from './ViewApicall/ProfileDataProvider';
+import { useProfileData } from './ViewApicall/ProfileDataProvider';
 
 // import { useParams } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ export const HoroscopeView: React.FC = () => {
     const location = useLocation();
     const queryParams1 = new URLSearchParams(location.search);
     const rasi = queryParams1.get("rasi");
-     const { horoscope_details } = useProfileData ();
+    const { horoscope_details } = useProfileData();
     // const { user_profile_id } = useParams<{ user_profile_id: string }>();
     // const queryParams = new URLSearchParams(location.search);
     // const id = queryParams.get('id');
@@ -127,16 +127,24 @@ export const HoroscopeView: React.FC = () => {
                     {/* {horoscope_details?.chevvai_dosham && horoscope_details.chevvai_dosham !== "" && horoscope_details.chevvai_dosham !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Chevvai Dhosham:
                             <span className="font-normal"> {horoscope_details?.chevvai_dosham}</span></h5>)} */}
+
+                    {horoscope_details?.chevvai_dosham && horoscope_details.chevvai_dosham !== "" && horoscope_details.chevvai_dosham !== null && (
+                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Chevvai Dosham:
+                            <span className="font-normal"> {horoscope_details?.chevvai_dosham}</span></h5>)}
                 </div>
 
                 <div>
+                    {horoscope_details?.sarpadosham && horoscope_details.sarpadosham !== "" && horoscope_details.sarpadosham !== null && (
+                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Ragu/Kethu Dhosham:
+                            <span className="font-normal"> {horoscope_details?.sarpadosham}</span></h5>)}
+
                     {horoscope_details?.surya_gothram && horoscope_details.surya_gothram !== "" && horoscope_details.surya_gothram !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Surya Gothram:
                             <span className="font-normal"> {horoscope_details?.surya_gothram}</span></h5>)}
 
-
-                    <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Madhulam :
-                        <span className="font-normal"> {horoscope_details?.madulamn}</span></h5>
+                    {horoscope_details?.madulamn && horoscope_details.madulamn !== "" && horoscope_details.madulamn !== null && (
+                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Madhulam :
+                            <span className="font-normal"> {horoscope_details?.madulamn}</span></h5>)}
 
                     {horoscope_details?.dasa_name && horoscope_details.dasa_name !== "" && horoscope_details.dasa_name !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Dasa Name:
@@ -146,13 +154,6 @@ export const HoroscopeView: React.FC = () => {
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Dasa Balance:
                             <span className="font-normal"> {horoscope_details?.dasa_balance}</span></h5>)}
 
-                    {/* {horoscope_details?.chevai_dosham && horoscope_details.chevai_dosham !== "" && horoscope_details.chevai_dosham !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Chevvai Dosham:
-                            <span className="font-normal"> {horoscope_details?.chevai_dosham}</span></h5>)}
-
-                    {horoscope_details?.sarpadosham && horoscope_details.sarpadosham !== "" && horoscope_details.sarpadosham !== null && (
-                        <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Ragu/Kethu Dhosham:
-                            <span className="font-normal"> {horoscope_details?.sarpadosham}</span></h5>)} */}
                 </div>
             </div>
 

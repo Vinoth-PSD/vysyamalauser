@@ -1,7 +1,7 @@
 import React from 'react';
 //import axios from 'axios';
 // import apiClient from '../../../API';
-import { useProfileData  } from './ViewApicall/ProfileDataProvider';
+import { useProfileData } from './ViewApicall/ProfileDataProvider';
 // import { useParams } from 'react-router-dom';
 
 // interface FamilyDetails {
@@ -21,7 +21,7 @@ import { useProfileData  } from './ViewApicall/ProfileDataProvider';
 // }
 
 export const FamilyView: React.FC = () => {
-    const { family_details } = useProfileData ();
+    const { family_details } = useProfileData();
     // const [familyDetails, setFamilyDetails] = useState<FamilyDetails | null>(null);
     // const [isEditing, setIsEditing] = useState<boolean>(false);
     // const [family_details, setFormData] = useState<FamilyDetails>({
@@ -143,11 +143,14 @@ export const FamilyView: React.FC = () => {
                     {family_details?.no_of_sisters && family_details.no_of_sisters !== "" && family_details.no_of_sisters !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sisters:
                             <span className="font-normal">
-                                {family_details.no_of_sisters === "0"
+                                {/* {family_details.no_of_sisters === "0"
                                     ? "No"
                                     : family_details.no_of_sisters?.toString().trim()
                                         ? family_details.no_of_sisters
-                                        : "N/A"}
+                                        : "N/A"} */}
+                                {family_details.personal_sis?.toString().trim()
+                                    ? family_details.no_of_sisters
+                                    : "N/A"}
                             </span>
                         </h5>
                     )}
@@ -157,11 +160,14 @@ export const FamilyView: React.FC = () => {
                     {family_details?.no_of_sis_married && family_details.no_of_sis_married !== "" && family_details.no_of_sis_married !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Sisters Married:
                             <span className="font-normal">
-                                {family_details.no_of_sis_married === "0"
+                                {/* {family_details.no_of_sis_married === "0"
                                     ? "No"
                                     : family_details.no_of_sis_married?.toString().trim()
                                         ? family_details.no_of_sis_married
-                                        : "N/A"}
+                                        : "N/A"} */}
+                                {family_details.no_of_sis_married?.toString().trim()
+                                    ? family_details.no_of_sis_married
+                                    : "N/A"}
                             </span>
                         </h5>
                     )}
@@ -169,11 +175,14 @@ export const FamilyView: React.FC = () => {
                     {family_details?.no_of_brothers && family_details.no_of_brothers !== "" && family_details.no_of_brothers !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Brothers:
                             <span className="font-normal">
-                                {family_details.no_of_brothers === "0"
+                                {/* {family_details.no_of_brothers === "0"
                                     ? "No"
                                     : family_details.no_of_brothers?.toString().trim()
                                         ? family_details.no_of_brothers
-                                        : "N/A"}
+                                        : "N/A"} */}
+                                {family_details.no_of_brothers?.toString().trim()
+                                    ? family_details.no_of_brothers
+                                    : "N/A"}
                             </span>
                         </h5>
                     )}
@@ -181,11 +190,14 @@ export const FamilyView: React.FC = () => {
                     {family_details?.no_of_bro_married && family_details.no_of_bro_married !== "" && family_details.no_of_bro_married !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Brothers Married:
                             <span className="font-normal">
-                                {family_details.no_of_bro_married === "0"
+                                {/* {family_details.no_of_bro_married === "0"
                                     ? "No"
                                     : family_details.no_of_bro_married?.toString().trim()
                                         ? family_details.no_of_bro_married
-                                        : "N/A"}
+                                        : "N/A"} */}
+                                {family_details.no_of_bro_married?.toString().trim()
+                                    ? family_details.no_of_bro_married
+                                    : "N/A"}
                             </span>
                         </h5>
                     )}
@@ -204,7 +216,7 @@ export const FamilyView: React.FC = () => {
 
                     {family_details?.mother_alive && family_details.mother_alive !== "" && family_details.mother_alive !== null && (
                         <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">Mother Alive:
-                            <span className="font-normal"> {family_details.mother_alive || "N/A"}</span>
+                            <span className="font-normal"> {family_details.father_alive || "N/A"}</span>
                         </h5>
                     )}
                 </div>

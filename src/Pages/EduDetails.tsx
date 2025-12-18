@@ -33,7 +33,8 @@ const schema = zod.object({
   profession: zod.string().min(1, "Profession is required"),
   annualIncome: zod.string().optional(),
   annualIncome_max: zod.string().optional(),
-  actualIncome: zod.string().optional(),
+  // actualIncome: zod.string().optional(),
+  actualIncome: zod.string().optional().or(zod.literal("")),
   country: zod.string().optional(),
   pincode: zod.string().optional(),
   careerPlans: zod.string().optional(),
@@ -119,6 +120,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       currency: "INR", // Set default currency to INR
+      actualIncome: "",
     },
   });
   const [, setSelectedProfession] = useState<string | null>(null);
@@ -521,7 +523,7 @@ const EduDetails: React.FC<EduDetailsProps> = () => {
         business_address: (selectedProfessionId === 2 || selectedProfessionId === 6) ? data.business_address : "",
         nature_of_business: (selectedProfessionId === 2 || selectedProfessionId === 6) ? data.nature_of_business : "",
         currency: data.currency,
-        actual_income: data.actualIncome,
+        actual_income: data.actualIncome?.trim() || "",
         work_pincode: data.pincode,
         career_plans: data.careerPlans,
         status: "1",
