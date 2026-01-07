@@ -21,6 +21,7 @@ interface PersonalDetails {
   personal_profile_complexion_name: string;
   personal_hobbies: string;
   personal_pysically_changed: string;
+  Physically_challenged_details: string;
   personal_profile_for_name: string;
   marital_sts_id: number;
   height_id: number;
@@ -99,6 +100,8 @@ export const Personal = () => {
   const [hour, setHour] = useState("");
   const [minute, setMinute] = useState("");
   const [period, setPeriod] = useState<"AM" | "PM">("AM");
+  const [physicallyChallengedDetails, setPhysicallyChallengedDetails] = useState("");
+
 
   useEffect(() => {
     if (personalDetails?.personal_time_of_birth_str) {
@@ -261,6 +264,7 @@ export const Personal = () => {
   const handleEditClick = () => {
     if (isEditing) {
       setFormData({});
+      setPhysicallyChallengedDetails("");
     } else {
       if (personalDetails) {
         // 📝 FIX: Use personal_about_self_original here to set the form data.
@@ -268,6 +272,9 @@ export const Personal = () => {
           ...personalDetails,
           personal_about_self: personalDetails.personal_about_self_original,
         });
+        setPhysicallyChallengedDetails(
+          (personalDetails as any).Physically_challenged_details || ""
+        );
       }
     }
     setIsEditing(!isEditing);
@@ -433,6 +440,10 @@ export const Personal = () => {
           Profile_complexion: selectedComplexion,
           hobbies: formData.personal_hobbies,
           Pysically_changed: formData.personal_pysically_changed,
+          Physically_challenged_details:
+            formData.personal_pysically_changed === "yes"
+              ? physicallyChallengedDetails
+              : "",
           Profile_for: selectedProfileHolder,
           Mobile_no: formData.mobile_no,
         }
@@ -945,7 +956,7 @@ export const Personal = () => {
                 />
               </label>
 
-              <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+              <label className="block mb-2 mt-4 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Physical Status:
                 <div className="flex space-x-4 mt-2">
                   <label className="inline-flex items-center">
@@ -984,6 +995,30 @@ export const Personal = () => {
                   </label>
                 </div>
               </label>
+
+              {formData.personal_pysically_changed === "yes" && (
+                // <label className="block mb-2 text-[20px] text-ash font-semibold">
+                //   Challenged Detail:
+                //   <textarea
+                //     value={physicallyChallengedDetails}
+                //     onChange={(e) => setPhysicallyChallengedDetails(e.target.value)}
+                //     // placeholder="Enter challenged details"
+                //     className="font-normal border rounded px-3 py-2 w-full focus:outline-none border-ashBorder"
+                //     rows={1 }
+                //   />
+                // </label>
+                <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
+                  Challenged Detail:
+                  <input
+                    type="text"
+                    // name="personal_hobbies"
+                    value={physicallyChallengedDetails}
+                    onChange={(e) => setPhysicallyChallengedDetails(e.target.value)}
+                    className={`font-normal border rounded px-3 py-2 w-full focus:outline-none  border-ashBorder
+                  `}
+                  />
+                </label>
+              )}
 
               {/* <label className="block mb-2 text-[20px] text-ash font-semibold max-xl:text-[18px] max-lg:text-[16px] max-lg:font-medium">
                 Profile For:
@@ -1198,6 +1233,15 @@ export const Personal = () => {
                   {personalDetails.personal_pysically_changed || "N/A"}
                 </span>
               </h5>
+              {personalDetails.Physically_challenged_details && (
+                <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
+                  Challenged Detail :
+                  <span className="font-normal">
+                    {" "}
+                    {personalDetails.Physically_challenged_details || "N/A"}
+                  </span>
+                </h5>
+              )}
 
               {/* <h5 className="text-[20px] text-ash font-semibold mb-4 max-lg:text-[16px]">
                 Profile Created By :
