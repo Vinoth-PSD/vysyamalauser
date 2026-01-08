@@ -93,6 +93,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
+import { encryptId } from "../../../utils/cryptoUtils";
+import PlatinumModal from "../../DashBoard/ReUsePopup/PlatinumModalPopup";
 
 interface SuggestedCardProps {
   profileImg?: string;
@@ -121,6 +123,7 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
 
   // State to track if the card is bookmarked or not
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
 
   const handleBookmark = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -130,10 +133,12 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
   const navigate = useNavigate();
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
 
+
   const handleProfileClick = async (profileId: string) => {
+    if (isPlatinumModalOpen) return;
     if (activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
-
+    const secureId = encryptId(profileId);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     let page_id = "2";
 
@@ -147,28 +152,47 @@ export const SuggestedCard: React.FC<SuggestedCardProps> = ({
         }
       );
 
+      // if (checkResponse.data.status === "failure") {
+      //   toast.error(checkResponse.data.message || "Limit reached to view profile");
+      //   setActiveProfileId(null);
+      //   return;
+      // }
+
       if (checkResponse.data.status === "failure") {
-        toast.error(checkResponse.data.message || "Limit reached to view profile");
-        setActiveProfileId(null);
+        if (checkResponse.data.message === "Profile visibility restricted") {
+          setIsPlatinumModalOpen(true);
+        } else {
+          toast.error(checkResponse.data.message || "Limit reached to view profile");
+        }
         return;
       }
 
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-    } catch (error) {
-      toast.error("Error accessing profile.");
+      navigate(`/ProfileDetails?id=${secureId}&rasi=1`);
+    } catch (error: any) {
+      // toast.error("Error accessing profile.");
+      // console.error("API Error:", error);
+      const serverMessage = error.response?.data?.message;
+
+      if (serverMessage === "Profile visibility restricted") {
+        setIsPlatinumModalOpen(true);
+      } else {
+        // Only show the toast if it's NOT the visibility restriction
+        toast.error(serverMessage || "Error accessing profile.");
+        console.error("API Error:", error);
+      }
       console.error("API Error:", error);
     } finally {
       setActiveProfileId(null); // reset loading
     }
   };
- 
+
   const gender = localStorage.getItem("gender");
 
-const defaultImgUrl =
-  gender?.toLowerCase() === "male"
-    ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
-    : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
+  const defaultImgUrl =
+    gender?.toLowerCase() === "male"
+      ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
+      : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
 
   return (
@@ -179,12 +203,12 @@ const defaultImgUrl =
     >
       <div className="mb-3 !h-auto ">
         {profileImg ? (
-          <img src={profileImg || defaultImgUrl} alt="Profile" 
-           onError={(e) => {
-                  e.currentTarget.onerror = null; // Prevent infinite loop
-                  e.currentTarget.src = defaultImgUrl; // Set default image
-                }}
-          className="w-full h-[260px] object-cover object-top" />
+          <img src={profileImg || defaultImgUrl} alt="Profile"
+            onError={(e) => {
+              e.currentTarget.onerror = null; // Prevent infinite loop
+              e.currentTarget.src = defaultImgUrl; // Set default image
+            }}
+            className="w-full h-[260px] object-cover object-top" />
         ) : (
           <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
             <span className="text-gray-500">No Image</span>
@@ -227,6 +251,10 @@ const defaultImgUrl =
           className="absolute top-5 right-5 text-white text-[22px] fill-[#72727240] cursor-pointer"
         />
       )}
+      <PlatinumModal
+        isOpen={isPlatinumModalOpen}
+        onClose={() => setIsPlatinumModalOpen(false)}
+      />
     </div>
   );
 };

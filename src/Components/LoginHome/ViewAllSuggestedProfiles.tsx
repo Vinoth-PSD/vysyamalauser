@@ -18,6 +18,8 @@ import { ProfileContext } from "../../ProfileContext";
 import apiClient from '../../API';
 import { Hearts } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
+import { encryptId } from '../../utils/cryptoUtils';
+import PlatinumModal from '../DashBoard/ReUsePopup/PlatinumModalPopup';
 // Define the shape of your profile data
 interface Profile {
   profile_id: string;
@@ -37,6 +39,7 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
   const navigate = useNavigate();
   const context = useContext(ProfileContext);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
 
   if (!context) {
     throw new Error("ViewAllSuggestedProfiles must be used within a ProfileProvider");
@@ -107,9 +110,10 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
   }, [page]);
 
   const handleProfileClick = async (profileId: string) => {
+    if (isPlatinumModalOpen) return;
     if (activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
-
+    const secureId = encryptId(profileId);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
     let page_id = "2";
 
@@ -127,16 +131,34 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
         }
       );
 
+      // if (checkResponse.data.status === "failure") {
+      //   toast.error(checkResponse.data.message || "Limit reached to view profile");
+      //   setActiveProfileId(null);
+      //   return;
+      // }
+
       if (checkResponse.data.status === "failure") {
-        toast.error(checkResponse.data.message || "Limit reached to view profile");
-        setActiveProfileId(null);
+        if (checkResponse.data.message === "Profile visibility restricted") {
+          setIsPlatinumModalOpen(true);
+        } else {
+          toast.error(checkResponse.data.message || "Limit reached to view profile");
+        }
         return;
       }
-
       // Navigate after validation
-      navigate(`/ProfileDetails?id=${profileId}&rasi=1`);
-    } catch (error) {
-      toast.error("Error accessing profile.");
+      navigate(`/ProfileDetails?id=${secureId}&rasi=1`);
+    } catch (error: any) {
+      // toast.error("Error accessing profile.");
+      // console.error("API Error:", error);
+      const serverMessage = error.response?.data?.message;
+
+      if (serverMessage === "Profile visibility restricted") {
+        setIsPlatinumModalOpen(true);
+      } else {
+        // Only show the toast if it's NOT the visibility restriction
+        toast.error(serverMessage || "Error accessing profile.");
+        console.error("API Error:", error);
+      }
       console.error("API Error:", error);
     } finally {
       setActiveProfileId(null); // reset loading
@@ -307,6 +329,10 @@ export const ViewAllSuggestedProfiles: React.FC = () => {
           totalRecords={TotalRecords}
           dataPerPage={perPage}
           toptalPages={totalPage}
+        />
+        <PlatinumModal
+          isOpen={isPlatinumModalOpen}
+          onClose={() => setIsPlatinumModalOpen(false)}
         />
       </div>
     </div>
