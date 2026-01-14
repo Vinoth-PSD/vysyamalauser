@@ -28,6 +28,7 @@ import { ReUseUpGradePopup } from "../ReUsePopup/ReUseUpGradePopup";
 import { GenderRestrictionPopup } from "../ReUsePopup/GenderRestrictionPopup";
 import { decryptId } from "../../../utils/cryptoUtils";
 
+
 // Define the interfaces for profile data
 interface HoroscopeDetails {
   star_name: string;

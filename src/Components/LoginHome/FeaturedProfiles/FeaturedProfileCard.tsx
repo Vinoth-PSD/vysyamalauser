@@ -62,6 +62,7 @@ import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 
+
 interface FeaturedProfileCardProps {
   profileName: string;
   profileId: string;

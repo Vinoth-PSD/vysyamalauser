@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import MatchingScore from "./DashBoard/ProfileDetails/MatchingScore";
 import { encryptId } from "../utils/cryptoUtils";
 
+
 const AdvanceSearchCard = () => {
   const context = useContext(ProfileContext);
 

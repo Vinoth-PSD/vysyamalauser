@@ -5,6 +5,7 @@ import apiClient from '../../../../API';
 import { useSearchParams } from 'react-router-dom';
 import { decryptId } from '../../../../utils/cryptoUtils';
 
+
 interface ProfileData {
     personal_details: any;
     education_details: any;

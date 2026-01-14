@@ -21,6 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 
+
 // Define the interface for the profile data
 interface ProfileData {
     vys_profileid: string;

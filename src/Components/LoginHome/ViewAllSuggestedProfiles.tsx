@@ -19,6 +19,7 @@ import apiClient from '../../API';
 import { Hearts } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import { encryptId } from '../../utils/cryptoUtils';
+
 import PlatinumModal from '../DashBoard/ReUsePopup/PlatinumModalPopup';
 // Define the shape of your profile data
 interface Profile {

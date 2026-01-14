@@ -96,6 +96,7 @@ import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 import PlatinumModal from "../../DashBoard/ReUsePopup/PlatinumModalPopup";
 
+
 interface SuggestedCardProps {
   profileImg?: string;
   profile_name?: string;
