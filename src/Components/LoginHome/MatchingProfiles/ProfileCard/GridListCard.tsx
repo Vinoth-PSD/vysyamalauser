@@ -22,7 +22,6 @@ import PlatinumModal from "../../../DashBoard/ReUsePopup/PlatinumModalPopup";
 // import { toast } from "react-toastify";
 // import { ToastNotification } from "../../../Toast/ToastNotification";
 
-
 interface GridListCardProps {
   profileId: string;
   searchvalues: string;

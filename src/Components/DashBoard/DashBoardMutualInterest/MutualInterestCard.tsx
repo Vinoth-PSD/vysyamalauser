@@ -13,7 +13,6 @@ import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 
-
 // Define the Profile interface
 export interface Profile {
   mutint_Profile_img: string;

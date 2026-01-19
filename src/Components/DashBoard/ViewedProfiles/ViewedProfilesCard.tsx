@@ -21,7 +21,6 @@ import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 import PlatinumModal from "../ReUsePopup/PlatinumModalPopup";
 //import PlatinumModal from "../ReUsePopup/PlatinumModalPopup";
-
 // Define types for API response
 interface Profile {
   visited_profileid: string;

@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 // import { ChangePassword } from "./OtherSettings/ChangePassword";
 // import { ProfileVisibility } from "./OtherSettings/ProfileVisibility";
 
-
 interface OtherSettingsProps {
   dashBoardAgain: () => void;
 }

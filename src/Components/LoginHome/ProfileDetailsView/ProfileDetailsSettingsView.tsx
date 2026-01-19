@@ -16,7 +16,6 @@ import { ProfileDataProvider } from './ViewApicall/ProfileDataProvider';
 import { decryptId, encryptId } from '../../../utils/cryptoUtils';
 
 
-
 interface ProfileDetailsSettingsViewProps { }
 
 interface ProfileListResponse {

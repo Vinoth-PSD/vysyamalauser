@@ -27,7 +27,6 @@ import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../../utils/cryptoUtils";
 import PlatinumModal from "../../../DashBoard/ReUsePopup/PlatinumModalPopup";
 
-
 interface ListCardProps {
   profile: Profile;
   searchvalues: string;

@@ -3,7 +3,6 @@ import CryptoJS from "crypto-js";
 // In production, move this to your .env file
 const SECRET_KEY = "vysyamala-secure-key-123"; 
 
-
 export const encryptId = (id: string): string => {
   const cipher = CryptoJS.AES.encrypt(id, SECRET_KEY).toString();
   // Make it URL safe (replace +, /, and =)

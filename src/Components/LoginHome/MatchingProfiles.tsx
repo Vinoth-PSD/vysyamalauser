@@ -37,7 +37,6 @@ import PaginationNew from "../PaginationNew";
 import { decryptId, encryptId } from "../../utils/cryptoUtils";
 // import { log } from "console";
 
-
 // const items = [
 //     { id: 1, title: 'Back End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
 //     { id: 2, title: 'Front End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },

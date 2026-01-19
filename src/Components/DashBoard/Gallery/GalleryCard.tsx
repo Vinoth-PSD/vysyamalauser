@@ -8,7 +8,6 @@ import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 
 
-
 interface GalleryCardProps {
   profiles: GalleryItem[];
   pageNumber: number; // Add this prop

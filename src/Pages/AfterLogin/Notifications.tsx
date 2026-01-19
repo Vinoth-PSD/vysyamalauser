@@ -9,7 +9,6 @@ import apiClient from "../../API";
 import { toast } from "react-toastify";
 import { encryptId } from "../../utils/cryptoUtils";
 
-
 export const Notifications = () => {
   const context = useContext(ProfileContext);
 
