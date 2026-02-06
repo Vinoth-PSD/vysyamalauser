@@ -42,8 +42,44 @@ const profileIdSchema = z.object({
     }),
 });
 
-// Define the type for the form inputs based on the schema
+// --- NEW: Advanced Search Schema for Age Validation ---
+const advancedSearchSchema = z.object({
+  fromAge: z.coerce.number().min(18, "Minimum age is 18").optional().or(z.literal("")),
+  toAge: z.coerce.number().optional().or(z.literal("")),
+}).superRefine((data, ctx) => {
+  const myGender = localStorage.getItem("gender")?.toLowerCase();
+  const myAge = Number(localStorage.getItem("age")) || 0;
+
+  // Validation: Males cannot search for someone > (My Age + 1)
+  if (myGender === "male" && data.toAge && Number(data.toAge) > (myAge + 1)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Your age preference does not match this profile.`,
+      path: ["toAge"],
+    });
+  }
+
+  // Validation: Females cannot search for someone < (My Age - 1)
+  if (myGender === "female" && data.fromAge && Number(data.fromAge) < (myAge - 1)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Your age preference does not match this profile.`,
+      path: ["fromAge"],
+    });
+  }
+
+  // Basic logical check
+  if (data.fromAge && data.toAge && Number(data.fromAge) > Number(data.toAge)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "From Age cannot be greater than To Age",
+      path: ["fromAge"],
+    });
+  }
+});
+
 type ProfileIdForm = z.infer<typeof profileIdSchema>;
+type AdvancedSearchForm = z.infer<typeof advancedSearchSchema>;
 
 interface MaritalStatus {
   marital_sts_id: number;
@@ -90,10 +126,11 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   onFindMatch,
 }) => {
   const {
-    register,
+    // register,
     setError,
-    handleSubmit,
-    formState: { errors },
+    // handleSubmit,
+    // formState: { errors },
+    formState: { },
   } = useForm<ProfileIdForm>({
     resolver: zodResolver(profileIdSchema),
   });
@@ -137,6 +174,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   const { resetAdvancedSearchFilters } = context;
 
   const {
+    // fromAge, ToAge,
     setFromAge,
     setToAge,
     setFromHeight,
@@ -163,6 +201,23 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     peopleOnlyWithPhoto,
   } = context;
 
+  const idForm = useForm<ProfileIdForm>({
+    resolver: zodResolver(profileIdSchema),
+  });
+
+  const advancedForm = useForm<AdvancedSearchForm>({
+    resolver: zodResolver(advancedSearchSchema),
+    mode: "onChange" // Validates as the user types
+  });
+
+  const onProfileIdSubmit = (data: ProfileIdForm) => {
+    Search_By_profileId(data.profile_id);
+    navigate('/Search/SearchProfiles');
+  };
+
+  const handleAdvancedSearchSubmit = (_data: AdvancedSearchForm) => {
+    navigate('/Search/FindMatch');
+  };
   // useEffect(() => {
   //   handle_Get_advance_search();
   // }, [pageNumber]); // Add pageNumber as a dependency
@@ -179,11 +234,11 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
   //     onFindMatch();
   //     // navigate('/Search/SearchProfiles');
   // };
-  const handleSearch = () => {
-    // Just navigate to the new results route.
-    // The context already holds all the form values.
-    navigate('/Search/FindMatch');
-  };
+  // const handleSearch = () => {
+  //   // Just navigate to the new results route.
+  //   // The context already holds all the form values.
+  //   navigate('/Search/FindMatch');
+  // };
 
   const handlePeopleWithPhotoChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -423,11 +478,11 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     setWorkLocation(event.target.value);
   };
 
-  const onSubmit = (data: ProfileIdForm) => {
-    // Proceed with the search if no errors
-    Search_By_profileId(data.profile_id);
-    navigate('/Search/SearchProfiles');
-  };
+  // const onSubmit = (data: ProfileIdForm) => {
+  //   // Proceed with the search if no errors
+  //   Search_By_profileId(data.profile_id);
+  //   navigate('/Search/SearchProfiles');
+  // };
 
   const storedGender = localStorage.getItem("gender");
   const storedHeight = sessionStorage.getItem("userheightfromapi") || 0;
@@ -458,12 +513,14 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
       <div className="container mx-auto py-10 max-md:px-3">
         <div className="w-8/12 mx-auto rounded-lg p-10 bg-white shadow-lg max-lg:w-4/5 max-md:w-full  max-sm:p-5">
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            // onSubmit={handleSubmit(onSubmit)}
+            onSubmit={idForm.handleSubmit(onProfileIdSubmit)}
             className="relative flex justify-center items-center rounded-lg p-1 border-2 border-footer-text-gray max-sm:flex-col"
           >
             <input
               // onChange={(e) => setSearchProfile(e.target.value)}
-              {...register("profile_id")}
+              // {...register("profile_id")}
+              {...idForm.register("profile_id")}
               type="text"
               placeholder="Search by Profile ID or Profile Name"
               className="w-full px-10 focus-visible:outline-none max-sm:p-4 max-sm:pl-10"
@@ -476,20 +533,23 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               Search
             </button>
           </form>
-          {errors.profile_id && (
+          {/* {errors.profile_id && (
             <p className="text-red-500 text-sm mt-1">
               {errors.profile_id.message}
             </p>
+          )} */}
+          {idForm.formState.errors.profile_id && (
+            <p className="text-red-500 text-sm mt-1">{idForm.formState.errors.profile_id.message}</p>
           )}
 
           {/* advance search */}
           <hr className="text-footer-text-gray mt-10 mb-5 max-md:my-8" />
-
           <h4 className="text-[24px] text-vysyamalaBlackSecondary font-bold mb-5 max-md:text-[20px]">
             Advanced Search
           </h4>
-
-          <form action="" method="post" className="space-y-5">
+          {/* 
+          <form action="" method="post" className="space-y-5"> */}
+          <form onSubmit={advancedForm.handleSubmit(handleAdvancedSearchSubmit)} className="space-y-5">
             {/* {/ Age & Height /} */}
             <div className="flex justify-between items-center gap-4 max-2xl:gap-4 max-sm:flex-col max-sm:items-start">
               {/* {/ Age /} */}
@@ -526,20 +586,41 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                         }
                       }}
                       // name="Profile_pincode"
-
+                      {...advancedForm.register("fromAge")}
                       type="text"
+                      // onChange={(e) => {
+                      //   const value = e.target.value;
+                      //   // Only allow digits
+                      //   setFromAge(Number(value));
+
+                      // }}
+                      // onChange={(e) => {
+                      //   const val = e.target.value;
+                      //   // Convert to number for context and form validation
+                      //   const numVal = val === "" ? "" : Number(val);
+
+                      //   setFromAge(Number(val)); // Update your Context state
+
+                      //   // Explicitly cast to match the expected Zod type
+                      //   advancedForm.setValue("fromAge", numVal as number | "" | undefined, { shouldValidate: true });
+                      // }}
                       onChange={(e) => {
-                        const value = e.target.value;
-                        // Only allow digits
-                        setFromAge(Number(value));
-
+                        const val = e.target.value;
+                        const numVal = val === "" ? "" : Number(val);
+                        setFromAge(Number(val)); // Context update
+                        // This tells the form to re-run the superRefine validation
+                        advancedForm.setValue("fromAge", numVal as any, { shouldValidate: true });
                       }}
-
                       id="age"
                       name="age"
                       placeholder="From"
                       className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded"
                     />
+                    {advancedForm.formState.errors.fromAge && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {advancedForm.formState.errors.fromAge.message}
+                      </p>
+                    )}
                   </div>
                   <div className="w-full">
                     <input
@@ -570,18 +651,37 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                         }
                       }}
                       // name="Profile_pincode"
+                      {...advancedForm.register("toAge")}
+                      // onChange={(e) => {
 
+                      //   const value = e.target.value;
+                      //   // Only allow digits
+                      //   setToAge(Number(value));
+
+                      // }}
+                      // onChange={(e) => {
+                      //   const val = e.target.value;
+                      //   // Convert to number for context and form validation
+                      //   const numVal = val === "" ? "" : Number(val);
+
+                      //   setToAge(Number(val)); // Update your Context state
+
+                      //   // Explicitly cast to match the expected Zod type
+                      //   advancedForm.setValue("toAge", numVal as number | "" | undefined, { shouldValidate: true });
+                      // }}
                       onChange={(e) => {
-
-                        const value = e.target.value;
-                        // Only allow digits
-                        setToAge(Number(value));
-
+                        const val = e.target.value;
+                        const numVal = val === "" ? "" : Number(val);
+                        setToAge(Number(val)); // Context update
+                        // This tells the form to re-run the superRefine validation
+                        advancedForm.setValue("toAge", numVal as any, { shouldValidate: true });
                       }}
-
                       placeholder="To"
                       className="outline-none w-full px-3 py-[13px] text-placeHolderColor border border-footer-text-gray rounded"
                     />
+                    {advancedForm.formState.errors.toAge && (
+                      <p className="text-red-500 text-xs mt-1">{advancedForm.formState.errors.toAge.message}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1097,7 +1197,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               </button>
               <button
                 // onClick={() => handleSearch()}
-                onClick={handleSearch}
+                //onClick={handleSearch}
                 // disabled={disableFindMatch}
                 type="submit"
                 className="flex items-center text-sm py-[10px] px-6 bg-gradient text-white rounded-[6px] mt-2"
