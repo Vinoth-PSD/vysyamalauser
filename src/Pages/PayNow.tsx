@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AddOns } from "../Components/PayNow/AddOns";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { cancelPayment, createOrder, Get_addon_packages, savePlanPackage, verifyPayment } from "../commonapicall";
-import axios from "axios";
+import { cancelPayment, createOrder, Get_addon_packages, PayNowsavePlanPackage, savePlanPackage, verifyPayment } from "../commonapicall";
 import { ToastNotification, NotifyError, NotifySuccess } from "../Components/Toast/ToastNotification";
 import { GPayPopup } from "./PayNowRegistration/GPayPopup";
 import { ConfirmationPopup } from "./PayNowRegistration/ConfirmationPopup";
+import apiClient from "../API";
 
 interface Package {
   package_id: number;
@@ -24,7 +24,7 @@ export const PayNow: React.FC = () => {
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    const response = await axios.post(Get_addon_packages);
+    const response = await apiClient.post(Get_addon_packages);
     try {
       if (response.status === 200) {
         setMemberShipPlane(response.data.data);
@@ -101,7 +101,7 @@ export const PayNow: React.FC = () => {
   const createPaymentOrder = async () => {
     try {
       const amountInPaise = totalAmount;
-    //  const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
+      //  const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
       const addonPackageIdsString = selectedPackageIds.join(",");
 
       const orderResponse = await createOrder(
@@ -129,8 +129,8 @@ export const PayNow: React.FC = () => {
 
   const storePlanId = () => {
     if (plan_id) {
-      localStorage.setItem("userplanid", plan_id);
-      sessionStorage.setItem("cur_plan_id", plan_id);
+      // localStorage.setItem("userplanid", plan_id);
+      // sessionStorage.setItem("cur_plan_id", plan_id);
       console.log("Plan ID stored after payment:", plan_id);
     }
   };
@@ -186,7 +186,7 @@ export const PayNow: React.FC = () => {
       }
     } catch (error: any) {
       console.error("Error during payment cancellation:", error.message);
-     NotifyError("Error during payment cancellation. Please try again.");
+      NotifyError("Error during payment cancellation. Please try again.");
     }
   };
 
@@ -212,7 +212,7 @@ export const PayNow: React.FC = () => {
   const Save_plan_package = async (isGPay?: boolean) => {
     try {
       const addonPackageIdsString = selectedPackageIds.join(",");
-      const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
+      //const plan_id = localStorage.getItem("plan_id"); // Get cur_plan_id
       let response;
 
       if (isGPay) {
@@ -226,9 +226,9 @@ export const PayNow: React.FC = () => {
         );
       } else {
         // For other payments: don't pass gpay_online parameter
-        response = await savePlanPackage(
+        response = await PayNowsavePlanPackage(
           String(profile_id),
-          String(plan_id),
+          // String(plan_id),
           addonPackageIdsString,
           totalAmount
         );
@@ -245,7 +245,7 @@ export const PayNow: React.FC = () => {
           localStorage.setItem("register_token", response.token);
           localStorage.setItem("user_profile_image", response.profile_image);
           localStorage.setItem("custom_message", response.custom_message);
-          localStorage.setItem("plan_id", response.cur_plan_id);
+          //localStorage.setItem("plan_id", response.cur_plan_id);
           localStorage.setItem("valid_till", response.valid_till);
           //console.log("Save_plan_package", response);
 
@@ -303,6 +303,7 @@ export const PayNow: React.FC = () => {
       const options = {
         // key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
         key: "rzp_live_HYCeDsho3jhHRt", // Your Razorpay Key ID
+        //key: "rzp_test_SEjGDBXnicHcim",
         amount: amountInPaise, // Amount in paise
         currency: "INR",
         name: "Vysyamala", // Your company or name

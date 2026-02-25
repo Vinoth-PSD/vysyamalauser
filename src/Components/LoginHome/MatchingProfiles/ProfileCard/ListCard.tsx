@@ -26,6 +26,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../../utils/cryptoUtils";
 import PlatinumModal from "../../../DashBoard/ReUsePopup/PlatinumModalPopup";
+import FreeProfileRestrictionPopup from "../../../DashBoard/ReUsePopup/FreeProfileRestrictionPopup";
+import PremiumProfileRestrictionPopup from "../../../DashBoard/ReUsePopup/PremiumProfileRestrictionPopup";
 
 interface ListCardProps {
   profile: Profile;
@@ -42,6 +44,8 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
     setSelectedProfiles: () => { },
   };
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
+  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
+  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
   // useEffect(() => {
   //   const bookmarkedProfiles = JSON.parse(
   //     localStorage.getItem("bookmarkedProfiles") || "[]"
@@ -99,10 +103,10 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
 
   const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isPlatinumModalOpen) return;
-    if (isLoading) return;
-    setIsLoading(true);
     e.stopPropagation();
+    if (profile.visited_marriage_check) return;
+    if (isPremiumLimitPopupOpen || isPlatinumModalOpen || isFreeLimitPopupOpen || isLoading) return;
+    setIsLoading(true);
 
     let page_id = "1"; // Default
     // if (location.pathname === "/LoginHome" || location.pathname === "/Search") {
@@ -124,12 +128,37 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
       //   toast.error(checkResponse.data.message || "Limit reached to view profile");
       //   return;
       // }
+      // if (checkResponse.data.status === "failure") {
+      //   if (checkResponse.data.message === "Profile visibility restricted") {
+      //     setIsPlatinumModalOpen(true);
+      //   } else {
+      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
+      //   }
+      //   return;
+      // }
+
       if (checkResponse.data.status === "failure") {
-        if (checkResponse.data.message === "Profile visibility restricted") {
-          setIsPlatinumModalOpen(true);
-        } else {
-          toast.error(checkResponse.data.message || "Limit reached to view profile");
+        const message = checkResponse.data.message;
+
+        if (
+          message ===
+          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
+        ) {
+          setIsPremiumLimitPopupOpen(true);
+          return;
         }
+
+        if (message === "You have reached your profile viewing limit.") {
+          setIsFreeLimitPopupOpen(true);
+          return;
+        }
+
+        if (message === "Profile visibility restricted") {
+          setIsPlatinumModalOpen(true);
+          return;
+        }
+
+        toast.error(message || "Error accessing profile.");
         return;
       }
 
@@ -163,8 +192,11 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
+      } else if (serverMessage === "You have reached your profile viewing limit.") {
+        setIsFreeLimitPopupOpen(true);
+      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
+        setIsPremiumLimitPopupOpen(true);
       } else {
-        // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
         console.error("API Error:", error);
       }
@@ -212,7 +244,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
   return (
     // <Link to="/ProfileDetails" target="_blank">
     <div
-      className="flex justify-between items-start space-x-5 relative rounded-xl shadow-profileCardShadow p-6 mb-5 max-md:w-[400px] max-sm:w-[300px]"
+      className={`flex justify-between items-start space-x-5 relative rounded-xl shadow-profileCardShadow p-6 mb-5 max-md:w-[400px] max-sm:w-[300px] ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
       onClick={handleCardClick}
     >
       {isLoading && (
@@ -246,13 +278,15 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
                   }}
                   className="w-[218px] h-[218px] rounded-[6px] max-md:w-full max-md:h-[280px] opacity-50" // Reduced opacity when locked
                 />
-                {/* Lock overlay */}
-                <div className="absolute inset-0 flex flex-col justify-center items-center text-center bg-black bg-opacity-50 rounded-[6px]">
-                  <IoMdLock className="w-fit mx-auto text-secondary text-[50px]" />
-                  <p className="text-sm text-white font-semibold">
-                    Click and Enter password to view profile photo
-                  </p>
-                </div>
+                {profile.visited_marriage_check && (
+                  <div className="absolute inset-0 z-20 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
+                    <img
+                      src={profile.visited_marriage_badge || ""}
+                      alt="Marriage Badge"
+                      className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-2xl animate-in zoom-in duration-300"
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <img
@@ -266,16 +300,35 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
               />
             )}
 
+            {profile.visited_marriage_check && (
+              <div className="absolute inset-0 z-20 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
+                <img
+                  src={profile.visited_marriage_badge || ""}
+                  alt="Marriage Badge"
+                  className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-2xl animate-in zoom-in duration-300"
+                />
+              </div>
+            )}
+            {/* Lock overlay */}
+            {!profile.visited_marriage_check && profile.photo_protection === 1 && (
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-center bg-black bg-opacity-50 rounded-[6px]">
+                <IoMdLock className="w-fit mx-auto text-secondary text-[50px]" />
+                <p className="text-sm text-white font-semibold">
+                  Click and Enter password to view profile photo
+                </p>
+              </div>
+            )}
+
             {/* Bookmark Icon */}
             {isBookmarked ? (
               <MdBookmark
                 onClick={handleBookmark}
-                className="absolute top-2 right-2 text-secondary text-[22px] cursor-pointer"
+                className={`absolute top-2 right-2 text-secondary text-[22px] ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
               />
             ) : (
               <MdBookmarkBorder
                 onClick={handleBookmark}
-                className="absolute top-2 right-2 text-secondary text-[22px] cursor-pointer"
+                className={`absolute top-2 right-2 text-secondary text-[22px] ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
               />
             )}
           </div>
@@ -289,11 +342,11 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
               <div className="flex items-center">
                 <h5
                   onClick={handleCardClick}
-                  className="text-[20px] text-secondary font-semibold cursor-pointer">
+                  className={`text-[20px] text-secondary font-semibold ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}>
                   {profile_name || "Unknown"}{" "}
                   <span
                     onClick={handleCardClick}
-                    className="text-sm text-ashSecondary">
+                    className={`text-sm text-ashSecondary ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}>
                     ({profile_id || "N/A"})
                   </span>
                 </h5>
@@ -364,6 +417,14 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
         <PlatinumModal
           isOpen={isPlatinumModalOpen}
           onClose={() => setIsPlatinumModalOpen(false)}
+        />
+        <FreeProfileRestrictionPopup
+          isOpen={isFreeLimitPopupOpen}
+          onClose={() => setIsFreeLimitPopupOpen(false)}
+        />
+        <PremiumProfileRestrictionPopup
+          isOpen={isPremiumLimitPopupOpen}
+          onClose={() => setIsPremiumLimitPopupOpen(false)}
         />
       </div>
     </div>

@@ -29,7 +29,9 @@ export interface Profile {
   wish_list?: number;
   user_profile_views?: string;
   star?: string
-  matching_score?: string
+  matching_score?: string;
+  visited_marriage_check: boolean;
+  visited_marriage_badge: string | null;
 }
 export interface DashboardDetails {
   matching_profile_count?: number;  // Optional field
@@ -146,8 +148,8 @@ interface ProfileContextType {
   setWorkLocation: Dispatch<SetStateAction<string>>;
   setPeopleOnlyWithPhoto: Dispatch<SetStateAction<number>>;
   peopleOnlyWithPhoto: number;
-  advanceSearchData: Profile[];
-  setAdvanceSearchData: Dispatch<SetStateAction<Profile[]>>;
+  advanceSearchData: Profile[] | null;
+  setAdvanceSearchData: Dispatch<SetStateAction<Profile[] | null>>;
   gridListCardData: Profile[];
   setGridListCardData: Dispatch<SetStateAction<Profile[]>>;
   setTotalRecords: Dispatch<SetStateAction<number>>;
@@ -239,7 +241,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   const [workLocation, setWorkLocation] = useState<string>("");
   const [selectedIncomes, setSelectedIncomes] = useState<string>("");
   const [selectedMaxIncomes, setSelectedMaxIncomes] = useState<string>("");
-  const [advanceSearchData, setAdvanceSearchData] = useState<Profile[]>([]);
+  const [advanceSearchData, setAdvanceSearchData] = useState<Profile[] | null>(null);
   const [gridListCardData, setGridListCardData] = useState<Profile[]>([]);
   const [peopleOnlyWithPhoto, setPeopleOnlyWithPhoto] = useState<number>(0);
   //advance search
@@ -524,7 +526,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
     setAdvanceSelectedBirthStar("");
     setNativeState([]);
     setPeopleOnlyWithPhoto(0);
-    setAdvanceSearchData([]);
+    setAdvanceSearchData(null);
   };
 
   return (

@@ -94,7 +94,23 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
               <span className="text-sm text-primary"> ({totalRecords})</span>
             </h4>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-6">
+            <div
+
+              className="group flex items-center space-x-3 whitespace-nowrap"
+            >
+              <span className="text-md font-semibold text-vysyamalaBlackSecondary">
+                To update photo
+              </span>
+              <button
+                onClick={() => navigate("/MyProfile")}
+                type="button"
+                className="bg-gradient text-white px-2 py-1.5 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-md text-sm"
+              >
+                Click here
+              </button>
+            </div>
+
             {sortBy === "profile_id" ? (
               <MdToggleOff
                 onClick={toggleSort}
@@ -138,7 +154,7 @@ const PhotoRequest: React.FC<DashBoardMyProfileProps> = ({
             totalRecords={totalRecords}
             dataPerPage={dataPerPage}
             toptalPages={toptalPages}
-            //sortBy={sortBy}
+          //sortBy={sortBy}
           />
         </div>
 

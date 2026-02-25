@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { AddOns } from "../Components/PayNow/AddOns";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { cancelPayment, createOrder, Get_addon_packages, savePlanPackage, verifyPayment } from "../commonapicall";
-import axios from "axios";
 import { ToastNotification, NotifyError, NotifySuccess, } from "../Components/Toast/ToastNotification";
 import { GPayPopup } from "./PayNowRegistration/GPayPopup";
 import { ConfirmationPopup } from "./PayNowRegistration/ConfirmationPopup";
+import apiClient from "../API";
 
 interface Package {
   package_id: number;
@@ -25,7 +25,7 @@ export const PayNowRegistration: React.FC = () => {
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    const response = await axios.post(Get_addon_packages);
+    const response = await apiClient.post(Get_addon_packages);
     try {
       if (response.status === 200) {
         setMemberShipPlane(response.data.data);
@@ -284,6 +284,7 @@ export const PayNowRegistration: React.FC = () => {
       const options = {
         // key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
         key: "rzp_live_HYCeDsho3jhHRt", // Your Razorpay Key ID
+         //key: "rzp_test_SEjGDBXnicHcim", 
         amount: amountInPaise, // Amount in paise
         currency: "INR",
         name: "Vysyamala", // Your company or name
