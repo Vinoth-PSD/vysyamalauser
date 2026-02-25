@@ -27,7 +27,6 @@ import { Hearts } from 'react-loader-spinner'
 import { ReUseUpGradePopup } from "../ReUsePopup/ReUseUpGradePopup";
 import { GenderRestrictionPopup } from "../ReUsePopup/GenderRestrictionPopup";
 import { decryptId } from "../../../utils/cryptoUtils";
-import config from "../../../Config";
 
 // Define the interfaces for profile data
 interface HoroscopeDetails {
@@ -64,7 +63,6 @@ interface PersonalDetails {
 }
 
 interface ProfileData {
-  encrypted_profile_id: string;
   horoscope_details: HoroscopeDetails;
   education_details: EducationDetails;
   basic_details: BasicDetails;
@@ -118,8 +116,7 @@ export const ProfileDetailsExpressInterest: React.FC<
   const custom_message = localStorage.getItem("custom_message");
   const storedPlanId = localStorage.getItem("plan_id") || sessionStorage.getItem("plan_id");
   const isPlan16 = storedPlanId === "16";
-  const [serverEncryptedId, setServerEncryptedId] = useState<string>("");
-  const [EncryptedMyprofileId, setEncryptedMyprofileId] = useState<string>("");
+
 
   ////console.log("vysya", storedPlanId);
   const navigate = useNavigate();
@@ -328,12 +325,7 @@ export const ProfileDetailsExpressInterest: React.FC<
           setProfileData(null); // Ensure profile data is cleared if this error occurs
           return; // Stop processing the rest of the success logic
         }
-        if (response.data.encrypted_profile_id) {
-          setServerEncryptedId(response.data.encrypted_profile_id);
-        }
-        if (response.data.My_profile_id) {
-          setEncryptedMyprofileId(response.data.My_profile_id);
-        }
+        // Store the response data for Vys Assist
         setVysAssistData(response.data);
 
         await apiClient.post("/auth/Create_profile_visit/", {
@@ -567,7 +559,6 @@ export const ProfileDetailsExpressInterest: React.FC<
   const [isHovered, setIsHovered] = useState(false);
   const [apimsgPhotoReq, setApimsgPhotoReq] = useState("");
   const [apimsgMatchingScore, setApimsgMatchingScore] = useState("");
-  const [isPhotoReqAlreadySent, setIsPhotoReqAlreadySent] = useState<boolean>(false);
   //console.log('apimsgMatchingScore', apimsgMatchingScore)
 
   const sendPhotoRequest = async () => {
@@ -581,13 +572,7 @@ export const ProfileDetailsExpressInterest: React.FC<
         }
       );
       if (response.data.Status === 0 && response.data.message) {
-        if (response.data.message === "Photo interests updated") {
-          setApimsgPhotoReq("Photo request already sent.");
-          setIsPhotoReqAlreadySent(true); // Mark as already sent
-        } else {
-          setApimsgPhotoReq(response.data.message);
-          setIsPhotoReqAlreadySent(false); // Mark as upgrade required
-        }
+        setApimsgPhotoReq(response.data.message);
         setBookMarkPopup(true);
         return;
       }
@@ -607,11 +592,9 @@ export const ProfileDetailsExpressInterest: React.FC<
   };
 
   const generatePoruthamPDF = async () => {
-    const encodedId = encodeURIComponent(serverEncryptedId);
-    const encodedMyprofileId = encodeURIComponent(EncryptedMyprofileId);
     try {
-      const response = await apiClient.get(
-        `/auth/generate-porutham-pdf-mobile/${encodedMyprofileId}/${encodedId}/`,
+      const response = await axios.get(
+        `https://app.vysyamala.com/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
         // const response = await apiClient.get(
         //   `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
         {
@@ -747,23 +730,19 @@ export const ProfileDetailsExpressInterest: React.FC<
 
   // Horoscope Download Function
   const handleDownloadPdf = () => {
-    const encodedId = encodeURIComponent(serverEncryptedId);
-    const encodedMyprofileId = encodeURIComponent(EncryptedMyprofileId);
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    // link.href = `${config.apiUrl}/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `${config.apiUrl}/auth/New_horoscope_black/${encodedMyprofileId}/${encodedId}/`;
+    // link.href = `https://app.vysyamala.com/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://app.vysyamala.com/auth/New_horoscope_black/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
   };
   const handleDownloadColorPdf = () => {
-    const encodedId = encodeURIComponent(serverEncryptedId);
-    const encodedMyprofileId = encodeURIComponent(EncryptedMyprofileId);
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
-    // link.href = `${config.apiUrl}/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `${config.apiUrl}/auth/New_horoscope_color/${encodedMyprofileId}/${encodedId}/`;
+    // link.href = `https://app.vysyamala.com/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
+    link.href = `https://app.vysyamala.com/auth/New_horoscope_color/${idparam}/${loginuser_profileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -1112,7 +1091,7 @@ export const ProfileDetailsExpressInterest: React.FC<
                       </h5>
                     )}
 
-
+                    
                     {/* Star & Gothram */}
                     <div className="flex justify-start gap-4 items-center mb-3 max-lg:flex-wrap max-sm:gap-3 max-sm:flex-col max-sm:items-start">
                       {profileData?.horoscope_details?.star_name &&
@@ -1494,16 +1473,11 @@ export const ProfileDetailsExpressInterest: React.FC<
           <ReUseUpGradePopup closePopup={() => setExpressPopup(false)} text={apimsgExpressInt} />
         )
       }
-      {bookMarkPopup && (
-        <ReUseUpGradePopup
-          closePopup={() => {
-            setBookMarkPopup(false);
-            setIsPhotoReqAlreadySent(false); 
-          }}
-          text={apimsgPhotoReq}
-          isAlreadySent={isPhotoReqAlreadySent}
-        />
-      )}
+      {
+        bookMarkPopup && (
+          <ReUseUpGradePopup closePopup={() => setBookMarkPopup(false)} text={apimsgPhotoReq} />
+        )
+      }
       {
         matchingScorePopup && (
           <ReUseUpGradePopup closePopup={() => setMatchingScorePopup(false)} text={apimsgMatchingScore} />

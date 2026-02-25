@@ -62,8 +62,6 @@ import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 import PlatinumModal from "../../DashBoard/ReUsePopup/PlatinumModalPopup";
-import PremiumProfileRestrictionPopup from "../../DashBoard/ReUsePopup/PremiumProfileRestrictionPopup";
-import FreeProfileRestrictionPopup from "../../DashBoard/ReUsePopup/FreeProfileRestrictionPopup";
 
 interface FeaturedProfileCardProps {
   profileName: string;
@@ -84,11 +82,10 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
   const navigate = useNavigate();
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
-  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
-  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
 
   const handleProfileClick = async (profileId: string) => {
-    if (isPremiumLimitPopupOpen || isFreeLimitPopupOpen || isPlatinumModalOpen || activeProfileId) return;
+    if (activeProfileId) return;
+    if (isPlatinumModalOpen) return;
     setActiveProfileId(profileId); // set the card that's loading
     const secureId = encryptId(profileId);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -110,37 +107,12 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
       //   return;
       // }
 
-      // if (checkResponse.data.status === "failure") {
-      //   if (checkResponse.data.message === "Profile visibility restricted") {
-      //     setIsPlatinumModalOpen(true);
-      //   } else {
-      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
-      //   }
-      //   return;
-      // }
-
       if (checkResponse.data.status === "failure") {
-        const message: string = checkResponse.data.message || "";
-
-        if (
-          message ===
-          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
-        ) {
-          setIsPremiumLimitPopupOpen(true);
-          return;
-        }
-
-        if (message === "You have reached your profile viewing limit.") {
-          setIsFreeLimitPopupOpen(true);
-          return;
-        }
-
-        if (message.includes("Profile visibility restricted")) {
+        if (checkResponse.data.message === "Profile visibility restricted") {
           setIsPlatinumModalOpen(true);
-          return;
+        } else {
+          toast.error(checkResponse.data.message || "Limit reached to view profile");
         }
-
-        toast.error(message || "Error Accessing Profile");
         return;
       }
 
@@ -153,10 +125,6 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
-      } else if (serverMessage === "You have reached your profile viewing limit.") {
-        setIsFreeLimitPopupOpen(true);
-      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
-        setIsPremiumLimitPopupOpen(true);
       } else {
         // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
@@ -216,14 +184,6 @@ export const FeaturedProfileCard: React.FC<FeaturedProfileCardProps> = ({
       <PlatinumModal
         isOpen={isPlatinumModalOpen}
         onClose={() => setIsPlatinumModalOpen(false)}
-      />
-      <FreeProfileRestrictionPopup
-        isOpen={isFreeLimitPopupOpen}
-        onClose={() => setIsFreeLimitPopupOpen(false)}
-      />
-      <PremiumProfileRestrictionPopup
-        isOpen={isPremiumLimitPopupOpen}
-        onClose={() => setIsPremiumLimitPopupOpen(false)}
       />
     </div>
   );

@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { AddOns } from "../../Components/PayNow/AddOns";
 import { Link, useNavigate } from "react-router-dom";
 import { cancelPayment, createOrder, Get_addon_packages, savePlanPackage, verifyPayment } from "../../commonapicall";
+import axios from "axios";
 import { ToastNotification, NotifyError, NotifySuccess } from "../../Components/Toast/ToastNotification";
 import { GPayPopup } from "../PayNowRegistration/GPayPopup";
 import { ConfirmationPopup } from "../PayNowRegistration/ConfirmationPopup";
-import apiClient from "../../API";
 
 interface Package {
   package_id: number;
@@ -27,12 +27,12 @@ export const UpgradePayNow: React.FC = () => {
   const [popupMessage, setPopupMessage] = useState("");
   // const [isPaymentCancelled, setIsPaymentCancelled] = useState(false);
   // const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
-  const [, setIsPaymentCancelled] = useState(false);
+   const [, setIsPaymentCancelled] = useState(false);
   const [, setCurrentOrderId] = useState<string | null>(null);
   const [popupHeading, setPopupHeading] = useState("Thank You");
 
   const fetchData = async () => {
-    const response = await apiClient.post(Get_addon_packages);
+    const response = await axios.post(Get_addon_packages);
     try {
       if (response.status === 200) {
         setMemberShipPlane(response.data.data);
@@ -202,11 +202,11 @@ export const UpgradePayNow: React.FC = () => {
           localStorage.setItem("custom_message", response.custom_message);
           localStorage.setItem("plan_id", response.cur_plan_id);
           localStorage.setItem("valid_till", response.valid_till);
-
+  
           // Navigate to the next page
           setTimeout(() => {
             navigate("/MyProfile");
-          }, 5000);
+          },5000);
         } else {
           // Handle the case where data_message is missing
           console.error("data_message is missing in the response.");
@@ -234,11 +234,11 @@ export const UpgradePayNow: React.FC = () => {
         order_id,
         3
       );
-      if (cancelResponse.status === "success" && hasShownCancelToast.current) {
-        NotifyError("Payment cancelled successfully!");
-        hasShownCancelToast.current = true; // prevent duplicate toast
+     if (cancelResponse.status === "success" && hasShownCancelToast.current) {
+      NotifyError("Payment cancelled successfully!");
+      hasShownCancelToast.current = true; // prevent duplicate toast
       } else {
-        console.log("Failed to cancel the payment. Please try again.");
+          console.log("Failed to cancel the payment. Please try again.");
       }
     } catch (error: any) {
       console.error("Error during payment cancellation:", error.message);
@@ -295,7 +295,6 @@ export const UpgradePayNow: React.FC = () => {
       const options = {
         // key: "rzp_test_bR07kHwjYrmOHm", // Your Razorpay Key ID
         key: "rzp_live_HYCeDsho3jhHRt", // Your Razorpay Key ID
-        //key: "rzp_test_SEjGDBXnicHcim",
         amount: amountInPaise, // Amount in paise
         currency: "INR",
         name: "Vysyamala", // Your company or name

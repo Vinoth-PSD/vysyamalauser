@@ -21,9 +21,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../utils/cryptoUtils";
 import PlatinumModal from "../DashBoard/ReUsePopup/PlatinumModalPopup";
-import FreeProfileRestrictionPopup from "../DashBoard/ReUsePopup/FreeProfileRestrictionPopup";
-import PremiumProfileRestrictionPopup from "../DashBoard/ReUsePopup/PremiumProfileRestrictionPopup";
 
+
+// Define the shape of your wishlist profile
 interface WishlistProfile {
   height: string;
   degree: string;
@@ -45,8 +45,6 @@ interface WishlistProfile {
   wishlist_userstatus: string;
   wishlist_horoscope: string;
   wishlist_profile: number;
-  wishlist_marriage_check?: boolean;
-  wishlist_marriage_badge?: string;
 }
 interface WishlistCardProps {
   page: number;
@@ -67,8 +65,6 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
   const [bookmarkedProfiles, setBookmarkedProfiles] = useState<string[]>([]);
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
-  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
-  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
 
   const fetchWishlistProfiles = async (profileId: string) => {
     setIsLoading(true); // Start loading
@@ -139,11 +135,9 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
   // const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
-  const handleProfileClick = async (profileId: string, isMarriageChecked?: boolean) => {
-    if (isMarriageChecked) {
-      return;
-    }
-    if (isPremiumLimitPopupOpen || isFreeLimitPopupOpen || isPlatinumModalOpen || activeProfileId) return;
+  const handleProfileClick = async (profileId: string) => {
+    if (isPlatinumModalOpen) return;
+    if (activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
     const secureId = encryptId(profileId);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -169,37 +163,12 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
       //   return;
       // }
 
-      // if (checkResponse.data.status === "failure") {
-      //   if (checkResponse.data.message === "Profile visibility restricted") {
-      //     setIsPlatinumModalOpen(true);
-      //   } else {
-      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
-      //   }
-      //   return;
-      // }
-
       if (checkResponse.data.status === "failure") {
-        const message: string = checkResponse.data.message || "";
-
-        if (
-          message ===
-          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
-        ) {
-          setIsPremiumLimitPopupOpen(true);
-          return;
-        }
-
-        if (message === "You have reached your profile viewing limit.") {
-          setIsFreeLimitPopupOpen(true);
-          return;
-        }
-
-        if (message.includes("Profile visibility restricted")) {
+        if (checkResponse.data.message === "Profile visibility restricted") {
           setIsPlatinumModalOpen(true);
-          return;
+        } else {
+          toast.error(checkResponse.data.message || "Limit reached to view profile");
         }
-
-        toast.error(message || "Error Accessing Profile");
         return;
       }
 
@@ -220,10 +189,6 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
-      } else if (serverMessage === "You have reached your profile viewing limit.") {
-        setIsFreeLimitPopupOpen(true);
-      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
-        setIsPremiumLimitPopupOpen(true);
       } else {
         // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
@@ -331,12 +296,7 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
             {wishlistProfiles.map((profile) => (
               <div
                 key={profile.wishlist_profileid}
-                onClick={() =>
-                  !profile.wishlist_marriage_check &&
-                  handleProfileClick(profile.wishlist_profileid, profile.wishlist_marriage_check)
-                }
-                className={`flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow px-3 py-3 mb-5
-  ${profile.wishlist_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
+                className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow px-3 py-3 mb-5"
               >
                 {activeProfileId === profile.wishlist_profileid && (
                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
@@ -352,38 +312,27 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
                         src={profile.wishlist_Profile_img || defaultImgUrl}
                         alt="Profile-image"
                         onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = defaultImgUrl;
+                          e.currentTarget.onerror = null; // Prevent infinite loop
+                          e.currentTarget.src = defaultImgUrl; // Set default image
                         }}
                         className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                       />
-                      {profile.wishlist_marriage_check && (
-                        <div className="absolute inset-0 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
-                          <img
-                            src={profile.wishlist_marriage_badge}
-                            alt="Marriage Badge"
-                            className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-xl"
-                          />
-                        </div>
-                      )}
-                      {!profile.wishlist_marriage_check && (
-                        bookmarkedProfiles.includes(profile.wishlist_profileid) ? (
-                          <MdBookmark
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookmarkToggle(profile.wishlist_profileid);
-                            }}
-                            className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                          />
-                        ) : (
-                          <MdBookmarkBorder
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookmarkToggle(profile.wishlist_profileid);
-                            }}
-                            className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                          />
-                        )
+                      {bookmarkedProfiles.includes(profile.wishlist_profileid) ? (
+                        <MdBookmark
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBookmarkToggle(profile.wishlist_profileid);
+                          }}
+                          className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                        />
+                      ) : (
+                        <MdBookmarkBorder
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBookmarkToggle(profile.wishlist_profileid);
+                          }}
+                          className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                        />
                       )}
                       {/* No Bookmark icon functionality here */}
                     </div>
@@ -396,11 +345,9 @@ export const WishlistCard: React.FC<WishlistCardProps> = ({ page, sortBy }) => {
                         <div className="flex items-center">
                           <h5
                             onClick={() =>
-                              handleProfileClick(profile.wishlist_profileid, profile.wishlist_marriage_check)
+                              handleProfileClick(profile.wishlist_profileid)
                             }
-                            className={`text-[20px] text-secondary font-semibold
-${profile.wishlist_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
-
+                            className="text-[20px] text-secondary font-semibold cursor-pointer"
                           >
                             {profile.wishlist_profile_name}
                             <span className="text-sm text-ashSecondary">
@@ -515,14 +462,6 @@ ${profile.wishlist_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
       <PlatinumModal
         isOpen={isPlatinumModalOpen}
         onClose={() => setIsPlatinumModalOpen(false)}
-      />
-      <FreeProfileRestrictionPopup
-        isOpen={isFreeLimitPopupOpen}
-        onClose={() => setIsFreeLimitPopupOpen(false)}
-      />
-      <PremiumProfileRestrictionPopup
-        isOpen={isPremiumLimitPopupOpen}
-        onClose={() => setIsPremiumLimitPopupOpen(false)}
       />
     </div>
   );

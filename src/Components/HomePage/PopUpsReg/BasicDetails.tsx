@@ -160,9 +160,7 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
     if (dateOfBirth) {
       const age = calculateAge(dateOfBirth);
       setAgeMessage(`Your age is ${age}`);
-      sessionStorage.setItem("userAge", age.toString());
-      sessionStorage.setItem("age", age.toString());
-      localStorage.setItem("age", age.toString());
+      sessionStorage.setItem("userAge", age.toString()); // Convert age to string before storing
     } else {
       setAgeMessage("");
       sessionStorage.removeItem("userAge"); // Remove age from session storage if date of birth is not provided
@@ -175,8 +173,6 @@ export const BasicDetails: React.FC<BasicDetailsProps> = ({ onClose }) => {
     if (height) {
       sessionStorage.setItem("userHeight", height);
       localStorage.setItem("userHeight", height);
-      sessionStorage.setItem("height", height);
-      localStorage.setItem("height", height);
     }
   }, [height]);
 

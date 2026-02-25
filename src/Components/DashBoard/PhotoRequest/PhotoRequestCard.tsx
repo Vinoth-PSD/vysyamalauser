@@ -3,16 +3,17 @@ import { useEffect, useState } from "react";
 import {
   MdBookmark,
   MdBookmarkBorder,
-  //MdMessage,
+  MdMessage,
   MdOutlineGrid3X3,
   MdStars,
   MdVerifiedUser,
 } from "react-icons/md";
+import axios from "axios";
 import { Update_photo_request } from "../../../commonapicall";
 import {
   ToastNotification,
-  // NotifyError,
-  // NotifySuccess,
+  NotifyError,
+  NotifySuccess,
 } from "../../Toast/ToastNotification";
 // import { useNavigate } from "react-router-dom";
 import { IoCalendar, IoEye, IoSchool } from "react-icons/io5";
@@ -24,8 +25,8 @@ import {
 } from "react-icons/fa6";
 import MatchingScore from "../ProfileDetails/MatchingScore";
 // import ProfileListImg from "../../../assets/images/./ProfileListImg.png";
-// import { FaCheckCircle } from "react-icons/fa";
-// import { IoMdCloseCircle } from "react-icons/io";
+import { FaCheckCircle } from "react-icons/fa";
+import { IoMdCloseCircle } from "react-icons/io";
 import { PhotoRequestPopup } from "./PhotoRequestPopup";
 //import Spinner from "../../Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -35,8 +36,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 import PlatinumModal from "../ReUsePopup/PlatinumModalPopup";
-import PremiumProfileRestrictionPopup from "../ReUsePopup/PremiumProfileRestrictionPopup";
-import FreeProfileRestrictionPopup from "../ReUsePopup/FreeProfileRestrictionPopup";
 
 
 interface PhotoRequestData {
@@ -58,8 +57,6 @@ interface PhotoRequestData {
   req_userstatus: string;
   req_horoscope: string;
   req_profile_wishlist: string | number;
-  visited_marriage_check: any;
-  visited_marriage_badge: string;
 }
 
 interface proptype {
@@ -80,11 +77,10 @@ const PhotoRequestCard = ({
   const navigate = useNavigate();
   // const [photoRequests, setPhotoRequests] = useState<PhotoRequestData[]>([]);
   const [, setPhotoRequests] = useState<PhotoRequestData[]>([]);
-  // const [loading, setLoading] = useState(false);
-  const [, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
-  //const [RejectMsg] = useState<string>("");
+  const [RejectMsg] = useState<string>("");
   // const [, setShowPhotoRequestNotesPopup] = useState<boolean>(false);
 
   //const [showMessageButton, setShowMessageButton] = useState<boolean>(false);
@@ -94,15 +90,12 @@ const PhotoRequestCard = ({
   //const [declineButtonVisible, setDeclineButtonVisible] = useState(true); // State to control the visibility of the Decline button
   ///const [responseMessage, setResponseMessage] = useState<string | null>(null);
 
-  // const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
-  // const [roomId, setRoomId] = useState("");
-  // const [isRedirect, setIsRedirect] = useState(false);
-   const [selectedProfileId, ] = useState<string | null>(null);
-  const [roomId, ] = useState("");
-  const [isRedirect,] = useState(false);
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  const [roomId, setRoomId] = useState("");
+  const [isRedirect, setIsRedirect] = useState(false);
   const [userName] = useState("");
   // Added state to capture the selected from_profile_id for messaging
-  //const [, setSelectedFromProfileId] = useState<string | null>(null);
+  const [, setSelectedFromProfileId] = useState<string | null>(null);
   ////console.log("setSelectedFromProfileId",setSelectedFromProfileId)
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const location = useLocation();
@@ -117,58 +110,56 @@ const PhotoRequestCard = ({
     return savedBookmarks ? JSON.parse(savedBookmarks) : [];
   });
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
-  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
-  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
 
-  // const handleMessage = async (fromProfileId: string) => {
-  //   try {
-  //     // First API call to Create_or_retrievechat
-  //     const response = await apiClient.post("/auth/Create_or_retrievechat/", {
-  //       profile_id: loginuser_profileId,
-  //       profile_to: fromProfileId, // Use the passed fromProfileId
-  //     });
+  const handleMessage = async (fromProfileId: string) => {
+    try {
+      // First API call to Create_or_retrievechat
+      const response = await apiClient.post("/auth/Create_or_retrievechat/", {
+        profile_id: loginuser_profileId,
+        profile_to: fromProfileId, // Use the passed fromProfileId
+      });
 
 
-  //     if (response.data.statue === 1) {
-  //       const { room_id_name } = response.data;
+      if (response.data.statue === 1) {
+        const { room_id_name } = response.data;
 
-  //       // Second API call to Get_user_chatlist
-  //       const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
-  //         profile_id: loginuser_profileId,
-  //       });
+        // Second API call to Get_user_chatlist
+        const chatListResponse = await apiClient.post("/auth/Get_user_chatlist/", {
+          profile_id: loginuser_profileId,
+        });
 
-  //       if (chatListResponse.data.status === 1) {
-  //         // Extract relevant profile data
-  //         const profileData = chatListResponse.data.data.find(
-  //           (item: { room_name_id: any; }) => item.room_name_id === room_id_name
-  //         );
+        if (chatListResponse.data.status === 1) {
+          // Extract relevant profile data
+          const profileData = chatListResponse.data.data.find(
+            (item: { room_name_id: any; }) => item.room_name_id === room_id_name
+          );
 
-  //         // Structure profileData with actual details from chatListResponse
-  //         const selectedProfileData = {
-  //           room_name_id: profileData.room_name_id,
-  //           profile_image: profileData.profile_image,
-  //           profile_user_name: profileData.profile_user_name,
-  //           profile_lastvist: profileData.profile_lastvist,
-  //         };
+          // Structure profileData with actual details from chatListResponse
+          const selectedProfileData = {
+            room_name_id: profileData.room_name_id,
+            profile_image: profileData.profile_image,
+            profile_user_name: profileData.profile_user_name,
+            profile_lastvist: profileData.profile_lastvist,
+          };
 
-  //         // Save profile data with room ID to sessionStorage
-  //         sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
-  //         console.log(selectedProfileData, "selectedProfileData");
+          // Save profile data with room ID to sessionStorage
+          sessionStorage.setItem("selectedProfile", JSON.stringify(selectedProfileData));
+          console.log(selectedProfileData, "selectedProfileData");
 
-  //         // Set state and navigate to messages page
-  //         setRoomId(room_id_name);
-  //         setIsRedirect(true);
-  //         navigate("/Messages");
-  //       } else {
-  //         console.error("Failed to fetch chat list:", chatListResponse.data.mesaage);
-  //       }
-  //     } else {
-  //       console.error("Failed to create chat room:", response.data.Message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating or fetching chat room:", error);
-  //   }
-  // };
+          // Set state and navigate to messages page
+          setRoomId(room_id_name);
+          setIsRedirect(true);
+          navigate("/Messages");
+        } else {
+          console.error("Failed to fetch chat list:", chatListResponse.data.mesaage);
+        }
+      } else {
+        console.error("Failed to create chat room:", response.data.Message);
+      }
+    } catch (error) {
+      console.error("Error creating or fetching chat room:", error);
+    }
+  };
 
 
   useEffect(() => {
@@ -212,32 +203,32 @@ const PhotoRequestCard = ({
   //console.log(photoRequests, "ddddddddddddddd");
 
 
-  // const handleUpdateInterest = async (status: string) => {
-  //   const payload = {
-  //     profile_id: loginuser_profileId,
-  //     profile_from: data.req_profileid,
-  //     status: status === "2" ? "2" : "3",
-  //     response_message: status === "3" ? RejectMsg : undefined,
-  //   };
+  const handleUpdateInterest = async (status: string) => {
+    const payload = {
+      profile_id: loginuser_profileId,
+      profile_from: data.req_profileid,
+      status: status === "2" ? "2" : "3",
+      response_message: status === "3" ? RejectMsg : undefined,
+    };
 
-  //   try {
-  //     const response = await apiClient.post(Update_photo_request, payload);
-  //     if (response.status === 200 && response.data.Status === 1) {
-  //       if (status === "2") {
-  //         NotifySuccess("Photo request accepted successfully");
-  //       } else {
-  //         NotifyError("Photo request declined");
-  //       }
+    try {
+      const response = await axios.post(Update_photo_request, payload);
+      if (response.status === 200 && response.data.Status === 1) {
+        if (status === "2") {
+          NotifySuccess("Photo request accepted successfully");
+        } else {
+          NotifyError("Photo request declined");
+        }
 
-  //       setNewUPDatedData(!NewUpdatedData); // Trigger a refresh
-  //     } else {
-  //       NotifyError("Failed to update photo request");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating photo request:", error);
-  //     NotifyError("An error occurred while updating the photo request");
-  //   }
-  // };
+        setNewUPDatedData(!NewUpdatedData); // Trigger a refresh
+      } else {
+        NotifyError("Failed to update photo request");
+      }
+    } catch (error) {
+      console.error("Error updating photo request:", error);
+      NotifyError("An error occurred while updating the photo request");
+    }
+  };
 
   // const handleBookmark = () => {
   //   setIsBookmarked(!isBookmarked);
@@ -305,17 +296,17 @@ const PhotoRequestCard = ({
     }
   };
 
-  // const handleshowPhotoRequestPopup = (profileId: string) => {
-  //   setSelectedProfileId(profileId); // Set the selected profile ID
-  //   setshowPhotoRequestPopup(!showPhotoRequestPopup); // Toggle the popup
-  // };
+  const handleshowPhotoRequestPopup = (profileId: string) => {
+    setSelectedProfileId(profileId); // Set the selected profile ID
+    setshowPhotoRequestPopup(!showPhotoRequestPopup); // Toggle the popup
+  };
 
 
   const handleDeclineSubmit = async (message: string) => {
     if (!selectedProfileId) return;
 
     try {
-      const response = await apiClient.post(Update_photo_request, {
+      const response = await axios.post(Update_photo_request, {
         profile_id: loginuser_profileId,
         profile_from: selectedProfileId,
         status: "3",
@@ -334,11 +325,30 @@ const PhotoRequestCard = ({
   };
 
 
+  if (loading) {
+    return (
+      <div className="w-fit mx-auto py-40">
+        <Hearts
+          height="100"
+          width="100"
+          color="#FF6666"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        <p className="text-sm">Please wait...</p>
+      </div>
+    );
+  }
+  if (error) return <div>{error}</div>;
+
+  // const handleProfileClick = (profileId: string) => {
+  //   navigate(`/ProfileDetails?id=${profileId}&page=6`);
+  // };
+
   const handleProfileClick = async (profileId: string, sortBy: string) => {
-    if (data.visited_marriage_check) {
-      return;
-    }
-    if (isPremiumLimitPopupOpen || isFreeLimitPopupOpen || isPlatinumModalOpen || activeProfileId) return;
+    if (activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
     const secureId = encryptId(profileId);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -365,36 +375,12 @@ const PhotoRequestCard = ({
       // }
 
 
-      // if (checkResponse.data.status === "failure") {
-      //   if (checkResponse.data.message === "Profile visibility restricted") {
-      //     setIsPlatinumModalOpen(true);
-      //   } else {
-      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
-      //   }
-      //   return;
-      // }
       if (checkResponse.data.status === "failure") {
-        const message: string = checkResponse.data.message || "";
-
-        if (
-          message ===
-          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
-        ) {
-          setIsPremiumLimitPopupOpen(true);
-          return;
-        }
-
-        if (message === "You have reached your profile viewing limit.") {
-          setIsFreeLimitPopupOpen(true);
-          return;
-        }
-
-        if (message.includes("Profile visibility restricted")) {
+        if (checkResponse.data.message === "Profile visibility restricted") {
           setIsPlatinumModalOpen(true);
-          return;
+        } else {
+          toast.error(checkResponse.data.message || "Limit reached to view profile");
         }
-
-        toast.error(message || "Error Accessing Profile");
         return;
       }
       // Navigate after validation
@@ -406,10 +392,6 @@ const PhotoRequestCard = ({
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
-      } else if (serverMessage === "You have reached your profile viewing limit.") {
-        setIsFreeLimitPopupOpen(true);
-      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
-        setIsPremiumLimitPopupOpen(true);
       } else {
         // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
@@ -428,7 +410,6 @@ const PhotoRequestCard = ({
       ? "https://vysyamat.blob.core.windows.net/vysyamala/default_bride.png"
       : "https://vysyamat.blob.core.windows.net/vysyamala/default_groom.png";
 
-  if (error) return <div>{error}</div>;
 
   return (
     <div>
@@ -436,7 +417,7 @@ const PhotoRequestCard = ({
 
       <div
         key={data.req_profileid}
-        className={`relative border-b-[1px] border-footer-text-gray mb-4 ${data.visited_marriage_check ? "cursor-not-allowed" : ""}`}
+        className=""
       >
         {activeProfileId === data.req_profileid && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
@@ -455,31 +436,19 @@ const PhotoRequestCard = ({
                     e.currentTarget.onerror = null; // Prevent infinite loop
                     e.currentTarget.src = defaultImgUrl; // Set default image
                   }}
-                  className={`rounded-[6px] w-[218px] h-[218px]  max-md:w-full ${data.visited_marriage_check ? "cursor-not-allowed" : ""}`}
+                  className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                   onClick={() => handleProfileClick(data.req_profileid, sortBy)} // ✅ Add this line
                 />
-                {data.visited_marriage_check && (
-                  <div className="absolute inset-0 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
-                    <img
-                      src={data.visited_marriage_badge || ""}
-                      alt="Marriage Badge"
-                      className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-xl"
-                    />
-                  </div>
-                )}
-
-                {!data.visited_marriage_check && (
-                  isBookmarked ? (
-                    <MdBookmark
-                      onClick={handleBookmarkToggle}
-                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                    />
-                  ) : (
-                    <MdBookmarkBorder
-                      onClick={handleBookmarkToggle}
-                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                    />
-                  )
+                {isBookmarked ? (
+                  <MdBookmark
+                    onClick={handleBookmarkToggle}
+                    className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                  />
+                ) : (
+                  <MdBookmarkBorder
+                    onClick={handleBookmarkToggle}
+                    className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                  />
                 )}
               </div>
 
@@ -495,7 +464,7 @@ const PhotoRequestCard = ({
                 <div className="relative mb-2">
                   <div className="flex items-center">
                     <h5
-                      className={`text-[20px] text-secondary font-semibold ${data.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"} flex gap-2 items-center`}
+                      className="text-[20px] text-secondary font-semibold cursor-pointer flex gap-2 items-center"
                       onClick={() => handleProfileClick(data.req_profileid, sortBy)}
                     >
                       {data.req_profile_name}
@@ -613,7 +582,7 @@ const PhotoRequestCard = ({
                   {/* {!requestHandled && ( */}
 
                   {/* // {!requestHandled && !responseMessage && !data.response_message && ( */}
-                  {/* {data.req_status !== 2 && data.req_status !== 3 && (
+                  {data.req_status !== 2 && data.req_status !== 3 && (
                     <>
                       <button
                         onClick={() => handleUpdateInterest("2")}
@@ -621,7 +590,7 @@ const PhotoRequestCard = ({
                       >
                         <FaCheckCircle className="text-[22px] mr-2 text" /> Accept
                       </button>
-                      
+                      {/* {declineButtonVisible && ( */}
                       <button
                         onClick={() =>
                           handleshowPhotoRequestPopup(data.req_profileid)
@@ -630,22 +599,22 @@ const PhotoRequestCard = ({
                       >
                         <IoMdCloseCircle className="text-[26px] mr-2 text-main" /> Decline
                       </button>
-                     
+                      {/* )} */}
                     </>
-                  )} */}
+                  )}
                   {/* {showMessageButton && data.req_status === 2  ( */}
-                  {/* {data.req_status === 2 && (
+                  {data.req_status === 2 && (
                     <button className="text-main font-semibold flex items-center rounded-lg py-5 cursor-pointer"
                       onClick={() => {
-                        setSelectedFromProfileId(data.req_profileid); 
-                        handleMessage(data.req_profileid); 
+                        setSelectedFromProfileId(data.req_profileid); // Set the selected profile ID
+                        handleMessage(data.req_profileid); // Pass the ID to the handler
                       }}
 
 
                     >
                       <MdMessage className="text-[26px] mr-2 text-main" /> Message
                     </button>
-                  )} */}
+                  )}
                 </div>
                 <div>
                   <div>
@@ -656,11 +625,11 @@ const PhotoRequestCard = ({
                     )} */}
 
                     {/* {responseMessage &&   ( */}
-                    {/* {data.req_status === 3 && (
+                    {data.req_status === 3 && (
                       <div className="text-main font-semibold mt-4">
                         Response Message: {data.response_message}
                       </div>
-                    )} */}
+                    )}
                   </div>
                 </div>
               </div>
@@ -692,14 +661,6 @@ const PhotoRequestCard = ({
         <PlatinumModal
           isOpen={isPlatinumModalOpen}
           onClose={() => setIsPlatinumModalOpen(false)}
-        />
-        <FreeProfileRestrictionPopup
-          isOpen={isFreeLimitPopupOpen}
-          onClose={() => setIsFreeLimitPopupOpen(false)}
-        />
-        <PremiumProfileRestrictionPopup
-          isOpen={isPremiumLimitPopupOpen}
-          onClose={() => setIsPremiumLimitPopupOpen(false)}
         />
       </div>
     </div>

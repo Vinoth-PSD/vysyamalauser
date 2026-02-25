@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { NameCard } from "./NameCard";
 import "../../index.css";
-import config from "../../Config";
 
 interface Chat {
   room_name_id: string;
@@ -47,7 +46,7 @@ export const ProfileContacts: React.FC<ProfileContactsProps> = ({
         let data: any[] = [];
         if (searchTerm === "") {
           const response = await fetch(
-             `${config.apiUrl}/auth/Get_user_chatlist/`,
+             "https://app.vysyamala.com/auth/Get_user_chatlist/",
            // "http://103.214.132.20:8000/auth/Get_user_chatlist/",
             {
               method: "POST",
@@ -63,7 +62,7 @@ export const ProfileContacts: React.FC<ProfileContactsProps> = ({
           }
         } else {
           const response = await fetch(
-            `${config.apiUrl}/auth/Get_user_chatlist_search/`,
+            "https://app.vysyamala.com/auth/Get_user_chatlist_search/",
             //"http://103.214.132.20:8000/auth/Get_user_chatlist_search/",
             {
               method: "POST",

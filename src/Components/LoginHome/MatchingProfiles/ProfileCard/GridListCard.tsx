@@ -19,8 +19,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../../utils/cryptoUtils";
 import PlatinumModal from "../../../DashBoard/ReUsePopup/PlatinumModalPopup";
-import FreeProfileRestrictionPopup from "../../../DashBoard/ReUsePopup/FreeProfileRestrictionPopup";
-import PremiumProfileRestrictionPopup from "../../../DashBoard/ReUsePopup/PremiumProfileRestrictionPopup";
 // import { toast } from "react-toastify";
 // import { ToastNotification } from "../../../Toast/ToastNotification";
 
@@ -46,8 +44,6 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
     setSelectedProfiles: () => { },
   };
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
-  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
-  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
   const navigate = useNavigate();
   const loginuser_profileId = localStorage.getItem("loginuser_profile_id")
 
@@ -110,10 +106,10 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    if (profile.visited_marriage_check) return;
-    if (isPremiumLimitPopupOpen || isPlatinumModalOpen || isFreeLimitPopupOpen || isLoading) return;
+    if (isPlatinumModalOpen) return;
+    if (isLoading) return;
     setIsLoading(true);
+    e.stopPropagation();
 
     let page_id = "1"; // Default
 
@@ -133,38 +129,12 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
       //   return;
       // }
 
-      // if (checkResponse.data.status === "failure") {
-      //   if (checkResponse.data.message === "Profile visibility restricted") {
-      //     setIsPlatinumModalOpen(true);
-      //   } else {
-      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
-      //   }
-      //   return;
-      // }
-
       if (checkResponse.data.status === "failure") {
-        const message = checkResponse.data.message;
-
-        if (
-          message ===
-          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
-        ) {
-          setIsPremiumLimitPopupOpen(true);
-          return;
-        }
-
-
-        if (message === "You have reached your profile viewing limit.") {
-          setIsFreeLimitPopupOpen(true);
-          return;
-        }
-
-        if (message === "Profile visibility restricted") {
+        if (checkResponse.data.message === "Profile visibility restricted") {
           setIsPlatinumModalOpen(true);
-          return;
+        } else {
+          toast.error(checkResponse.data.message || "Limit reached to view profile");
         }
-
-        toast.error(message || "Error accessing profile.");
         return;
       }
 
@@ -199,11 +169,8 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
-      } else if (serverMessage === "You have reached your profile viewing limit.") {
-        setIsFreeLimitPopupOpen(true);
-      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
-        setIsPremiumLimitPopupOpen(true);
       } else {
+        // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
         console.error("API Error:", error);
       }
@@ -233,22 +200,43 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
   } = profile;
 
   return (
+    // <Link to="/ProfileDetails" target="_blank">
+
     <div
-      className={`flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow px-4 py-[18px] max-sm:w-fit max-sm:mx-auto 
-      ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
+      className="flex justify-start items-center space-x-5 relative rounded-xl shadow-profileCardShadow px-4 py-[18px]  max-sm:w-fit max-sm:mx-auto "
       onClick={handleCardClick}
     >
-      {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-white bg-opacity-80 z-50 flex flex-col items-center justify-center rounded-xl">
+        <div className="absolute inset-0 bg-white bg-opacity-80 z-10 flex flex-col items-center justify-center rounded-xl">
           <Hearts height="80" width="80" color="#FF6666" visible={true} />
           <p className="text-sm mt-2 text-primary">Please wait...</p>
         </div>
       )}
 
       <div className="flex justify-between gap-x-4 max-sm:flex-col max-sm:w-full max-sm:gap-2">
-        {/* Profile Image Container */}
-        <div className="relative w-[180px] h-[180px] flex-shrink-0 max-sm:w-full max-sm:h-[250px]">
+        {/* {/ Profile Image /} */}
+        {/* <div className="relative max-sm:w-full">
+            <img
+              src={profile_img || ProfileListImg}
+              alt="Profile-image"
+              className="w-[180px] rounded-[6px] max-sm:w-full max-sm:h-[250px]"
+            />
+            {isBookmarked ? (
+              <MdBookmark
+                onClick={handleBookmark}
+                className="absolute top-2 right-2 text-secondary text-[22px] cursor-pointer"
+              />
+            ) : (
+              <MdBookmarkBorder
+                onClick={handleBookmark}
+                className="absolute top-2 right-2 text-secondary text-[22px] cursor-pointer"
+              />
+            )}
+          </div> */}
+
+        {/* <ToastContainer /> */}
+
+        <div className="relative w-[180px] h-full flex-shrink-[0] max-sm:w-full">
           {profile.photo_protection === 1 ? (
             <>
               <img
@@ -260,15 +248,6 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
                 }}
                 className="w-[180px] h-[180px] rounded-[6px] max-sm:w-full max-sm:h-[250px] object-cover object-top"
               />
-              {profile.visited_marriage_check && (
-                <div className="absolute inset-0 z-20 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
-                  <img
-                    src={profile.visited_marriage_badge || ""}
-                    alt="Marriage Badge"
-                    className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-2xl animate-in zoom-in duration-300"
-                  />
-                </div>
-              )}
               {/* Lock overlay */}
               <div className="absolute inset-0 flex flex-col justify-center items-center text-center bg-black bg-opacity-50 rounded-[6px]">
                 <IoMdLock className="w-fit mx-auto text-secondary text-[50px]" />
@@ -289,35 +268,21 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
             />
           )}
 
-          {/* 1. MARRIAGE SETTLED BADGE (Highest Priority) */}
-          {profile.visited_marriage_check && (
-            <div className="absolute inset-0 z-20 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
-              <img
-                src={profile.visited_marriage_badge || ""}
-                alt="Marriage Badge"
-                className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-2xl animate-in zoom-in duration-300"
-              />
-            </div>
-          )}
-
-          {!profile.visited_marriage_check && (
-            <div className="absolute top-2 right-2 z-30 cursor-pointer">
-              {isBookmarked ? (
-                <MdBookmark
-                  onClick={handleBookmark}
-                  className="text-white text-[22px] drop-shadow-md"
-                />
-              ) : (
-                <MdBookmarkBorder
-                  onClick={handleBookmark}
-                  className="text-white text-[22px] drop-shadow-md"
-                />
-              )}
-            </div>
+          {/* Bookmark Icon */}
+          {isBookmarked ? (
+            <MdBookmark
+              onClick={handleBookmark}
+              className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+            />
+          ) : (
+            <MdBookmarkBorder
+              onClick={handleBookmark}
+              className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+            />
           )}
         </div>
 
-        {/* Profile Details */}
+        {/* {/ Profile Details /} */}
         <div className="max-sm:w-full">
           {/* {/ Name & Profile ID /} */}
           <div className="relative mb-2 max-sm:w-full">
@@ -325,7 +290,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
             <div className="flex items-center">
               <h5
                 onClick={handleCardClick}
-                className={`text-secondary text-[20px] font-bold ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                className="text-secondary text-[20px] font-bold cursor-pointer">
                 {profile_name || "Unknown"}{" "}
 
               </h5>
@@ -337,7 +302,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
           </div>
           <div
             onClick={handleCardClick}
-            className={`mb-1 ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}>
+            className="mb-1">
             <p className="text-sm text-primary-400">
               ({profile_id || "N/A"})
             </p>
@@ -383,14 +348,6 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
         <PlatinumModal
           isOpen={isPlatinumModalOpen}
           onClose={() => setIsPlatinumModalOpen(false)}
-        />
-        <FreeProfileRestrictionPopup
-          isOpen={isFreeLimitPopupOpen}
-          onClose={() => setIsFreeLimitPopupOpen(false)}
-        />
-        <PremiumProfileRestrictionPopup
-          isOpen={isPremiumLimitPopupOpen}
-          onClose={() => setIsPremiumLimitPopupOpen(false)}
         />
       </div>
       {/* <ToastNotification/> */}

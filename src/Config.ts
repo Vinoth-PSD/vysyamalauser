@@ -1,8 +1,7 @@
+// src/config.js
 const config = {
-  apiUrl: 'https://app.vysyamala.com'  
-  //apiUrl: 'https://stagapi.vysyamala.com'   
+  apiUrl: 'https://app.vysyamala.com'   
   };
-
   
   export default config;
   
