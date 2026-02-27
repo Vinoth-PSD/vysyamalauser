@@ -20,6 +20,8 @@ import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 import PlatinumModal from "../ReUsePopup/PlatinumModalPopup";
+import PremiumProfileRestrictionPopup from "../ReUsePopup/PremiumProfileRestrictionPopup";
+import FreeProfileRestrictionPopup from "../ReUsePopup/FreeProfileRestrictionPopup";
 //import PlatinumModal from "../ReUsePopup/PlatinumModalPopup";
 // Define types for API response
 interface Profile {
@@ -40,6 +42,9 @@ interface Profile {
   visited_horoscope: string;
   visited_profile_wishlist: number;
   visited_datetime: string;
+  visited_marriage_check?: boolean;
+  visited_marriage_badge?: string | null;
+
 }
 
 interface ApiResponse {
@@ -68,6 +73,8 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
   const location = useLocation();
   const [loading, setLoading] = useState<boolean>(true); // 👈 add local loading
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
+  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
+  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
   //const [showPlatinumModal, setShowPlatinumModal] = useState(false);
 
   useEffect(() => {
@@ -171,9 +178,11 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
   // };
 
 
-  const handleProfileClick = async (profileId: string) => {
-    if (isPlatinumModalOpen) return;
-    if (activeProfileId) return;
+  const handleProfileClick = async (profileId: string, isMarriageChecked?: boolean) => {
+    if (isMarriageChecked) {
+      return;
+    }
+    if (isPremiumLimitPopupOpen || isFreeLimitPopupOpen || isPlatinumModalOpen || activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
     const secureId = encryptId(profileId);
 
@@ -200,12 +209,36 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       //   return;
       // }
 
+      // if (checkResponse.data.status === "failure") {
+      //   if (checkResponse.data.message === "Profile visibility restricted") {
+      //     setIsPlatinumModalOpen(true);
+      //   } else {
+      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
+      //   }
+      //   return;
+      // }
       if (checkResponse.data.status === "failure") {
-        if (checkResponse.data.message === "Profile visibility restricted") {
-          setIsPlatinumModalOpen(true);
-        } else {
-          toast.error(checkResponse.data.message || "Limit reached to view profile");
+        const message: string = checkResponse.data.message || "";
+
+        if (
+          message ===
+          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
+        ) {
+          setIsPremiumLimitPopupOpen(true);
+          return;
         }
+
+        if (message === "You have reached your profile viewing limit.") {
+          setIsFreeLimitPopupOpen(true);
+          return;
+        }
+
+        if (message.includes("Profile visibility restricted")) {
+          setIsPlatinumModalOpen(true);
+          return;
+        }
+
+        toast.error(message || "Error Accessing Profile");
         return;
       }
       // Navigate after validation
@@ -226,6 +259,10 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
+      } else if (serverMessage === "You have reached your profile viewing limit.") {
+        setIsFreeLimitPopupOpen(true);
+      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
+        setIsPremiumLimitPopupOpen(true);
       } else {
         // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
@@ -265,7 +302,8 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       {profiles.map((profile) => (
         <div
           key={profile.visited_profileid}
-          className="flex justify-start items-center space-x-5 relative  py-5  border-b-[1px] border-ashSecondary rounded-none"
+          className={`flex justify-start items-center space-x-5 relative py-5 border-b-[1px] border-ashSecondary rounded-none
+  ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
         >
           {activeProfileId === profile.visited_profileid && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
@@ -276,7 +314,11 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
           <div className="w-full flex justify-between items-center">
             <div className="flex justify-between items-start space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
               {/* Profile Image */}
-              <div className="relative  max-sm:w-full cursor-pointer" onClick={() => handleProfileClick(profile.visited_profileid)}>
+              <div className="relative  max-sm:w-full cursor-pointer"
+                onClick={() =>
+                  !profile.visited_marriage_check &&
+                  handleProfileClick(profile.visited_profileid)
+                }>
                 <img
                   src={profile.visited_Profile_img || defaultImgUrl}
                   alt="Profile-image"
@@ -286,23 +328,34 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                   }}
                   className="rounded-[6px] w-[218px] h-[218px]  max-md:w-full"
                 />
+                {profile.visited_marriage_check && (
+                  <div className="absolute inset-0 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
+                    <img
+                      src={profile.visited_marriage_badge || ""}
+                      alt="Marriage Badge"
+                      className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-xl"
+                    />
+                  </div>
+                )}
 
-                {bookmarkedProfiles.includes(profile.visited_profileid) ? (
-                  <MdBookmark
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleBookmarkToggle(profile.visited_profileid);
-                    }}
-                    className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                  />
-                ) : (
-                  <MdBookmarkBorder
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleBookmarkToggle(profile.visited_profileid);
-                    }}
-                    className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                  />
+                {!profile.visited_marriage_check && (
+                  bookmarkedProfiles.includes(profile.visited_profileid) ? (
+                    <MdBookmark
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(profile.visited_profileid);
+                      }}
+                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                    />
+                  ) : (
+                    <MdBookmarkBorder
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(profile.visited_profileid);
+                      }}
+                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                    />
+                  )
                 )}
               </div>
 
@@ -312,9 +365,10 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
                 <div className="relative mb-2">
                   <div className="flex items-center">
                     <h5
-                      className="text-[20px] text-secondary font-semibold cursor-pointer"
+                      className={`text-[20px] text-secondary font-semibold
+                      ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}
                       onClick={() =>
-                        handleProfileClick(profile.visited_profileid)
+                        handleProfileClick(profile.visited_profileid, profile.visited_marriage_check)
                       }
                     >
                       {profile.visited_profile_name}
@@ -413,6 +467,14 @@ export const ViewedProfilesCard: React.FC<ViewedProfilesCardProps> = ({ pageNumb
       <PlatinumModal
         isOpen={isPlatinumModalOpen}
         onClose={() => setIsPlatinumModalOpen(false)}
+      />
+      <FreeProfileRestrictionPopup
+        isOpen={isFreeLimitPopupOpen}
+        onClose={() => setIsFreeLimitPopupOpen(false)}
+      />
+      <PremiumProfileRestrictionPopup
+        isOpen={isPremiumLimitPopupOpen}
+        onClose={() => setIsPremiumLimitPopupOpen(false)}
       />
     </div>
   );

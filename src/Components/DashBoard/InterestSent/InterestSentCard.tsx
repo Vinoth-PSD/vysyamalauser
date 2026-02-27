@@ -16,6 +16,8 @@ import apiClient from "../../../API";
 import { Hearts } from "react-loader-spinner";
 import { encryptId } from "../../../utils/cryptoUtils";
 import PlatinumModal from "../ReUsePopup/PlatinumModalPopup";
+import PremiumProfileRestrictionPopup from "../ReUsePopup/PremiumProfileRestrictionPopup";
+import FreeProfileRestrictionPopup from "../ReUsePopup/FreeProfileRestrictionPopup";
 
 // Define the Profile interface
 export interface Profile {
@@ -35,6 +37,8 @@ export interface Profile {
   myint_userstatus: string;
   myint_horoscope: string;
   myint_profile_wishlist: number;
+  visited_marriage_check: any;
+  visited_marriage_badge: string;
 }
 
 type InterestSentCardProps = {
@@ -63,6 +67,8 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const location = useLocation();
   const [isPlatinumModalOpen, setIsPlatinumModalOpen] = useState(false);
+  const [isFreeLimitPopupOpen, setIsFreeLimitPopupOpen] = useState(false);
+  const [isPremiumLimitPopupOpen, setIsPremiumLimitPopupOpen] = useState(false);
 
   // Added state to capture the selected from_profile_id for messaging
   // const [, setSelectedFromProfileId] = useState<string | null>(null);
@@ -271,9 +277,11 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
 
 
 
-  const handleProfileClick = async (profileId: string) => {
-    if (isPlatinumModalOpen) return;
-    if (activeProfileId) return;
+  const handleProfileClick = async (profileId: string, visited_marriage_check: any) => {
+    if (visited_marriage_check) {
+      return;
+    }
+    if (isPremiumLimitPopupOpen || isFreeLimitPopupOpen || isPlatinumModalOpen || activeProfileId) return;
     setActiveProfileId(profileId); // set the card that's loading
     const secureId = encryptId(profileId);
     const loginuser_profileId = localStorage.getItem("loginuser_profile_id");
@@ -299,15 +307,39 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
       //   return;
       // }
 
+      // if (checkResponse.data.status === "failure") {
+      //   if (checkResponse.data.message === "Profile visibility restricted") {
+      //     setIsPlatinumModalOpen(true);
+      //   } else {
+      //     toast.error(checkResponse.data.message || "Limit reached to view profile");
+      //   }
+      //   return;
+      // }
+
       if (checkResponse.data.status === "failure") {
-        if (checkResponse.data.message === "Profile visibility restricted") {
-          setIsPlatinumModalOpen(true);
-        } else {
-          toast.error(checkResponse.data.message || "Limit reached to view profile");
+        const message: string = checkResponse.data.message || "";
+
+        if (
+          message ===
+          "Today’s view limit has been reached.Please log in tomorrow to view more new profiles.You can still revisit profiles you’ve already viewed."
+        ) {
+          setIsPremiumLimitPopupOpen(true);
+          return;
         }
+
+        if (message === "You have reached your profile viewing limit.") {
+          setIsFreeLimitPopupOpen(true);
+          return;
+        }
+
+        if (message.includes("Profile visibility restricted")) {
+          setIsPlatinumModalOpen(true);
+          return;
+        }
+
+        toast.error(message || "Error Accessing Profile");
         return;
       }
-
       // Navigate after validation
       //navigate(`/ProfileDetails?id=${profileId}&page=3`);
       navigate(`/Profiledetails?id=${secureId}&page=3&sortBy=${sortBy}`, {
@@ -329,6 +361,10 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
 
       if (serverMessage === "Profile visibility restricted") {
         setIsPlatinumModalOpen(true);
+      } else if (serverMessage === "You have reached your profile viewing limit.") {
+        setIsFreeLimitPopupOpen(true);
+      } else if (serverMessage?.includes("Today’s view limit has been reached")) {
+        setIsPremiumLimitPopupOpen(true);
       } else {
         // Only show the toast if it's NOT the visibility restriction
         toast.error(serverMessage || "Error accessing profile.");
@@ -355,7 +391,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
       {profile.map((profile) => (
         <div
           key={profile.myint_profileid}
-          className="flex justify-start items-center space-x-5 relative rounded-xl py-5"
+          className={`flex justify-start items-center space-x-5 relative rounded-xl py-5 ${profile.visited_marriage_check ? "cursor-not-allowed" : ""}`}
         >
           {activeProfileId === profile.myint_profileid && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white bg-opacity-70 rounded-xl">
@@ -367,7 +403,7 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
           <div className="w-full flex justify-between items-center">
             <div className="flex justify-between items-center space-x-5  max-sm:flex-col max-sm:gap-5 max-sm:w-full max-sm:items-start">
               {/* Profile Image */}
-              <div className="relative  max-sm:w-full">
+              <div className={`relative  max-sm:w-full ${profile.visited_marriage_check ? "cursor-not-allowed" : ""}`}>
                 <img
                   src={profile.myint_Profile_img || defaultImgUrl}
                   alt="Profile-image"
@@ -396,22 +432,34 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
                     className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
                   />
                 )} */}
-                {bookmarkedProfiles.includes(profile.myint_profileid) ? (
-                  <MdBookmark
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleBookmarkToggle(profile.myint_profileid);
-                    }}
-                    className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                  />
-                ) : (
-                  <MdBookmarkBorder
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleBookmarkToggle(profile.myint_profileid);
-                    }}
-                    className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
-                  />
+                {profile.visited_marriage_check && (
+                  <div className="absolute inset-0 rounded-[6px] backdrop-blur-sm bg-black/30 flex items-center justify-center">
+                    <img
+                      src={profile.visited_marriage_badge || ""}
+                      alt="Marriage Badge"
+                      className="w-[90px] h-[90px] object-contain rounded-full bg-[#F8EFE0] p-2 shadow-xl"
+                    />
+                  </div>
+                )}
+
+                {!profile.visited_marriage_check && (
+                  bookmarkedProfiles.includes(profile.myint_profileid) ? (
+                    <MdBookmark
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(profile.myint_profileid);
+                      }}
+                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                    />
+                  ) : (
+                    <MdBookmarkBorder
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookmarkToggle(profile.myint_profileid);
+                      }}
+                      className="absolute top-2 right-2 text-white text-[22px] cursor-pointer"
+                    />
+                  )
                 )}
               </div>
 
@@ -422,9 +470,10 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
                   <div className="flex items-center">
                     <h5
                       onClick={() =>
-                        handleProfileClick(profile.myint_profileid)
+                        !profile.visited_marriage_check &&
+                        handleProfileClick(profile.myint_profileid, profile.visited_marriage_check)
                       }
-                      className="text-[20px] text-secondary font-semibold cursor-pointer">
+                      className={`text-[20px] text-secondary font-semibold ${profile.visited_marriage_check ? "cursor-not-allowed" : "cursor-pointer"}`}>
                       {profile.myint_profile_name}{" "}
                       <span className="text-sm text-ashSecondary">
                         ({profile.myint_profileid})
@@ -546,6 +595,14 @@ export const InterestSentCard: React.FC<InterestSentCardProps> = ({ pageNumber, 
       <PlatinumModal
         isOpen={isPlatinumModalOpen}
         onClose={() => setIsPlatinumModalOpen(false)}
+      />
+      <FreeProfileRestrictionPopup
+        isOpen={isFreeLimitPopupOpen}
+        onClose={() => setIsFreeLimitPopupOpen(false)}
+      />
+      <PremiumProfileRestrictionPopup
+        isOpen={isPremiumLimitPopupOpen}
+        onClose={() => setIsPremiumLimitPopupOpen(false)}
       />
     </div>
   );
