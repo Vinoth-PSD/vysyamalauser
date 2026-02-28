@@ -578,8 +578,8 @@ export const Horoscope = () => {
           dasa_balance: formData.personal_dasa_bal,
           rasi_kattam: formData.personal_rasi_katt,
           amsa_kattam: formData.personal_amsa_katt,
-          horoscope_hints: formData.personal_horoscope_hints, // Add this line
-          padham: formData.personal_padham,
+          horoscope_hints: formData.personal_horoscope_hints,
+          padham: formData.personal_padham ? Number(formData.personal_padham) : 0,
         }
       );
 
@@ -834,10 +834,11 @@ export const Horoscope = () => {
                 Padham:
                 <select
                   name="personal_padham"
-                  value={formData.personal_padham === null || formData.personal_padham === undefined ? "" : String(formData.personal_padham)}
+                  value={formData.personal_padham ? String(formData.personal_padham) : ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    const finalValue = value === "" ? null : Number(value);
+                    // If user selects "Select Padham", set it to 0 or null
+                    const finalValue = value === "" ? 0 : Number(value);
                     setFormData(prev => ({ ...prev, personal_padham: finalValue }));
                   }}
                   className="font-normal border rounded px-3 py-[10px] w-full focus:outline-none border-ashBorder"
