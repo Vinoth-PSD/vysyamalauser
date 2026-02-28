@@ -119,7 +119,9 @@ export const ProfileDetailsExpressInterest: React.FC<
   const storedPlanId = localStorage.getItem("plan_id") || sessionStorage.getItem("plan_id");
   const isPlan16 = storedPlanId === "16";
   const [serverEncryptedId, setServerEncryptedId] = useState<string>("");
+  console.log("serverEncryptedId", serverEncryptedId)
   const [EncryptedMyprofileId, setEncryptedMyprofileId] = useState<string>("");
+  console.log("EncryptedMyprofileId", EncryptedMyprofileId)
 
   ////console.log("vysya", storedPlanId);
   const navigate = useNavigate();
@@ -611,6 +613,7 @@ export const ProfileDetailsExpressInterest: React.FC<
     const encodedMyprofileId = encodeURIComponent(EncryptedMyprofileId);
     try {
       const response = await apiClient.get(
+        // `/auth/generate-porutham-pdf-mobile/${encodedMyprofileId}/${encodedId}/`,
         `/auth/generate-porutham-pdf-mobile/${encodedMyprofileId}/${encodedId}/`,
         // const response = await apiClient.get(
         //   `/auth/generate-porutham-pdf-mobile/${loginuser_profileId}/${idparam}/`,
@@ -752,7 +755,8 @@ export const ProfileDetailsExpressInterest: React.FC<
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
     // link.href = `${config.apiUrl}/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `${config.apiUrl}/auth/New_horoscope_black/${encodedMyprofileId}/${encodedId}/`;
+    //link.href = `${config.apiUrl}/auth/New_horoscope_black/${encodedMyprofileId}/${encodedId}/`;
+    link.href = `${config.apiUrl}/auth/New_horoscope_black/${encodedId}/${encodedMyprofileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -763,7 +767,8 @@ export const ProfileDetailsExpressInterest: React.FC<
     const link = document.createElement("a");
     link.target = '_blank'; // Open in a new tab
     // link.href = `${config.apiUrl}/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
-    link.href = `${config.apiUrl}/auth/New_horoscope_color/${encodedMyprofileId}/${encodedId}/`;
+    // link.href = `${config.apiUrl}/auth/New_horoscope_color/${encodedMyprofileId}/${encodedId}/`;
+    link.href = `${config.apiUrl}/auth/New_horoscope_color/${encodedId}/${encodedMyprofileId}/`;
     // link.href = `http://103.214.132.20:8000/auth/generate-pdf/${loginuser_profileId}/${idparam}`;
     link.download = `pdf_${idparam}.pdf`; // Customize the file name
     link.click();
@@ -1498,7 +1503,7 @@ export const ProfileDetailsExpressInterest: React.FC<
         <ReUseUpGradePopup
           closePopup={() => {
             setBookMarkPopup(false);
-            setIsPhotoReqAlreadySent(false); 
+            setIsPhotoReqAlreadySent(false);
           }}
           text={apimsgPhotoReq}
           isAlreadySent={isPhotoReqAlreadySent}
