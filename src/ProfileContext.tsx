@@ -32,6 +32,7 @@ export interface Profile {
   matching_score?: string;
   visited_marriage_check: boolean;
   visited_marriage_badge: string | null;
+  viewed_date:string;
 }
 export interface DashboardDetails {
   matching_profile_count?: number;  // Optional field

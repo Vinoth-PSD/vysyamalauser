@@ -229,6 +229,7 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
     degree,
     profession,
     location: profile_location,
+    viewed_date,
     verified,
   } = profile;
 
@@ -377,6 +378,13 @@ export const GridListCard: React.FC<GridListCardProps> = ({ profile }) => {
             <p className="flex items-center text-sm text-primary-400">
               {/* <FaLocationDot className="mr-2" /> */}
               {profile_location || "N/A"}
+            </p>
+          </div>
+          <div className="mb-1">
+            <p className="flex items-center text-sm text-primary-400">
+              {/* <FaLocationDot className="mr-2" /> */}
+              Viewed Date: {viewed_date ? viewed_date.split("T")[0] : "N/A"}
+
             </p>
           </div>
         </div>

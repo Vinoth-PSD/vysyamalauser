@@ -28,6 +28,7 @@ import { encryptId } from "../../../../utils/cryptoUtils";
 import PlatinumModal from "../../../DashBoard/ReUsePopup/PlatinumModalPopup";
 import FreeProfileRestrictionPopup from "../../../DashBoard/ReUsePopup/FreeProfileRestrictionPopup";
 import PremiumProfileRestrictionPopup from "../../../DashBoard/ReUsePopup/PremiumProfileRestrictionPopup";
+import { FaCalendarAlt } from "react-icons/fa";
 
 interface ListCardProps {
   profile: Profile;
@@ -228,6 +229,7 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
     degree,
     profession,
     location: profile_location,
+    viewed_date,
     matching_score,
     // user_profile_views,
     verified,
@@ -403,8 +405,12 @@ export const ListCard: React.FC<ListCardProps> = ({ profile }) => {
                 {profile_location || "N/A"}
               </p>
             </div>
-
-
+            <div className="mb-[6px]">
+              <p className="flex items-center text-sm text-ashSecondary font-normal">
+                <FaCalendarAlt  className="mr-2" />
+                Viewed Date: {viewed_date ? viewed_date.split("T")[0] : "N/A"}
+              </p>
+            </div>
           </div>
         </div>
 
